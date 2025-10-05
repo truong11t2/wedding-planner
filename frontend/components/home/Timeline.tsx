@@ -1,7 +1,11 @@
 import React from 'react';
 import { Download, CheckCircle, Heart } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import Link from 'next/link';
 
 export default function Timeline({ weddingDate, timeline, setShowPlan }) {
+  const { isLoggedIn } = useAuth();
+
   const downloadPDF = () => {
     const wedding = new Date(weddingDate);
     const content = `
@@ -137,8 +141,19 @@ Congratulations on your upcoming wedding!
                         {item.title} • {item.category}
                       </p>
                       <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700 text-sm sm:text-base">{item.description}</span>
+                        <CheckCircle 
+                          className={`w-5 h-5 ${isLoggedIn ? 'text-green-500' : 'text-gray-300'} flex-shrink-0 mt-0.5`} 
+                        />
+                        {isLoggedIn ? (
+                          <Link 
+                            href={`/vendor/${item.category.toLowerCase()}/${item.id}`}
+                            className="text-gray-600 text-sm sm:text-base hover:text-pink-600 underline decoration-pink-300 underline-offset-2 transition-colors"
+                          >
+                            {item.description}
+                          </Link>
+                        ) : (
+                          <span className="text-gray-700 text-sm sm:text-base">{item.description}</span>
+                        )}
                       </div>
                     </div>
                   ))}

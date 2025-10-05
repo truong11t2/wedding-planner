@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import HomePage from '@/components/home/HomePage';
 import BlogPage from '@/components/blog/BlogPage';
 import LoginPage from '@/components/auth/LoginPage';
+import VendorPage from '@/components/vendor/VendorPage';
 
 export default function WeddingPlanner() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -23,6 +24,7 @@ export default function WeddingPlanner() {
       {currentPage === 'home' && <HomePage />}
       {currentPage === 'blog' && <BlogPage />}
       {currentPage === 'login' && <LoginPage setCurrentPage={setCurrentPage} />}
+      {currentPage === 'vendor' && <VendorPage />}
       
       <Footer />
     </div>
