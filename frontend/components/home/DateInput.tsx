@@ -3,6 +3,16 @@ import { Calendar } from 'lucide-react';
 import { generateTimeline } from '@/lib/timelineGenerator';
 
 export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, setTimeline }) {
+  // TODO: Remove this in production
+  React.useEffect(() => {
+    if (!weddingDate) {
+      // Set default date to 6 months from now
+      const defaultDate = new Date();
+      defaultDate.setMonth(defaultDate.getMonth() + 12);
+      setWeddingDate(defaultDate.toISOString().split('T')[0]);
+    }
+  }, []);
+
   const handleGeneratePlan = () => {
     if (weddingDate) {
       try {
@@ -40,7 +50,7 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
             value={weddingDate}
             onChange={(e) => setWeddingDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
-            className="w-full px-4 py-3 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-base sm:text-lg"
+            className="w-full px-4 py-3 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-base sm:text-lg text-gray-900 placeholder-gray-700"
           />
         </div>
 

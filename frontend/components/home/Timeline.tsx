@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Download, CheckCircle, Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
+import ItemOptions from './ItemOptions';
+import ItemOptionsWithText from './ItemOptionsWithText';
 
-export default function Timeline({ weddingDate, timeline, setShowPlan }) {
+export default function Timeline({ 
+  weddingDate, 
+  timeline, 
+  setTimeline, // Add this prop
+  setShowPlan 
+}) {
   const { isLoggedIn } = useAuth();
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const downloadPDF = () => {
     const wedding = new Date(weddingDate);
@@ -31,6 +39,30 @@ Congratulations on your upcoming wedding!
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleSaveOption = async (itemId: string, values: string | { [key: string]: string }) => {
+    try {
+      const updatedTimeline = timeline.map(item => {
+        if (item.id === itemId) {
+          // Check if the item has isTextInput option
+          if (item.options?.[0]?.isTextInput) {
+            // Handle text input options (multiple values)
+            return { ...item, selectedOptions: values as { [key: string]: string } };
+          } else {
+            // Handle radio options (single value)
+            return { ...item, selectedOption: values as string };
+          }
+        }
+        return item;
+      });
+      
+      setTimeline(updatedTimeline);
+      setSelectedItem(null);
+    } catch (error) {
+      console.error('Error saving options:', error);
+      throw error;
+    }
   };
 
   // Update the getMonthsUntil function to handle weeks
@@ -145,14 +177,73 @@ Congratulations on your upcoming wedding!
                           className={`w-5 h-5 ${isLoggedIn ? 'text-green-500' : 'text-gray-300'} flex-shrink-0 mt-0.5`} 
                         />
                         {isLoggedIn ? (
-                          <Link 
-                            href={`/vendor/${item.category.toLowerCase()}/${item.id}`}
-                            className="text-gray-600 text-sm sm:text-base hover:text-pink-600 underline decoration-pink-300 underline-offset-2 transition-colors"
-                          >
-                            {item.description}
-                          </Link>
+                          <div className="relative">
+                            {item.selectedOptions ? (
+                              // Display for text input options
+                              <div className="flex items-start justify-between gap-2">
+                                <span className="text-gray-700 text-sm sm:text-base">
+                                  {item.description}
+                                  {Object.entries(item.selectedOptions).map(([key, value]) => (
+                                    <div key={key} className="text-green-600 font-medium mt-1">
+                                      {item.options?.find(opt => opt.id === key)?.label}: {value}
+                                    </div>
+                                  ))}
+                                </span>
+                                <button
+                                  onClick={() => setSelectedItem(item)}
+                                  className="text-pink-500 hover:text-pink-700 underline flex-shrink-0"
+                                >
+                                  Change
+                                </button>
+                              </div>
+                            ) : item.selectedOption ? (
+                              // Display for radio options
+                              <div className="flex items-start justify-between gap-2">
+                                <span className="text-gray-700 text-sm sm:text-base">
+                                  {item.description} 
+                                  <span className="text-green-600 font-medium">
+                                    <div>
+                                      {item.options?.find(opt => opt.id === item.selectedOption)?.label}
+                                    </div>
+                                  </span>
+                                </span>
+                                <button
+                                  onClick={() => setSelectedItem(item)}
+                                  className="text-pink-500 hover:text-pink-700 underline flex-shrink-0"
+                                >
+                                  Change
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setSelectedItem(item)}
+                                className="text-gray-600 text-sm sm:text-base hover:text-pink-600 underline decoration-pink-300 underline-offset-2 transition-colors"
+                              >
+                                {item.description}
+                              </button>
+                            )}
+                            {selectedItem?.id === item.id && (
+                              <div className="absolute z-10 mt-2 w-full max-w-md">
+                                {selectedItem.options?.[0]?.isTextInput ? (
+                                  <ItemOptionsWithText
+                                    item={selectedItem}
+                                    onSave={handleSaveOption}
+                                    onClose={() => setSelectedItem(null)}
+                                  />
+                                ) : (
+                                  <ItemOptions
+                                    item={selectedItem}
+                                    onSave={handleSaveOption}
+                                    onClose={() => setSelectedItem(null)}
+                                  />
+                                )}
+                              </div>
+                            )}
+                          </div>
                         ) : (
-                          <span className="text-gray-700 text-sm sm:text-base">{item.description}</span>
+                          <span className="text-gray-700 text-sm sm:text-base">
+                            {item.description}
+                          </span>
                         )}
                       </div>
                     </div>
