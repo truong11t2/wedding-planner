@@ -1,12 +1,11 @@
 import React from 'react';
 import { socialLogin } from '@/lib/api';
 
-export default function SocialLoginButtons({ setCurrentPage }) {
+export default function SocialLoginButtons({ onSuccess }) {
   const handleSocialLogin = async (provider) => {
     const result = await socialLogin(provider);
     if (result.success) {
-      alert(`${provider} login successful!`);
-      setCurrentPage('home');
+      onSuccess();
     } else {
       alert('Login failed. Please try again.');
     }

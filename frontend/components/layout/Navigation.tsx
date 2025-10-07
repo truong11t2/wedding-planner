@@ -1,63 +1,78 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { Heart, Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import { useAuth } from '../../context/AuthContext'; // Add this import
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
-export default function Navigation({ currentPage, setCurrentPage, mobileMenuOpen, setMobileMenuOpen }) {
-  const { isLoggedIn } = useAuth(); // Add this line
-  
+export default function Navigation() {
+  const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isLoggedIn } = useAuth();
+  const pathname = usePathname();
+
+  const handleLogin = () => {
+    setMobileMenuOpen(false);
+    router.push('/login');
+  };
+
   return (
     <header className="bg-white shadow-md border-b-2 border-pink-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <div 
-            className="flex items-center gap-3 cursor-pointer" 
-            onClick={() => setCurrentPage('home')}
+          <Link 
+            href="/"
+            className="flex items-center gap-3"
           >
             <Heart className="w-8 h-8 text-pink-500 fill-pink-500" />
             <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
               Perfect Day Planner
             </h1>
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-8">
-            <button
-              onClick={() => setCurrentPage('home')}
+            <Link
+              href="/"
               className={`text-lg font-semibold transition-colors ${
-                currentPage === 'home' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
+                pathname === '/' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
               Home
-            </button>
-            {isLoggedIn && (
-              <button
-                onClick={() => setCurrentPage('vendor')}
-                className={`text-lg font-semibold transition-colors ${
-                  currentPage === 'vendor' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
-                }`}
-              >
-                Vendor
-              </button>
-            )}
-            <button
-              onClick={() => setCurrentPage('blog')}
+            </Link>
+            <Link
+              href="/blog"
               className={`text-lg font-semibold transition-colors ${
-                currentPage === 'blog' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
+                pathname === '/blog' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
               Blog
-            </button>
+            </Link>
+            {isLoggedIn && (
+              <Link
+                href="/vendor"
+                className={`text-lg font-semibold transition-colors ${
+                  pathname === '/vendor' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
+                }`}
+              >
+                Vendor
+              </Link>
+            )}
             {!isLoggedIn ? (
               <button
-                onClick={() => { setCurrentPage('login'); setMobileMenuOpen(false); }}
+                onClick={handleLogin}
                 className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
               >
                 Login
               </button>
-            ): (
+            ) : (
               <button
-                onClick={() => { setCurrentPage('logout'); setMobileMenuOpen(false); }}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  /* TODO: Add logout handler */
+                }}
                 className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
               >
                 Logout
@@ -77,40 +92,53 @@ export default function Navigation({ currentPage, setCurrentPage, mobileMenuOpen
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <nav className="md:hidden pb-4 space-y-2">
-            <button
-              onClick={() => { setCurrentPage('home'); setMobileMenuOpen(false); }}
-              className="block w-full text-left px-4 py-2 text-lg font-semibold text-gray-700 hover:bg-pink-50 rounded"
+            <Link
+              href="/"
+              className={`block py-2 text-lg font-semibold ${
+                pathname === '/' ? 'text-pink-600' : 'text-gray-700'
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
             >
               Home
-            </button>
-            {isLoggedIn && (
-              <button
-                onClick={() => { setCurrentPage('vendor'); setMobileMenuOpen(false); }}
-                className="block w-full text-left px-4 py-2 text-lg font-semibold text-gray-700 hover:bg-pink-50 rounded"
-              >
-                Vendor
-              </button>
-            )}
-            <button
-              onClick={() => { setCurrentPage('blog'); setMobileMenuOpen(false); }}
-              className="block w-full text-left px-4 py-2 text-lg font-semibold text-gray-700 hover:bg-pink-50 rounded"
+            </Link>
+            <Link
+              href="/blog"
+              className={`block py-2 text-lg font-semibold ${
+                pathname === '/blog' ? 'text-pink-600' : 'text-gray-700'
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
             >
               Blog
-            </button>
-            {!isLoggedIn ? (
-              <button
-                onClick={() => { setCurrentPage('login'); setMobileMenuOpen(false); }}
-                className="block w-full text-left px-4 py-2 text-lg font-semibold text-white bg-gradient-to-r from-pink-600 to-purple-600 rounded"
+            </Link>
+            {isLoggedIn && (
+              <Link
+                href="/vendor"
+                className={`block py-2 text-lg font-semibold ${
+                  pathname === '/vendor' ? 'text-pink-600' : 'text-gray-700'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
               >
-                Login
-              </button>
-            ): (
+                Vendor
+              </Link>
+            )}
+            {isLoggedIn ? (
               <button
-                onClick={() => { setCurrentPage('logout'); setMobileMenuOpen(false); }}
-                className="block w-full text-left px-4 py-2 text-lg font-semibold text-white bg-gradient-to-r from-pink-600 to-purple-600 rounded"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  /* TODO: Add logout handler */
+                }}
+                className="block w-full text-left py-2 text-lg font-semibold text-gray-700"
               >
                 Logout
               </button>
+            ) : (
+              <Link
+                href="/login"
+                className="block py-2 text-lg font-semibold text-gray-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Login
+              </Link>
             )}
           </nav>
         )}

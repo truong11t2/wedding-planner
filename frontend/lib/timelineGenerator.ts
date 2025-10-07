@@ -110,7 +110,7 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
     description: "Secure your ceremony and reception venues",
     dueDate: getDateBeforeWedding(9),
     completed: false,
-    category: "Vendors"
+    category: "Vendor"
   });
   
   timeline.push({
@@ -119,7 +119,7 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
     description: "Research and book your wedding photographer",
     dueDate: getDateBeforeWedding(9),
     completed: false,
-    category: "Vendors"
+    category: "Vendor"
   });
 
   // 6 months before
@@ -138,7 +138,7 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
     description: "Select your catering service and plan the menu",
     dueDate: getDateBeforeWedding(6),
     completed: false,
-    category: "Vendors"
+    category: "Vendor"
   });
 
   // 3 months before
@@ -186,7 +186,7 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
     description: "Confirm final details, timing, and setup with all vendors",
     dueDate: getDateBeforeWedding(0.5),
     completed: false,
-    category: "Vendors"
+    category: "Vendor"
   });
 
   timeline.push({

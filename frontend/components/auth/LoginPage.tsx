@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import { Heart, Mail, Lock, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import SocialLoginButtons from './SocialLoginButtons';
 import { loginUser, registerUser } from '@/lib/api';
 
-export default function LoginPage({ setCurrentPage }) {
+export default function LoginPage() {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +24,7 @@ export default function LoginPage({ setCurrentPage }) {
       const result = await loginUser(email, password);
       if (result.success) {
         alert('Login successful!');
-        setCurrentPage('home');
+        router.push('/'); // Redirect to home page
       } else {
         alert(result.message || 'Login failed');
       }
@@ -40,7 +42,7 @@ export default function LoginPage({ setCurrentPage }) {
       const result = await registerUser(fullName, email, password);
       if (result.success) {
         alert('Registration successful!');
-        setCurrentPage('home');
+        router.push('/'); // Redirect to home page
       } else {
         alert(result.message || 'Registration failed');
       }
@@ -149,7 +151,7 @@ export default function LoginPage({ setCurrentPage }) {
             </div>
           </div>
 
-          <SocialLoginButtons setCurrentPage={setCurrentPage} />
+          <SocialLoginButtons onSuccess={() => router.push('/')} />
         </div>
       </div>
     </main>
