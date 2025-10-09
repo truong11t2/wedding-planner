@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Download, CheckCircle, Heart } from 'lucide-react';
+import { Download, CheckCircle, Heart, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
 import ItemOptions from './ItemOptions';
 import ItemOptionsWithText from './ItemOptionsWithText';
+import OptionsDialog from './OptionsDialog';
 
 export default function Timeline({ 
   weddingDate, 
@@ -13,6 +14,9 @@ export default function Timeline({
 }) {
   const { isLoggedIn } = useAuth();
   const [selectedItem, setSelectedItem] = useState(null);
+  const [expandedItem, setExpandedItem] = useState(null);
+  const [tempValues, setTempValues] = useState({});
+  const [tempSelectedOption, setTempSelectedOption] = useState('');
 
   const downloadPDF = () => {
     const wedding = new Date(weddingDate);
@@ -62,6 +66,33 @@ Congratulations on your upcoming wedding!
     } catch (error) {
       console.error('Error saving options:', error);
       throw error;
+    }
+  };
+
+  const handleAccordionToggle = (item) => {
+    if (expandedItem?.id === item.id) {
+      setExpandedItem(null);
+    } else {
+      setExpandedItem(item);
+      // Initialize temp values
+      if (item.options?.[0]?.isTextInput) {
+        setTempValues(item.selectedOptions || {});
+      } else {
+        setTempSelectedOption(item.selectedOption || '');
+      }
+    }
+  };
+
+  const handleSave = async (item) => {
+    try {
+      if (item.options?.[0]?.isTextInput) {
+        await handleSaveOption(item.id, tempValues);
+      } else {
+        await handleSaveOption(item.id, tempSelectedOption);
+      }
+      setExpandedItem(null);
+    } catch (error) {
+      console.error('Error saving:', error);
     }
   };
 
@@ -177,66 +208,104 @@ Congratulations on your upcoming wedding!
                           className={`w-5 h-5 ${isLoggedIn ? 'text-green-500' : 'text-gray-300'} flex-shrink-0 mt-0.5`} 
                         />
                         {isLoggedIn ? (
-                          <div className="relative">
-                            {item.selectedOptions ? (
-                              // Display for text input options
-                              <div className="flex items-start justify-between gap-2">
+                          <div className="w-full">
+                            {/* Accordion Header */}
+                            <div
+                              onClick={() => handleAccordionToggle(item)}
+                              className="w-full flex items-center justify-between text-left p-3 rounded-lg hover:bg-pink-50 transition-colors cursor-pointer"
+                            >
+                              <div className="flex-1">
                                 <span className="text-gray-700 text-sm sm:text-base">
                                   {item.description}
-                                  {Object.entries(item.selectedOptions).map(([key, value]) => (
-                                    <div key={key} className="text-green-600 font-medium mt-1">
-                                      {item.options?.find(opt => opt.id === key)?.label}: {value}
-                                    </div>
-                                  ))}
                                 </span>
-                                <button
-                                  onClick={() => setSelectedItem(item)}
-                                  className="text-pink-500 hover:text-pink-700 underline flex-shrink-0"
-                                >
-                                  Change
-                                </button>
-                              </div>
-                            ) : item.selectedOption ? (
-                              // Display for radio options
-                              <div className="flex items-start justify-between gap-2">
-                                <span className="text-gray-700 text-sm sm:text-base">
-                                  {item.description} 
-                                  <span className="text-green-600 font-medium">
-                                    <div>
-                                      {item.options?.find(opt => opt.id === item.selectedOption)?.label}
-                                    </div>
-                                  </span>
-                                </span>
-                                <button
-                                  onClick={() => setSelectedItem(item)}
-                                  className="text-pink-500 hover:text-pink-700 underline flex-shrink-0"
-                                >
-                                  Change
-                                </button>
-                              </div>
-                            ) : (
-                              <button
-                                onClick={() => setSelectedItem(item)}
-                                className="text-gray-600 text-sm sm:text-base hover:text-pink-600 underline decoration-pink-300 underline-offset-2 transition-colors"
-                              >
-                                {item.description}
-                              </button>
-                            )}
-                            {selectedItem?.id === item.id && (
-                              <div className="absolute z-10 mt-2 w-full max-w-md">
-                                {selectedItem.options?.[0]?.isTextInput ? (
-                                  <ItemOptionsWithText
-                                    item={selectedItem}
-                                    onSave={handleSaveOption}
-                                    onClose={() => setSelectedItem(null)}
-                                  />
-                                ) : (
-                                  <ItemOptions
-                                    item={selectedItem}
-                                    onSave={handleSaveOption}
-                                    onClose={() => setSelectedItem(null)}
-                                  />
+                                {(item.selectedOption || item.selectedOptions) && (
+                                  <div className="mt-1">
+                                    {item.selectedOptions ? (
+                                      Object.entries(item.selectedOptions).map(([key, value]) => (
+                                        <div key={key} className="text-green-600 font-medium text-sm">
+                                          {item.options?.find(opt => opt.id === key)?.label}: {value}
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <div className="text-green-600 font-medium text-sm">
+                                        {item.options?.find(opt => opt.id === item.selectedOption)?.label}
+                                      </div>
+                                    )}
+                                  </div>
                                 )}
+                              </div>
+                              <ChevronDown 
+                                className={`w-5 h-5 text-gray-400 transform transition-transform ${
+                                  expandedItem?.id === item.id ? 'rotate-180' : ''
+                                }`} 
+                              />
+                            </div>
+
+                            {/* Accordion Content */}
+                            {expandedItem?.id === item.id && (
+                              <div className="mt-3 p-4 bg-gray-50 rounded-lg space-y-4">
+                                {item.options?.[0]?.isTextInput ? (
+                                  // Text input options
+                                  <div className="space-y-4">
+                                    {item.options.map((option) => (
+                                      <div key={option.id} className="space-y-2">
+                                        <label className="block font-medium text-gray-700 text-sm">
+                                          {option.label}
+                                        </label>
+                                        <textarea
+                                          value={tempValues[option.id] || ''}
+                                          onChange={(e) => setTempValues({
+                                            ...tempValues,
+                                            [option.id]: e.target.value
+                                          })}
+                                          className="w-full h-10 px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                                          placeholder={option.description}
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  // Radio options
+                                  <div className="space-y-2">
+                                    {item.options?.map((option) => (
+                                      <label
+                                        key={option.id}
+                                        className="flex items-center p-2 rounded cursor-pointer hover:bg-white"
+                                      >
+                                        <input
+                                          type="radio"
+                                          name={`option-${item.id}`}
+                                          value={option.id}
+                                          checked={tempSelectedOption === option.id}
+                                          onChange={(e) => setTempSelectedOption(e.target.value)}
+                                          className="w-4 h-4 text-pink-600 focus:ring-pink-500"
+                                        />
+                                        <div className="ml-3">
+                                          <span className="text-sm font-medium text-gray-900">{option.label}</span>
+                                          {option.description && (
+                                            <p className="text-xs text-gray-500 mt-1">{option.description}</p>
+                                          )}
+                                        </div>
+                                      </label>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {/* Action buttons */}
+                                <div className="flex justify-end gap-2 pt-2">
+                                  <button
+                                    onClick={() => setExpandedItem(null)}
+                                    className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+                                  >
+                                    Cancel
+                                  </button>
+                                  <button
+                                    onClick={() => handleSave(item)}
+                                    className="px-4 py-1 text-sm bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded hover:from-pink-700 hover:to-purple-700"
+                                  >
+                                    Save
+                                  </button>
+                                </div>
                               </div>
                             )}
                           </div>
