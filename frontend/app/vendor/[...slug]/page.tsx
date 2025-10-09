@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import styles from '@/styles/article.module.css';
 import { Star } from 'lucide-react';
+import { MDXComponents } from '@/components/mdx/MDXComponents';
 
 interface PageProps {
   params: Promise<{
@@ -32,7 +33,7 @@ export default async function VendorPage({ params }: PageProps) {
         <div className="flex items-center gap-4 mb-6">
           <div className="flex items-center">
             <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />
-            <span className="ml-2 font-semibold text-lg">{vendor.rating}</span>
+            <span className="ml-2 font-semibold text-lg text-gray-600">{vendor.rating}</span>
           </div>
           <span className="text-gray-600">•</span>
           <span className="text-gray-600">{vendor.category}</span>
@@ -50,7 +51,10 @@ export default async function VendorPage({ params }: PageProps) {
       </div>
       
       <div className={`${styles.content} prose prose-lg`}>
-        <MDXRemote source={vendor.content} />
+        <MDXRemote 
+          source={vendor.content} 
+          components={MDXComponents}
+        />
       </div>
     </article>
   );

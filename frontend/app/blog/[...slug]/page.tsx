@@ -3,6 +3,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import styles from '@/styles/article.module.css';
+import { MDXComponents } from '@/components/mdx/MDXComponents';
+
 
 interface PageProps {
   params: Promise<{
@@ -47,7 +49,10 @@ export default async function BlogPost({ params }: PageProps) {
       </div>
       
       <div className={`${styles.content} prose prose-lg`}>
-        <MDXRemote source={post.content} />
+        <MDXRemote 
+          source={post.content} 
+          components={MDXComponents}
+        />
       </div>
     </article>
   );
