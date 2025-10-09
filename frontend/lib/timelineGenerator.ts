@@ -85,19 +85,19 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
       {
         id: 'bride-side',
         label: 'Bride Side',
-        description: 'Enter names of bridesmaids and maid of honor (one per line)',
+        description: 'Enter names of bridesmaids',
         isTextInput: true
       },
       {
         id: 'groom-side',
         label: 'Groom Side',
-        description: 'Enter names of groomsmen and best man (one per line)',
+        description: 'Enter names of groomsmen',
         isTextInput: true
       },
       {
         id: 'other-roles',
         label: 'Other Roles',
-        description: 'Enter any other important roles (one per line)',
+        description: 'Enter any other important roles',
         isTextInput: true
       }
     ]
