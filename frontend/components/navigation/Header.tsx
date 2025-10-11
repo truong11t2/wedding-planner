@@ -1,22 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import Toast from '../common/Toast';
 
-export default function Navigation() {
+export default function Header() {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isLoggedIn } = useAuth();
   const pathname = usePathname();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('success');
 
   const handleLogin = () => {
     setMobileMenuOpen(false);
     router.push('/login');
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      setToastMessage(`Welcome back!`);
+      setToastType('success');
+      setShowToast(true);
+    }
+  }, [isLoggedIn]);
 
   return (
     <header className="bg-white shadow-md border-b-2 border-pink-200 sticky top-0 z-50">
@@ -143,6 +155,13 @@ export default function Navigation() {
           </nav>
         )}
       </div>
+
+      <Toast 
+        message={toastMessage}
+        type={toastType}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </header>
   );
 }
