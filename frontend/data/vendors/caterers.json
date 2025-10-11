@@ -1,0 +1,72 @@
+[
+  {
+    "id": "gourmet-delights",
+    "label": "Gourmet Delights Catering",
+    "description": "Farm-to-table cuisine with seasonal menus",
+    "price": "$85 - $150 per person",
+    "image": "/images/vendor/caterer-1.jpg",
+    "rating": 4.8,
+    "cuisine": "Farm-to-Table",
+    "minGuests": 50
+  },
+  {
+    "id": "elegant-eats",
+    "label": "Elegant Eats",
+    "description": "Sophisticated dining experiences for weddings",
+    "price": "$65 - $120 per person",
+    "image": "/images/vendor/caterer-2.jpg",
+    "rating": 4.7,
+    "cuisine": "Contemporary",
+    "minGuests": 30
+  },
+  {
+    "id": "fusion-flavors",
+    "label": "Fusion Flavors",
+    "description": "International cuisine with creative presentation",
+    "price": "$75 - $135 per person",
+    "image": "/images/vendor/caterer-3.jpg",
+    "rating": 4.6,
+    "cuisine": "International",
+    "minGuests": 40
+  },
+  {
+    "id": "comfort-classics",
+    "label": "Comfort Classics",
+    "description": "Traditional comfort food with a modern twist",
+    "price": "$55 - $95 per person",
+    "image": "/images/vendor/caterer-4.jpg",
+    "rating": 4.5,
+    "cuisine": "American",
+    "minGuests": 25
+  },
+  {
+    "id": "artisan-kitchen",
+    "label": "Artisan Kitchen",
+    "description": "Handcrafted dishes with locally sourced ingredients",
+    "price": "$95 - $165 per person",
+    "image": "/images/vendor/caterer-5.jpg",
+    "rating": 4.9,
+    "cuisine": "Artisan",
+    "minGuests": 60
+  },
+  {
+    "id": "celebration-cuisine",
+    "label": "Celebration Cuisine",
+    "description": "Custom menus designed for your special day",
+    "price": "$70 - $125 per person",
+    "image": "/images/vendor/caterer-6.jpg",
+    "rating": 4.7,
+    "cuisine": "Custom",
+    "minGuests": 35
+  },
+  {
+    "id": "signature-services",
+    "label": "Signature Services",
+    "description": "Full-service catering with impeccable presentation",
+    "price": "$100 - $180 per person",
+    "image": "/images/vendor/caterer-7.jpg",
+    "rating": 4.8,
+    "cuisine": "Luxury",
+    "minGuests": 50
+  }
+]

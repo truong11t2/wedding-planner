@@ -1,0 +1,79 @@
+[
+  {
+    "id": "garden-paradise",
+    "label": "Garden Paradise Estate",
+    "description": "Elegant outdoor venue with lush gardens",
+    "price": "$3,500 - $6,000",
+    "image": "/images/vendor/venue-1.jpg",
+    "rating": 4.8,
+    "location": "Garden District",
+    "capacity": "150-300",
+    "type": "Outdoor"
+  },
+  {
+    "id": "grand-ballroom",
+    "label": "Grand Ballroom Hotel",
+    "description": "Luxurious indoor venue with crystal chandeliers",
+    "price": "$5,000 - $8,500",
+    "image": "/images/vendor/venue-2.jpg",
+    "rating": 4.9,
+    "location": "Downtown",
+    "capacity": "200-500",
+    "type": "Indoor"
+  },
+  {
+    "id": "rustic-barn",
+    "label": "Rustic Barn Venue",
+    "description": "Charming countryside setting with vintage appeal",
+    "price": "$2,200 - $4,200",
+    "image": "/images/vendor/venue-3.jpg",
+    "rating": 4.6,
+    "location": "Countryside",
+    "capacity": "100-200",
+    "type": "Rustic"
+  },
+  {
+    "id": "oceanview-terrace",
+    "label": "Oceanview Terrace",
+    "description": "Stunning seaside venue with panoramic views",
+    "price": "$4,500 - $7,500",
+    "image": "/images/vendor/venue-4.jpg",
+    "rating": 4.9,
+    "location": "Coastal",
+    "capacity": "120-250",
+    "type": "Waterfront"
+  },
+  {
+    "id": "historic-mansion",
+    "label": "Historic Mansion",
+    "description": "Classic elegance in a restored heritage building",
+    "price": "$3,800 - $6,500",
+    "image": "/images/vendor/venue-5.jpg",
+    "rating": 4.7,
+    "location": "Historic District",
+    "capacity": "80-180",
+    "type": "Historic"
+  },
+  {
+    "id": "modern-loft",
+    "label": "Modern Loft Space",
+    "description": "Contemporary urban venue with industrial chic",
+    "price": "$2,800 - $4,800",
+    "image": "/images/vendor/venue-6.jpg",
+    "rating": 4.5,
+    "location": "Arts District",
+    "capacity": "100-200",
+    "type": "Modern"
+  },
+  {
+    "id": "vineyard-estate",
+    "label": "Vineyard Estate",
+    "description": "Romantic winery setting among rolling hills",
+    "price": "$4,200 - $7,200",
+    "image": "/images/vendor/venue-7.jpg",
+    "rating": 4.8,
+    "location": "Wine Country",
+    "capacity": "150-300",
+    "type": "Vineyard"
+  }
+]

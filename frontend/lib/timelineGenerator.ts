@@ -1,3 +1,5 @@
+import { getVendorOptions } from './vendorData';
+
 interface TimelineItem {
   id: string;
   title: string;
@@ -105,24 +107,25 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
 
   // 9 months before
   timeline.push({
-    id: "book-venue",
-    title: "Book Venue",
-    description: "Secure your ceremony and reception venues",
-    dueDate: getDateBeforeWedding(9),
-    completed: false,
-    category: "Vendor"
-  });
-  
-  timeline.push({
     id: "book-photographer",
-    title: "Book Photographer",
+    title: "Book Photographer", 
     description: "Research and book your wedding photographer",
     dueDate: getDateBeforeWedding(9),
     completed: false,
-    category: "Vendor"
+    category: "Vendor",
+    options: getVendorOptions('photographer') // This should return options with image property
   });
 
-  // 6 months before
+  timeline.push({
+    id: "book-venue",
+    title: "Book Venue",
+    description: "Secure your ceremony and reception venues", 
+    dueDate: getDateBeforeWedding(9),
+    completed: false,
+    category: "Vendor",
+    options: getVendorOptions('venue') // This should return options with image property
+  });
+  
   timeline.push({
     id: "order-dress",
     title: "Order Wedding Dress",
@@ -133,12 +136,13 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
   });
   
   timeline.push({
-    id: "book-caterer",
+    id: "book-caterer", 
     title: "Book Caterer",
     description: "Select your catering service and plan the menu",
     dueDate: getDateBeforeWedding(6),
     completed: false,
-    category: "Vendor"
+    category: "Vendor", 
+    options: getVendorOptions('caterer') // This should return options with image property
   });
 
   // 3 months before

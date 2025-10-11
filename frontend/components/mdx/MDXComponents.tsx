@@ -22,13 +22,13 @@ export const MDXComponents = {
     />
   ),
   img: (props) => (
-    <div className="relative w-full h-[400px] my-8 rounded-lg overflow-hidden">
+    <span className="block relative w-full h-[400px] my-8 rounded-lg overflow-hidden">
       <Image
         {...props}
         alt={props.alt || ''}
         fill
         className="object-cover"
       />
-    </div>
+    </span>
   ),
 };

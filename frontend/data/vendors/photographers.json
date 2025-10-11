@@ -1,0 +1,72 @@
+[
+  {
+    "id": "perfect-moments",
+    "label": "Perfect Moments Photography",
+    "description": "Award-winning wedding photography with artistic flair",
+    "price": "$2,500 - $4,500",
+    "image": "/images/vendor/photographer-1.jpg",
+    "rating": 4.9,
+    "location": "Downtown",
+    "specialties": ["Portrait", "Candid", "Artistic"]
+  },
+  {
+    "id": "eternal-captures",
+    "label": "Eternal Captures Studio",
+    "description": "Romantic and timeless wedding photography",
+    "price": "$1,800 - $3,200",
+    "image": "/images/vendor/photographer-2.jpg",
+    "rating": 4.7,
+    "location": "Uptown",
+    "specialties": ["Romantic", "Classic", "Traditional"]
+  },
+  {
+    "id": "golden-hour",
+    "label": "Golden Hour Photography",
+    "description": "Natural light specialists for dreamy photos",
+    "price": "$2,200 - $3,800",
+    "image": "/images/vendor/photographer-3.jpg",
+    "rating": 4.8,
+    "location": "Suburbs",
+    "specialties": ["Natural Light", "Outdoor", "Sunset"]
+  },
+  {
+    "id": "modern-lens",
+    "label": "Modern Lens Co.",
+    "description": "Contemporary and editorial wedding photography",
+    "price": "$3,000 - $5,500",
+    "image": "/images/vendor/photographer-4.jpg",
+    "rating": 4.9,
+    "location": "Arts District",
+    "specialties": ["Editorial", "Modern", "Fashion"]
+  },
+  {
+    "id": "vintage-vows",
+    "label": "Vintage Vows Photography",
+    "description": "Classic and elegant wedding documentation",
+    "price": "$1,500 - $2,800",
+    "image": "/images/vendor/photographer-5.jpg",
+    "rating": 4.6,
+    "location": "Historic District",
+    "specialties": ["Vintage", "Classic", "Film"]
+  },
+  {
+    "id": "candid-creations",
+    "label": "Candid Creations",
+    "description": "Photojournalistic approach to wedding photography",
+    "price": "$2,800 - $4,200",
+    "image": "/images/vendor/photographer-6.jpg",
+    "rating": 4.8,
+    "location": "City Center",
+    "specialties": ["Photojournalism", "Documentary", "Candid"]
+  },
+  {
+    "id": "dream-shots",
+    "label": "Dream Shots Photography",
+    "description": "Luxury wedding photography with cinematic style",
+    "price": "$4,000 - $7,000",
+    "image": "/images/vendor/photographer-7.jpg",
+    "rating": 5.0,
+    "location": "Luxury District",
+    "specialties": ["Luxury", "Cinematic", "Destination"]
+  }
+]

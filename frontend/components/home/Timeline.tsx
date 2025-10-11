@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Download, CheckCircle, Heart, ChevronDown } from 'lucide-react';
+import { Download, CheckCircle, Heart, ChevronDown, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
+import Image from 'next/image';
 import ItemOptions from './ItemOptions';
 import ItemOptionsWithText from './ItemOptionsWithText';
 import OptionsDialog from './OptionsDialog';
@@ -279,20 +280,91 @@ Congratulations on your upcoming wedding!
                                 {item.options?.map((option) => (
                                   <label
                                     key={option.id}
-                                    className="flex items-center p-2 rounded cursor-pointer hover:bg-white"
+                                    className={`flex flex-col sm:flex-row sm:items-center p-3 rounded-lg cursor-pointer transition-all border-2 ${
+                                      tempSelectedOption === option.id
+                                        ? 'border-pink-500 bg-pink-50'
+                                        : 'border-gray-200 hover:border-pink-300 hover:bg-pink-25'
+                                    }`}
                                   >
-                                    <input
-                                      type="radio"
-                                      name={`option-${item.id}`}
-                                      value={option.id}
-                                      checked={tempSelectedOption === option.id}
-                                      onChange={(e) => setTempSelectedOption(e.target.value)}
-                                      className="w-4 h-4 text-pink-600 focus:ring-pink-500"
-                                    />
-                                    <div className="ml-3">
-                                      <span className="text-sm font-medium text-gray-900">{option.label}</span>
+                                    {/* Mobile Layout - Radio and Image Row */}
+                                    <div className="flex items-center mb-3 sm:mb-0 sm:mr-3">
+                                      <input
+                                        type="radio"
+                                        name={`option-${item.id}`}
+                                        value={option.id}
+                                        checked={tempSelectedOption === option.id}
+                                        onChange={(e) => setTempSelectedOption(e.target.value)}
+                                        className="w-4 h-4 text-pink-600 focus:ring-pink-500 mr-3 flex-shrink-0"
+                                      />
+                                      
+                                      {/* Clickable vendor image */}
+                                      {option.image && (
+                                        <Link 
+                                          href={`/vendor/${option.id}`}
+                                          className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 hover:ring-2 hover:ring-pink-300 transition-all"
+                                          onClick={(e) => e.stopPropagation()} // Prevent radio selection when clicking image
+                                        >
+                                          <Image
+                                            src={option.image}
+                                            alt={option.label}
+                                            fill
+                                            className="object-cover hover:scale-105 transition-transform"
+                                            sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, (max-width: 1024px) 96px, 112px"
+                                          />
+                                        </Link>
+                                      )}
+                                    </div>
+                                    
+                                    {/* Content - Vertical on mobile, horizontal on desktop */}
+                                    <div className="flex-1 min-w-0 sm:ml-3">
+                                      {/* Clickable vendor title */}
+                                      <Link 
+                                        href={`/vendor/${option.id}`}
+                                        className="text-sm sm:text-base font-medium text-gray-900 block mb-1 hover:text-pink-600 transition-colors"
+                                        onClick={(e) => e.stopPropagation()} // Prevent radio selection when clicking title
+                                      >
+                                        {option.label}
+                                      </Link>
+                                      
                                       {option.description && (
-                                        <p className="text-xs text-gray-500 mt-1">{option.description}</p>
+                                        <p className="text-xs sm:text-sm text-gray-500 mb-2 leading-relaxed">
+                                          {option.description}
+                                        </p>
+                                      )}
+                                      
+                                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+                                        {option.price && (
+                                          <p className="text-xs sm:text-sm font-medium text-pink-600">
+                                            {option.price}
+                                          </p>
+                                        )}
+                                        
+                                        {option.rating && (
+                                          <div className="flex items-center">
+                                            <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                                            <span className="text-xs text-gray-600 ml-1">{option.rating}</span>
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Additional vendor details */}
+                                      {option.location && (
+                                        <p className="text-xs text-gray-500 mt-1">
+                                          📍 {option.location}
+                                        </p>
+                                      )}
+                                      
+                                      {option.specialties && option.specialties.length > 0 && (
+                                        <div className="mt-2 flex flex-wrap gap-1">
+                                          {option.specialties.slice(0, 3).map((specialty, index) => (
+                                            <span
+                                              key={index}
+                                              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                                            >
+                                              {specialty}
+                                            </span>
+                                          ))}
+                                        </div>
                                       )}
                                     </div>
                                   </label>
