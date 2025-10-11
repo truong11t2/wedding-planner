@@ -4,13 +4,13 @@ const {
   register, 
   login, 
   socialLogin, 
-  getMe 
+  getMe: getProfile 
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
 router.post('/register', register);
 router.post('/login', login);
 router.post('/social', socialLogin);
-router.get('/me', protect, getMe);
+router.get('/profile', protect, getProfile);
 
 module.exports = router;

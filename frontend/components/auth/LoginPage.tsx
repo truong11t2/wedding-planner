@@ -3,11 +3,13 @@
 import React, { useState } from 'react';
 import { Heart, Mail, Lock, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import SocialLoginButtons from './SocialLoginButtons';
 import { loginUser, registerUser } from '@/lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,7 +24,8 @@ export default function LoginPage() {
       }
 
       const result = await loginUser(email, password);
-      if (result.success) {
+      if (result.success && result.token) {
+        login(result.user);
         alert('Login successful!');
         router.push('/'); // Redirect to home page
       } else {

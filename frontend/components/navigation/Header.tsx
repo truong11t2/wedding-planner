@@ -11,7 +11,7 @@ import Toast from '../common/Toast';
 export default function Header() {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const pathname = usePathname();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -20,6 +20,12 @@ export default function Header() {
   const handleLogin = () => {
     setMobileMenuOpen(false);
     router.push('/login');
+  };
+
+    const handleLogout = () => {
+    logout();
+    setMobileMenuOpen(false);
+    router.push('/');
   };
 
   useEffect(() => {
@@ -72,6 +78,16 @@ export default function Header() {
                 Vendor
               </Link>
             )}
+            {isLoggedIn && (
+              <Link
+                href="/profile"
+                className={`text-lg font-semibold transition-colors ${
+                  pathname === '/profile' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
+                }`}
+              >
+                Profile
+              </Link>
+            )}
             {!isLoggedIn ? (
               <button
                 onClick={handleLogin}
@@ -83,7 +99,7 @@ export default function Header() {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  /* TODO: Add logout handler */
+                  handleLogout();
                 }}
                 className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
               >
@@ -133,11 +149,22 @@ export default function Header() {
                 Vendor
               </Link>
             )}
+            {isLoggedIn && (
+              <Link
+                href="/profile"
+                className={`block py-2 text-lg font-semibold ${
+                  pathname === '/profile' ? 'text-pink-600' : 'text-gray-700'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Profile
+              </Link>
+            )}
             {isLoggedIn ? (
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  /* TODO: Add logout handler */
+                  handleLogout();
                 }}
                 className="block w-full text-left py-2 text-lg font-semibold text-gray-700"
               >
