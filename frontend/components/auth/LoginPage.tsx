@@ -5,6 +5,7 @@ import { Heart, Mail, Lock, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginButtons from './SocialLoginButtons';
+import Toast from '@/components/common/Toast';
 import { loginUser, registerUser } from '@/lib/api';
 
 export default function LoginPage() {
@@ -15,45 +16,63 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ show: true, message, type });
+  };
 
   const handleSubmit = async () => {
     if (isLogin) {
       if (!email || !password) {
-        alert('Please fill in all fields');
+        showToast('Please fill in all fields', 'error');
         return;
       }
 
       const result = await loginUser(email, password);
       if (result.success && result.token) {
         login(result.user);
-        alert('Login successful!');
-        router.push('/'); // Redirect to home page
+        showToast('Login successful!', 'success');
+        // Short delay before redirect to show the success toast
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       } else {
-        alert(result.message || 'Login failed');
+        showToast(result.message || 'Login failed', 'error');
       }
     } else {
       if (!fullName || !email || !password || !confirmPassword) {
-        alert('Please fill in all fields');
+        showToast('Please fill in all fields', 'error');
         return;
       }
 
       if (password !== confirmPassword) {
-        alert('Passwords do not match');
+        showToast('Passwords do not match', 'error');
         return;
       }
 
       const result = await registerUser(fullName, email, password);
       if (result.success) {
-        alert('Registration successful!');
-        router.push('/'); // Redirect to home page
+        showToast('Registration successful!', 'success');
+        // Short delay before redirect to show the success toast
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       } else {
-        alert(result.message || 'Registration failed');
+        showToast(result.message || 'Registration failed', 'error');
       }
     }
   };
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <Toast
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
+      
       <div className="max-w-md mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-pink-200">
           <div className="text-center mb-8">
