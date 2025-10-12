@@ -8,6 +8,7 @@ import { getUserProfile } from '@/lib/api';
 interface UserProfile {
   fullName: string;
   email: string;
+  weddingDate: string;
   createdAt: string;
 }
 
@@ -90,6 +91,16 @@ export default function ProfilePage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-500">Email</label>
                   <p className="mt-1 text-lg font-semibold text-gray-900">{profile.email}</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-500">Wedding Date</label>
+                  <p className="mt-1 text-lg font-semibold text-gray-900">
+                    {new Date(profile.weddingDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}</p>
                 </div>
 
                 <div>

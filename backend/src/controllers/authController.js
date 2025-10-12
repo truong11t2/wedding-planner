@@ -147,9 +147,9 @@ exports.socialLogin = async (req, res) => {
 };
 
 // @desc    Get current user
-// @route   GET /api/auth/me
+// @route   GET /api/auth/getProfile
 // @access  Private
-exports.getMe = async (req, res) => {
+exports.getProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ['password'] }
@@ -162,5 +162,38 @@ exports.getMe = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// @desc    Save wedding date
+// @route   POST /api/auth/wedding-date
+// @access  Private
+exports.saveWeddingDate = async (req, res) => {
+  try {
+    const { weddingDate } = req.body;
+    
+    const user = await User.update(
+      { 
+        weddingDate,
+        hasGeneratedTimeline: true 
+      },
+      {
+        where: { id: req.user.id },
+        returning: true, // This is needed for PostgreSQL to return the updated row
+        plain: true // Get only the updated row as an object
+      }
+    );
+
+    // user[1] contains the updated user object when using returning: true
+    res.status(200).json({
+      success: true,
+      data: user[1]
+    });
+  } catch (error) {
+    console.error('Error saving wedding date:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error saving wedding date'
+    });
   }
 };

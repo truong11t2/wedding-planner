@@ -4,7 +4,8 @@ const {
   register, 
   login, 
   socialLogin, 
-  getMe: getProfile 
+  getProfile,
+  saveWeddingDate
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
@@ -12,5 +13,6 @@ router.post('/register', register);
 router.post('/login', login);
 router.post('/social', socialLogin);
 router.get('/profile', protect, getProfile);
+router.post('/wedding-date', protect, saveWeddingDate);
 
 module.exports = router;

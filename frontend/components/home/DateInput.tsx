@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
 import { generateTimeline } from '@/lib/timelineGenerator';
+import { saveWeddingDate } from '@/lib/api';
 
 export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, setTimeline }) {
   // TODO: Remove this in production
@@ -14,8 +15,12 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
   }, []);
 
   const handleGeneratePlan = () => {
+    console.log('Generating plan for date:', weddingDate);
     if (weddingDate) {
       try {
+        // Save wedding date to backend if user is logged in
+        saveWeddingDate(weddingDate);
+        // Generate timeline
         const plan = generateTimeline(weddingDate);
         setTimeline(plan);
         setShowPlan(true);

@@ -382,3 +382,45 @@ export const loginUserWithRetry = async (email: string, password: string): Promi
     };
   }
 };
+
+export const saveWeddingDate = async (weddingDate: string): Promise<AuthResponse> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/auth/wedding-date`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ weddingDate }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to save wedding date',
+      };
+    }
+
+    return {
+      success: true,
+      user: data.data,
+    };
+  } catch (error) {
+    console.error('Error saving wedding date:', error);
+    return {
+      success: false,
+      message: 'Network error while saving wedding date',
+    };
+  }
+};

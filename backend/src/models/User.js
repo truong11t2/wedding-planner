@@ -37,6 +37,10 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     allowNull: true
   },
+  hasGeneratedTimeline: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
