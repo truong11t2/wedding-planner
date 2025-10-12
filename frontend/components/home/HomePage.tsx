@@ -8,6 +8,7 @@ import { Clock, CheckCircle, Download } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getUserProfile } from '@/lib/api';
 import { generateTimeline } from '@/lib/timelineGenerator';
+import Carousel from './Carousel';
 
 export default function HomePage() {
   const [weddingDate, setWeddingDate] = useState('');
@@ -50,12 +51,17 @@ export default function HomePage() {
           setShowPlan={setShowPlan}
         />
       ) : (
-        <DateInput 
-          weddingDate={weddingDate}
-          setWeddingDate={setWeddingDate}
-          setShowPlan={setShowPlan}
-          setTimeline={setTimeline}
-        />
+        <>
+          <Carousel />
+          <div className="mt-12"> {/* Added spacing div */}
+            <DateInput
+              weddingDate={weddingDate}
+              setWeddingDate={setWeddingDate}
+              setShowPlan={setShowPlan}
+              setTimeline={setTimeline} 
+            />
+          </div>
+        </>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8">
         {features.map((feature, i) => (
