@@ -40,12 +40,25 @@ export async function getVendors(): Promise<Vendor[]> {
     .map((file) => {
       const filePath = path.join(vendorsDirectory, file)
       const fileContent = fs.readFileSync(filePath, 'utf8')
-      const { data } = matter(fileContent)
+      const { data, content } = matter(fileContent)
       
       return {
         slug: file.replace('.mdx', ''),
+        content,
+        name: data.name,
+        category: data.category,
+        image: data.image,
+        description: data.description,
+        price: data.price,
+        rating: data.rating,
+        location: data.location,
+        id: data.id,
+        services: data.services,
+        pricing: data.pricing,
+        contact: data.contact,
+        // Add other properties as needed
         ...data,
-      } as Vendor
+      }
     })
     
   return vendors
@@ -76,6 +89,14 @@ export async function getVendor(slug: string) {
     return {
       slug,
       content,
+      name: data.name,
+      category: data.category,
+      image: data.image,
+      description: data.description,
+      price: data.price,
+      rating: data.rating,
+      location: data.location,
+      // Add other properties as needed
       ...data,
     };
   } catch (error) {

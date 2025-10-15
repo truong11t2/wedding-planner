@@ -29,7 +29,10 @@ export default function ProfilePage() {
       try {
         const response = await getUserProfile();
         if (response.success && response.user) {
-          setProfile(response.user);
+          setProfile({
+            ...response.user,
+            weddingDate: response.user.weddingDate || new Date().toISOString()
+          });
         } else {
           setError(response.message || 'Failed to load profile');
         }

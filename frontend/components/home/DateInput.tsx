@@ -2,8 +2,16 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 import { generateTimeline } from '@/lib/timelineGenerator';
 import { saveWeddingDate } from '@/lib/api';
+import { TimelineItem } from '@/lib/timelineGenerator';
 
-export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, setTimeline }) {
+export interface DateInputProps {
+  weddingDate: string;
+  setWeddingDate: (date: string) => void;
+  setShowPlan: (show: boolean) => void;
+  setTimeline: (timeline: TimelineItem[]) => void;
+}
+
+export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, setTimeline }: DateInputProps) {
   // TODO: Remove this in production
   React.useEffect(() => {
     if (!weddingDate) {
@@ -25,7 +33,8 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
         setTimeline(plan);
         setShowPlan(true);
       } catch (error) {
-        alert(error.message);
+        const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+        alert(errorMessage);
       }
     }
   };
@@ -37,10 +46,10 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
           <Calendar className="w-12 h-12 text-pink-600" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          When's the Big Day?
+          {"When's the Big Day?"}
         </h2>
         <p className="text-gray-600 text-sm sm:text-base">
-          Enter your wedding date and we'll create a personalized planning timeline just for you
+          {"Enter your wedding date and we'll create a personalized planning timeline just for you"}
         </p>
       </div>
 

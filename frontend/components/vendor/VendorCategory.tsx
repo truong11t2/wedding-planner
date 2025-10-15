@@ -2,18 +2,11 @@ import React from 'react';
 import Image from 'next/image';
 import { Star } from 'lucide-react';
 import Link from 'next/link';
+import { Vendor } from '@/lib/types';
 
 interface VendorCategoryProps {
   title: string;
-  vendors: Array<{
-    id: string;
-    slug: string;  // Add this
-    name: string;
-    image: string;
-    price: string;
-    description: string;
-    rating: number;
-  }>;
+  vendors: Vendor[];
 }
 
 export default function VendorCategory({ title, vendors }: VendorCategoryProps) {

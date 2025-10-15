@@ -1,6 +1,6 @@
 import { getVendorOptions } from './vendorData';
 
-interface TimelineItem {
+export interface TimelineItem {
   id: string;
   title: string;
   description: string;
@@ -9,6 +9,10 @@ interface TimelineItem {
   category: string;
   isWeddingDay?: boolean;
   options?: {
+    image?: string;
+    location?: string;
+    specialties?: string[];
+    rating?: number;
     id: string;
     label: string;
     description?: string;
@@ -16,7 +20,8 @@ interface TimelineItem {
     isTextInput?: boolean;
     textValue?: string;
   }[];
-  selectedOptions?: { [key: string]: string }; // Changed from selectedOption to selectedOptions
+  selectedOptions?: { [key: string]: string }; // For text input options
+  selectedOption?: string; // For single select options
 }
 
 export const generateTimeline = (weddingDate: string): TimelineItem[] => {

@@ -1,8 +1,12 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
-  allowedDevOrigins: ['saigonvatoi.hopto.org']
+  output: 'standalone',
+  allowedDevOrigins: ['saigonchieumua.ddns.net'],
+  images: {
+    domains: ['localhost'],
+  },
 };
 
 export default nextConfig;

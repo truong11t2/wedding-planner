@@ -39,7 +39,7 @@ export default async function BlogPost({ params }: PageProps) {
         </div>
         <div className={styles.coverImage}>
           <Image
-            src={post.coverImage}
+            src={post.coverImage ?? '/default-cover.jpg'}
             alt={post.title}
             fill
             className="object-cover"

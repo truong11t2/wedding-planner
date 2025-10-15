@@ -9,11 +9,12 @@ import { useAuth } from '@/context/AuthContext';
 import { getUserProfile } from '@/lib/api';
 import { generateTimeline } from '@/lib/timelineGenerator';
 import Carousel from './Carousel';
+import { TimelineItem } from '@/lib/timelineGenerator';
 
 export default function HomePage() {
   const [weddingDate, setWeddingDate] = useState('');
   const [showPlan, setShowPlan] = useState(false);
-  const [timeline, setTimeline] = useState([]);
+  const [timeline, setTimeline] = useState<TimelineItem[]>([]);
   const { isLoggedIn } = useAuth();
 
   const checkWeddingDate = async () => {

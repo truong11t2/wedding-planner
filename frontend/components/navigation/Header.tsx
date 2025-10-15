@@ -14,8 +14,8 @@ export default function Header() {
   const { isLoggedIn, logout } = useAuth();
   const pathname = usePathname();
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  const [toastType, setToastType] = useState('success');
+  const [toastMessage] = useState('');
+  const [toastType] = useState<'success' | 'error'>('success');
 
   const handleLogin = () => {
     setMobileMenuOpen(false);

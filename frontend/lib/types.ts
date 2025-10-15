@@ -6,7 +6,7 @@ export interface BlogPost {
   excerpt: string
   author: string
   content: string
-  coverImage?: string
+  coverImage: string
 }
 
 export interface Vendor {
@@ -16,7 +16,7 @@ export interface Vendor {
   category: string
   description: string
   services: string[]
-  pricing: string
+  price: string
   location: string
   contact: {
     phone?: string

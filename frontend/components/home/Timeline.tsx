@@ -3,21 +3,25 @@ import { Download, CheckCircle, Heart, ChevronDown, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import ItemOptions from './ItemOptions';
-import ItemOptionsWithText from './ItemOptionsWithText';
-import OptionsDialog from './OptionsDialog';
+import { TimelineItem } from '@/lib/timelineGenerator';
+
+interface TimelineProps {
+  weddingDate: string;
+  timeline: TimelineItem[];
+  setTimeline: (timeline: TimelineItem[]) => void;
+  setShowPlan: (show: boolean) => void;
+}
 
 export default function Timeline({ 
   weddingDate, 
   timeline, 
   setTimeline, // Add this prop
   setShowPlan 
-}) {
+}: TimelineProps) {
   const { isLoggedIn } = useAuth();
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [expandedItem, setExpandedItem] = useState(null);
-  const [tempValues, setTempValues] = useState({});
-  const [tempSelectedOption, setTempSelectedOption] = useState('');
+  const [expandedItem, setExpandedItem] = useState<TimelineItem | null>(null);
+  const [tempValues, setTempValues] = useState<{ [key: string]: string }>({});
+  const [tempSelectedOption, setTempSelectedOption] = useState<string>('');
 
   const downloadPDF = () => {
     const wedding = new Date(weddingDate);
@@ -63,14 +67,13 @@ Congratulations on your upcoming wedding!
       });
       
       setTimeline(updatedTimeline);
-      setSelectedItem(null);
     } catch (error) {
       console.error('Error saving options:', error);
       throw error;
     }
   };
 
-  const handleAccordionToggle = (item) => {
+  const handleAccordionToggle = (item: TimelineItem) => {
     if (expandedItem?.id === item.id) {
       setExpandedItem(null);
     } else {
@@ -84,7 +87,7 @@ Congratulations on your upcoming wedding!
     }
   };
 
-  const handleSave = async (item) => {
+  const handleSave = async (item: TimelineItem) => {
     try {
       if (item.options?.[0]?.isTextInput) {
         await handleSaveOption(item.id, tempValues);
@@ -98,7 +101,7 @@ Congratulations on your upcoming wedding!
   };
 
   // Update the getMonthsUntil function to handle weeks
-  const getTimeUntil = (date) => {
+  const getTimeUntil = (date: Date) => {
     const d1 = new Date(date);
     const d2 = new Date(weddingDate);
     const diffTime = Math.abs(d2.getTime() - d1.getTime());
@@ -126,10 +129,10 @@ Congratulations on your upcoming wedding!
     }
     acc[key].items.push(item);
     return acc;
-  }, {});
+  }, {} as Record<string, { months: number; weeks: number; items: TimelineItem[] }>);
 
   const sortedGroups = Object.entries(groupedTimeline)
-    .sort(([keyA, _a], [keyB, _b]) => {
+    .sort(([keyA], [keyB]) => {
       const isWeekA = keyA.startsWith('w');
       const isWeekB = keyB.startsWith('w');
       
@@ -407,7 +410,7 @@ Congratulations on your upcoming wedding!
         <Heart className="w-16 h-16 mx-auto mb-4 fill-white" />
         <h3 className="text-2xl sm:text-3xl font-bold mb-2">Congratulations!</h3>
         <p className="text-pink-100 text-sm sm:text-base">
-          Wishing you a lifetime of love and happiness. May your wedding day be everything you've dreamed of!
+          {"Wishing you a lifetime of love and happiness. May your wedding day be everything you've dreamed of!"}
         </p>
       </div>
     </div>

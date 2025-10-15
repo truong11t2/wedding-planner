@@ -1,10 +1,43 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+// Define proper user interface
+interface User {
+  id: string;
+  fullName: string;
+  email: string;
+  weddingDate?: string;
+  hasGeneratedTimeline?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Define timeline item interface
+interface TimelineItem {
+  id: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  category: string;
+  completed: boolean;
+  selectedOption?: string;
+  selectedOptions?: Record<string, string>;
+  options?: Array<{
+    id: string;
+    label: string;
+    description?: string;
+    price?: string;
+    image?: string;
+    rating?: number;
+    isTextInput?: boolean;
+  }>;
+}
+
+// Update interfaces to use proper types
 interface AuthResponse {
   success: boolean;
   message?: string;
   token?: string;
-  user?: any;
+  user?: User;
 }
 
 interface SocialAuthResponse {
@@ -15,7 +48,7 @@ interface SocialAuthResponse {
 
 interface TimelineData {
   weddingDate: string;
-  timeline: any[];
+  timeline: TimelineItem[];
 }
 
 interface SaveTimelineResponse {
@@ -115,7 +148,7 @@ export const registerUser = async (
   }
 };
 
-type Provider = 'Gmail' | 'Outlook' | 'Facebook' | 'Twitter';
+export type Provider = 'Gmail' | 'Outlook' | 'Facebook' | 'Twitter';
 
 export const socialLogin = async (provider: Provider): Promise<SocialAuthResponse> => {
   try {
@@ -148,12 +181,15 @@ export const socialLogin = async (provider: Provider): Promise<SocialAuthRespons
   } catch (error) {
     return {
       success: false,
-      message: `An error occurred during ${provider} login`,
+      message: `An error occurred during ${provider} login: ${error instanceof Error ? error.message : 'Unknown error'}`,
     };
   }
 };
 
-export const saveUserTimeline = async (weddingDate: string, timeline: any[]): Promise<SaveTimelineResponse> => {
+export const saveUserTimeline = async (
+  weddingDate: string, 
+  timeline: TimelineItem[]
+): Promise<SaveTimelineResponse> => {
   try {
     const token = localStorage.getItem('authToken');
     
@@ -281,10 +317,15 @@ export const deleteUserTimeline = async (): Promise<SaveTimelineResponse> => {
 // Utility function to check if backend is reachable
 export const checkBackendHealth = async (): Promise<boolean> => {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
     const response = await fetch(`${API_BASE_URL}/api/health`, {
       method: 'GET',
-      timeout: 5000,
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
     return response.ok;
   } catch (error) {
     console.error('Backend health check failed:', error);
@@ -357,8 +398,8 @@ const retryRequest = async (requestFn: () => Promise<Response>, maxRetries = 3):
 // Example usage in login function with retry:
 export const loginUserWithRetry = async (email: string, password: string): Promise<AuthResponse> => {
   try {
-    await retryRequest(async () => {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const response = await retryRequest(async () => {
+      const fetchResponse = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -366,14 +407,26 @@ export const loginUserWithRetry = async (email: string, password: string): Promi
         body: JSON.stringify({ email, password }),
       });
       
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+      if (!fetchResponse.ok) {
+        throw new Error(`HTTP ${fetchResponse.status}`);
       }
       
-      return response;
+      return fetchResponse;
     });
 
-    // ... rest of login logic
+    const data = await response.json();
+
+    // Store the token if login is successful
+    if (data.token) {
+      localStorage.setItem('authToken', data.token);
+    }
+
+    return {
+      success: true,
+      token: data.token,
+      user: data.user,
+      message: data.message,
+    };
   } catch (error) {
     console.error('Login error after retries:', error);
     return {

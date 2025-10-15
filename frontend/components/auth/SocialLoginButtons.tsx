@@ -1,8 +1,12 @@
 import React from 'react';
-import { socialLogin } from '@/lib/api';
+import { Provider, socialLogin } from '@/lib/api';
 
-export default function SocialLoginButtons({ onSuccess }) {
-  const handleSocialLogin = async (provider) => {
+interface SocialLoginButtonsProps {
+  onSuccess: () => void;
+}
+
+export default function SocialLoginButtons({ onSuccess }: SocialLoginButtonsProps) {
+  const handleSocialLogin = async (provider: Provider) => {
     const result = await socialLogin(provider);
     if (result.success) {
       onSuccess();
