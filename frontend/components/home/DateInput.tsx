@@ -32,6 +32,14 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
         const plan = generateTimeline(weddingDate);
         setTimeline(plan);
         setShowPlan(true);
+
+        // Scroll to top of the page after timeline is generated
+        setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }, 100); // Small delay to ensure state updates are complete
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
         alert(errorMessage);

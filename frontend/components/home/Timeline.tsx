@@ -10,13 +10,15 @@ interface TimelineProps {
   timeline: TimelineItem[];
   setTimeline: (timeline: TimelineItem[]) => void;
   setShowPlan: (show: boolean) => void;
+  onNewDate?: () => void; // Add this prop
 }
 
 export default function Timeline({ 
   weddingDate, 
   timeline, 
   setTimeline, // Add this prop
-  setShowPlan 
+  setShowPlan,
+  onNewDate
 }: TimelineProps) {
   const { isLoggedIn } = useAuth();
   const [expandedItem, setExpandedItem] = useState<TimelineItem | null>(null);
@@ -150,6 +152,11 @@ Congratulations on your upcoming wedding!
     })
     .map(([_, group]) => group);  // Fix: Use underscore for unused key parameter
 
+  const handleNewDate = () => {
+    setShowPlan(false);
+    onNewDate?.(); // Call the scroll function
+  };
+
   return (
     <div>
       <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-6 border-2 border-pink-200">
@@ -178,7 +185,7 @@ Congratulations on your upcoming wedding!
               <span className="hidden sm:inline">Download</span>
             </button>
             <button
-              onClick={() => setShowPlan(false)}
+              onClick={handleNewDate}
               className="px-4 sm:px-6 py-3 border-2 border-pink-300 rounded-lg font-semibold hover:bg-pink-50 transition-all"
             >
               New Date
