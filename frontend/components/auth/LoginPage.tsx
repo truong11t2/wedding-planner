@@ -99,7 +99,7 @@ export default function LoginPage() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    className="w-full pl-10 pr-4 py-3 border-2 text-gray-600 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -116,7 +116,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  className="w-full pl-10 pr-4 py-3 border-2 text-gray-600 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                   placeholder="Enter your email"
                 />
               </div>
@@ -132,7 +132,7 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  className="w-full pl-10 pr-4 py-3 border-2 text-gray-600 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                   placeholder="Enter your password"
                 />
               </div>
@@ -149,7 +149,7 @@ export default function LoginPage() {
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    className="w-full pl-10 pr-4 py-3 border-2 text-gray-600 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                     placeholder="Confirm your password"
                   />
                 </div>
