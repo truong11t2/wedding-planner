@@ -22,16 +22,16 @@ const User = sequelize.define('User', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: true // Nullable for social login users
+    allowNull: true
   },
   provider: {
     type: DataTypes.STRING,
-    allowNull: true, // 'local', 'gmail', 'facebook', 'outlook', 'twitter'
+    allowNull: true,
     defaultValue: 'local'
   },
   providerId: {
     type: DataTypes.STRING,
-    allowNull: true // Social media user ID
+    allowNull: true
   },
   weddingDate: {
     type: DataTypes.DATE,
@@ -65,9 +65,17 @@ User.beforeUpdate(async (user) => {
   }
 });
 
-// Method to compare password
 User.prototype.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Define associations - One-to-One relationship
+User.associate = function(models) {
+  User.hasOne(models.Timeline, {
+    foreignKey: 'userId',
+    as: 'timeline', // Changed to singular 'timeline'
+    onDelete: 'CASCADE'
+  });
 };
 
 module.exports = User;

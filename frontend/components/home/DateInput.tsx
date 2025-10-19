@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { generateTimeline } from '@/lib/timelineGenerator';
 import { saveWeddingDate } from '@/lib/api';
 import { TimelineItem } from '@/lib/timelineGenerator';
+import Toast from '@/components/common/Toast';
 
 export interface DateInputProps {
   weddingDate: string;
@@ -12,6 +13,25 @@ export interface DateInputProps {
 }
 
 export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, setTimeline }: DateInputProps) {
+  // Toast state
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+  }>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ show: true, message, type });
+  };
+
+  const hideToast = () => {
+    setToast(prev => ({ ...prev, show: false }));
+  };
+
   // TODO: Remove this in production
   React.useEffect(() => {
     if (!weddingDate) {
@@ -42,13 +62,21 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
         }, 100); // Small delay to ensure state updates are complete
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-        alert(errorMessage);
+        showToast(errorMessage, 'error');
       }
     }
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-10 border-2 border-pink-200">
+      {/* Toast Component */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={hideToast}
+      />
+
       <div className="text-center mb-8">
         <div className="inline-block p-4 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full mb-4">
           <Calendar className="w-12 h-12 text-pink-600" />

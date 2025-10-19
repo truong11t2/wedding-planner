@@ -8,9 +8,9 @@ export const API_CONFIG = {
       LOGOUT: '/api/auth/logout',
     },
     TIMELINE: {
-      SAVE: '/api/timeline/save',
-      GET: '/api/timeline/get',
-      DELETE: '/api/timeline/delete',
+      SAVE: '/api/auth/timeline/save',
+      GET: '/api/auth/timeline/get',
+      DELETE: '/api/auth/timeline/delete',
     },
     HEALTH: '/api/health',
   },

@@ -1,3 +1,5 @@
+import { title } from "process";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 // Define proper user interface
@@ -200,7 +202,7 @@ export const saveUserTimeline = async (
       };
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/timeline/save`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/timeline/save`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -242,7 +244,7 @@ export const getUserTimeline = async (): Promise<GetTimelineResponse> => {
       };
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/timeline/get`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/timeline/get`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -284,7 +286,7 @@ export const deleteUserTimeline = async (): Promise<SaveTimelineResponse> => {
       };
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/timeline/delete`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/timeline/delete`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -475,5 +477,146 @@ export const saveWeddingDate = async (weddingDate: string): Promise<AuthResponse
       success: false,
       message: 'Network error while saving wedding date',
     };
+  }
+};
+
+// Save individual timeline item (no weddingDate needed)
+export const saveTimelineItem = async (
+  itemId: string,
+  title: string,
+  description: string,
+  dueDate: string,
+  category: string,
+  isWeddingDay: boolean,
+  selectedOption?: string,
+  selectedOptions?: { [key: string]: string }
+): Promise<{ success: boolean; message?: string }> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${API_BASE_URL}/api/auth/timeline/item`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        itemId,
+        title,
+        description,
+        dueDate,
+        category,
+        selectedOption,
+        selectedOptions,
+        isWeddingDay
+      })
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error saving timeline item:', error);
+    return { success: false, message: 'Network error' };
+  }
+};
+
+// Save complete timeline (no weddingDate needed)
+export const saveCompleteTimeline = async (
+  timeline: TimelineItem[]
+): Promise<{ success: boolean; message?: string }> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${API_BASE_URL}/api/auth/timeline/bulk`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ timeline })
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error saving timeline:', error);
+    return { success: false, message: 'Network error' };
+  }
+};
+
+
+// Save single timeline option selection
+export const saveTimelineSelection = async (
+  itemId: string,
+  itemTitle: string,    // item title
+  itemCategory: string, // item category
+  itemDescription: string, // item description
+  optionId: string,
+  optionLabel: string,
+  optionDescription?: string,
+  optionPrice?: string,
+  optionImage?: string,
+  optionRating?: number
+): Promise<{ success: boolean; message?: string }> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${API_BASE_URL}/api/auth/timeline/selection`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        itemId,
+        itemTitle,
+        itemCategory,
+        itemDescription,
+        optionId,
+        optionLabel,
+        optionDescription,
+        optionPrice,
+        optionImage,
+        optionRating
+      })
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error saving timeline selection:', error);
+    return { success: false, message: 'Network error' };
+  }
+};
+
+// Save multiple text inputs for a timeline item
+export const saveTimelineTextInputs = async (
+  itemId: string,
+  itemTitle: string,    // item title
+  itemDescription: string, // item description
+  itemCategory: string, // item category
+  //optionId: string,
+  optionTextInputs: { [key: string]: string }
+): Promise<{ success: boolean; message?: string }> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${API_BASE_URL}/api/auth/timeline/text-inputs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        itemId,
+        itemTitle,
+        itemDescription,
+        itemCategory,
+        //optionId,
+        optionTextInputs
+      })
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error saving text inputs:', error);
+    return { success: false, message: 'Network error' };
   }
 };

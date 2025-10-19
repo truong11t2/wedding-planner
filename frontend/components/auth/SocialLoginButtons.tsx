@@ -1,22 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Provider, socialLogin } from '@/lib/api';
+import Toast from '@/components/common/Toast';
 
 interface SocialLoginButtonsProps {
   onSuccess: () => void;
 }
 
 export default function SocialLoginButtons({ onSuccess }: SocialLoginButtonsProps) {
+  // Toast state
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+  }>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ show: true, message, type });
+  };
+
+  const hideToast = () => {
+    setToast(prev => ({ ...prev, show: false }));
+  };
+
   const handleSocialLogin = async (provider: Provider) => {
     const result = await socialLogin(provider);
     if (result.success) {
       onSuccess();
     } else {
-      alert('Login failed. Please try again.');
+      showToast('Login failed. Please try again.', 'error');
     }
   };
 
   return (
     <div className="mt-8">
+      {/* Toast Component */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={hideToast}
+      />
+
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-300"></div>

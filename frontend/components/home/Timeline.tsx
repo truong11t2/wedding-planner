@@ -4,19 +4,21 @@ import { useAuth } from '../../context/AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import { TimelineItem } from '@/lib/timelineGenerator';
+import { saveTimelineSelection, saveTimelineTextInputs } from '@/lib/api';
+import Toast from '@/components/common/Toast';
 
 interface TimelineProps {
   weddingDate: string;
   timeline: TimelineItem[];
   setTimeline: (timeline: TimelineItem[]) => void;
   setShowPlan: (show: boolean) => void;
-  onNewDate?: () => void; // Add this prop
+  onNewDate?: () => void;
 }
 
 export default function Timeline({ 
   weddingDate, 
   timeline, 
-  setTimeline, // Add this prop
+  setTimeline,
   setShowPlan,
   onNewDate
 }: TimelineProps) {
@@ -24,6 +26,25 @@ export default function Timeline({
   const [expandedItem, setExpandedItem] = useState<TimelineItem | null>(null);
   const [tempValues, setTempValues] = useState<{ [key: string]: string }>({});
   const [tempSelectedOption, setTempSelectedOption] = useState<string>('');
+  
+  // Toast state
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+  }>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ show: true, message, type });
+  };
+
+  const hideToast = () => {
+    setToast(prev => ({ ...prev, show: false }));
+  };
 
   const downloadPDF = () => {
     const wedding = new Date(weddingDate);
@@ -52,28 +73,54 @@ Congratulations on your upcoming wedding!
     URL.revokeObjectURL(url);
   };
 
-  const handleSaveOption = async (itemId: string, values: string | { [key: string]: string }) => {
-    try {
-      const updatedTimeline = timeline.map(item => {
-        if (item.id === itemId) {
-          // Check if the item has isTextInput option
-          if (item.options?.[0]?.isTextInput) {
-            // Handle text input options (multiple values)
-            return { ...item, selectedOptions: values as { [key: string]: string } };
-          } else {
-            // Handle radio options (single value)
-            return { ...item, selectedOption: values as string };
-          }
+const handleSaveOption = async (itemId: string, values: string | { [key: string]: string }) => {
+  try {
+    const updatedTimeline = timeline.map(item => {
+      if (item.id === itemId) {
+        if (item.options?.[0]?.isTextInput) {
+          return { ...item, selectedOptions: values as { [key: string]: string } };
+        } else {
+          return { ...item, selectedOption: values as string };
         }
-        return item;
-      });
+      }
+      return item;
+    });
+    
+    setTimeline(updatedTimeline);
+
+    // Save to backend if user is logged in
+    if (isLoggedIn) {
+      const isTextInput = timeline.find(item => item.id === itemId)?.options?.[0]?.isTextInput;
       
-      setTimeline(updatedTimeline);
-    } catch (error) {
-      console.error('Error saving options:', error);
-      throw error;
+      if (isTextInput) {
+        // Save multiple text inputs
+        const item = timeline.find(item => item.id === itemId);
+        const result = await saveTimelineTextInputs(itemId, item?.title || '', item?.description || '', item?.category || '', values as { [key: string]: string });
+        if (!result.success) {
+          console.error('Failed to save text inputs:', result.message);
+          showToast('Failed to save your inputs. Please try again.', 'error');
+        } else {
+          showToast('Your inputs have been saved successfully!', 'success');
+        }
+      } else {
+        // Save single selection
+        const item = timeline.find(item => item.id === itemId);
+        const selectedOption = item?.options?.find(opt => opt.id === values as string);
+        const result = await saveTimelineSelection(itemId, item?.title || '', item?.category || '', item?.description || '', selectedOption?.id || '', selectedOption?.label || '', selectedOption?.description || '', selectedOption?.price || '', selectedOption?.image || '', selectedOption?.rating || 0);
+        if (!result.success) {
+          console.error('Failed to save selection:', result.message);
+          showToast('Failed to save your selection. Please try again.', 'error');
+        } else {
+          showToast('Your selection has been saved successfully!', 'success');
+        }
+      }
     }
-  };
+  } catch (error) {
+    console.error('Error saving options:', error);
+    showToast('An error occurred while saving. Please try again.', 'error');
+    throw error;
+  }
+};
 
   const handleAccordionToggle = (item: TimelineItem) => {
     if (expandedItem?.id === item.id) {
@@ -159,6 +206,14 @@ Congratulations on your upcoming wedding!
 
   return (
     <div>
+      {/* Toast Component */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={hideToast}
+      />
+
       <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-6 border-2 border-pink-200">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
