@@ -8,15 +8,19 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Toast from '../common/Toast';
 
-export default function Header() {
-  const router = useRouter();
+interface HeaderProps {
+  onSidebarToggle?: () => void;
+}
+
+export default function Header({ onSidebarToggle }: HeaderProps) {
+    const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isLoggedIn, logout } = useAuth();
-  const pathname = usePathname();
+  const { user, isLoggedIn, logout } = useAuth();
+    const pathname = usePathname();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage] = useState('');
   const [toastType] = useState<'success' | 'error'>('success');
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleLogin = () => {
     setMobileMenuOpen(false);
     router.push('/login');
@@ -27,11 +31,21 @@ export default function Header() {
     setMobileMenuOpen(false);
     router.push('/');
   };
-
   return (
     <header className="bg-white shadow-md border-b-2 border-pink-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
+                    {/* Sidebar toggle button - only show when user is authenticated and on mobile */}
+          {isLoggedIn && onSidebarToggle && (
+            <button
+              type="button"
+              className="lg:hidden -m-2.5 p-2.5 text-gray-700 hover:text-gray-900"
+              onClick={onSidebarToggle}
+            >
+              <span className="sr-only">Open sidebar</span>
+              <Menu className="h-6 w-6" aria-hidden="true" />
+            </button>
+          )}
           <Link 
             href="/"
             className="flex items-center gap-3"
@@ -99,7 +113,6 @@ export default function Header() {
               </button>
             )}
           </nav>
-
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

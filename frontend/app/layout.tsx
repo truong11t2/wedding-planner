@@ -1,9 +1,13 @@
+'use client';
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/navigation/Footer";
+import Sidebar from "@/components/navigation/Sidebar";
+import { AuthProvider } from "@/context/AuthContext";
+import { useState } from 'react';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,10 +19,33 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: 'Perfect Day Planner - Wedding Planning',
-  description: 'Your personalized wedding planning timeline',
-};
+function RootLayoutContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header onSidebarToggle={() => setSidebarOpen(true)} />
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      
+      {/* Main content area with responsive margin */}
+      <div className="lg:ml-64">
+        <main className="pt-16 min-h-screen">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
+      
+      <div className="lg:ml-64">
+        <Footer />
+      </div>
+    </div>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -29,11 +56,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <Header />
-          <main className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50">
+          <RootLayoutContent>
             {children}
-          </main>
-          <Footer />
+          </RootLayoutContent>
         </AuthProvider>
       </body>
     </html>
