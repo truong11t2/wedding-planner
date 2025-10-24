@@ -7,7 +7,7 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
   X,
-  Home,
+  LayoutDashboard,
   Clock,
   CircleCheckBig,
   Users,
@@ -28,8 +28,8 @@ interface SidebarProps {
 }
 
 const navigationItems: NavItem[] = [
-  { name: 'Home', href: '/', icon: Home },
-  { name: 'Timeline', href: '/timeline', icon: Clock },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Timeline', href: '/', icon: Clock },
   { name: 'Checklist', href: '/checklist', icon: CircleCheckBig },
   { name: 'Guests', href: '/guests', icon: Users },
   { name: 'Venues', href: '/venues', icon: MapPinned },
@@ -51,11 +51,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       {/* Sidebar header */}
       <div className="flex-shrink-0 px-4 py-4 border-b border-gray-200">
         <h2 className="text-lg font-medium text-gray-900">
-          Wedding Dashboard
+          Welcome back {user.fullName}
         </h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Welcome back, {user.name}
-        </p>
       </div>
       
       {/* Navigation menu */}
