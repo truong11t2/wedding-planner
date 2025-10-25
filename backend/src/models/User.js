@@ -34,8 +34,13 @@ const User = sequelize.define('User', {
     allowNull: true // Social media user ID
   },
   weddingDate: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: true
+  },
+  timelineData: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: null
   },
   hasGeneratedTimeline: {
     type: DataTypes.BOOLEAN,

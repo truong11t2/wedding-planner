@@ -5,6 +5,7 @@ require('dotenv').config();
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const timelineRoutes = require('./routes/timelineRoutes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/timeline', timelineRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
