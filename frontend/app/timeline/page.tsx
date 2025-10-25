@@ -20,20 +20,7 @@ export default function TimelinePage() {
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Wedding Timeline</h1>
-        <p className="text-gray-600">
-          Track important milestones and stay organized for your special day.
-        </p>
-      </div>
-      
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <Timeline weddingDate={''} timeline={[]} setTimeline={function (timeline: TimelineItem[]): void {
-                  throw new Error('Function not implemented.');
-              } } setShowPlan={function (show: boolean): void {
-                  throw new Error('Function not implemented.');
-              } } />
-      </div>
+      <Timeline />
     </div>
   );
 }

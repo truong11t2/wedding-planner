@@ -7,6 +7,7 @@ import Header from "@/components/navigation/Header";
 import Footer from "@/components/navigation/Footer";
 import Sidebar from "@/components/navigation/Sidebar";
 import { AuthProvider } from "@/context/AuthContext";
+import { TimelineProvider } from "@/context/TimelineContext";
 import { useState } from 'react';
 
 const geistSans = Geist({
@@ -56,9 +57,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <RootLayoutContent>
-            {children}
-          </RootLayoutContent>
+          <TimelineProvider>
+            <RootLayoutContent>
+              {children}
+            </RootLayoutContent>
+          </TimelineProvider>
         </AuthProvider>
       </body>
     </html>

@@ -1,5 +1,7 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+import { TimelineItem } from '@/lib/timelineGenerator';
+
 // Define proper user interface
 interface User {
   id: string;
@@ -12,25 +14,25 @@ interface User {
 }
 
 // Define timeline item interface
-interface TimelineItem {
-  id: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  category: string;
-  completed: boolean;
-  selectedOption?: string;
-  selectedOptions?: Record<string, string>;
-  options?: Array<{
-    id: string;
-    label: string;
-    description?: string;
-    price?: string;
-    image?: string;
-    rating?: number;
-    isTextInput?: boolean;
-  }>;
-}
+// interface TimelineItem {
+//   id: string;
+//   title: string;
+//   description: string;
+//   dueDate: string;
+//   category: string;
+//   completed: boolean;
+//   selectedOption?: string;
+//   selectedOptions?: Record<string, string>;
+//   options?: Array<{
+//     id: string;
+//     label: string;
+//     description?: string;
+//     price?: string;
+//     image?: string;
+//     rating?: number;
+//     isTextInput?: boolean;
+//   }>;
+// }
 
 // Update interfaces to use proper types
 interface AuthResponse {
@@ -477,3 +479,77 @@ export const saveWeddingDate = async (weddingDate: string): Promise<AuthResponse
     };
   }
 };
+
+export interface SavedTimelineData {
+  id?: string;
+  userId: string;
+  weddingDate: string;
+  timelineItems: TimelineItem[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Save timeline to backend
+export async function saveTimeline(timelineData: SavedTimelineData): Promise<SavedTimelineData> {
+  try {
+    const response = await fetch('/api/timeline', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Adjust based on your auth implementation
+      },
+      body: JSON.stringify(timelineData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to save timeline');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error saving timeline:', error);
+    throw error;
+  }
+}
+
+// Load timeline from backend
+export async function loadTimeline(userId: string): Promise<SavedTimelineData | null> {
+  try {
+    const response = await fetch(`/api/timeline/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Adjust based on your auth implementation
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null; // No saved timeline found
+      }
+      throw new Error('Failed to load timeline');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error loading timeline:', error);
+    throw error;
+  }
+}
+
+// Delete timeline from backend
+export async function deleteTimeline(userId: string): Promise<void> {
+  try {
+    const response = await fetch(`/api/timeline/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Adjust based on your auth implementation
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete timeline');
+    }
+  } catch (error) {
+    console.error('Error deleting timeline:', error);
+    throw error;
+  }
+}

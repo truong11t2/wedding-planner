@@ -1,425 +1,416 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Download, CheckCircle, Heart, ChevronDown, Star } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import Link from 'next/link';
-import Image from 'next/image';
-import { TimelineItem } from '@/lib/timelineGenerator';
+import { useTimeline } from '@/context/TimelineContext';
+import { CheckCircle, TriangleAlert, Clock, Bookmark, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 
-interface TimelineProps {
-  weddingDate: string;
-  timeline: TimelineItem[];
-  setTimeline: (timeline: TimelineItem[]) => void;
-  setShowPlan: (show: boolean) => void;
-  onNewDate?: () => void; // Add this prop
-}
+export default function Timeline() {
+  const {
+    timelineItems,
+    weddingDate,
+    isLoading,
+    error,
+    setWeddingDate,
+    updateTimelineItem,
+    saveTimelineData,
+    lastSaved,
+  } = useTimeline();
+  
+  const [tempWeddingDate, setTempWeddingDate] = useState(weddingDate);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
-export default function Timeline({ 
-  weddingDate, 
-  timeline, 
-  setTimeline, // Add this prop
-  setShowPlan,
-  onNewDate
-}: TimelineProps) {
-  const { isLoggedIn } = useAuth();
-  const [expandedItem, setExpandedItem] = useState<TimelineItem | null>(null);
-  const [tempValues, setTempValues] = useState<{ [key: string]: string }>({});
-  const [tempSelectedOption, setTempSelectedOption] = useState<string>('');
-
-  const downloadPDF = () => {
-    const wedding = new Date(weddingDate);
-    const content = `
-WEDDING PLANNING TIMELINE
-Wedding Date: ${wedding.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-
-${timeline.map((item, idx) => `
-${idx + 1}. ${item.title.toUpperCase()}
-Due Date: ${item.dueDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-${item.description}
-Category: ${item.category}
-`).join('\n')}
-
-Congratulations on your upcoming wedding!
-    `;
-
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'wedding-planning-timeline.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const handleWeddingDateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (tempWeddingDate) {
+      setWeddingDate(tempWeddingDate);
+    }
   };
 
-  const handleSaveOption = async (itemId: string, values: string | { [key: string]: string }) => {
+  const handleSaveTimeline = async () => {
+    setSaveStatus('saving');
     try {
-      const updatedTimeline = timeline.map(item => {
-        if (item.id === itemId) {
-          // Check if the item has isTextInput option
-          if (item.options?.[0]?.isTextInput) {
-            // Handle text input options (multiple values)
-            return { ...item, selectedOptions: values as { [key: string]: string } };
-          } else {
-            // Handle radio options (single value)
-            return { ...item, selectedOption: values as string };
-          }
-        }
-        return item;
-      });
-      
-      setTimeline(updatedTimeline);
+      await saveTimelineData();
+      setSaveStatus('success');
+      setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (error) {
-      console.error('Error saving options:', error);
-      throw error;
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 5000);
     }
   };
 
-  const handleAccordionToggle = (item: TimelineItem) => {
-    if (expandedItem?.id === item.id) {
-      setExpandedItem(null);
-    } else {
-      setExpandedItem(item);
-      // Initialize temp values
-      if (item.options?.[0]?.isTextInput) {
-        setTempValues(item.selectedOptions || {});
+  const toggleTaskCompletion = (itemId: string) => {
+    const item = timelineItems.find(t => t.id === itemId);
+    if (item) {
+      updateTimelineItem(itemId, { completed: !item.completed });
+    }
+  };
+
+  const handleOptionSelect = (itemId: string, optionId: string) => {
+    updateTimelineItem(itemId, { selectedOption: optionId });
+    // Collapse the options after selection
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(itemId);
+      return newSet;
+    });
+  };
+
+  const toggleOptionsExpansion = (itemId: string) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(itemId)) {
+        newSet.delete(itemId);
       } else {
-        setTempSelectedOption(item.selectedOption || '');
+        newSet.add(itemId);
       }
-    }
+      return newSet;
+    });
   };
 
-  const handleSave = async (item: TimelineItem) => {
-    try {
-      if (item.options?.[0]?.isTextInput) {
-        await handleSaveOption(item.id, tempValues);
-      } else {
-        await handleSaveOption(item.id, tempSelectedOption);
+  const handleTextInputChange = (itemId: string, optionId: string, value: string) => {
+    const item = timelineItems.find(t => t.id === itemId);
+    const currentSelections = item?.selectedOptions || {};
+    
+    updateTimelineItem(itemId, {
+      selectedOptions: {
+        ...currentSelections,
+        [optionId]: value
       }
-      setExpandedItem(null);
-    } catch (error) {
-      console.error('Error saving:', error);
-    }
+    });
   };
 
-  // Update the getMonthsUntil function to handle weeks
-  const getTimeUntil = (date: Date) => {
-    const d1 = new Date(date);
-    const d2 = new Date(weddingDate);
-    const diffTime = Math.abs(d2.getTime() - d1.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 14) { // Two weeks or less
-      const diffWeeks = Math.ceil(diffDays / 7);
-      return { months: 0, weeks: diffWeeks };
-    }
-    
-    const months = (d2.getFullYear() - d1.getFullYear()) * 12 + 
-                  (d2.getMonth() - d1.getMonth());
-    return { months, weeks: 0 };
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(date);
   };
 
-  const groupedTimeline = timeline.reduce((acc, item) => {
-    const timeUntil = getTimeUntil(item.dueDate);
-    // Use decimal representation for weeks (0.5 for 2 weeks, 0.25 for 1 week, 0 for wedding day)
-    const key = timeUntil.months === 0 
-      ? `w${timeUntil.weeks}` 
-      : `m${timeUntil.months}`;
-    
-    if (!acc[key]) {
-      acc[key] = { ...timeUntil, items: [] };
-    }
-    acc[key].items.push(item);
-    return acc;
-  }, {} as Record<string, { months: number; weeks: number; items: TimelineItem[] }>);
-
-  const sortedGroups = Object.entries(groupedTimeline)
-    .sort(([keyA], [keyB]) => {
-      const isWeekA = keyA.startsWith('w');
-      const isWeekB = keyB.startsWith('w');
-      
-      // Get numeric values
-      const valueA = Number(keyA.slice(1));
-      const valueB = Number(keyB.slice(1));
-
-      // If both are months or both are weeks, sort by value
-      if ((!isWeekA && !isWeekB) || (isWeekA && isWeekB)) {
-        return valueB - valueA;
-      }
-      
-      // If one is month and other is week, months come first
-      return isWeekA ? 1 : -1;
-    })
-    .map(([_, group]) => group);  // Fix: Use underscore for unused key parameter
-
-  const handleNewDate = () => {
-    setShowPlan(false);
-    onNewDate?.(); // Call the scroll function
+  const getCategoryColor = (category: string) => {
+    const colors = {
+      'Yourself': 'bg-blue-100 text-blue-800',
+      'Vendor': 'bg-green-100 text-green-800',
+      'Attire': 'bg-purple-100 text-purple-800',
+      'Planning': 'bg-yellow-100 text-yellow-800',
+      'Personal': 'bg-pink-100 text-pink-800',
+      'Legal': 'bg-red-100 text-red-800',
+      'Celebration': 'bg-orange-100 text-orange-800'
+    };
+    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
-  return (
-    <div>
-      <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-6 border-2 border-pink-200">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-              Your Wedding Timeline
-            </h2>
-            <p className="text-gray-600">
-              Wedding Date: <span className="font-semibold text-pink-600">
-                {new Date(weddingDate).toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </span>
+  // Floating Save Button Component
+  const FloatingSaveButton = () => {
+    if (!weddingDate) return null;
+
+    return (
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={handleSaveTimeline}
+          disabled={isLoading || saveStatus === 'saving'}
+          className={`
+            px-6 py-3 rounded-full font-medium transition-all flex items-center space-x-2 shadow-lg hover:shadow-xl
+            ${saveStatus === 'saving' || isLoading
+              ? 'bg-gray-400 cursor-not-allowed'
+              : saveStatus === 'success'
+              ? 'bg-green-500 hover:bg-green-600'
+              : saveStatus === 'error'
+              ? 'bg-red-500 hover:bg-red-600'
+              : 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700'
+            } text-white
+          `}
+        >
+          {saveStatus === 'saving' ? (
+            <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
+          ) : saveStatus === 'success' ? (
+            <Check className="h-5 w-5" />
+          ) : saveStatus === 'error' ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Bookmark className="h-5 w-5" />
+          )}
+          <span className="hidden sm:inline">
+            {saveStatus === 'saving' ? 'Saving...' :
+             saveStatus === 'success' ? 'Saved!' :
+             saveStatus === 'error' ? 'Save Failed' :
+             'Save Timeline'}
+          </span>
+        </button>
+      </div>
+    );
+  };
+
+  if (!weddingDate) {
+    return (
+      <div className="max-w-2xl mx-auto p-6">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Create Your Wedding Timeline</h2>
+          <p className="text-gray-600 mb-6">
+            Enter your wedding date to generate a personalized planning timeline
+          </p>
+        </div>
+
+        <form onSubmit={handleWeddingDateSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="mb-4">
+            <label htmlFor="wedding-date" className="block text-sm font-medium text-gray-700 mb-2">
+              Wedding Date *
+            </label>
+            <input
+              type="date"
+              id="wedding-date"
+              value={tempWeddingDate}
+              onChange={(e) => setTempWeddingDate(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              min={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]} // 3 months from now
+              required
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              Wedding date must be at least 3 months in advance
             </p>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={downloadPDF}
-              className="flex items-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
-            >
-              <Download className="w-5 h-5" />
-              <span className="hidden sm:inline">Download</span>
-            </button>
-            <button
-              onClick={handleNewDate}
-              className="px-4 sm:px-6 py-3 border-2 border-pink-300 rounded-lg font-semibold hover:bg-pink-50 transition-all"
-            >
-              New Date
-            </button>
-          </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center">
+              <TriangleAlert className="h-5 w-5 text-red-500 mr-2" />
+              <span className="text-red-700 text-sm">{error}</span>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all"
+          >
+            Generate Timeline
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="max-w-4xl mx-auto p-6 pb-24"> {/* Added bottom padding to prevent overlap with floating button */}
+        {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Wedding Timeline</h2>
+          <p className="text-gray-600">
+            Wedding Date: <span className="font-medium">{formatDate(new Date(weddingDate))}</span>
+          </p>
+          {lastSaved && (
+            <p className="text-sm text-gray-500 mt-1">
+              Last saved: {formatDate(lastSaved)}
+            </p>
+          )}
+        </div>
+        
+          <div className="mt-4 sm:mt-0">
+          <button
+            onClick={() => {
+              setWeddingDate('');
+              setTempWeddingDate('');
+            }}
+            className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+          >
+            Change Date
+          </button>
         </div>
       </div>
 
-      <div className="space-y-6">
-        {sortedGroups.map((group, idx) => (
-          <div key={idx} className="bg-white rounded-xl shadow-lg p-3 md:p-8 border-l-4 border-pink-500 hover:shadow-xl transition-shadow">
-            {/* Header section with number and title on same line */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                {idx + 1}
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
-                {group.months > 0 
-                  ? `${group.months} ${group.months === 1 ? 'Month' : 'Months'} Before`
-                  : `${group.weeks} ${group.weeks === 1 ? 'Week' : 'Weeks'} Before`
-                }
-              </h3>
-            </div>
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
+          <TriangleAlert className="h-5 w-5 text-red-500 mr-3" />
+          <span className="text-red-700">{error}</span>
+        </div>
+      )}
 
-            {/* Items section on separate line */}
-            <div className="space-y-4">
-              {group.items.map((item, i) => (
-                <div key={i} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
-                  <p className="text-pink-600 font-medium mb-2 text-sm sm:text-base">
-                    {item.title} • {item.category}
-                  </p>
-                  <div className="flex items-center gap-3"> {/* Changed from items-start to items-center */}
-                    <CheckCircle 
-                      className={`w-5 h-5 flex-shrink-0 ${
-                        isLoggedIn 
-                          ? (item.selectedOption || item.selectedOptions) 
-                            ? 'text-green-500' 
-                            : 'text-amber-500'  // Warning color for unselected items
-                          : 'text-gray-300'
-                      }`} 
-                    />
-                    {isLoggedIn ? (
-                      <div className="w-full">
-                        {/* Accordion Header */}
-                        <div
-                          onClick={() => handleAccordionToggle(item)}
-                          className="w-full flex items-center justify-between text-left p-3 rounded-lg hover:bg-pink-50 transition-colors cursor-pointer"
+      {/* Timeline Items */}
+      <div className="space-y-6">
+        {timelineItems.map((item, index) => (
+          <div 
+            key={item.id} 
+            className={`
+              relative bg-white rounded-lg shadow-sm border border-gray-200 p-6
+              ${item.isWeddingDay ? 'border-pink-300 bg-pink-50' : ''}
+              ${item.completed ? 'opacity-75' : ''}
+            `}
+          >
+            {/* Timeline connector line */}
+            {index < timelineItems.length - 1 && (
+              <div className="absolute left-8 top-16 w-0.5 h-6 bg-gray-200"></div>
+            )}
+            
+            <div className="flex items-start space-x-4">
+              {/* Completion checkbox */}
+              <button
+                onClick={() => toggleTaskCompletion(item.id)}
+                className="flex-shrink-0 mt-1"
+                disabled={item.isWeddingDay}
+              >
+                {item.completed ? (
+                  <CheckCircle className="h-6 w-6 text-green-500" />
+                ) : (
+                  <div className="h-6 w-6 border-2 border-gray-300 rounded-full hover:border-pink-500 transition-colors flex items-center justify-center">
+                    {item.isWeddingDay && <Clock className="h-4 w-4 text-pink-500" />}
+                  </div>
+                )}
+              </button>
+
+              <div className="flex-1 min-w-0">
+                {/* Task header */}
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className={`text-lg font-semibold ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm mt-1">{item.description}</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ml-4">
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(item.category)}`}>
+                      {item.category}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Due date */}
+                <div className="flex items-center text-sm text-gray-500 mb-4">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>Due: {formatDate(item.dueDate)}</span>
+                </div>
+
+                {/* Options */}
+                {item.options && item.options.length > 0 && (
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-medium text-gray-900">
+                        {item.selectedOption || (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) 
+                          ? 'Your selection:' 
+                          : 'Choose an option:'}
+                      </h4>
+                      
+                      {/* Show expand/collapse button only if there's a selection */}
+                      {(item.selectedOption || (item.selectedOptions && Object.keys(item.selectedOptions).length > 0)) && (
+                        <button
+                          onClick={() => toggleOptionsExpansion(item.id)}
+                          className="flex items-center space-x-1 text-sm text-pink-600 hover:text-pink-700 transition-colors"
                         >
-                          <div className="flex-1">
-                            <span className="text-gray-700 text-sm sm:text-base">
-                              {item.description}
-                            </span>
-                            {(item.selectedOption || item.selectedOptions) && (
-                              <div className="mt-1">
-                                {item.selectedOptions ? (
-                                  Object.entries(item.selectedOptions).map(([key, value]) => (
-                                    <div key={key} className="text-green-600 font-medium text-sm">
-                                      {item.options?.find(opt => opt.id === key)?.label}: {value}
+                          <span>{expandedItems.has(item.id) ? 'Hide options' : 'Change selection'}</span>
+                          {expandedItems.has(item.id) ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {item.options.map((option) => {
+                        const isSelected = item.selectedOption === option.id || 
+                                        (item.selectedOptions && item.selectedOptions[option.id]);
+                        const shouldShow = !item.selectedOption && (!item.selectedOptions || Object.keys(item.selectedOptions).length === 0) || 
+                                        isSelected || 
+                                        expandedItems.has(item.id);
+
+                        if (!shouldShow) return null;
+
+                        return (
+                          <div key={option.id} className="space-y-2">
+                            {option.isTextInput ? (
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  {option.label}
+                                </label>
+                                <textarea
+                                  value={item.selectedOptions?.[option.id] || ''}
+                                  onChange={(e) => handleTextInputChange(item.id, option.id, e.target.value)}
+                                  placeholder={option.description}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-sm"
+                                  rows={3}
+                                />
+                              </div>
+                            ) : (
+                              <div
+                                onClick={() => handleOptionSelect(item.id, option.id)}
+                                className={`
+                                  cursor-pointer p-3 border rounded-lg transition-all
+                                  ${isSelected
+                                    ? 'border-pink-500 bg-pink-50 ring-2 ring-pink-200' 
+                                    : 'border-gray-200 hover:border-gray-300'
+                                  }
+                                `}
+                              >
+                                {isSelected && (
+                                  <div className="flex items-center justify-between mb-2">
+                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-800">
+                                      <Check className="h-3 w-3 mr-1" />
+                                      Selected
+                                    </span>
+                                  </div>
+                                )}
+                                
+                                {option.image && (
+                                  <img 
+                                    src={option.image} 
+                                    alt={option.label}
+                                    className="w-full h-32 object-cover rounded-lg mb-2"
+                                  />
+                                )}
+                                <h5 className="font-medium text-gray-900">{option.label}</h5>
+                                {option.description && (
+                                  <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+                                )}
+                                {option.price && (
+                                  <p className="text-sm font-medium text-pink-600 mt-1">{option.price}</p>
+                                )}
+                                {option.location && (
+                                  <p className="text-xs text-gray-500 mt-1">{option.location}</p>
+                                )}
+                                {option.specialties && (
+                                  <div className="flex flex-wrap gap-1 mt-2">
+                                    {option.specialties.map((specialty, idx) => (
+                                      <span key={idx} className="px-2 py-1 bg-gray-100 text-xs rounded-full">
+                                        {specialty}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                                {option.rating && (
+                                  <div className="flex items-center mt-2">
+                                    <div className="flex items-center">
+                                      {[...Array(5)].map((_, i) => (
+                                        <svg 
+                                          key={i} 
+                                          className={`h-4 w-4 ${i < option.rating! ? 'text-yellow-400' : 'text-gray-300'}`}
+                                          fill="currentColor" 
+                                          viewBox="0 0 20 20"
+                                        >
+                                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                      ))}
                                     </div>
-                                  ))
-                                ) : (
-                                  <div className="text-green-600 font-medium text-sm">
-                                    {item.options?.find(opt => opt.id === item.selectedOption)?.label}
+                                    <span className="ml-1 text-xs text-gray-600">({option.rating})</span>
                                   </div>
                                 )}
                               </div>
                             )}
                           </div>
-                          <ChevronDown 
-                            className={`w-5 h-5 text-gray-400 transform transition-transform ${
-                              expandedItem?.id === item.id ? 'rotate-180' : ''
-                            }`} 
-                          />
-                        </div>
-
-                        {/* Accordion Content */}
-                        {expandedItem?.id === item.id && (
-                          <div className="mt-3 p-4 bg-gray-50 rounded-lg space-y-4">
-                            {item.options?.[0]?.isTextInput ? (
-                              // Text input options
-                              <div className="space-y-4">
-                                {item.options.map((option) => (
-                                  <div key={option.id} className="space-y-2">
-                                    <label className="block font-medium text-gray-700 text-sm">
-                                      {option.label}
-                                    </label>
-                                    <textarea
-                                      value={tempValues[option.id] || ''}
-                                      onChange={(e) => setTempValues({
-                                        ...tempValues,
-                                        [option.id]: e.target.value
-                                      })}
-                                      className="w-full h-12 px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                                      placeholder={option.description}
-                                    />
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              // Radio options
-                              <div className="space-y-2">
-                                {item.options?.map((option) => (
-                                  <label
-                                    key={option.id}
-                                    className={`flex flex-col sm:flex-row sm:items-center p-3 rounded-lg cursor-pointer transition-all border-2 ${
-                                      tempSelectedOption === option.id
-                                        ? 'border-pink-500 bg-pink-50'
-                                        : 'border-gray-200 hover:border-pink-300 hover:bg-pink-25'
-                                    }`}
-                                  >
-                                    {/* Mobile Layout - Radio and Image Row */}
-                                    <div className="flex items-center mb-3 sm:mb-0 sm:mr-3">
-                                      <input
-                                        type="radio"
-                                        name={`option-${item.id}`}
-                                        value={option.id}
-                                        checked={tempSelectedOption === option.id}
-                                        onChange={(e) => setTempSelectedOption(e.target.value)}
-                                        className="w-4 h-4 text-pink-600 focus:ring-pink-500 mr-3 flex-shrink-0"
-                                      />
-                                      
-                                      {/* Clickable vendor image */}
-                                      {option.image && (
-                                        <Link 
-                                          href={`/vendor/${option.id}`}
-                                          className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 hover:ring-2 hover:ring-pink-300 transition-all"
-                                          onClick={(e) => e.stopPropagation()} // Prevent radio selection when clicking image
-                                        >
-                                          <Image
-                                            src={option.image}
-                                            alt={option.label}
-                                            fill
-                                            className="object-cover hover:scale-105 transition-transform"
-                                            sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, (max-width: 1024px) 96px, 112px"
-                                          />
-                                        </Link>
-                                      )}
-                                    </div>
-                                    
-                                    {/* Content - Vertical on mobile, horizontal on desktop */}
-                                    <div className="flex-1 min-w-0 sm:ml-3">
-                                      {/* Clickable vendor title */}
-                                      <Link 
-                                        href={`/vendor/${option.id}`}
-                                        className="text-sm sm:text-base font-medium text-gray-900 block mb-1 hover:text-pink-600 transition-colors"
-                                        onClick={(e) => e.stopPropagation()} // Prevent radio selection when clicking title
-                                      >
-                                        {option.label}
-                                      </Link>
-                                      
-                                      {option.description && (
-                                        <p className="text-xs sm:text-sm text-gray-500 mb-2 leading-relaxed">
-                                          {option.description}
-                                        </p>
-                                      )}
-                                      
-                                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
-                                        {option.price && (
-                                          <p className="text-xs sm:text-sm font-medium text-pink-600">
-                                            {option.price}
-                                          </p>
-                                        )}
-                                        
-                                        {option.rating && (
-                                          <div className="flex items-center">
-                                            <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                                            <span className="text-xs text-gray-600 ml-1">{option.rating}</span>
-                                          </div>
-                                        )}
-                                      </div>
-
-                                      {/* Additional vendor details */}
-                                      {option.location && (
-                                        <p className="text-xs text-gray-500 mt-1">
-                                          📍 {option.location}
-                                        </p>
-                                      )}
-                                      
-                                      {option.specialties && option.specialties.length > 0 && (
-                                        <div className="mt-2 flex flex-wrap gap-1">
-                                          {option.specialties.slice(0, 3).map((specialty, index) => (
-                                            <span
-                                              key={index}
-                                              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
-                                            >
-                                              {specialty}
-                                            </span>
-                                          ))}
-                                        </div>
-                                      )}
-                                    </div>
-                                  </label>
-                                ))}
-                              </div>
-                            )}
-
-                            {/* Action buttons */}
-                            <div className="flex justify-end gap-2 pt-2">
-                              <button
-                                onClick={() => setExpandedItem(null)}
-                                className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                onClick={() => handleSave(item)}
-                                className="px-4 py-1 text-sm bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded hover:from-pink-700 hover:to-purple-700"
-                              >
-                                Save
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <span className="text-gray-700 text-sm sm:text-base">
-                        {item.description}
-                      </span>
-                    )}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
             </div>
           </div>
         ))}
       </div>
-
-      <div className="mt-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl p-6 sm:p-8 text-center text-white shadow-xl">
-        <Heart className="w-16 h-16 mx-auto mb-4 fill-white" />
-        <h3 className="text-2xl sm:text-3xl font-bold mb-2">Congratulations!</h3>
-        <p className="text-pink-100 text-sm sm:text-base">
-          {"Wishing you a lifetime of love and happiness. May your wedding day be everything you've dreamed of!"}
-        </p>
-      </div>
     </div>
+
+      {/* Floating Save Button */}
+      <FloatingSaveButton />
+    </>
   );
 }
