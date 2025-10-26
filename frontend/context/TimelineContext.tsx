@@ -32,12 +32,8 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isLoggedIn && user?.id) {
       loadTimelineData();
-    } else {
-      // Clear timeline when user logs out
-      setTimelineItems([]);
-      setWeddingDateState('');
-      setLastSaved(null);
     }
+    // Removed the else clause that was clearing timeline for non-logged-in users
   }, [isLoggedIn, user?.id]);
 
   const setWeddingDate = (date: string) => {
@@ -50,6 +46,9 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error generating timeline');
       }
+    } else {
+      // Only clear timeline if date is explicitly cleared
+      setTimelineItems([]);
     }
   };
 
@@ -64,9 +63,15 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
   };
 
   const saveTimelineData = async () => {
-    if (!user?.id || !weddingDate) {
-      setError('User must be logged in and wedding date must be set');
-      return;
+    // Allow saving attempt but show appropriate message
+    if (!isLoggedIn || !user?.id) {
+      setError('Please log in to save your timeline');
+      throw new Error('Please log in to save your timeline');
+    }
+
+    if (!weddingDate) {
+      setError('Wedding date must be set');
+      throw new Error('Wedding date must be set');
     }
 
     setIsLoading(true);
@@ -82,7 +87,8 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
       await saveTimeline(timelineData);
       setLastSaved(new Date());
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save timeline');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save timeline';
+      setError(errorMessage);
       throw err;
     } finally {
       setIsLoading(false);
@@ -90,7 +96,10 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
   };
 
   const loadTimelineData = async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      console.log('No user ID, skipping timeline load');
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
@@ -107,7 +116,10 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
         setLastSaved(savedTimeline.updatedAt ? new Date(savedTimeline.updatedAt) : null);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load timeline');
+      // Don't show error for missing timelines
+      if (!(err instanceof Error && err.message?.includes('No timeline found'))) {
+        setError(err instanceof Error ? err.message : 'Failed to load timeline');
+      }
     } finally {
       setIsLoading(false);
     }
