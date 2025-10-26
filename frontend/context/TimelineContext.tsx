@@ -96,7 +96,7 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const savedTimeline = await loadTimeline(user.id);
+      const savedTimeline = await loadTimeline();
       
       if (savedTimeline) {
         setWeddingDateState(savedTimeline.weddingDate);

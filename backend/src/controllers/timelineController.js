@@ -32,7 +32,6 @@ const saveTimeline = async (req, res) => {
       });
     }
 
-    console.log('timelineData to save:', { weddingDate, timelineItems });
     // Prepare timeline data
     const timelineData = {
       weddingDate: weddingDate,
@@ -94,7 +93,7 @@ const loadTimeline = async (req, res) => {
     res.status(200).json({
       success: true,
       userId: user.id,
-      weddingDate: user.timelineData.savedAt,
+      weddingDate: user.timelineData.weddingDate,
       timelineItems: user.timelineData.timelineItems || [],
       savedAt: user.timelineData.savedAt,
       updatedAt: user.updatedAt,

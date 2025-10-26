@@ -21,12 +21,12 @@ export default function HomePage() {
   const checkWeddingDate = async () => {
     if (isLoggedIn) {
       const response = await getUserProfile();
-      console.log('User profile response:', response);
+      //console.log('User profile response:', response);
       if (response.success && response.user?.weddingDate && response.user?.hasGeneratedTimeline) {
-        setWeddingDate(response.user.weddingDate);
+        //setWeddingDate(response.user.weddingDate);
         // Generate timeline
-        const plan = generateTimeline(response.user.weddingDate);
-        setTimeline(plan);
+        //const plan = generateTimeline(response.user.weddingDate);
+        //setTimeline(plan);
         setShowPlan(true);
       }
     }
@@ -58,13 +58,7 @@ export default function HomePage() {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {showPlan ? (
         <div id="timeline-section">
-          <Timeline 
-            weddingDate={weddingDate}
-            timeline={timeline}
-            setTimeline={setTimeline}
-            setShowPlan={setShowPlan}
-            onNewDate={scrollToDateInput}
-          />
+          <Timeline />
         </div>
       ) : (
         <>

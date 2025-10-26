@@ -13,14 +13,13 @@ interface HeaderProps {
 }
 
 export default function Header({ onSidebarToggle }: HeaderProps) {
-    const router = useRouter();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, isLoggedIn, logout } = useAuth();
-    const pathname = usePathname();
+  const { isLoggedIn, logout } = useAuth();
+  const pathname = usePathname();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage] = useState('');
   const [toastType] = useState<'success' | 'error'>('success');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleLogin = () => {
     setMobileMenuOpen(false);
     router.push('/login');

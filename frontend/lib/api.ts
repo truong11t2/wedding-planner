@@ -196,135 +196,6 @@ export const socialLogin = async (provider: Provider): Promise<SocialAuthRespons
   }
 };
 
-export const saveUserTimeline = async (
-  weddingDate: string, 
-  timelineItems: TimelineItem[]
-): Promise<SaveTimelineResponse> => {
-  try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/timeline/save`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({ weddingDate, timelineItems }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        message: data.message || 'Failed to save timeline',
-      };
-    }
-
-    return {
-      success: true,
-      message: data.message || 'Timeline saved successfully',
-      data: data.data,
-    };
-  } catch (error) {
-    console.error('Error saving timeline:', error);
-    return {
-      success: false,
-      message: 'Network error while saving timeline',
-    };
-  }
-};
-
-export const getUserTimeline = async (): Promise<GetTimelineResponse> => {
-  try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/timeline/get`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        message: data.message || 'Failed to get timeline',
-      };
-    }
-
-    return {
-      success: true,
-      data: data.data,
-      message: data.message,
-    };
-  } catch (error) {
-    console.error('Error getting timeline:', error);
-    return {
-      success: false,
-      message: 'Network error while fetching timeline',
-    };
-  }
-};
-
-export const deleteUserTimeline = async (): Promise<SaveTimelineResponse> => {
-  try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
-    const response = await fetch(`${API_BASE_URL}/api/timeline/delete`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        message: data.message || 'Failed to delete timeline',
-      };
-    }
-
-    return {
-      success: true,
-      message: data.message || 'Timeline deleted successfully',
-    };
-  } catch (error) {
-    console.error('Error deleting timeline:', error);
-    return {
-      success: false,
-      message: 'Network error while deleting timeline',
-    };
-  }
-};
-
 export const getTimelineStatus = async (): Promise<{
   success: boolean;
   data?: {
@@ -571,7 +442,7 @@ export async function saveTimeline(timelineData: SavedTimelineData): Promise<Sav
 }
 
 // Load timeline from backend
-export async function loadTimeline(userId: string): Promise<SavedTimelineData | null> {
+export async function loadTimeline(): Promise<SavedTimelineData | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/timeline/get`, {
       headers: {

@@ -29,7 +29,7 @@ interface SidebarProps {
 
 const navigationItems: NavItem[] = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Timeline', href: '/', icon: Clock },
+  { name: 'Timeline', href: '/timeline', icon: Clock },
   { name: 'Checklist', href: '/checklist', icon: CircleCheckBig },
   { name: 'Guests', href: '/guests', icon: Users },
   { name: 'Venues', href: '/venues', icon: MapPinned },
