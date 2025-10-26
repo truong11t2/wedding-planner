@@ -351,7 +351,7 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
                                     value={item.selectedOptions?.[option.id] || ''}
                                     onChange={(e) => handleTextInputChange(item.id, option.id, e.target.value)}
                                     placeholder={option.description}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-sm"
+                                    className="w-full px-3 py-2 border border-gray-300 text-gray-500 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-sm"
                                     rows={3}
                                   />
                                 </div>
@@ -395,7 +395,7 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
                                   {option.specialties && (
                                     <div className="flex flex-wrap gap-1 mt-2">
                                       {option.specialties.map((specialty, idx) => (
-                                        <span key={idx} className="px-2 py-1 bg-gray-100 text-xs rounded-full">
+                                        <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-full">
                                           {specialty}
                                         </span>
                                       ))}

@@ -1,4 +1,5 @@
 import { getVendorOptions } from './vendorData';
+import timelineConfig from '@/data/timelineConfig.json';
 
 export interface TimelineItem {
   id: string;
@@ -24,6 +25,23 @@ export interface TimelineItem {
   selectedOption?: string; // For single select options
 }
 
+interface TimelineConfigItem {
+  id: string;
+  title: string;
+  description: string;
+  monthsBeforeWedding: number;
+  category: string;
+  isWeddingDay?: boolean;
+  vendorType?: string;
+  options?: {
+    id: string;
+    label: string;
+    description?: string;
+    price?: string;
+    isTextInput?: boolean;
+  }[];
+}
+
 export const generateTimeline = (weddingDate: string): TimelineItem[] => {
   const weddingDay = new Date(weddingDate);
   const today = new Date();
@@ -36,9 +54,7 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
     throw new Error("Wedding date must be at least 3 months in advance for proper planning.");
   }
 
-  const timeline: TimelineItem[] = [];
-
-  // Helper function to subtract months or weeks from wedding date
+  // Helper function to calculate due date based on months before wedding
   const getDateBeforeWedding = (months: number): Date => {
     const date = new Date(weddingDay);
     if (months >= 1) {
@@ -51,228 +67,96 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
     return date;
   };
 
-  // 12 months before
-  timeline.push({
-    id: "set-budget",
-    title: "Set Your Budget",
-    description: "Determine your total budget and how to allocate it",
-    dueDate: getDateBeforeWedding(12),
-    completed: false,
-    category: "Yourself",
-    options: [
-      {
-        id: 'budget',
-        label: 'Budget Friendly',
-        description: 'Essential services with cost-effective choices',
-        price: '$5,000 - $15,000'
-      },
-      {
-        id: 'medium',
-        label: 'Medium Range',
-        description: 'Balance of quality and cost with some premium services',
-        price: '$15,000 - $30,000'
-      },
-      {
-        id: 'luxury',
-        label: 'Luxury',
-        description: 'Premium services and exclusive venues',
-        price: '$30,000+'
-      }
-    ]
-  });
-  
-  timeline.push({
-    id: "choose-party",
-    title: "Choose Wedding Party",
-    description: "Select your bridesmaids, groomsmen, and other key roles",
-    dueDate: getDateBeforeWedding(12),
-    completed: false,
-    category: "Yourself",
-    options: [
-      {
-        id: 'bride-side',
-        label: 'Bride Side',
-        description: 'Enter names of bridesmaids',
-        isTextInput: true
-      },
-      {
-        id: 'groom-side',
-        label: 'Groom Side',
-        description: 'Enter names of groomsmen',
-        isTextInput: true
-      },
-      {
-        id: 'other-roles',
-        label: 'Other Roles',
-        description: 'Enter any other important roles',
-        isTextInput: true
-      }
-    ]
+  // Generate timeline from JSON configuration
+  const timeline: TimelineItem[] = timelineConfig.timelineItems.map((configItem: TimelineConfigItem) => {
+    const timelineItem: TimelineItem = {
+      id: configItem.id,
+      title: configItem.title,
+      description: configItem.description,
+      dueDate: getDateBeforeWedding(configItem.monthsBeforeWedding),
+      completed: false,
+      category: configItem.category,
+      isWeddingDay: configItem.isWeddingDay || false,
+    };
+
+    // Handle vendor options
+    if (configItem.vendorType) {
+      timelineItem.options = getVendorOptions(configItem.vendorType);
+    } 
+    // Handle predefined options from config
+    else if (configItem.options) {
+      timelineItem.options = configItem.options.map(option => ({
+        id: option.id,
+        label: option.label,
+        description: option.description,
+        price: option.price,
+        isTextInput: option.isTextInput || false,
+      }));
+    }
+
+    return timelineItem;
   });
 
-  // 9 months before
-  timeline.push({
-    id: "book-photographer",
-    title: "Book Photographer", 
-    description: "Research and book your wedding photographer",
-    dueDate: getDateBeforeWedding(9),
-    completed: false,
-    category: "Vendor",
-    options: getVendorOptions('photographer') // This should return options with image property
-  });
+  // Sort timeline by due date (earliest first, but we'll reverse this in the component)
+  return timeline.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
+};
 
-  timeline.push({
-    id: "book-venue",
-    title: "Book Venue",
-    description: "Secure your ceremony and reception venues", 
-    dueDate: getDateBeforeWedding(9),
-    completed: false,
-    category: "Vendor",
-    options: getVendorOptions('venue') // This should return options with image property
-  });
-  
-  timeline.push({
-    id: "order-dress",
-    title: "Order Wedding Dress",
-    description: "Start shopping for and order your wedding dress",
-    dueDate: getDateBeforeWedding(6),
-    completed: false,
-    category: "Attire"
-  });
-  
-  timeline.push({
-    id: "book-caterer", 
-    title: "Book Caterer",
-    description: "Select your catering service and plan the menu",
-    dueDate: getDateBeforeWedding(6),
-    completed: false,
-    category: "Vendor", 
-    options: getVendorOptions('caterer') // This should return options with image property
-  });
+// Utility function to add new timeline items programmatically
+export const addTimelineItem = (
+  weddingDate: string,
+  customItem: Omit<TimelineConfigItem, 'id'> & { id?: string }
+): TimelineItem => {
+  const weddingDay = new Date(weddingDate);
+  const getDateBeforeWedding = (months: number): Date => {
+    const date = new Date(weddingDay);
+    if (months >= 1) {
+      date.setMonth(date.getMonth() - months);
+    } else {
+      const weeks = months * 4;
+      date.setDate(date.getDate() - (weeks * 7));
+    }
+    return date;
+  };
 
-  // 3 months before
-  timeline.push({
-    id: "send-invitations",
-    title: "Send Invitations",
-    description: "Mail out wedding invitations to your guest list",
-    dueDate: getDateBeforeWedding(3),
+  return {
+    id: customItem.id || `custom-${Date.now()}`,
+    title: customItem.title,
+    description: customItem.description,
+    dueDate: getDateBeforeWedding(customItem.monthsBeforeWedding),
     completed: false,
-    category: "Yourself"
-  });
-  
-  timeline.push({
-    id: "order-rings",
-    title: "Order Wedding Rings",
-    description: "Choose and order your wedding bands",
-    dueDate: getDateBeforeWedding(3),
-    completed: false,
-    category: "Attire"
-  });
+    category: customItem.category,
+    isWeddingDay: customItem.isWeddingDay || false,
+    options: customItem.options?.map(option => ({
+      id: option.id,
+      label: option.label,
+      description: option.description,
+      price: option.price,
+      isTextInput: option.isTextInput || false,
+    })),
+  };
+};
 
-  // 1 month before
-  timeline.push({
-    id: "final-dress-fitting",
-    title: "Final Dress Fitting",
-    description: "Schedule final dress alterations and fitting",
-    dueDate: getDateBeforeWedding(1),
-    completed: false,
-    category: "Attire"
-  });
-  
-  timeline.push({
-    id: "create-timeline",
-    title: "Create Timeline",
-    description: "Finalize wedding day schedule with vendors",
-    dueDate: getDateBeforeWedding(1),
-    completed: false,
-    category: "Planning"
-  });
+// Utility function to get timeline categories
+export const getTimelineCategories = (): string[] => {
+  const categories = new Set(timelineConfig.timelineItems.map(item => item.category));
+  return Array.from(categories).sort();
+};
 
-  // 2 weeks before
-  timeline.push({
-    id: "final-vendor-confirmations",
-    title: "Final Vendor Confirmations",
-    description: "Confirm final details, timing, and setup with all vendors",
-    dueDate: getDateBeforeWedding(0.5),
-    completed: false,
-    category: "Vendor"
-  });
+// Utility function to get timeline items by category
+export const getTimelineItemsByCategory = (category: string): TimelineConfigItem[] => {
+  return timelineConfig.timelineItems.filter(item => item.category === category);
+};
 
-  timeline.push({
-    id: "wedding-rehearsal-planning",
-    title: "Wedding Rehearsal Planning",
-    description: "Organize rehearsal dinner and ceremony practice details",
-    dueDate: getDateBeforeWedding(0.5),
-    completed: false,
-    category: "Planning"
-  });
-
-  timeline.push({
-    id: "final-guest-count",
-    title: "Final Guest Count",
-    description: "Provide final headcount to venue and caterer",
-    dueDate: getDateBeforeWedding(0.5),
-    completed: false,
-    category: "Planning"
-  });
-
-  // Final week
-  timeline.push({
-    id: "beauty-appointments",
-    title: "Beauty Appointments",
-    description: "Hair trial, facial, and other beauty preparations",
-    dueDate: getDateBeforeWedding(0.25),
-    completed: false,
-    category: "Personal"
-  });
-
-  timeline.push({
-    id: "pick-up-wedding-attire",
-    title: "Pick Up Wedding Attire",
-    description: "Collect wedding dress, suits, and accessories",
-    dueDate: getDateBeforeWedding(0.25),
-    completed: false,
-    category: "Attire"
-  });
-
-  timeline.push({
-    id: "pack-wedding-day-kit",
-    title: "Pack Wedding Day Kit",
-    description: "Emergency supplies, makeup, accessories, and documents",
-    dueDate: getDateBeforeWedding(0.25),
-    completed: false,
-    category: "Planning"
-  });
-
-  timeline.push({
-    id: "marriage-license",
-    title: "Marriage License",
-    description: "Ensure marriage license is ready and valid",
-    dueDate: getDateBeforeWedding(0.25),
-    completed: false,
-    category: "Legal"
-  });
-
-  timeline.push({
-    id: "ceremony-items",
-    title: "Ceremony Items",
-    description: "Prepare rings, vows, and other ceremony essentials",
-    dueDate: getDateBeforeWedding(0.25),
-    completed: false,
-    category: "Planning"
-  });
-
-  // Update the wedding day item
-  timeline.push({
-    id: "enjoy-wedding-day",
-    title: "Enjoy Your Wedding Day!",
-    description: "Relax and celebrate your special day",
-    dueDate: getDateBeforeWedding(0),
-    completed: false,
-    category: "Celebration",
-    isWeddingDay: true
-  });
-
-  // Sort timeline by due date (reversed order)
-  return timeline.sort((a, b) => b.dueDate.getTime() - a.dueDate.getTime());
+// Utility function to validate timeline configuration
+export const validateTimelineConfig = (): boolean => {
+  try {
+    const requiredFields = ['id', 'title', 'description', 'monthsBeforeWedding', 'category'];
+    
+    return timelineConfig.timelineItems.every(item => {
+      return requiredFields.every(field => field in item);
+    });
+  } catch (error) {
+    console.error('Timeline configuration validation failed:', error);
+    return false;
+  }
 };

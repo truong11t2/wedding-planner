@@ -1,0 +1,297 @@
+{
+  "timelineItems": [
+    {
+      "id": "set-budget",
+      "title": "Set Your Budget",
+      "description": "Determine your total budget and how to allocate it",
+      "monthsBeforeWedding": 12,
+      "category": "Yourself",
+      "options": [
+        {
+          "id": "budget",
+          "label": "Budget Friendly",
+          "description": "Essential services with cost-effective choices",
+          "price": "$5,000 - $15,000"
+        },
+        {
+          "id": "medium",
+          "label": "Medium Range",
+          "description": "Balance of quality and cost with some premium services",
+          "price": "$15,000 - $30,000"
+        },
+        {
+          "id": "luxury",
+          "label": "Luxury",
+          "description": "Premium services and exclusive venues",
+          "price": "$30,000+"
+        }
+      ]
+    },
+    {
+      "id": "choose-party",
+      "title": "Choose Wedding Party",
+      "description": "Select your bridesmaids, groomsmen, and other key roles",
+      "monthsBeforeWedding": 12,
+      "category": "Yourself",
+      "options": [
+        {
+          "id": "bride-side",
+          "label": "Bride Side",
+          "description": "Enter names of bridesmaids",
+          "isTextInput": true
+        },
+        {
+          "id": "groom-side",
+          "label": "Groom Side",
+          "description": "Enter names of groomsmen",
+          "isTextInput": true
+        },
+        {
+          "id": "other-roles",
+          "label": "Other Roles",
+          "description": "Enter any other important roles",
+          "isTextInput": true
+        }
+      ]
+    },
+    {
+      "id": "book-venue",
+      "title": "Book Venue",
+      "description": "Secure your ceremony and reception venues",
+      "monthsBeforeWedding": 9,
+      "category": "Vendor",
+      "vendorType": "venue"
+    },
+    {
+      "id": "book-photographer",
+      "title": "Book Photographer",
+      "description": "Research and book your wedding photographer",
+      "monthsBeforeWedding": 9,
+      "category": "Vendor",
+      "vendorType": "photographer"
+    },
+    {
+      "id": "order-dress",
+      "title": "Order Wedding Dress",
+      "description": "Start shopping for and order your wedding dress",
+      "monthsBeforeWedding": 6,
+      "category": "Attire",
+      "options": [
+        {
+          "id": "ballgown",
+          "label": "Ball Gown",
+          "description": "Classic princess-style dress with full skirt",
+          "price": "$800 - $3,000"
+        },
+        {
+          "id": "a-line",
+          "label": "A-Line",
+          "description": "Flattering silhouette that suits most body types",
+          "price": "$600 - $2,500"
+        },
+        {
+          "id": "mermaid",
+          "label": "Mermaid",
+          "description": "Fitted through hips, flares at knees",
+          "price": "$700 - $2,800"
+        },
+        {
+          "id": "sheath",
+          "label": "Sheath",
+          "description": "Simple, straight silhouette",
+          "price": "$400 - $1,800"
+        }
+      ]
+    },
+    {
+      "id": "book-caterer",
+      "title": "Book Caterer",
+      "description": "Select your catering service and plan the menu",
+      "monthsBeforeWedding": 6,
+      "category": "Vendor",
+      "vendorType": "caterer"
+    },
+    {
+      "id": "send-invitations",
+      "title": "Send Invitations",
+      "description": "Mail out wedding invitations to your guest list",
+      "monthsBeforeWedding": 3,
+      "category": "Planning",
+      "options": [
+        {
+          "id": "traditional",
+          "label": "Traditional Paper",
+          "description": "Classic printed invitations with RSVP cards",
+          "price": "$200 - $800"
+        },
+        {
+          "id": "digital",
+          "label": "Digital Invitations",
+          "description": "Eco-friendly and cost-effective option",
+          "price": "$50 - $200"
+        },
+        {
+          "id": "luxury",
+          "label": "Luxury Custom",
+          "description": "Premium materials with custom design",
+          "price": "$500 - $1,500"
+        }
+      ]
+    },
+    {
+      "id": "order-rings",
+      "title": "Order Wedding Rings",
+      "description": "Choose and order your wedding bands",
+      "monthsBeforeWedding": 3,
+      "category": "Attire",
+      "options": [
+        {
+          "id": "gold-classic",
+          "label": "Classic Gold Bands",
+          "description": "Traditional yellow or white gold rings",
+          "price": "$300 - $1,200"
+        },
+        {
+          "id": "platinum",
+          "label": "Platinum Bands",
+          "description": "Durable and hypoallergenic premium option",
+          "price": "$800 - $2,500"
+        },
+        {
+          "id": "custom",
+          "label": "Custom Design",
+          "description": "Personalized rings with engravings or unique design",
+          "price": "$600 - $3,000"
+        }
+      ]
+    },
+    {
+      "id": "book-music",
+      "title": "Book Music/DJ",
+      "description": "Secure entertainment for ceremony and reception",
+      "monthsBeforeWedding": 2,
+      "category": "Vendor",
+      "vendorType": "dj"
+    },
+    {
+      "id": "final-dress-fitting",
+      "title": "Final Dress Fitting",
+      "description": "Schedule final dress alterations and fitting",
+      "monthsBeforeWedding": 1,
+      "category": "Attire"
+    },
+    {
+      "id": "create-timeline",
+      "title": "Create Wedding Day Timeline",
+      "description": "Finalize wedding day schedule with vendors",
+      "monthsBeforeWedding": 1,
+      "category": "Planning"
+    },
+    {
+      "id": "final-vendor-confirmations",
+      "title": "Final Vendor Confirmations",
+      "description": "Confirm final details, timing, and setup with all vendors",
+      "monthsBeforeWedding": 0.5,
+      "category": "Vendor"
+    },
+    {
+      "id": "wedding-rehearsal-planning",
+      "title": "Wedding Rehearsal Planning",
+      "description": "Organize rehearsal dinner and ceremony practice details",
+      "monthsBeforeWedding": 0.5,
+      "category": "Planning"
+    },
+    {
+      "id": "final-guest-count",
+      "title": "Final Guest Count",
+      "description": "Provide final headcount to venue and caterer",
+      "monthsBeforeWedding": 0.5,
+      "category": "Planning"
+    },
+    {
+      "id": "beauty-appointments",
+      "title": "Beauty Appointments",
+      "description": "Hair trial, facial, and other beauty preparations",
+      "monthsBeforeWedding": 0.25,
+      "category": "Personal",
+      "options": [
+        {
+          "id": "hair-makeup-trial",
+          "label": "Hair & Makeup Trial",
+          "description": "Test run of your wedding day beauty look",
+          "price": "$150 - $400"
+        },
+        {
+          "id": "facial-treatment",
+          "label": "Facial Treatment",
+          "description": "Professional facial for glowing skin",
+          "price": "$80 - $200"
+        },
+        {
+          "id": "manicure-pedicure",
+          "label": "Manicure & Pedicure",
+          "description": "Perfect nails for your special day",
+          "price": "$50 - $120"
+        }
+      ]
+    },
+    {
+      "id": "pick-up-wedding-attire",
+      "title": "Pick Up Wedding Attire",
+      "description": "Collect wedding dress, suits, and accessories",
+      "monthsBeforeWedding": 0.25,
+      "category": "Attire"
+    },
+    {
+      "id": "pack-wedding-day-kit",
+      "title": "Pack Wedding Day Kit",
+      "description": "Emergency supplies, makeup, accessories, and documents",
+      "monthsBeforeWedding": 0.25,
+      "category": "Planning",
+      "options": [
+        {
+          "id": "emergency-kit",
+          "label": "Emergency Kit Items",
+          "description": "List items for your wedding day emergency kit",
+          "isTextInput": true
+        }
+      ]
+    },
+    {
+      "id": "marriage-license",
+      "title": "Obtain Marriage License",
+      "description": "Ensure marriage license is ready and valid",
+      "monthsBeforeWedding": 0.25,
+      "category": "Legal"
+    },
+    {
+      "id": "ceremony-items",
+      "title": "Prepare Ceremony Items",
+      "description": "Prepare rings, vows, and other ceremony essentials",
+      "monthsBeforeWedding": 0.25,
+      "category": "Planning",
+      "options": [
+        {
+          "id": "vows",
+          "label": "Wedding Vows",
+          "description": "Write your personal wedding vows",
+          "isTextInput": true
+        },
+        {
+          "id": "ceremony-music",
+          "label": "Ceremony Music",
+          "description": "Select processional and recessional music",
+          "isTextInput": true
+        }
+      ]
+    },
+    {
+      "id": "enjoy-wedding-day",
+      "title": "Enjoy Your Wedding Day!",
+      "description": "Relax and celebrate your special day",
+      "monthsBeforeWedding": 0,
+      "category": "Celebration",
+      "isWeddingDay": true
+    }
+  ]
+}
