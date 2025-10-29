@@ -89,7 +89,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
                 type="text"
                 required
                 value={formData.task}
-                onChange={(e) => setFormData({ ...formData, task: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, task: e.target.value as string })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="Enter task description"
               />
@@ -118,7 +118,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
               </label>
               <select
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'high' | 'medium' | 'low' })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
               >
                 <option value="high">High Priority</option>
@@ -336,7 +336,7 @@ export default function ChecklistPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select
                   value={filter}
-                  onChange={(e) => setFilter(e.target.value as any)}
+                  onChange={(e) => setFilter(e.target.value as 'all' | 'completed' | 'pending')}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 >
                   <option value="all">All Tasks</option>

@@ -3,10 +3,27 @@
 import React from 'react';
 import { TimelineItem } from '@/lib/timelineGenerator';
 import { CheckCircle, Clock, Calendar } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, TooltipProps } from 'recharts';
 
 interface TimelineProgressProps {
   timelineItems: TimelineItem[];
+}
+
+interface ChartData {
+  name: string;
+  value: number;
+  color: string;
+  icon: React.ComponentType<{ className?: string }>;
+  [key: string]: string | number | React.ComponentType<{ className?: string }>;
+}
+
+interface CustomTooltipProps extends TooltipProps<number, string> {
+  active?: boolean;
+  payload?: Array<{
+    name: string;
+    value: number;
+    payload: ChartData;
+  }>;
 }
 
 export default function TimelineProgress({ timelineItems }: TimelineProgressProps) {
@@ -14,7 +31,7 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
   const remainingItems = timelineItems.filter(item => !item.completed && !item.isWeddingDay);
   const totalItems = completedItems.length + remainingItems.length;
 
-  const data = [
+  const data: ChartData[] = [
     {
       name: 'Completed',
       value: completedItems.length,
@@ -33,8 +50,8 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
 
   const completionPercentage = totalItems > 0 ? Math.round((completedItems.length / totalItems) * 100) : 0;
 
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
+  const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
+    if (active && payload && payload.length > 0) {
       const data = payload[0];
       return (
         <div className="bg-white p-3 border rounded-lg shadow-lg">

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getUserProfile } from '@/lib/api';
+import { getUserProfile, User } from '@/lib/api';
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  user: any | null;
-  login: (userData: any) => void;
+  user: User | null;
+  login: (userData: User) => void;
   logout: () => void;
 }
 
@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Check for auth token and fetch user data on initial load
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkAuth();
   }, []);
 
-  const login = (userData: any) => {
+  const login = (userData: User) => {
     setIsLoggedIn(true);
     setUser(userData);
   };

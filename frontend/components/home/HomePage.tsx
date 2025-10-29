@@ -1,22 +1,20 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import DateInput from './DateInput';
 import Timeline from './Timeline';
 import FeatureCard from '@/components/common/FeatureCard';
 import { Clock, CheckCircle, Download } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getUserProfile } from '@/lib/api';
-import { generateTimeline } from '@/lib/timelineGenerator';
 import Carousel from './Carousel';
 import { TimelineItem } from '@/lib/timelineGenerator';
 
 export default function HomePage() {
   const [weddingDate, setWeddingDate] = useState('');
   const [showPlan, setShowPlan] = useState(false);
-  const [timeline, setTimeline] = useState<TimelineItem[]>([]);
+  const [, setTimeline] = useState<TimelineItem[]>([]);
   const { isLoggedIn } = useAuth();
-  const dateInputRef = useRef<HTMLDivElement>(null);
 
   const checkWeddingDate = async () => {
     if (isLoggedIn) {
@@ -32,17 +30,6 @@ export default function HomePage() {
     checkWeddingDate();
   }, [isLoggedIn]);
 
-  const scrollToDateInput = () => {
-    setTimeout(() => {
-      const dateInputSection = document.getElementById('date-input-section');
-      if (dateInputSection) {
-        dateInputSection.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    }, 100);
-  };
 
   const features = [
     { icon: Clock, text: 'Step-by-step guide' },

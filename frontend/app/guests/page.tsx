@@ -156,7 +156,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
               </label>
               <select
                 value={formData.rsvpStatus}
-                onChange={(e) => setFormData({ ...formData, rsvpStatus: e.target.value as any })}
+                onChange={(e) => setFormData({ ...formData, rsvpStatus: e.target.value as 'pending' | 'attending' | 'declined' | 'no-response' })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
               >
                 <option value="pending">Pending</option>

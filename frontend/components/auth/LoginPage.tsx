@@ -30,7 +30,7 @@ export default function LoginPage() {
       }
 
       const result = await loginUser(email, password);
-      if (result.success && result.token) {
+      if (result.success && result.token && result.user) {
         login(result.user);
         showToast('Login successful!', 'success');
         // Short delay before redirect to show the success toast

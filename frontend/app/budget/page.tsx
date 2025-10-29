@@ -171,7 +171,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
               </label>
               <select
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'high' | 'medium' | 'low' })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
               >
                 <option value="high">High Priority</option>

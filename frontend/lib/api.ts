@@ -3,7 +3,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 import { TimelineItem } from '@/lib/timelineGenerator';
 
 // Define proper user interface
-interface User {
+export interface User {
   id: string;
   fullName: string;
   email: string;
@@ -46,30 +46,6 @@ interface SocialAuthResponse {
   success: boolean;
   message?: string;
   token?: string;
-}
-
-interface TimelineData {
-  weddingDate: string;
-  timeline: TimelineItem[];
-  savedAt?: string;
-  updatedAt?: string;
-  user?: {
-    id: string;
-    fullName: string;
-    email: string;
-  };
-}
-
-interface SaveTimelineResponse {
-  success: boolean;
-  message?: string;
-  data?: any;
-}
-
-interface GetTimelineResponse {
-  success: boolean;
-  data?: TimelineData;
-  message?: string;
 }
 
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
@@ -465,7 +441,7 @@ export async function loadTimeline(): Promise<SavedTimelineData | null> {
 }
 
 // Delete timeline from backend
-export async function deleteTimeline(userId: string): Promise<void> {
+export async function deleteTimeline(): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/timeline/delete`, {
       method: 'DELETE',

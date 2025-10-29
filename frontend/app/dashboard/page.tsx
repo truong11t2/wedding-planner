@@ -65,7 +65,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {greeting}, {user?.name || 'there'}! 
+                {greeting}, {user?.fullName || 'there'}! 
                 <Heart className="inline-block ml-2 h-8 w-8 text-pink-500" />
               </h1>
               <p className="text-gray-600 mt-2">
