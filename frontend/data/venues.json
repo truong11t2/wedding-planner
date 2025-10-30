@@ -1,0 +1,157 @@
+{
+  "venues": [
+    {
+      "id": "1",
+      "name": "Grand Ballroom at The Ritz",
+      "description": "Elegant ballroom with crystal chandeliers, marble floors, and panoramic city views. Perfect for sophisticated wedding celebrations with timeless charm and luxury amenities.",
+      "images": [
+        "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&h=600",
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600",
+        "https://images.unsplash.com/photo-1571501679680-de32f1e7aad4?w=800&h=600"
+      ],
+      "address": {
+        "street": "123 Main Street",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001"
+      },
+      "contact": {
+        "phone": "(555) 123-4567",
+        "email": "events@grandritz.com",
+        "website": "https://grandritz.com"
+      },
+      "pricing": {
+        "basePrice": 15000,
+        "priceRange": "$15,000 - $25,000",
+        "guestCapacity": { "min": 100, "max": 300 }
+      },
+      "amenities": ["Parking", "WiFi", "Air Conditioning", "Sound System", "Catering Kitchen", "Bar Service", "Security", "Bridal Suite"],
+      "venueType": ["Indoor", "Ballroom", "Luxury"],
+      "rating": 4.8,
+      "reviewCount": 127,
+      "availability": {
+        "weekdays": true,
+        "weekends": true,
+        "holidays": false
+      },
+      "features": {
+        "indoor": true,
+        "outdoor": false,
+        "parking": true,
+        "catering": true,
+        "alcohol": true,
+        "music": true,
+        "wifi": true,
+        "airConditioning": true,
+        "security": true
+      },
+      "policies": {
+        "cancellation": "30 days notice",
+        "deposit": "50% required",
+        "setupTime": "4 hours before event"
+      },
+      "isFavorite": false
+    },
+    {
+      "id": "2",
+      "name": "Sunset Garden Estate",
+      "description": "Beautiful outdoor garden venue surrounded by blooming flowers and ancient oak trees. Features both ceremony and reception areas with romantic lighting and natural beauty.",
+      "images": [
+        "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=800&h=600",
+        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&h=600"
+      ],
+      "address": {
+        "street": "456 Garden Lane",
+        "city": "Napa Valley",
+        "state": "CA",
+        "zipCode": "94558"
+      },
+      "contact": {
+        "phone": "(555) 987-6543",
+        "email": "info@sunsetgarden.com",
+        "website": "https://sunsetgarden.com"
+      },
+      "pricing": {
+        "basePrice": 8000,
+        "priceRange": "$8,000 - $15,000",
+        "guestCapacity": { "min": 50, "max": 200 }
+      },
+      "amenities": ["Parking", "WiFi", "Sound System", "Catering Kitchen", "Bar Service", "Bridal Suite"],
+      "venueType": ["Outdoor", "Garden", "Rustic"],
+      "rating": 4.6,
+      "reviewCount": 89,
+      "availability": {
+        "weekdays": true,
+        "weekends": true,
+        "holidays": true
+      },
+      "features": {
+        "indoor": false,
+        "outdoor": true,
+        "parking": true,
+        "catering": true,
+        "alcohol": true,
+        "music": true,
+        "wifi": true,
+        "airConditioning": false,
+        "security": false
+      },
+      "policies": {
+        "cancellation": "60 days notice",
+        "deposit": "30% required",
+        "setupTime": "6 hours before event"
+      },
+      "isFavorite": true
+    },
+    {
+      "id": "3",
+      "name": "Historic Manor House",
+      "description": "Charming 19th-century manor with original architecture, vintage details, and manicured grounds. Offers both indoor and outdoor ceremony options with old-world elegance.",
+      "images": [
+        "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&h=600",
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600"
+      ],
+      "address": {
+        "street": "789 Heritage Drive",
+        "city": "Charleston",
+        "state": "SC",
+        "zipCode": "29401"
+      },
+      "contact": {
+        "phone": "(555) 456-7890",
+        "email": "weddings@historicmanor.com"
+      },
+      "pricing": {
+        "basePrice": 12000,
+        "priceRange": "$12,000 - $20,000",
+        "guestCapacity": { "min": 80, "max": 250 }
+      },
+      "amenities": ["Parking", "WiFi", "Air Conditioning", "Sound System", "Catering Kitchen", "Bar Service"],
+      "venueType": ["Historic", "Indoor", "Outdoor"],
+      "rating": 4.7,
+      "reviewCount": 156,
+      "availability": {
+        "weekdays": false,
+        "weekends": true,
+        "holidays": false
+      },
+      "features": {
+        "indoor": true,
+        "outdoor": true,
+        "parking": true,
+        "catering": true,
+        "alcohol": true,
+        "music": true,
+        "wifi": true,
+        "airConditioning": true,
+        "security": true
+      },
+      "policies": {
+        "cancellation": "45 days notice",
+        "deposit": "40% required",
+        "setupTime": "5 hours before event"
+      },
+      "isFavorite": false
+    }
+  ]
+}

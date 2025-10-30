@@ -388,7 +388,7 @@ function BudgetBlogPosts() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogPosts.map((post) => (
           <article
             key={post.id}
@@ -398,7 +398,7 @@ function BudgetBlogPosts() {
               <img
                 src={post.image}
                 alt={post.title}
-                className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-200"
+                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
               />
             </div>
             
