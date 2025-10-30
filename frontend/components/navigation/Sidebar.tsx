@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import {
   X,
   LayoutDashboard,
@@ -50,9 +50,26 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
     <div className="flex-1 flex flex-col min-h-0 bg-white">
       {/* Sidebar header */}
       <div className="flex-shrink-0 px-4 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-medium text-gray-900">
-          Welcome back {user.fullName}
-        </h2>
+{/* User profile section */}
+      <div className="flex-shrink-0 border-t border-gray-200 p-4">
+        <div className="flex items-center space-x-3">
+          <div className="flex-shrink-0">
+            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
+              <span className="text-sm font-semibold text-white">
+                {user.fullName?.charAt(0)?.toUpperCase() || 'U'}
+              </span>
+            </div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate">
+              {user.fullName}
+            </p>
+            <p className="text-xs text-gray-500 truncate">
+              {user.email}
+            </p>
+          </div>
+        </div>
+      </div>
       </div>
       
       {/* Navigation menu */}
@@ -86,36 +103,15 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
           );
         })}
       </nav>
-      
-      {/* User profile section */}
-      <div className="flex-shrink-0 border-t border-gray-200 p-4">
-        <div className="flex items-center space-x-3">
-          <div className="flex-shrink-0">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
-              <span className="text-sm font-semibold text-white">
-                {user.fullName?.charAt(0)?.toUpperCase() || 'U'}
-              </span>
-            </div>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {user.fullName}
-            </p>
-            <p className="text-xs text-gray-500 truncate">
-              {user.email}
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 
   return (
     <>
       {/* Mobile sidebar */}
-      <Transition.Root show={sidebarOpen} as={Fragment}>
+      <Transition show={sidebarOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="transition-opacity ease-linear duration-300"
             enterFrom="opacity-0"
@@ -125,10 +121,10 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             leaveTo="opacity-0"
           >
             <div className="fixed inset-0 bg-gray-900/80" />
-          </Transition.Child>
+          </TransitionChild>
 
           <div className="fixed inset-0 flex">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="transition ease-in-out duration-300 transform"
               enterFrom="-translate-x-full"
@@ -137,8 +133,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
-                <Transition.Child
+              <DialogPanel className="relative mr-16 flex w-full max-w-xs flex-1">
+                <TransitionChild
                   as={Fragment}
                   enter="ease-in-out duration-300"
                   enterFrom="opacity-0"
@@ -157,17 +153,17 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                       <X className="h-6 w-6 text-white" aria-hidden="true" />
                     </button>
                   </div>
-                </Transition.Child>
+                </TransitionChild>
                 <SidebarContent />
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </Dialog>
-      </Transition.Root>
+      </Transition>
 
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 lg:pt-16 lg:z-30">
-        <div className="border-r border-gray-200 shadow-sm">
+        <div className="border-r border-gray-200 shadow-sm h-full">
           <SidebarContent />
         </div>
       </aside>

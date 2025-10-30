@@ -215,7 +215,6 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6 pb-24"> {/* Added bottom padding to prevent overlap with floating button */}
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
@@ -431,8 +430,6 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
             </div>
           ))}
         </div>
-      </div>
-
       {/* Floating Save Button */}
       <FloatingSaveButton />
     </>

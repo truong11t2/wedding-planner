@@ -9,11 +9,11 @@ import BudgetOverview from '@/components/dashboard/BudgetOverview';
 import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import BlogPosts from '@/components/dashboard/BlogPosts';
 import DashboardStats from '@/components/dashboard/DashboardStats';
-import { Calendar, CheckCircle, Clock, DollarSign, Heart, TrendingUp } from 'lucide-react';
+import { Calendar, Heart } from 'lucide-react';
 
 export default function DashboardPage() {
   const { user, isLoggedIn } = useAuth();
-  const { timelineItems, weddingDate, isLoading } = useTimeline();
+  const { timelineItems, weddingDate } = useTimeline();
   const router = useRouter();
   const [greeting, setGreeting] = useState('');
 
