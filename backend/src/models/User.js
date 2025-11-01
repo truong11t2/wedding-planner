@@ -46,6 +46,21 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
+  checklistData: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: null
+  },
+  guestData: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: null
+  },
+  budgetData: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: null
+  },
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
