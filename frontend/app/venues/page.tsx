@@ -28,60 +28,7 @@ import {
   Shield,
   MapPinned
 } from 'lucide-react';
-import { venueService } from '@/lib/venueService';
-
-interface Venue {
-  id: string;
-  name: string;
-  description: string;
-  images: string[];
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    coordinates?: { lat: number; lng: number };
-  };
-  contact: {
-    phone: string;
-    email: string;
-    website?: string;
-  };
-  pricing: {
-    basePrice: number;
-    priceRange: string;
-    guestCapacity: {
-      min: number;
-      max: number;
-    };
-  };
-  amenities: string[];
-  venueType: string[];
-  rating: number;
-  reviewCount: number;
-  availability: {
-    weekdays: boolean;
-    weekends: boolean;
-    holidays: boolean;
-  };
-  features: {
-    indoor: boolean;
-    outdoor: boolean;
-    parking: boolean;
-    catering: boolean;
-    alcohol: boolean;
-    music: boolean;
-    wifi: boolean;
-    airConditioning: boolean;
-    security: boolean;
-  };
-  policies: {
-    cancellation: string;
-    deposit: string;
-    setupTime: string;
-  };
-  isFavorite: boolean;
-}
+import { venueService, Venue } from '@/lib/venueService';
 
 interface VenueCardProps {
   venue: Venue;
@@ -564,31 +511,6 @@ useEffect(() => {
   }
 }, [isLoggedIn]);
 
-  // Add loading state to your JSX
-  if (!isLoggedIn) {
-    return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
-          <p className="text-gray-600">Browse wedding venues by logging in first.</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Add loading spinner
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <h2 className="text-lg font-medium text-gray-900">Loading venues...</h2>
-          <p className="text-gray-600">Please wait while we fetch the latest venue information.</p>
-        </div>
-      </div>
-    );
-  }
-  
 // Update the filter effect:
 useEffect(() => {
   let filtered = venues;
@@ -624,6 +546,31 @@ useEffect(() => {
   setFilteredVenues(filtered);
 }, [venues, searchQuery, filters]);
 
+  // Add loading state to your JSX
+  if (!isLoggedIn) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
+          <p className="text-gray-600">Browse wedding venues by logging in first.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Add loading spinner
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <h2 className="text-lg font-medium text-gray-900">Loading venues...</h2>
+          <p className="text-gray-600">Please wait while we fetch the latest venue information.</p>
+        </div>
+      </div>
+    );
+  }
+  
 // Update the handleToggleFavorite function:
 const handleToggleFavorite = (venueId: string) => {
   const updatedVenue = venueService.toggleFavorite(venueId);

@@ -1,5 +1,58 @@
 import venuesData from '@/data/venues.json';
 
+export interface Venue {
+  id: string;
+  name: string;
+  description: string;
+  images: string[];
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    coordinates?: { lat: number; lng: number };
+  };
+  contact: {
+    phone: string;
+    email: string;
+    website?: string;
+  };
+  pricing: {
+    basePrice: number;
+    priceRange: string;
+    guestCapacity: {
+      min: number;
+      max: number;
+    };
+  };
+  amenities: string[];
+  venueType: string[];
+  rating: number;
+  reviewCount: number;
+  availability: {
+    weekdays: boolean;
+    weekends: boolean;
+    holidays: boolean;
+  };
+  features: {
+    indoor: boolean;
+    outdoor: boolean;
+    parking: boolean;
+    catering: boolean;
+    alcohol: boolean;
+    music: boolean;
+    wifi: boolean;
+    airConditioning: boolean;
+    security: boolean;
+  };
+  policies: {
+    cancellation: string;
+    deposit: string;
+    setupTime: string;
+  };
+  isFavorite: boolean;
+}
+
 export interface VenueData {
   venues: Venue[];
 }
