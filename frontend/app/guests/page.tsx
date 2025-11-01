@@ -4,21 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Toast from '@/components/common/Toast';
 import { Users, Plus, Edit2, Trash2, Mail, Phone, MapPin, Gift, Check, X } from 'lucide-react';
-
-interface Guest {
-  id: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  side: 'bride' | 'groom';
-  rsvpStatus: 'pending' | 'attending' | 'declined' | 'no-response';
-  plusOne: boolean;
-  plusOneName?: string;
-  dietaryRestrictions?: string;
-  notes?: string;
-  createdAt: Date;
-}
+import { 
+  getGuestList, 
+  saveGuestList, 
+  addGuest as apiAddGuest,
+  updateGuest as apiUpdateGuest,
+  deleteGuest as apiDeleteGuest,
+  updateRSVP as apiUpdateRSVP,
+  getGuestStats,
+  Guest,
+  GuestStats
+} from '@/lib/api';
 
 interface AddGuestModalProps {
   isOpen: boolean;
@@ -339,6 +335,7 @@ function GuestCard({ guest, onEdit, onDelete }: GuestCardProps) {
 export default function GuestsPage() {
   const { isLoggedIn, user } = useAuth();
   const [guests, setGuests] = useState<Guest[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalSide, setModalSide] = useState<'bride' | 'groom'>('bride');
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
@@ -363,36 +360,45 @@ export default function GuestsPage() {
     }, 3000);
   };
 
-  // Sample data - replace with API calls
+  // Load guest list from backend
   useEffect(() => {
-    if (isLoggedIn) {
-      // Load guests from API
-      const sampleGuests: Guest[] = [
-        {
-          id: '1',
-          name: 'John Smith',
-          email: 'john@example.com',
-          phone: '(555) 123-4567',
-          side: 'bride',
-          rsvpStatus: 'attending',
-          plusOne: true,
-          plusOneName: 'Jane Smith',
-          createdAt: new Date(),
-        },
-        {
-          id: '2',
-          name: 'Sarah Johnson',
-          email: 'sarah@example.com',
-          side: 'groom',
-          rsvpStatus: 'pending',
-          plusOne: false,
-          dietaryRestrictions: 'Vegetarian',
-          createdAt: new Date(),
+    const loadGuestData = async () => {
+      if (isLoggedIn) {
+        setLoading(true);
+        try {
+          const response = await getGuestList();
+          if (response.success && response.data) {
+            setGuests(response.data);
+          } else {
+            // Initialize with empty list if no data exists
+            setGuests([]);
+          }
+        } catch (error) {
+          console.error('Error loading guest list:', error);
+          showToast('Failed to load guest list', 'error');
+        } finally {
+          setLoading(false);
         }
-      ];
-      setGuests(sampleGuests);
-    }
+      }
+    };
+
+    loadGuestData();
   }, [isLoggedIn]);
+
+  // Auto-save guest list whenever guests change (debounced)
+  useEffect(() => {
+    if (guests.length >= 0 && isLoggedIn && !loading) {
+      const timeoutId = setTimeout(async () => {
+        try {
+          await saveGuestList(guests);
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+        }
+      }, 1000); // Debounce auto-save by 1 second
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [guests, isLoggedIn, loading]);
 
   if (!isLoggedIn) {
     return (
@@ -400,6 +406,17 @@ export default function GuestsPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
           <p className="text-gray-600">Manage your guest list by logging in first.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <h2 className="text-lg font-medium text-gray-900">Loading your guest list...</h2>
         </div>
       </div>
     );
@@ -417,32 +434,48 @@ export default function GuestsPage() {
     setIsModalOpen(true);
   };
 
-  const handleSaveGuest = (guestData: Omit<Guest, 'id' | 'createdAt'>) => {
-    if (editingGuest) {
-      // Update existing guest
-      setGuests(prev => prev.map(g => 
-        g.id === editingGuest.id 
-          ? { ...g, ...guestData }
-          : g
-      ));
-      showToast(`${guestData.name} has been updated successfully`, 'success');
-    } else {
-      // Add new guest
-      const newGuest: Guest = {
-        ...guestData,
-        id: Date.now().toString(),
-        createdAt: new Date(),
-      };
-      setGuests(prev => [...prev, newGuest]);
-      showToast(`${guestData.name} has been added to your guest list`, 'success');
+  const handleSaveGuest = async (guestData: Omit<Guest, 'id' | 'createdAt'>) => {
+    try {
+      if (editingGuest) {
+        // Update existing guest
+        const response = await apiUpdateGuest(editingGuest.id, guestData);
+        if (response.success && response.data) {
+          setGuests(prev => prev.map(g => 
+            g.id === editingGuest.id ? response.data! : g
+          ));
+          showToast(`${guestData.name} has been updated successfully`, 'success');
+        } else {
+          showToast(response.message || 'Failed to update guest', 'error');
+        }
+      } else {
+        // Add new guest
+        const response = await apiAddGuest(guestData);
+        if (response.success && response.data) {
+          setGuests(prev => [...prev, response.data!]);
+          showToast(`${guestData.name} has been added to your guest list`, 'success');
+        } else {
+          showToast(response.message || 'Failed to add guest', 'error');
+        }
+      }
+    } catch (error) {
+      showToast('Error saving guest', 'error');
     }
   };
 
-  const handleDeleteGuest = (guestId: string) => {
+  const handleDeleteGuest = async (guestId: string) => {
     const guest = guests.find(g => g.id === guestId);
     if (guest && window.confirm(`Are you sure you want to remove ${guest.name} from your guest list?`)) {
-      setGuests(prev => prev.filter(g => g.id !== guestId));
-      showToast(`${guest.name} has been removed from your guest list`, 'success');
+      try {
+        const response = await apiDeleteGuest(guestId);
+        if (response.success) {
+          setGuests(prev => prev.filter(g => g.id !== guestId));
+          showToast(`${guest.name} has been removed from your guest list`, 'success');
+        } else {
+          showToast(response.message || 'Failed to delete guest', 'error');
+        }
+      } catch (error) {
+        showToast('Error deleting guest', 'error');
+      }
     }
   };
 

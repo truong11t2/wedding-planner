@@ -19,22 +19,166 @@ import {
   CheckCircle,
   XCircle
 } from 'lucide-react';
+import {
+  BudgetCategory,
+  BudgetData,
+  getBudgetData,
+  saveBudgetData,
+  updateTotalBudget as apiUpdateTotalBudget,
+  addBudgetCategory as apiAddCategory,
+  updateBudgetCategory as apiUpdateCategory,
+  deleteBudgetCategory as apiDeleteCategory
+} from '@/lib/api';
 
-interface BudgetCategory {
-  id: string;
-  name: string;
-  budgeted: number;
-  spent: number;
-  color: string;
-  description: string;
-  priority: 'high' | 'medium' | 'low';
-}
 
 interface BudgetModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (category: Omit<BudgetCategory, 'id'>) => void;
   editCategory?: BudgetCategory | null;
+}
+
+interface UpdateBudgetModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (budget: number) => void;
+  currentBudget: number;
+}
+
+function UpdateBudgetModal({ isOpen, onClose, onSave, currentBudget }: UpdateBudgetModalProps) {
+  const [formData, setFormData] = useState({
+    totalBudget: '',
+    notes: ''
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        totalBudget: currentBudget.toString(),
+        notes: ''
+      });
+    }
+  }, [isOpen, currentBudget]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const budget = parseFloat(formData.totalBudget);
+    if (!isNaN(budget) && budget >= 0) {
+      onSave(budget);
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-md w-full">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-900">
+              Update Wedding Budget
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <XCircle className="h-6 w-6" />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Total Budget *
+              </label>
+              <div className="relative">
+                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="number"
+                  required
+                  min="0"
+                  step="1"
+                  value={formData.totalBudget}
+                  onChange={(e) => setFormData({ ...formData, totalBudget: e.target.value })}
+                  className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                  placeholder="25000"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Enter your total wedding budget in dollars
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Budget Notes (Optional)
+              </label>
+              <textarea
+                value={formData.notes}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Any notes about your budget planning..."
+                rows={3}
+              />
+            </div>
+
+            {/* Budget Guidelines */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="text-sm font-medium text-blue-900 mb-2">💡 Budget Planning Tips:</h4>
+              <ul className="text-xs text-blue-700 space-y-1">
+                <li>• Average wedding cost: $20,000 - $35,000</li>
+                <li>• Add 10-20% buffer for unexpected expenses</li>
+                <li>• Consider seasonal and location factors</li>
+                <li>• Prioritize your most important elements</li>
+              </ul>
+            </div>
+
+            {/* Current vs New Budget Comparison */}
+            {parseFloat(formData.totalBudget) > 0 && parseFloat(formData.totalBudget) !== currentBudget && (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-gray-900 mb-2">Budget Comparison:</h4>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Current Budget:</span>
+                  <span className="font-medium text-gray-900">${currentBudget.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">New Budget:</span>
+                  <span className="font-medium text-blue-600">${parseFloat(formData.totalBudget).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm mt-1 pt-1 border-t border-gray-200">
+                  <span className="text-gray-600">Difference:</span>
+                  <span className={`font-medium ${
+                    parseFloat(formData.totalBudget) > currentBudget ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {parseFloat(formData.totalBudget) > currentBudget ? '+' : ''}
+                    ${(parseFloat(formData.totalBudget) - currentBudget).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex space-x-3 pt-4">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={!formData.totalBudget || parseFloat(formData.totalBudget) <= 0}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Update Budget
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps) {
@@ -426,7 +570,9 @@ function BudgetBlogPosts() {
 export default function BudgetPage() {
   const { isLoggedIn } = useAuth();
   const [categories, setCategories] = useState<BudgetCategory[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<BudgetCategory | null>(null);
   const [totalBudget, setTotalBudget] = useState(25000);
   const [toast, setToast] = useState<{
@@ -446,9 +592,18 @@ export default function BudgetPage() {
     }, 3000);
   };
 
-  // Sample budget categories
+  // Load budget data from backend when component mounts
   useEffect(() => {
+    const loadBudgetData = async () => {
     if (isLoggedIn) {
+        setLoading(true);
+        try {
+          const response = await getBudgetData();
+          if (response.success && response.data) {
+            setTotalBudget(response.data.totalBudget);
+            setCategories(response.data.categories);
+          } else {
+            // Initialize with sample data if no budget exists
       const sampleCategories: BudgetCategory[] = [
         {
           id: '1',
@@ -506,8 +661,35 @@ export default function BudgetPage() {
         }
       ];
       setCategories(sampleCategories);
+            // Save initial data to backend
+            await saveBudgetData({ totalBudget: 25000, categories: sampleCategories });
     }
+        } catch (error) {
+          console.error('Error loading budget data:', error);
+          showToast('Failed to load budget data', 'error');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadBudgetData();
   }, [isLoggedIn]);
+
+  // Auto-save budget data whenever it changes (debounced)
+  useEffect(() => {
+    if (!loading && isLoggedIn && (categories.length > 0 || totalBudget !== 25000)) {
+      const timeoutId = setTimeout(async () => {
+        try {
+          await saveBudgetData({ totalBudget, categories });
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+        }
+      }, 1000); // Debounce auto-save by 1 second
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [categories, totalBudget, isLoggedIn, loading]);
 
   if (!isLoggedIn) {
     return (
@@ -515,6 +697,17 @@ export default function BudgetPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
           <p className="text-gray-600">Access your wedding budget by logging in first.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <h2 className="text-lg font-medium text-gray-900">Loading your budget...</h2>
         </div>
       </div>
     );
@@ -536,29 +729,48 @@ export default function BudgetPage() {
     setIsModalOpen(true);
   };
 
-  const handleSaveCategory = (categoryData: Omit<BudgetCategory, 'id'>) => {
+  const handleSaveCategory = async (categoryData: Omit<BudgetCategory, 'id'>) => {
+    try {
     if (editingCategory) {
+        // Update existing category
+        const response = await apiUpdateCategory(editingCategory.id, categoryData);
+        if (response.success && response.data) {
       setCategories(prev => prev.map(cat => 
-        cat.id === editingCategory.id 
-          ? { ...cat, ...categoryData }
-          : cat
+            cat.id === editingCategory.id ? response.data! : cat
       ));
       showToast(`${categoryData.name} category updated successfully`, 'success');
     } else {
-      const newCategory: BudgetCategory = {
-        ...categoryData,
-        id: Date.now().toString()
-      };
-      setCategories(prev => [...prev, newCategory]);
+          showToast(response.message || 'Failed to update category', 'error');
+        }
+      } else {
+        // Add new category
+        const response = await apiAddCategory(categoryData);
+        if (response.success && response.data) {
+          setCategories(prev => [...prev, response.data!]);
       showToast(`${categoryData.name} category added successfully`, 'success');
+        } else {
+          showToast(response.message || 'Failed to add category', 'error');
+        }
+      }
+    } catch (error) {
+      showToast('Error saving category', 'error');
     }
   };
 
-  const handleDeleteCategory = (categoryId: string) => {
+  const handleDeleteCategory = async (categoryId: string) => {
     const category = categories.find(cat => cat.id === categoryId);
     if (category && window.confirm(`Are you sure you want to delete the ${category.name} category?`)) {
+      try {
+        const response = await apiDeleteCategory(categoryId);
+        if (response.success) {
       setCategories(prev => prev.filter(cat => cat.id !== categoryId));
       showToast(`${category.name} category deleted successfully`, 'success');
+        } else {
+          showToast(response.message || 'Failed to delete category', 'error');
+        }
+      } catch (error) {
+        showToast('Error deleting category', 'error');
+      }
     }
   };
 
@@ -566,6 +778,20 @@ export default function BudgetPage() {
     if (budgetUsedPercentage > 100) return { status: 'danger', message: 'Over budget!', icon: AlertTriangle };
     if (budgetUsedPercentage > 85) return { status: 'warning', message: 'Close to budget limit', icon: AlertTriangle };
     return { status: 'good', message: 'Within budget', icon: CheckCircle };
+  };
+
+  const handleUpdateBudget = async (newBudget: number) => {
+    try {
+      const response = await apiUpdateTotalBudget(newBudget);
+      if (response.success) {
+    setTotalBudget(newBudget);
+    showToast(`Budget updated to $${newBudget.toLocaleString()}`, 'success');
+      } else {
+        showToast(response.message || 'Failed to update budget', 'error');
+      }
+    } catch (error) {
+      showToast('Error updating budget', 'error');
+    }
   };
 
   const budgetStatus = getBudgetStatus();
@@ -593,15 +819,10 @@ export default function BudgetPage() {
               ${totalBudget.toLocaleString()}
             </div>
             <button
-              onClick={() => {
-                const newBudget = prompt('Enter your total wedding budget:', totalBudget.toString());
-                if (newBudget && !isNaN(Number(newBudget))) {
-                  setTotalBudget(Number(newBudget));
-                  showToast('Total budget updated successfully', 'success');
-                }
-              }}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              onClick={() => setIsBudgetModalOpen(true)} // Update this onClick
+              className="inline-flex text-sm text-blue-600 hover:text-blue-700 hover:underline font-medium"
             >
+              <Edit2 className="h-4 w-4 mr-2" />
               Update Budget
             </button>
           </div>
@@ -755,6 +976,14 @@ export default function BudgetPage() {
           onClose={() => setIsModalOpen(false)}
           onSave={handleSaveCategory}
           editCategory={editingCategory}
+        />
+
+        {/* Update Budget Modal */}
+        <UpdateBudgetModal
+          isOpen={isBudgetModalOpen}
+          onClose={() => setIsBudgetModalOpen(false)}
+          onSave={handleUpdateBudget}
+          currentBudget={totalBudget}
         />
       </div>
 

@@ -4,14 +4,15 @@ import { useAuth } from '@/context/AuthContext';
 import React, { useState, useEffect } from 'react';
 import Toast from '@/components/common/Toast';
 import { CircleCheckBig, Plus, X, Edit2, Trash2 } from 'lucide-react';
-
-interface ChecklistItem {
-  id: number;
-  task: string;
-  category: string;
-  completed: boolean;
-  priority: 'high' | 'medium' | 'low';
-}
+import { 
+  getChecklist, 
+  saveChecklist, 
+  addChecklistItem as apiAddItem,
+  updateChecklistItem as apiUpdateItem,
+  deleteChecklistItem as apiDeleteItem,
+  toggleChecklistItem as apiToggleItem,
+  ChecklistItem 
+} from '@/lib/api';
 
 interface AddTaskModalProps {
   isOpen: boolean;
@@ -89,7 +90,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
                 type="text"
                 required
                 value={formData.task}
-                onChange={(e) => setFormData({ ...formData, task: e.target.value as string })}
+                onChange={(e) => setFormData({ ...formData, task: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="Enter task description"
               />
@@ -149,20 +150,10 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
   );
 }
 
-const initialTasks: ChecklistItem[] = [
-  { id: 1, task: 'Set wedding date', category: 'Planning', completed: false, priority: 'high' },
-  { id: 2, task: 'Create guest list', category: 'Guests', completed: false, priority: 'high' },
-  { id: 3, task: 'Book ceremony venue', category: 'Venue', completed: false, priority: 'high' },
-  { id: 4, task: 'Choose photographer', category: 'Photography', completed: false, priority: 'medium' },
-  { id: 5, task: 'Select catering menu', category: 'Catering', completed: false, priority: 'medium' },
-  { id: 6, task: 'Order wedding invitations', category: 'Invitations', completed: false, priority: 'medium' },
-  { id: 7, task: 'Shop for wedding dress', category: 'Attire', completed: false, priority: 'low' },
-  { id: 8, task: 'Plan honeymoon destination', category: 'Honeymoon', completed: false, priority: 'low' },
-];
-
 export default function ChecklistPage() {
   const { user, isLoggedIn } = useAuth();
-  const [tasks, setTasks] = useState<ChecklistItem[]>(initialTasks);
+  const [tasks, setTasks] = useState<ChecklistItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<ChecklistItem | null>(null);
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
@@ -184,6 +175,58 @@ export default function ChecklistPage() {
     }, 3000);
   };
 
+  // Load checklist from backend when component mounts
+  useEffect(() => {
+    const loadChecklistData = async () => {
+      if (isLoggedIn) {
+        setLoading(true);
+        try {
+          const response = await getChecklist();
+          if (response.success && response.data) {
+            setTasks(response.data);
+          } else {
+            // If no checklist exists, initialize with default tasks
+            const initialTasks: ChecklistItem[] = [
+              { id: 1, task: 'Set wedding date', category: 'Planning', completed: false, priority: 'high' },
+              { id: 2, task: 'Create guest list', category: 'Guests', completed: false, priority: 'high' },
+              { id: 3, task: 'Book ceremony venue', category: 'Venue', completed: false, priority: 'high' },
+              { id: 4, task: 'Choose photographer', category: 'Photography', completed: false, priority: 'medium' },
+              { id: 5, task: 'Select catering menu', category: 'Catering', completed: false, priority: 'medium' },
+              { id: 6, task: 'Order wedding invitations', category: 'Invitations', completed: false, priority: 'medium' },
+              { id: 7, task: 'Shop for wedding dress', category: 'Attire', completed: false, priority: 'low' },
+              { id: 8, task: 'Plan honeymoon destination', category: 'Honeymoon', completed: false, priority: 'low' },
+            ];
+            setTasks(initialTasks);
+            // Save initial tasks to backend
+            await saveChecklist(initialTasks);
+          }
+        } catch (error) {
+          console.error('Error loading checklist:', error);
+          showToast('Failed to load checklist', 'error');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadChecklistData();
+  }, [isLoggedIn]);
+
+  // Auto-save checklist whenever tasks change (debounced)
+  useEffect(() => {
+    if (tasks.length > 0 && isLoggedIn && !loading) {
+      const timeoutId = setTimeout(async () => {
+        try {
+          await saveChecklist(tasks);
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+        }
+      }, 1000); // Debounce auto-save by 1 second
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [tasks, isLoggedIn, loading]);
+
   if (!isLoggedIn) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
@@ -195,22 +238,38 @@ export default function ChecklistPage() {
     );
   }
 
-  const toggleTask = (taskId: number) => {
-    setTasks(prevTasks => {
-      const updatedTasks = prevTasks.map(task => 
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      );
-      
-      const task = updatedTasks.find(t => t.id === taskId);
-      if (task) {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <h2 className="text-lg font-medium text-gray-900">Loading your checklist...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  const toggleTask = async (taskId: number) => {
+    try {
+      const response = await apiToggleItem(taskId);
+      if (response.success && response.data) {
+        setTasks(prevTasks => 
+          prevTasks.map(task => 
+            task.id === taskId ? response.data! : task
+          )
+        );
+        
+        const task = response.data;
         showToast(
           task.completed ? `"${task.task}" marked as completed!` : `"${task.task}" marked as pending`,
           'success'
         );
+      } else {
+        showToast(response.message || 'Failed to toggle task', 'error');
       }
-      
-      return updatedTasks;
-    });
+    } catch (error) {
+      showToast('Error updating task', 'error');
+    }
   };
 
   const handleAddTask = () => {
@@ -223,34 +282,50 @@ export default function ChecklistPage() {
     setIsModalOpen(true);
   };
 
-  const handleSaveTask = (taskData: Omit<ChecklistItem, 'id' | 'completed'>) => {
-    if (editingTask) {
-      // Update existing task
-      setTasks(prevTasks => 
-        prevTasks.map(task => 
-          task.id === editingTask.id 
-            ? { ...task, ...taskData }
-            : task
-        )
-      );
-      showToast(`Task "${taskData.task}" updated successfully`, 'success');
-    } else {
-      // Add new task
-      const newTask: ChecklistItem = {
-        ...taskData,
-        id: Math.max(...tasks.map(t => t.id), 0) + 1,
-        completed: false
-      };
-      setTasks(prevTasks => [...prevTasks, newTask]);
-      showToast(`Task "${taskData.task}" added successfully`, 'success');
+  const handleSaveTask = async (taskData: Omit<ChecklistItem, 'id' | 'completed'>) => {
+    try {
+      if (editingTask) {
+        // Update existing task
+        const response = await apiUpdateItem(editingTask.id, taskData);
+        if (response.success && response.data) {
+          setTasks(prevTasks => 
+            prevTasks.map(task => 
+              task.id === editingTask.id ? response.data! : task
+            )
+          );
+          showToast(`Task "${taskData.task}" updated successfully`, 'success');
+        } else {
+          showToast(response.message || 'Failed to update task', 'error');
+        }
+      } else {
+        // Add new task
+        const response = await apiAddItem(taskData);
+        if (response.success && response.data) {
+          setTasks(prevTasks => [...prevTasks, response.data!]);
+          showToast(`Task "${taskData.task}" added successfully`, 'success');
+        } else {
+          showToast(response.message || 'Failed to add task', 'error');
+        }
+      }
+    } catch (error) {
+      showToast('Error saving task', 'error');
     }
   };
 
-  const handleDeleteTask = (taskId: number) => {
+  const handleDeleteTask = async (taskId: number) => {
     const task = tasks.find(t => t.id === taskId);
     if (task && window.confirm(`Are you sure you want to delete "${task.task}"?`)) {
-      setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
-      showToast(`Task "${task.task}" deleted successfully`, 'success');
+      try {
+        const response = await apiDeleteItem(taskId);
+        if (response.success) {
+          setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
+          showToast(`Task "${task.task}" deleted successfully`, 'success');
+        } else {
+          showToast(response.message || 'Failed to delete task', 'error');
+        }
+      } catch (error) {
+        showToast('Error deleting task', 'error');
+      }
     }
   };
 

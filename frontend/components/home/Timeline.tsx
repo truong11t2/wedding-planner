@@ -298,7 +298,7 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
                   </div>
 
                   {/* Due date */}
-                  <div className="flex items-center text-sm text-gray-500 mb-4">
+                  <div className="flex items-center text-sm text-orange-500 mb-4">
                     <Clock className="h-4 w-4 mr-1" />
                     <span>Due: {formatDate(item.dueDate)}</span>
                   </div>

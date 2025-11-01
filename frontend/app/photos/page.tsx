@@ -557,13 +557,17 @@ export default function PhotosPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [toast, setToast] = useState({
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+  }>({
     show: false,
     message: '',
-    type: 'success' as const
+    type: 'success'
   });
 
-  const showToast = (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'success') => {
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ show: true, message, type });
     setTimeout(() => {
       setToast(prev => ({ ...prev, show: false }));

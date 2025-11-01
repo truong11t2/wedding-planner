@@ -19,7 +19,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      router.push('/auth/login');
+      router.push('/');
       return;
     }
 
@@ -73,10 +73,10 @@ export default function DashboardPage() {
                   daysUntilWedding !== null ? (
                     daysUntilWedding > 0 ? (
                       <>
-                        Your wedding is on {formatDate(weddingDate)} - 
+                        {/* Your wedding is on {formatDate(weddingDate)} - 
                         <span className="font-semibold text-pink-600 ml-1">
                           {daysUntilWedding} days to go!
-                        </span>
+                        </span> */}
                       </>
                     ) : daysUntilWedding === 0 ? (
                       <span className="font-bold text-pink-600">
