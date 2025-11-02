@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Toast from '@/components/common/Toast';
 import { 
@@ -26,21 +26,15 @@ import {
   ZoomIn,
   ZoomOut
 } from 'lucide-react';
-
-interface Photo {
-  id: string;
-  name: string;
-  url: string;
-  thumbnailUrl: string;
-  size: number;
-  uploadDate: Date;
-  category: string;
-  tags: string[];
-  isFavorite: boolean;
-  description?: string;
-  location?: string;
-  people?: string[];
-}
+import {
+  Photo,
+  getPhotos,
+  savePhotos,
+  addPhoto as apiAddPhoto,
+  updatePhoto as apiUpdatePhoto,
+  deletePhoto as apiDeletePhoto,
+  togglePhotoFavorite as apiToggleFavorite
+} from '@/lib/api';
 
 interface PhotoViewerProps {
   photo: Photo;
@@ -255,7 +249,7 @@ function PhotoViewer({
 
               <div>
                 <label className="text-sm font-medium text-gray-700">Upload Date</label>
-                <p className="text-gray-900">{photo.uploadDate.toLocaleDateString()}</p>
+                <p className="text-gray-900">{photo.uploadDate}</p>
               </div>
 
               <div>
@@ -550,6 +544,7 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
 export default function PhotosPage() {
   const { isLoggedIn } = useAuth();
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -574,87 +569,45 @@ export default function PhotosPage() {
     }, 3000);
   };
 
-  // Initialize with sample photos
-  React.useEffect(() => {
+  // Load photos from backend when component mounts
+  useEffect(() => {
+    const loadPhotosData = async () => {
     if (isLoggedIn) {
-      const samplePhotos: Photo[] = [
-        {
-          id: '1',
-          name: 'engagement-ring.jpg',
-          url: '/api/placeholder/800/600',
-          thumbnailUrl: '/api/placeholder/300/200',
-          size: 2500000,
-          uploadDate: new Date('2024-01-15'),
-          category: 'engagement',
-          tags: ['ring', 'proposal', 'romantic'],
-          isFavorite: true,
-          description: 'The perfect moment when everything began',
-          location: 'Central Park, NYC'
-        },
-        {
-          id: '2',
-          name: 'ceremony-kiss.jpg',
-          url: '/api/placeholder/800/600',
-          thumbnailUrl: '/api/placeholder/300/200',
-          size: 3200000,
-          uploadDate: new Date('2024-02-01'),
-          category: 'ceremony',
-          tags: ['ceremony', 'kiss', 'altar'],
-          isFavorite: true,
-          description: 'Our first kiss as married couple'
-        },
-        {
-          id: '3',
-          name: 'reception-dance.jpg',
-          url: '/api/placeholder/800/600',
-          thumbnailUrl: '/api/placeholder/300/200',
-          size: 2800000,
-          uploadDate: new Date('2024-02-01'),
-          category: 'reception',
-          tags: ['dance', 'celebration', 'party'],
-          isFavorite: false,
-          description: 'Dancing the night away'
-        },
-        {
-          id: '4',
-          name: 'getting-ready.jpg',
-          url: '/api/placeholder/800/600',
-          thumbnailUrl: '/api/placeholder/300/200',
-          size: 1900000,
-          uploadDate: new Date('2024-02-01'),
-          category: 'getting-ready',
-          tags: ['preparation', 'bride', 'makeup'],
-          isFavorite: false,
-          description: 'Final preparations before the big moment'
-        },
-        {
-          id: '5',
-          name: 'couple-portrait.jpg',
-          url: '/api/placeholder/800/600',
-          thumbnailUrl: '/api/placeholder/300/200',
-          size: 2100000,
-          uploadDate: new Date('2024-02-01'),
-          category: 'portraits',
-          tags: ['portrait', 'couple', 'love'],
-          isFavorite: true,
-          description: 'A moment of quiet love amidst the celebration'
-        },
-        {
-          id: '6',
-          name: 'venue-details.jpg',
-          url: '/api/placeholder/800/600',
-          thumbnailUrl: '/api/placeholder/300/200',
-          size: 1700000,
-          uploadDate: new Date('2024-02-01'),
-          category: 'venue',
-          tags: ['venue', 'decoration', 'flowers'],
-          isFavorite: false,
-          description: 'Beautiful venue decorations'
+        setLoading(true);
+        try {
+          const response = await getPhotos();
+          if (response.success && response.data) {
+            setPhotos(response.data);
+          } else {
+            // Initialize with empty array if no photos exist
+            setPhotos([]);
         }
-      ];
-      setPhotos(samplePhotos);
+        } catch (error) {
+          console.error('Error loading photos:', error);
+          showToast('Failed to load photos', 'error');
+        } finally {
+          setLoading(false);
     }
+      }
+    };
+
+    loadPhotosData();
   }, [isLoggedIn]);
+
+  // Auto-save photos whenever photos change (debounced)
+  useEffect(() => {
+    if (photos.length >= 0 && isLoggedIn && !loading) {
+      const timeoutId = setTimeout(async () => {
+        try {
+          await savePhotos(photos);
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+        }
+      }, 1000); // Debounce auto-save by 1 second
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [photos, isLoggedIn, loading]);
 
   if (!isLoggedIn) {
     return (
@@ -662,6 +615,17 @@ export default function PhotosPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
           <p className="text-gray-600">Access your wedding photos by logging in first.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <h2 className="text-lg font-medium text-gray-900">Loading your photos...</h2>
         </div>
       </div>
     );
@@ -681,46 +645,73 @@ export default function PhotosPage() {
   });
 
   const handleUpload = async (files: File[], category: string, description: string, tags: string[]) => {
-    // Simulate upload process
-    const newPhotos: Photo[] = files.map((file, index) => ({
-      id: Date.now().toString() + index,
+    try {
+      for (const file of files) {
+        // In a real app, you'd upload to a cloud storage service (AWS S3, Cloudinary, etc.)
+        // For now, we'll create object URLs (note: these won't persist across sessions)
+        const url = URL.createObjectURL(file);
+        
+        const photoData = {
       name: file.name,
-      url: URL.createObjectURL(file), // In real app, this would be server URL
-      thumbnailUrl: URL.createObjectURL(file),
+          url: url,
+          thumbnailUrl: url, // In real app, generate thumbnail
       size: file.size,
-      uploadDate: new Date(),
       category,
       tags,
       isFavorite: false,
       description: description || undefined
-    }));
+        };
 
-    setPhotos(prev => [...newPhotos, ...prev]);
+        const response = await apiAddPhoto(photoData);
+        if (response.success && response.data) {
+          setPhotos(prev => [response.data!, ...prev]);
+        }
+      }
+      
     showToast(`Successfully uploaded ${files.length} photo${files.length !== 1 ? 's' : ''}`, 'success');
+    } catch (error) {
+      showToast('Failed to upload photos', 'error');
+    }
   };
 
-  const handleToggleFavorite = (photoId: string) => {
+  const handleToggleFavorite = async (photoId: string) => {
+    try {
+      const response = await apiToggleFavorite(photoId);
+      if (response.success && response.data) {
     setPhotos(prev => prev.map(photo => 
-      photo.id === photoId 
-        ? { ...photo, isFavorite: !photo.isFavorite }
-        : photo
+          photo.id === photoId ? response.data! : photo
     ));
     
     const photo = photos.find(p => p.id === photoId);
     if (photo) {
       showToast(
-        photo.isFavorite ? 'Removed from favorites' : 'Added to favorites',
+            response.data.isFavorite ? 'Added to favorites' : 'Removed from favorites',
         'success'
       );
+        }
+      } else {
+        showToast(response.message || 'Failed to update favorite', 'error');
+      }
+    } catch (error) {
+      showToast('Error updating favorite', 'error');
     }
   };
 
-  const handleDeletePhoto = (photoId: string) => {
+  const handleDeletePhoto = async (photoId: string) => {
     const photo = photos.find(p => p.id === photoId);
     if (photo && window.confirm(`Are you sure you want to delete "${photo.name}"?`)) {
+      try {
+        const response = await apiDeletePhoto(photoId);
+        if (response.success) {
       setPhotos(prev => prev.filter(p => p.id !== photoId));
       setSelectedPhoto(null);
       showToast(`Deleted "${photo.name}"`, 'success');
+        } else {
+          showToast(response.message || 'Failed to delete photo', 'error');
+        }
+      } catch (error) {
+        showToast('Error deleting photo', 'error');
+      }
     }
   };
 
@@ -965,7 +956,7 @@ export default function PhotosPage() {
                         <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
                           <span className="flex items-center">
                             <Calendar className="h-3 w-3 mr-1" />
-                            {photo.uploadDate.toLocaleDateString()}
+                            {photo.uploadDate}
                           </span>
                           <span className="flex items-center">
                             <Camera className="h-3 w-3 mr-1" />

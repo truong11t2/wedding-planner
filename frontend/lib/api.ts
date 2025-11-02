@@ -1490,3 +1490,453 @@ export const getBudgetStats = async (): Promise<{
     };
   }
 };
+
+export interface Photo {
+  id: string;
+  name: string;
+  url: string;
+  thumbnailUrl: string;
+  size: number;
+  uploadDate: string;
+  category: string;
+  tags: string[];
+  isFavorite: boolean;
+  description?: string;
+  location?: string;
+  people?: string[];
+}
+
+export interface PhotoStats {
+  total: number;
+  favorites: number;
+  categories: number;
+  totalSize: number;
+  byCategory: Record<string, number>;
+  recentUploads: Photo[];
+}
+
+// Get user's photos
+export const getPhotos = async (): Promise<{
+  success: boolean;
+  data?: Photo[];
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to get photos',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error getting photos:', error);
+    return {
+      success: false,
+      message: 'Network error while fetching photos',
+    };
+  }
+};
+
+// Save entire photos collection
+export const savePhotos = async (photos: Photo[]): Promise<{
+  success: boolean;
+  data?: Photo[];
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ photos }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to save photos',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error saving photos:', error);
+    return {
+      success: false,
+      message: 'Network error while saving photos',
+    };
+  }
+};
+
+// Add single photo
+export const addPhoto = async (photo: Omit<Photo, 'id' | 'uploadDate'>): Promise<{
+  success: boolean;
+  data?: Photo;
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(photo),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to add photo',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error adding photo:', error);
+    return {
+      success: false,
+      message: 'Network error while adding photo',
+    };
+  }
+};
+
+// Update photo
+export const updatePhoto = async (photoId: string, updates: Partial<Photo>): Promise<{
+  success: boolean;
+  data?: Photo;
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(updates),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to update photo',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error updating photo:', error);
+    return {
+      success: false,
+      message: 'Network error while updating photo',
+    };
+  }
+};
+
+// Delete photo
+export const deletePhoto = async (photoId: string): Promise<{
+  success: boolean;
+  data?: Photo;
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to delete photo',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error deleting photo:', error);
+    return {
+      success: false,
+      message: 'Network error while deleting photo',
+    };
+  }
+};
+
+// Toggle photo favorite
+export const togglePhotoFavorite = async (photoId: string): Promise<{
+  success: boolean;
+  data?: Photo;
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}/favorite`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to toggle favorite',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error toggling favorite:', error);
+    return {
+      success: false,
+      message: 'Network error while toggling favorite',
+    };
+  }
+};
+
+// Get photos by category
+export const getPhotosByCategory = async (category: string): Promise<{
+  success: boolean;
+  data?: Photo[];
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/category/${category}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to get photos by category',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error getting photos by category:', error);
+    return {
+      success: false,
+      message: 'Network error while fetching photos by category',
+    };
+  }
+};
+
+// Search photos
+export const searchPhotos = async (query: string): Promise<{
+  success: boolean;
+  data?: Photo[];
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/search?query=${encodeURIComponent(query)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to search photos',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error searching photos:', error);
+    return {
+      success: false,
+      message: 'Network error while searching photos',
+    };
+  }
+};
+
+// Get photo statistics
+export const getPhotoStats = async (): Promise<{
+  success: boolean;
+  data?: PhotoStats;
+  message?: string;
+}> => {
+  try {
+    const token = localStorage.getItem('authToken');
+    
+    if (!token) {
+      return {
+        success: false,
+        message: 'No authentication token found',
+      };
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/stats`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to get photo statistics',
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Error getting photo statistics:', error);
+    return {
+      success: false,
+      message: 'Network error while fetching photo statistics',
+    };
+  }
+};
