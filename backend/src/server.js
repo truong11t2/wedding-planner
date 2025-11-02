@@ -8,6 +8,7 @@ const commentRoutes = require('./routes/commentRoutes');
 const timelineRoutes = require('./routes/timelineRoutes');
 const checklistRoutes = require('./routes/checklistRoutes');
 const guestRoutes = require('./routes/guestRoutes');
+const photosRoutes = require('./routes/photoRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 
 const app = express();
@@ -38,6 +39,7 @@ app.use('/api/comments', commentRoutes);
 app.use('/api/timeline', timelineRoutes);
 app.use('/api/checklist', checklistRoutes);
 app.use('/api/guests', guestRoutes);
+app.use('/api/photos', photosRoutes);
 app.use('/api/budget', budgetRoutes);
 
 // Health check

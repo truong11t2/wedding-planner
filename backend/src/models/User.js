@@ -56,6 +56,11 @@ const User = sequelize.define('User', {
     allowNull: true,
     defaultValue: null
   },
+  photosData: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: null
+  },
   budgetData: {
     type: DataTypes.JSON,
     allowNull: true,
