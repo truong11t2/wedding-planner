@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import {
   BudgetCategory,
-  BudgetData,
   getBudgetData,
   saveBudgetData,
   updateTotalBudget as apiUpdateTotalBudget,
@@ -601,69 +600,71 @@ export default function BudgetPage() {
           const response = await getBudgetData();
           if (response.success && response.data) {
             setTotalBudget(response.data.totalBudget);
+            if (response.data.categories.length > 0) {
             setCategories(response.data.categories);
-          } else {
-            // Initialize with sample data if no budget exists
-      const sampleCategories: BudgetCategory[] = [
-        {
-          id: '1',
-          name: 'Venue',
-          budgeted: 8000,
-          spent: 7500,
-          color: 'bg-blue-500',
-          description: 'Ceremony and reception venue costs',
-          priority: 'high'
-        },
-        {
-          id: '2',
-          name: 'Catering',
-          budgeted: 6000,
-          spent: 5800,
-          color: 'bg-green-500',
-          description: 'Food and beverage for guests',
-          priority: 'high'
-        },
-        {
-          id: '3',
-          name: 'Photography',
-          budgeted: 3000,
-          spent: 3200,
-          color: 'bg-purple-500',
-          description: 'Wedding photographer and videographer',
-          priority: 'medium'
-        },
-        {
-          id: '4',
-          name: 'Attire',
-          budgeted: 2500,
-          spent: 1800,
-          color: 'bg-pink-500',
-          description: 'Wedding dress, suit, and accessories',
-          priority: 'medium'
-        },
-        {
-          id: '5',
-          name: 'Flowers',
-          budgeted: 1500,
-          spent: 1200,
-          color: 'bg-yellow-500',
-          description: 'Bouquet, centerpieces, and decorations',
-          priority: 'low'
-        },
-        {
-          id: '6',
-          name: 'Music & Entertainment',
-          budgeted: 1200,
-          spent: 1000,
-          color: 'bg-indigo-500',
-          description: 'DJ, band, or entertainment services',
-          priority: 'medium'
-        }
-      ];
-      setCategories(sampleCategories);
-            // Save initial data to backend
-            await saveBudgetData({ totalBudget: 25000, categories: sampleCategories });
-    }
+            } else {
+              // Initialize with sample data if no budget exists
+              const sampleCategories: BudgetCategory[] = [
+                {
+                  id: '1',
+                  name: 'Venue',
+                  budgeted: 8000,
+                  spent: 7500,
+                  color: 'bg-blue-500',
+                  description: 'Ceremony and reception venue costs',
+                  priority: 'high'
+                },
+                {
+                  id: '2',
+                  name: 'Catering',
+                  budgeted: 6000,
+                  spent: 5800,
+                  color: 'bg-green-500',
+                  description: 'Food and beverage for guests',
+                  priority: 'high'
+                },
+                {
+                  id: '3',
+                  name: 'Photography',
+                  budgeted: 3000,
+                  spent: 3200,
+                  color: 'bg-purple-500',
+                  description: 'Wedding photographer and videographer',
+                  priority: 'medium'
+                },
+                {
+                  id: '4',
+                  name: 'Attire',
+                  budgeted: 2500,
+                  spent: 1800,
+                  color: 'bg-pink-500',
+                  description: 'Wedding dress, suit, and accessories',
+                  priority: 'medium'
+                },
+                {
+                  id: '5',
+                  name: 'Flowers',
+                  budgeted: 1500,
+                  spent: 1200,
+                  color: 'bg-yellow-500',
+                  description: 'Bouquet, centerpieces, and decorations',
+                  priority: 'low'
+                },
+                {
+                  id: '6',
+                  name: 'Music & Entertainment',
+                  budgeted: 1200,
+                  spent: 1000,
+                  color: 'bg-indigo-500',
+                  description: 'DJ, band, or entertainment services',
+                  priority: 'medium'
+                }
+              ];
+              setCategories(sampleCategories);
+              // Save initial data to backend
+              await saveBudgetData({ totalBudget: 25000, categories: sampleCategories });
+            }
+          }            
         } catch (error) {
           console.error('Error loading budget data:', error);
           showToast('Failed to load budget data', 'error');
