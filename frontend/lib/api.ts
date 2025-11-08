@@ -1494,16 +1494,41 @@ export const getBudgetStats = async (): Promise<{
 export interface Photo {
   id: string;
   name: string;
-  url: string;
-  thumbnailUrl: string;
-  size: number;
-  uploadDate: string;
+  url: string;           // Full size image URL
+  thumbnailUrl: string;  // Thumbnail URL
+  mediumUrl?: string;    // Medium size URL
+  size: number;          // Original file size
+  processedSizes?: {     // Processed file sizes
+    thumbnail: number;
+    medium: number;
+    full: number;
+  };
+  uploadDate: string;    // When uploaded to our system
+  takenDate: string;     // When photo was actually taken (from EXIF)
   category: string;
   tags: string[];
   isFavorite: boolean;
   description?: string;
-  location?: string;
-  people?: string[];
+  exifData?: {           // EXIF metadata from backend
+    camera?: string;
+    lens?: string;
+    focalLength?: string;
+    aperture?: string;
+    shutterSpeed?: string;
+    iso?: number;
+    flash?: boolean;
+    location?: {
+      latitude?: number;
+      longitude?: number;
+    };
+  };
+  originalMetadata?: {   // Original image metadata
+    width?: number;
+    height?: number;
+    format?: string;
+    colorSpace?: string;
+    hasAlpha?: boolean;
+  };
 }
 
 export interface PhotoStats {
@@ -1610,10 +1635,16 @@ export const savePhotos = async (photos: Photo[]): Promise<{
   }
 };
 
-// Add single photo
-export const addPhoto = async (photo: Omit<Photo, 'id' | 'uploadDate'>): Promise<{
+// Upload photos using FormData
+export const uploadPhotos = async (
+  files: File[], 
+  category: string, 
+  description?: string, 
+  tags?: string[]
+): Promise<{
   success: boolean;
-  data?: Photo;
+  data?: Photo[];
+  errors?: Array<{filename: string, error: string}>;
   message?: string;
 }> => {
   try {
@@ -1626,13 +1657,26 @@ export const addPhoto = async (photo: Omit<Photo, 'id' | 'uploadDate'>): Promise
       };
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/photos/add`, {
+    // Create FormData
+    const formData = new FormData();
+    
+    // Add files
+    files.forEach(file => {
+      formData.append('photos', file);
+    });
+
+    // Add metadata
+    formData.append('category', category);
+    if (description) formData.append('description', description);
+    if (tags && tags.length > 0) formData.append('tags', tags.join(','));
+
+    const response = await fetch(`${API_BASE_URL}/api/photos/upload`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
+        // Don't set Content-Type - let browser set it with boundary for multipart/form-data
       },
-      body: JSON.stringify(photo),
+      body: formData,
     });
 
     const data = await response.json();
@@ -1640,20 +1684,22 @@ export const addPhoto = async (photo: Omit<Photo, 'id' | 'uploadDate'>): Promise
     if (!response.ok) {
       return {
         success: false,
-        message: data.message || 'Failed to add photo',
+        message: data.message || 'Failed to upload photos',
+        errors: data.errors
       };
     }
 
     return {
       success: true,
       data: data.data,
+      errors: data.errors,
       message: data.message,
     };
   } catch (error) {
-    console.error('Error adding photo:', error);
+    console.error('Error uploading photos:', error);
     return {
       success: false,
-      message: 'Network error while adding photo',
+      message: 'Network error while uploading photos',
     };
   }
 };

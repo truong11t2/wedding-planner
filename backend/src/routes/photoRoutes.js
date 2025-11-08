@@ -5,13 +5,15 @@ const {
   getPhotoStats,
   searchPhotos,
   getPhotosByCategory,
+  uploadPhotos,
   savePhotos,
-  addPhoto,
   updatePhoto,
   deletePhoto,
-  toggleFavorite
+  toggleFavorite,
+  serveImage
 } = require('../controllers/photosController');
 const { protect } = require('../middleware/auth');
+const { uploadMiddleware, debugFormData } = require('../middleware/upload'); // Import from middleware
 
 // GET /api/photos - Get user's photos
 router.get('/', protect, getPhotos);
@@ -25,11 +27,14 @@ router.get('/search', protect, searchPhotos);
 // GET /api/photos/category/:category - Get photos by category
 router.get('/category/:category', protect, getPhotosByCategory);
 
+// GET /api/photos/serve/:userId/:size/:filename - Serve images
+router.get('/serve/:userId/:size/:filename', protect, serveImage);
+
+// POST /api/photos/upload - Upload and process photos
+router.post('/upload', protect, uploadMiddleware, debugFormData, uploadPhotos);
+
 // POST /api/photos - Save entire photos collection
 router.post('/', protect, savePhotos);
-
-// POST /api/photos/add - Add single photo
-router.post('/add', protect, addPhoto);
 
 // PUT /api/photos/:photoId - Update photo
 router.put('/:photoId', protect, updatePhoto);

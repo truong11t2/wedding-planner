@@ -1,4 +1,81 @@
 const User = require('../models/User');
+const imageProcessor = require('../utils/imageProcessor');
+const path = require('path');
+const fs = require('fs').promises;
+
+// Serve uploaded images - with authentication
+exports.serveImage = async (req, res) => {
+  try {
+    const { userId, size, filename } = req.params;
+    
+    // Check if user is accessing their own photos
+    if (req.user.id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied'
+      });
+    }
+
+    // Validate size parameter
+    const allowedSizes = ['thumbnails', 'medium', 'full'];
+    if (!allowedSizes.includes(size)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid image size requested'
+      });
+    }
+
+    // Construct file path
+    const uploadsDir = path.join(__dirname, '../../uploads');
+    const filePath = path.join(uploadsDir, 'images', userId, size, filename);
+
+    console.log('Serving file from:', filePath); // Debug log
+
+    // Check if file exists
+    try {
+      await fs.access(filePath);
+    } catch (error) {
+      console.error('File not found:', filePath);
+      return res.status(404).json({
+        success: false,
+        message: 'Image not found'
+      });
+    }
+
+    // Determine content type based on file extension
+    const ext = path.extname(filename).toLowerCase();
+    let contentType = 'image/jpeg';
+    
+    switch (ext) {
+      case '.png':
+        contentType = 'image/png';
+        break;
+      case '.webp':
+        contentType = 'image/webp';
+        break;
+      case '.gif':
+        contentType = 'image/gif';
+        break;
+      default:
+        contentType = 'image/jpeg';
+    }
+
+    // Set appropriate headers
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow CORS
+    
+    // Send file
+    res.sendFile(filePath);
+
+  } catch (error) {
+    console.error('Error serving image:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while serving image'
+    });
+  }
+};
 
 // Get user's photos
 exports.getPhotos = async (req, res) => {
@@ -32,13 +109,129 @@ exports.getPhotos = async (req, res) => {
   }
 };
 
-// Save user's entire photos collection
+// Upload and process multiple photos
+exports.uploadPhotos = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Debug: Log what we receive
+    console.log('=== UPLOAD PHOTOS DEBUG ===');
+    console.log('req.body:', req.body);
+    console.log('req.files count:', req.files ? req.files.length : 0);
+    console.log('Body keys:', Object.keys(req.body || {}));
+    
+    // Extract form data - handle FormData strings
+    const category = req.body.category || 'other';
+    const description = req.body.description || '';
+    const tagsString = req.body.tags || '';
+    
+    // Parse tags if it's a string from FormData
+    let parsedTags = [];
+    if (tagsString) {
+      if (typeof tagsString === 'string') {
+        parsedTags = tagsString.split(',').map(tag => tag.trim()).filter(tag => tag);
+      } else if (Array.isArray(tagsString)) {
+        parsedTags = tagsString;
+      }
+    }
+
+    console.log('Parsed form data:', {
+      category,
+      description,
+      parsedTags,
+      filesCount: req.files ? req.files.length : 0
+    });
+    console.log('=========================');
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No files uploaded'
+      });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const currentPhotos = user.photosData || [];
+    const processedPhotos = [];
+    const errors = [];
+
+    // Process each uploaded file
+    for (let i = 0; i < req.files.length; i++) {
+      const file = req.files[i];
+      
+      try {
+        console.log(`Processing file ${i + 1}/${req.files.length}: ${file.originalname}`);
+        
+        const processedPhoto = await imageProcessor.processImage(
+          file.buffer,
+          userId,
+          file.originalname,
+          category
+        );
+
+        // Add user-provided data
+        processedPhoto.description = description;
+        processedPhoto.tags = parsedTags;
+
+        processedPhotos.push(processedPhoto);
+        
+        console.log(`Successfully processed: ${file.originalname}`);
+        
+      } catch (error) {
+        console.error(`Error processing file ${file.originalname}:`, error);
+        errors.push({
+          filename: file.originalname,
+          error: error.message
+        });
+      }
+    }
+
+    // Save processed photos to database
+    if (processedPhotos.length > 0) {
+      const updatedPhotos = [...processedPhotos, ...currentPhotos];
+      user.photosData = updatedPhotos;
+      await user.save();
+      
+      console.log(`Saved ${processedPhotos.length} photos to database`);
+    }
+
+    // Prepare response
+    const response = {
+      success: processedPhotos.length > 0,
+      data: processedPhotos,
+      message: `Successfully processed ${processedPhotos.length} of ${req.files.length} photos`
+    };
+
+    if (errors.length > 0) {
+      response.errors = errors;
+      response.message += `. ${errors.length} photos failed to process.`;
+    }
+
+    res.status(processedPhotos.length > 0 ? 201 : 400).json(response);
+
+  } catch (error) {
+    console.error('Upload photos error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while uploading photos',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// Save user's entire photos collection (for compatibility)
 exports.savePhotos = async (req, res) => {
   try {
     const userId = req.user.id;
     const { photos } = req.body;
 
-    // Validate photos array
     if (!Array.isArray(photos)) {
       return res.status(400).json({
         success: false,
@@ -46,30 +239,6 @@ exports.savePhotos = async (req, res) => {
       });
     }
 
-    // Validate each photo structure
-    const isValidPhoto = (photo) => {
-      return (
-        photo &&
-        typeof photo.id === 'string' &&
-        typeof photo.url === 'string' &&
-        typeof photo.thumbnailUrl === 'string' &&
-        typeof photo.category === 'string' &&
-        Array.isArray(photo.tags) &&
-        typeof photo.isFavorite === 'boolean' &&
-        photo.uploadDate
-      );
-    };
-
-    const invalidPhotos = photos.filter(photo => !isValidPhoto(photo));
-    if (invalidPhotos.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid photo format',
-        invalidPhotos
-      });
-    }
-
-    // Update user's photos
     const user = await User.findByPk(userId);
     
     if (!user) {
@@ -97,78 +266,7 @@ exports.savePhotos = async (req, res) => {
   }
 };
 
-// Add a single photo
-exports.addPhoto = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { 
-      url, 
-      thumbnailUrl, 
-      category, 
-      tags, 
-      description,
-      name,
-      size
-    } = req.body;
-
-    // Validate required fields
-    if (!url || !thumbnailUrl || !category) {
-      return res.status(400).json({
-        success: false,
-        message: 'URL, thumbnail URL, and category are required'
-      });
-    }
-
-    const user = await User.findByPk(userId);
-    
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    // Get existing photos or initialize empty array
-    const currentPhotos = user.photosData || [];
-    
-    // Generate new ID
-    const newId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-
-    // Create new photo
-    const newPhoto = {
-      id: newId,
-      name: name || `photo-${newId}.jpg`,
-      url: url.trim(),
-      thumbnailUrl: thumbnailUrl.trim(),
-      size: size || 0,
-      uploadDate: new Date().toISOString(),
-      category: category.trim(),
-      tags: Array.isArray(tags) ? tags.map(tag => tag.trim()).filter(tag => tag) : [],
-      isFavorite: false,
-      description: description?.trim() || ''
-    };
-
-    // Add to photos list
-    const updatedPhotos = [newPhoto, ...currentPhotos];
-    user.photosData = updatedPhotos;
-    await user.save();
-
-    res.status(201).json({
-      success: true,
-      data: newPhoto,
-      message: 'Photo added successfully'
-    });
-
-  } catch (error) {
-    console.error('Add photo error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error while adding photo'
-    });
-  }
-};
-
-// Update a photo
+// Update a photo metadata
 exports.updatePhoto = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -194,17 +292,22 @@ exports.updatePhoto = async (req, res) => {
       });
     }
 
-    // Update the photo
+    // Update the photo metadata (don't allow changing file paths or IDs)
     const updatedPhoto = { 
       ...currentPhotos[photoIndex], 
       ...updates,
-      // Ensure we don't change the ID or uploadDate
+      // Preserve these fields
       id: currentPhotos[photoIndex].id,
-      uploadDate: currentPhotos[photoIndex].uploadDate
+      url: currentPhotos[photoIndex].url,
+      thumbnailUrl: currentPhotos[photoIndex].thumbnailUrl,
+      mediumUrl: currentPhotos[photoIndex].mediumUrl,
+      uploadDate: currentPhotos[photoIndex].uploadDate,
+      takenDate: currentPhotos[photoIndex].takenDate,
+      exifData: currentPhotos[photoIndex].exifData,
+      originalMetadata: currentPhotos[photoIndex].originalMetadata
     };
     
     currentPhotos[photoIndex] = updatedPhoto;
-    
     user.photosData = currentPhotos;
     await user.save();
 
@@ -248,11 +351,13 @@ exports.deletePhoto = async (req, res) => {
       });
     }
 
-    // Remove the photo
+    // Remove the photo from database
     const deletedPhoto = currentPhotos.splice(photoIndex, 1)[0];
-    
     user.photosData = currentPhotos;
     await user.save();
+
+    // Delete physical files
+    await imageProcessor.deleteUserImages(userId, photoId);
 
     res.status(200).json({
       success: true,
@@ -371,9 +476,18 @@ exports.getPhotoStats = async (req, res) => {
       favorites: photosData.filter(p => p.isFavorite).length,
       categories: [...new Set(photosData.map(p => p.category))].length,
       totalSize: photosData.reduce((sum, photo) => sum + (photo.size || 0), 0),
+      totalProcessedSize: photosData.reduce((sum, photo) => {
+        if (photo.processedSizes) {
+          return sum + photo.processedSizes.thumbnail + photo.processedSizes.medium + photo.processedSizes.full;
+        }
+        return sum;
+      }, 0),
       byCategory: {},
       recentUploads: photosData
         .sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime())
+        .slice(0, 5),
+      recentlyTaken: photosData
+        .sort((a, b) => new Date(b.takenDate).getTime() - new Date(a.takenDate).getTime())
         .slice(0, 5)
     };
 
@@ -430,7 +544,9 @@ exports.searchPhotos = async (req, res) => {
         photo.name?.toLowerCase().includes(searchTerm) ||
         photo.description?.toLowerCase().includes(searchTerm) ||
         photo.category?.toLowerCase().includes(searchTerm) ||
-        photo.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
+        photo.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+        photo.exifData?.camera?.toLowerCase().includes(searchTerm) ||
+        photo.exifData?.lens?.toLowerCase().includes(searchTerm)
       );
     });
 

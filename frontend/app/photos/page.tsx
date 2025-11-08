@@ -30,7 +30,7 @@ import {
   Photo,
   getPhotos,
   savePhotos,
-  addPhoto as apiAddPhoto,
+  uploadPhotos as apiUploadPhotos,
   updatePhoto as apiUpdatePhoto,
   deletePhoto as apiDeletePhoto,
   togglePhotoFavorite as apiToggleFavorite
@@ -248,8 +248,8 @@ function PhotoViewer({
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700">Upload Date</label>
-                <p className="text-gray-900">{photo.uploadDate}</p>
+                <label className="text-sm font-medium text-gray-700">Date Taken</label>
+                <p className="text-gray-900">{new Date(photo.takenDate).toLocaleString()}</p>
               </div>
 
               <div>
@@ -264,13 +264,6 @@ function PhotoViewer({
                 </div>
               )}
 
-              {photo.location && (
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Location</label>
-                  <p className="text-gray-900">{photo.location}</p>
-                </div>
-              )}
-
               {photo.tags.length > 0 && (
                 <div>
                   <label className="text-sm font-medium text-gray-700">Tags</label>
@@ -281,22 +274,6 @@ function PhotoViewer({
                         className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
                       >
                         {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {photo.people && photo.people.length > 0 && (
-                <div>
-                  <label className="text-sm font-medium text-gray-700">People</label>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {photo.people.map((person) => (
-                      <span
-                        key={person}
-                        className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
-                      >
-                        {person}
                       </span>
                     ))}
                   </div>
@@ -339,6 +316,7 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
   const [dragActive, setDragActive] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categories = [
@@ -378,15 +356,24 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (files.length > 0) {
+    if (files.length > 0 && !uploading) {
+      setUploading(true);
+      
       const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-      onUpload(files, category, description, tagArray);
-      setFiles([]);
-      setDescription('');
-      setTags('');
-      onClose();
+      
+      try {
+        await onUpload(files, category, description, tagArray);
+        
+        // Reset form
+        setFiles([]);
+        setDescription('');
+        setTags('');
+        onClose();
+      } finally {
+        setUploading(false);
+      }
     }
   };
 
@@ -528,10 +515,13 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
               </button>
               <button
                 type="submit"
-                disabled={files.length === 0}
+                disabled={files.length === 0 || uploading}
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Upload {files.length} Photo{files.length !== 1 ? 's' : ''}
+                {uploading 
+                  ? 'Processing...' 
+                  : `Upload ${files.length} Photo${files.length !== 1 ? 's' : ''}`
+                }
               </button>
             </div>
           </form>
@@ -646,30 +636,28 @@ export default function PhotosPage() {
 
   const handleUpload = async (files: File[], category: string, description: string, tags: string[]) => {
     try {
-      for (const file of files) {
-        // In a real app, you'd upload to a cloud storage service (AWS S3, Cloudinary, etc.)
-        // For now, we'll create object URLs (note: these won't persist across sessions)
-        const url = URL.createObjectURL(file);
+      const response = await apiUploadPhotos(files, category, description, tags);
+      
+      if (response.success && response.data) {
+        setPhotos(prev => [...response.data!, ...prev]);
         
-        const photoData = {
-      name: file.name,
-          url: url,
-          thumbnailUrl: url, // In real app, generate thumbnail
-      size: file.size,
-      category,
-      tags,
-      isFavorite: false,
-      description: description || undefined
-        };
-
-        const response = await apiAddPhoto(photoData);
-        if (response.success && response.data) {
-          setPhotos(prev => [response.data!, ...prev]);
+        let message = `Successfully uploaded ${response.data.length} photo${response.data.length !== 1 ? 's' : ''}`;
+        
+        if (response.errors && response.errors.length > 0) {
+          message += `. ${response.errors.length} photos failed to process.`;
+          console.warn('Upload errors:', response.errors);
+        }
+        
+        showToast(message, 'success');
+      } else {
+        showToast(response.message || 'Failed to upload photos', 'error');
+        
+        if (response.errors) {
+          console.error('Upload errors:', response.errors);
         }
       }
-      
-    showToast(`Successfully uploaded ${files.length} photo${files.length !== 1 ? 's' : ''}`, 'success');
     } catch (error) {
+      console.error('Upload error:', error);
       showToast('Failed to upload photos', 'error');
     }
   };
