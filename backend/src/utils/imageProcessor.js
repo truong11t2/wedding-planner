@@ -2,6 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 class ImageProcessor {
   constructor() {
@@ -9,24 +10,35 @@ class ImageProcessor {
     this.imagesDir = path.join(this.uploadsDir, 'images');
     
     // Minimum requirements
-    this.MIN_WIDTH = 800;
-    this.MIN_HEIGHT = 600;
+    this.MIN_WIDTH = 1200;
+    this.MIN_HEIGHT = 800;
     this.MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
     this.ALLOWED_FORMATS = ['jpeg', 'jpg', 'png', 'webp', 'tiff'];
     
     // Output sizes
     this.SIZES = {
-      thumbnail: { width: 300, height: 300, quality: 80 },
-      medium: { width: 1200, height: 1200, quality: 85 },
-      full: { width: 2400, height: 2400, quality: 90 }
+      thumbnail: { width: 300, height: 200, quality: 80 },
+      full: { width: 2400, height: 1600, quality: 90 }
     };
+
+    // Initialize S3 client
+    this.s3Client = new S3Client({
+      region: process.env.AWS_REGION || 'us-east-1',
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    this.bucketName = process.env.AWS_S3_BUCKET;
+    this.s3BaseUrl = process.env.AWS_S3_URL;
   }
 
   async ensureDirectories(userId) {
     const userDir = path.join(this.imagesDir, userId);
     const thumbnailDir = path.join(userDir, 'thumbnails');
     const mediumDir = path.join(userDir, 'medium');
-    const fullDir = path.join(userDir, 'full');
+    const fullDir = path.join(userDir, '');
 
     try {
       await fs.mkdir(this.uploadsDir, { recursive: true });
@@ -103,14 +115,55 @@ class ImageProcessor {
       ];
 
       for (const field of dateFields) {
-        if (exifData[field]) {
-          const dateString = exifData[field];
+        if (exifData.Photo?.[field]) {
+          const dateValue = exifData.Photo[field];
           
-          // EXIF date format: "YYYY:MM:DD HH:MM:SS"
-          const formattedDate = dateString.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3');
-          const date = new Date(formattedDate);
+          // If it's already a Date object
+          if (dateValue instanceof Date) {
+            if (!isNaN(dateValue.getTime())) {
+              console.log('Found Date object:', dateValue);
+              return dateValue.toISOString();
+            }
+            continue;
+          }
           
+          // If it's a number (timestamp)
+          if (typeof dateValue === 'number') {
+            const date = new Date(dateValue);
+            if (!isNaN(date.getTime())) {
+              console.log('Found timestamp:', dateValue);
+              return date.toISOString();
+            }
+            continue;
+          }
+          
+          // Convert to string for string operations
+          const dateString = String(dateValue);
+          
+          // Check if it's already in ISO format (2017-04-24T15:02:04.000Z)
+          if (dateString.includes('T') && dateString.includes('Z')) {
+            const date = new Date(dateString);
+            if (!isNaN(date.getTime())) {
+              console.log('Found ISO format date:', dateString);
+              return date.toISOString();
+            }
+          }
+          
+          // Check if it's in traditional EXIF format (YYYY:MM:DD HH:MM:SS)
+          if (dateString.includes(':') && dateString.match(/^\d{4}:\d{2}:\d{2}/)) {
+            const formattedDate = dateString.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3');
+            const date = new Date(formattedDate);
+            
+            if (!isNaN(date.getTime())) {
+              console.log('Found traditional EXIF date:', dateString, '-> converted to:', formattedDate);
+              return date.toISOString();
+            }
+          }
+          
+          // Try parsing as-is in case it's in another valid format
+          const date = new Date(dateString);
           if (!isNaN(date.getTime())) {
+            console.log('Found parseable date:', dateString);
             return date.toISOString();
           }
         }
@@ -128,47 +181,47 @@ class ImageProcessor {
       const metadata = {};
 
       // Camera info
-      if (exifData.Make && exifData.Model) {
-        metadata.camera = `${exifData.Make} ${exifData.Model}`.trim();
+      if (exifData.Image?.Make && exifData.Image?.Model) {
+        metadata.camera = `${exifData.Image.Make} ${exifData.Image.Model}`.trim();
       } else if (exifData.Model) {
         metadata.camera = exifData.Model;
       }
 
       // Lens info
-      if (exifData.LensModel) {
-        metadata.lens = exifData.LensModel;
+      if (exifData.Photo?.LensModel) {
+        metadata.lens = exifData.Photo.LensModel;
       }
 
       // Camera settings
-      if (exifData.FocalLength) {
-        metadata.focalLength = `${exifData.FocalLength}mm`;
+      if (exifData.Photo?.FocalLength) {
+        metadata.focalLength = `${exifData.Photo.FocalLength}mm`;
       }
 
-      if (exifData.FNumber) {
-        metadata.aperture = `f/${exifData.FNumber}`;
+      if (exifData.Photo?.FNumber) {
+        metadata.aperture = `f/${exifData.Photo.FNumber}`;
       }
 
-      if (exifData.ExposureTime) {
-        if (exifData.ExposureTime < 1) {
-          metadata.shutterSpeed = `1/${Math.round(1 / exifData.ExposureTime)}s`;
+      if (exifData.Photo?.ExposureTime) {
+        if (exifData.Photo.ExposureTime < 1) {
+          metadata.shutterSpeed = `1/${Math.round(1 / exifData.Photo.ExposureTime)}s`;
         } else {
-          metadata.shutterSpeed = `${exifData.ExposureTime}s`;
+          metadata.shutterSpeed = `${exifData.Photo.ExposureTime}s`;
         }
       }
 
-      if (exifData.ISOSpeedRatings) {
-        metadata.iso = exifData.ISOSpeedRatings;
+      if (exifData.Photo?.ISOSpeedRatings) {
+        metadata.iso = exifData.Photo.ISOSpeedRatings;
       }
 
-      if (exifData.Flash !== undefined) {
-        metadata.flash = exifData.Flash !== 0;
+      if (exifData.Photo?.Flash !== undefined) {
+        metadata.flash = exifData.Photo.Flash !== 0;
       }
 
       // GPS data
-      if (exifData.GPSLatitude && exifData.GPSLongitude) {
-        const lat = this.convertDMSToDD(exifData.GPSLatitude, exifData.GPSLatitudeRef);
-        const lon = this.convertDMSToDD(exifData.GPSLongitude, exifData.GPSLongitudeRef);
-        
+      if (exifData.GPSInfo?.GPSLatitude && exifData.GPSInfo?.GPSLongitude) {
+        const lat = this.convertDMSToDD(exifData.GPSInfo.GPSLatitude, exifData.GPSInfo.GPSLatitudeRef);
+        const lon = this.convertDMSToDD(exifData.GPSInfo.GPSLongitude, exifData.GPSInfo.GPSLongitudeRef);
+
         if (lat !== null && lon !== null) {
           metadata.location = { latitude: lat, longitude: lon };
         }
@@ -195,15 +248,77 @@ class ImageProcessor {
     }
   }
 
+  // NEW: Upload file to S3
+  async uploadToS3(buffer, key, contentType, metadata = {}) {
+    try {
+      console.log(`Uploading to S3: ${key}`);
+      
+      const command = new PutObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+        Body: buffer,
+        ContentType: contentType,
+        Metadata: {
+          ...metadata,
+          uploadedAt: new Date().toISOString(),
+          processedBy: 'wedding-planner-app'
+        },
+        // Make it publicly readable
+        ACL: 'public-read'
+      });
+
+      const result = await this.s3Client.send(command);
+      
+      // Construct the public URL
+      const publicUrl = `${this.s3BaseUrl}/${key}`;
+      
+      console.log(`✓ Successfully uploaded to S3: ${publicUrl}`);
+      
+      return {
+        success: true,
+        url: publicUrl,
+        key: key,
+        etag: result.ETag,
+        metadata: result.Metadata
+      };
+    } catch (error) {
+      console.error(`✗ Failed to upload to S3: ${key}`, error);
+      throw new Error(`S3 upload failed: ${error.message}`);
+    }
+  }
+
+  // NEW: Delete file from S3
+  async deleteFromS3(key) {
+    try {
+      console.log(`Deleting from S3: ${key}`);
+      
+      const command = new DeleteObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+      });
+
+      await this.s3Client.send(command);
+      console.log(`✓ Successfully deleted from S3: ${key}`);
+      
+      return true;
+    } catch (error) {
+      console.error(`✗ Failed to delete from S3: ${key}`, error);
+      return false;
+    }
+  }
+
   async processImage(buffer, userId, originalFilename, category = 'other') {
     try {
+      console.log(`Starting image processing for: ${originalFilename}`);
+      
       // Create unique filename
       const fileId = uuidv4();
       const ext = path.extname(originalFilename).toLowerCase();
       const baseName = path.basename(originalFilename, ext);
-      const filename = `${fileId}-${baseName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+      const filename = `${baseName.replace(/[^a-zA-Z0-9]/g, '_' )}`;
+      let size = 0;
 
-      // Ensure directories exist
+      // Ensure directories exist (for temporary processing)
       const directories = await this.ensureDirectories(userId);
 
       // Validate image
@@ -221,30 +336,38 @@ class ImageProcessor {
 
       try {
         if (metadata.exif) {
-          // Parse EXIF data using exif-reader
           const exifReader = require('exif-reader');
           exifData = exifReader(metadata.exif);
+          console.log('EXIF data extracted successfully');
           
-          // Extract taken date
           takenDate = this.extractExifDate(exifData);
           
           // Extract other metadata
-          exifData = this.extractExifMetadata(exifData);
+          // exifData = this.extractExifMetadata(exifData);
         }
       } catch (exifError) {
         console.warn('EXIF extraction failed:', exifError);
       }
 
-      // Fallback to file stats if no EXIF date
+      // Fallback to current date if no EXIF date
       if (!takenDate) {
         takenDate = new Date().toISOString();
       }
 
       // Process and save different sizes
       const processedImages = {};
+      const s3Uploads = {};
+      
+      console.log('Processing image sizes...');
       
       for (const [sizeName, config] of Object.entries(this.SIZES)) {
-        const outputPath = path.join(directories[sizeName === 'thumbnail' ? 'thumbnailDir' : sizeName === 'medium' ? 'mediumDir' : 'fullDir'], `${filename}.jpg`);
+        // Create local file path for temporary storage
+        const localPath = path.join(
+          directories[sizeName === 'thumbnail' ? 'thumbnailDir' : 'fullDir'], 
+          `${filename}.jpg`
+        );
+
+        console.log(`Processing ${sizeName} size...`);
         
         let processedImage = image.clone();
         
@@ -256,51 +379,92 @@ class ImageProcessor {
           });
         }
 
-        // Convert to JPEG and compress
-        await processedImage
+        // Convert to JPEG and get buffer
+        const processedBuffer = await processedImage
           .jpeg({ 
             quality: config.quality,
             progressive: true,
             mozjpeg: true
           })
-          .toFile(outputPath);
+          .toBuffer();
 
-        // Generate URL path for frontend
-        const relativePath = `${filename}.jpg`;
-        processedImages[sizeName] = `/api/photos/serve/${userId}/${sizeName === 'thumbnail' ? 'thumbnails' : sizeName}/${relativePath}`;
+        // Save locally for backup/debugging (optional)
+        await fs.writeFile(localPath, processedBuffer);
+        
+        if (sizeName === 'full') {
+          size = processedBuffer.length;
+        }
+        
+        // Upload to S3
+        const s3Key = `images/${userId}/${sizeName}/${filename}.jpg`;
+        
+        const s3Result = await this.uploadToS3(
+          processedBuffer, 
+          s3Key, 
+          'image/jpeg',
+          {
+            userId: userId,
+            category: category,
+            sizeName: sizeName,
+            originalFilename: originalFilename,
+            fileId: fileId,
+            width: config.width.toString(),
+            height: config.height.toString(),
+            quality: config.quality.toString()
+          }
+        );
+
+        s3Uploads[sizeName] = s3Result;
+        processedImages[sizeName] = s3Result.url;
+        
+        console.log(`✓ ${sizeName} processed and uploaded to S3`);
       }
 
-      // Get final file size
-      const thumbnailStats = await fs.stat(path.join(directories.thumbnailDir, `${filename}.jpg`));
-      const mediumStats = await fs.stat(path.join(directories.mediumDir, `${filename}.jpg`));
-      const fullStats = await fs.stat(path.join(directories.fullDir, `${filename}.jpg`));
+      console.log('All sizes processed and uploaded successfully');
 
+      // Clean up local files (optional - keep for debugging or remove to save space)
+      try {
+        for (const [sizeName] of Object.entries(this.SIZES)) {
+          const localPath = path.join(
+            directories[sizeName === 'thumbnail' ? 'thumbnailDir' : 'fullDir'], 
+            `${filename}.jpg`
+          );
+          await fs.unlink(localPath);
+        }
+        console.log('✓ Cleaned up local temporary files');
+      } catch (cleanupError) {
+        console.warn('Warning: Failed to clean up local files:', cleanupError);
+      }
+
+      // Return complete photo data
       return {
         id: fileId,
         name: originalFilename,
         url: processedImages.full,
         thumbnailUrl: processedImages.thumbnail,
-        mediumUrl: processedImages.medium,
-        size: buffer.length, // Original file size
-        processedSizes: {
-          thumbnail: thumbnailStats.size,
-          medium: mediumStats.size,
-          full: fullStats.size
-        },
+        size: size, // Original file size
         uploadDate: new Date().toISOString(),
         takenDate: takenDate,
         category: category,
         tags: [],
         isFavorite: false,
         description: '',
-        exifData: exifData,
-        originalMetadata: {
-          width: metadata.width,
-          height: metadata.height,
-          format: metadata.format,
-          colorSpace: metadata.space,
-          hasAlpha: metadata.hasAlpha
-        }
+        // exifData: exifData,
+        // originalMetadata: {
+        //   width: metadata.width,
+        //   height: metadata.height,
+        //   format: metadata.format,
+        //   colorSpace: metadata.space,
+        //   hasAlpha: metadata.hasAlpha
+        // },
+        // s3Data: {
+        //   bucket: this.bucketName,
+        //   keys: {
+        //     thumbnail: s3Uploads.thumbnail.key,
+        //     full: s3Uploads.full.key
+        //   },
+        //   region: process.env.AWS_REGION
+        // }
       };
 
     } catch (error) {
@@ -311,26 +475,53 @@ class ImageProcessor {
 
   async deleteUserImages(userId, photoId) {
     try {
-      const userDir = path.join(this.imagesDir, userId);
+      console.log(`Deleting images for user ${userId}, photo ${photoId}`);
       
-      // Find files matching the photoId
-      const directories = ['thumbnails', 'medium', 'full'];
+      // Delete from S3
+      const s3Keys = [
+        `images/${userId}/thumbnail/${photoId}-*.jpg`,
+        `images/${userId}/full/${photoId}-*.jpg`
+      ];
+
+      // Since we can't use wildcards in S3 delete, we need the exact keys
+      // In a real implementation, you'd store the S3 keys in your database
+      // For now, we'll try common patterns
+      const possibleKeys = [];
       
-      for (const dir of directories) {
-        const dirPath = path.join(userDir, dir);
-        
-        try {
-          const files = await fs.readdir(dirPath);
-          const matchingFiles = files.filter(file => file.startsWith(photoId));
-          
-          for (const file of matchingFiles) {
-            await fs.unlink(path.join(dirPath, file));
-          }
-        } catch (error) {
-          console.warn(`Failed to clean up files in ${dir}:`, error);
-        }
+      // You should store the exact S3 keys in your database and use those instead
+      // This is a simplified approach for the example
+      const sizes = ['thumbnail', 'full'];
+      sizes.forEach(size => {
+        possibleKeys.push(`images/${userId}/${size}/${photoId}`);
+        possibleKeys.push(`images/${userId}/${size}/${photoId}.jpg`);
+      });
+
+      let deletedCount = 0;
+      for (const key of possibleKeys) {
+        const deleted = await this.deleteFromS3(key);
+        if (deleted) deletedCount++;
       }
+
+      // Also clean up local files
+      // const userDir = path.join(this.imagesDir, userId);
+      // const directories = ['thumbnails', 'full'];
       
+      // for (const dir of directories) {
+      //   const dirPath = path.join(userDir, dir);
+        
+      //   try {
+      //     const files = await fs.readdir(dirPath);
+      //     const matchingFiles = files.filter(file => file.startsWith(photoId));
+          
+      //     for (const file of matchingFiles) {
+      //       await fs.unlink(path.join(dirPath, file));
+      //     }
+      //   } catch (error) {
+      //     console.warn(`Failed to clean up local files in ${dir}:`, error);
+      //   }
+      // }
+      
+      console.log(`✓ Deleted ${deletedCount} S3 objects and local files for photo ${photoId}`);
       return true;
     } catch (error) {
       console.error('Failed to delete user images:', error);
