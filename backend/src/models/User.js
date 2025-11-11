@@ -8,13 +8,17 @@ const User = sequelize.define('User', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
-  fullName: {
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  lastName: {
     type: DataTypes.STRING,
     allowNull: false
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true, // Allow null for social accounts without email
     unique: true,
     validate: {
       isEmail: true
@@ -22,11 +26,26 @@ const User = sequelize.define('User', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: true // Nullable for social login users
+    allowNull: true, // Allow null for social login users
+  },
+  // OAuth fields
+  googleId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
+  facebookId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
+  avatar: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   provider: {
     type: DataTypes.STRING,
-    allowNull: true, // 'local', 'gmail', 'facebook', 'outlook', 'twitter'
+    allowNull: true,
     defaultValue: 'local'
   },
   providerId: {

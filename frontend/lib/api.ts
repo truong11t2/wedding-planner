@@ -5,7 +5,8 @@ import { TimelineItem } from '@/lib/timelineGenerator';
 // Define proper user interface
 export interface User {
   id: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   weddingDate?: string;
   hasGeneratedTimeline?: boolean;
@@ -88,89 +89,84 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
 };
 
 export const registerUser = async (
-  fullName: string,
+  firstName: string,
+  lastName: string,
   email: string,
   password: string
-): Promise<AuthResponse> => {
+): Promise<{
+  success: boolean;
+  message?: string;
+  token?: string;
+  user?: any;
+}> => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
-        fullName, 
-        email, 
-        password 
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        password,
       }),
     });
 
     const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        message: data.message || 'Registration failed',
-      };
-    }
-
-    // Store the token if registration includes auto-login
-    if (data.token) {
+    
+    if (data.success && data.token) {
+      // Store the token
       localStorage.setItem('authToken', data.token);
     }
-
-    return {
-      success: true,
-      token: data.token,
-      user: data.user,
-      message: data.message || 'Registration successful',
-    };
+    
+    return data;
   } catch (error) {
     console.error('Registration error:', error);
     return {
       success: false,
-      message: 'Network error. Please check your connection.',
+      message: 'Registration failed. Please try again.',
     };
   }
 };
 
-export type Provider = 'Gmail' | 'Outlook' | 'Facebook' | 'Twitter';
+// export type Provider = 'Gmail' | 'Outlook' | 'Facebook' | 'Twitter';
 
-export const socialLogin = async (provider: Provider): Promise<SocialAuthResponse> => {
-  try {
-    const response = await fetch('/api/auth/social-login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ provider }),
-    });
+// export const socialLogin = async (provider: Provider): Promise<SocialAuthResponse> => {
+//   try {
+//     const response = await fetch('/api/auth/social-login', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ provider }),
+//     });
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    if (!response.ok) {
-      return {
-        success: false,
-        message: data.message || `${provider} login failed`,
-      };
-    }
+//     if (!response.ok) {
+//       return {
+//         success: false,
+//         message: data.message || `${provider} login failed`,
+//       };
+//     }
 
-    // Store the token in localStorage or handle it according to your auth strategy
-    if (data.token) {
-      localStorage.setItem('authToken', data.token);
-    }
+//     // Store the token in localStorage or handle it according to your auth strategy
+//     if (data.token) {
+//       localStorage.setItem('authToken', data.token);
+//     }
 
-    return {
-      success: true,
-      token: data.token,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: `An error occurred during ${provider} login: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    };
-  }
-};
+//     return {
+//       success: true,
+//       token: data.token,
+//     };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message: `An error occurred during ${provider} login: ${error instanceof Error ? error.message : 'Unknown error'}`,
+//     };
+//   }
+// };
 
 export const getTimelineStatus = async (): Promise<{
   success: boolean;
@@ -1983,6 +1979,55 @@ export const getPhotoStats = async (): Promise<{
     return {
       success: false,
       message: 'Network error while fetching photo statistics',
+    };
+  }
+};
+
+
+export type Provider = 'Google' | 'Facebook' | 'Twitter' | 'Outlook' | 'Gmail';
+
+// Social login function
+export const socialLogin = async (provider: Provider): Promise<{
+  success: boolean;
+  message?: string;
+  redirectUrl?: string;
+}> => {
+  try {
+    let authUrl: string;
+    
+    switch (provider) {
+      case 'Google':
+      case 'Gmail':
+        authUrl = `${API_BASE_URL}/api/auth/google`;
+        break;
+      case 'Facebook':
+        authUrl = `${API_BASE_URL}/api/auth/facebook`;
+        break;
+      case 'Twitter':
+        authUrl = `${API_BASE_URL}/api/auth/twitter`;
+        break;
+      case 'Outlook':
+        authUrl = `${API_BASE_URL}/api/auth/outlook`;
+        break;
+      default:
+        return {
+          success: false,
+          message: `${provider} login not supported yet`
+        };
+    }
+
+    // Redirect to OAuth provider
+    window.location.href = authUrl;
+    
+    return {
+      success: true,
+      redirectUrl: authUrl
+    };
+  } catch (error) {
+    console.error('Social login error:', error);
+    return {
+      success: false,
+      message: 'Failed to initiate social login'
     };
   }
 };

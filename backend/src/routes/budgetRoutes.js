@@ -9,7 +9,7 @@ const {
   updateBudgetCategory,
   deleteBudgetCategory
 } = require('../controllers/budgetController');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middleware/authMiddleware');
 
 // GET /api/budget - Get user's budget data
 router.get('/', protect, getBudget);

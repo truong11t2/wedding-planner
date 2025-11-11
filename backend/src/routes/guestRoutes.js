@@ -9,7 +9,7 @@ const {
   deleteGuest,
   updateRSVP
 } = require('../controllers/guestController');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middleware/authMiddleware');
 
 // GET /api/guests - Get user's guest list
 router.get('/', protect, getGuestList);

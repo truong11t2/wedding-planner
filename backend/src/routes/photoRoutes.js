@@ -12,8 +12,8 @@ const {
   toggleFavorite,
   serveImage
 } = require('../controllers/photosController');
-const { protect } = require('../middleware/auth');
-const { uploadMiddleware, debugFormData } = require('../middleware/upload'); // Import from middleware
+const { protect } = require('../middleware/authMiddleware');
+const { uploadMiddleware, debugFormData } = require('../middleware/uploadMiddleware'); // Import from middleware
 
 // GET /api/photos - Get user's photos
 router.get('/', protect, getPhotos);

@@ -8,7 +8,7 @@ const {
   deleteChecklistItem,
   toggleChecklistItem
 } = require('../controllers/checklistController');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middleware/authMiddleware');
 
 // GET /api/checklist - Get user's checklist
 router.get('/', protect, getChecklist);

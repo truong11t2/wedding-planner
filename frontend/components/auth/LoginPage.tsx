@@ -15,7 +15,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' as 'success' | 'error' });
 
   const showToast = (message: string, type: 'success' | 'error') => {
@@ -41,7 +42,7 @@ export default function LoginPage() {
         showToast(result.message || 'Login failed', 'error');
       }
     } else {
-      if (!fullName || !email || !password || !confirmPassword) {
+      if (!firstName || !lastName || !email || !password || !confirmPassword) {
         showToast('Please fill in all fields', 'error');
         return;
       }
@@ -51,7 +52,7 @@ export default function LoginPage() {
         return;
       }
 
-      const result = await registerUser(fullName, email, password);
+      const result = await registerUser(firstName, lastName, email, password);
       if (result.success) {
         showToast('Registration successful!', 'success');
         // Short delay before redirect to show the success toast
@@ -89,21 +90,41 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border-2 text-gray-600 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                    placeholder="Enter your full name"
-                  />
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      First Name
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 border-2 text-gray-600 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                        placeholder="First name"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Last Name
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 border-2 text-gray-600 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                        placeholder="Last name"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
 
             <div>

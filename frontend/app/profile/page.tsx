@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 import { getUserProfile } from '@/lib/api';
 
 interface UserProfile {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   weddingDate: string;
   createdAt: string;
@@ -88,7 +89,7 @@ export default function ProfilePage() {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-500">Full Name</label>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.fullName}</p>
+                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.firstName} {profile.lastName}</p>
                 </div>
 
                 <div>

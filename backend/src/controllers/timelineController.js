@@ -72,7 +72,7 @@ const loadTimeline = async (req, res) => {
 
     // Find user with timeline data
     const user = await User.findByPk(userId, {
-      attributes: ['id', 'fullName', 'email', 'weddingDate', 'timelineData', 'hasGeneratedTimeline', 'updatedAt'],
+      attributes: ['id', 'firstName', 'lastName', 'email', 'weddingDate', 'timelineData', 'hasGeneratedTimeline', 'updatedAt'],
     });
 
     if (!user) {
@@ -157,7 +157,7 @@ const getTimelineStatus = async (req, res) => {
     const userId = req.user.id;
 
     const user = await User.findByPk(userId, {
-      attributes: ['id', 'fullName', 'email', 'weddingDate', 'hasGeneratedTimeline', 'updatedAt'],
+      attributes: ['id', 'firstName', 'lastName', 'email', 'weddingDate', 'hasGeneratedTimeline', 'updatedAt'],
     });
 
     if (!user) {

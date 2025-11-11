@@ -1,4 +1,6 @@
 const express = require('express');
+const session = require('express-session');
+const passport = require('./config/passport');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -12,6 +14,21 @@ const photosRoutes = require('./routes/photoRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 
 const app = express();
+
+// Session configuration (required for OAuth)
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production', // HTTPS in production
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 const allowedOrigins = process.env.FRONTEND_URL.split(',');
 

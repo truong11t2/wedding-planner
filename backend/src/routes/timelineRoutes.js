@@ -6,7 +6,7 @@ const {
   deleteTimeline,
   getTimelineStatus,
 } = require('../controllers/timelineController');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middleware/authMiddleware');
 
 // POST /api/timeline/save - Save timeline to user profile
 router.post('/save', protect, saveTimeline);
