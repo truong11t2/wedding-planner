@@ -6,7 +6,7 @@ import "./globals.css";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/navigation/Footer";
 import Sidebar from "@/components/navigation/Sidebar";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { TimelineProvider } from "@/context/TimelineContext";
 import { useState } from 'react';
 
@@ -26,22 +26,26 @@ function RootLayoutContent({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isLoggedIn } = useAuth(); // Get login status
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header onSidebarToggle={() => setSidebarOpen(true)} />
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      {isLoggedIn && (
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      )}
       
-      {/* Main content area with responsive margin */}
-      <div className="lg:ml-64">
-        <main className="pt-16 min-h-screen">
+      {/* Main content area with conditional margin */}
+      <div className={isLoggedIn ? "lg:ml-64" : ""}>
+        <main className="min-h-screen">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
         </main>
       </div>
       
-      <div className="lg:ml-64">
+      {/* Footer with conditional margin */}
+      <div className={isLoggedIn ? "lg:ml-64" : ""}>
         <Footer />
       </div>
     </div>

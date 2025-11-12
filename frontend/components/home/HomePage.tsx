@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import DateInput from './DateInput';
 import Timeline from './Timeline';
 import FeatureCard from '@/components/common/FeatureCard';
+import Testimonials from './Testimonials';
 import { Clock, CheckCircle, Download } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getUserProfile } from '@/lib/api';
@@ -29,7 +30,6 @@ export default function HomePage() {
   useEffect(() => {
     checkWeddingDate();
   }, [isLoggedIn]);
-
 
   const features = [
     { icon: Clock, text: 'Step-by-step guide' },
@@ -57,11 +57,16 @@ export default function HomePage() {
           </div>
         </>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8">
+      
+      {/* Features Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 mb-16">
         {features.map((feature, i) => (
           <FeatureCard key={i} icon={feature.icon} text={feature.text} />
         ))}
       </div>
+
+      {/* Testimonials Section - Always show for social proof */}
+      <Testimonials />
     </main>
   );
 }
