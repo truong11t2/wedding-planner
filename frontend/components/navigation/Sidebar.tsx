@@ -54,11 +54,19 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       <div className="flex-shrink-0 border-t border-gray-200 p-4">
         <div className="flex items-center space-x-3">
           <div className="flex-shrink-0">
+            {user.avatar ? (
+              <img
+                className="h-10 w-10 rounded-full object-cover"
+                src={user.avatar}
+                alt={`${user.lastName}'s avatar`}
+              />
+            ) : (
             <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
               <span className="text-sm font-semibold text-white">
                 {user.lastName?.charAt(0)?.toUpperCase() || 'U'}
               </span>
             </div>
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-900 truncate">
