@@ -26,7 +26,7 @@ exports.serveImage = async (req, res) => {
     }
 
     // Construct file path
-    const uploadsDir = path.join(__dirname, '../../uploads');
+    const uploadsDir = process.env.UPLOADS_DIR;
     const filePath = path.join(uploadsDir, 'images', userId, size, filename);
 
     console.log('Serving file from:', filePath); // Debug log

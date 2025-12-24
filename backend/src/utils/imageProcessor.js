@@ -6,7 +6,7 @@ const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/cl
 
 class ImageProcessor {
   constructor() {
-    this.uploadsDir = path.join(__dirname, '../../uploads');
+    this.uploadsDir = process.env.UPLOADS_DIR;
     this.imagesDir = path.join(this.uploadsDir, 'images');
     
     // Minimum requirements
