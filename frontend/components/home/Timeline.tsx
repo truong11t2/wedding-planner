@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTimeline } from '@/context/TimelineContext';
 import { CheckCircle, TriangleAlert, Clock, Bookmark, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
+import Toast from '@/components/common/Toast';
 
 interface TimelineProps {
   initialWeddingDate?: string;
@@ -24,6 +25,23 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
+    const [toast, setToast] = useState<{
+      show: boolean;
+      message: string;
+      type: 'success' | 'error';
+    }>({
+      show: false,
+      message: '',
+      type: 'success'
+    });
+  
+    const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+      setToast({ show: true, message, type });
+      setTimeout(() => {
+        setToast(prev => ({ ...prev, show: false }));
+      }, 3000);
+    };
+    
   // Set the wedding date if passed as prop and context doesn't have one
   useEffect(() => {
     if (initialWeddingDate && !weddingDate) {
@@ -51,9 +69,11 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
     setSaveStatus('saving');
     try {
       await saveTimelineData();
+      showToast('Timeline data saved successfully', 'success');
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (error) {
+      showToast('Failed to save timeline data. Please login to continue.', 'error');
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 5000);
     }
@@ -432,6 +452,13 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
         </div>
       {/* Floating Save Button */}
       <FloatingSaveButton />
+            {/* Toast */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={() => setToast(prev => ({ ...prev, show: false }))}
+      />
     </>
   );
 }
