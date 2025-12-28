@@ -107,7 +107,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
@@ -118,7 +118,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="guest@example.com"
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -133,7 +133,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Address
               </label>
@@ -144,9 +144,9 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 placeholder="Mailing address"
                 rows={2}
               />
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 RSVP Status
               </label>
@@ -160,7 +160,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 <option value="declined">Declined</option>
                 <option value="no-response">No Response</option>
               </select>
-            </div>
+            </div> */}
 
             <div className="flex items-center">
               <input
@@ -190,7 +190,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
               </div>
             )}
 
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Dietary Restrictions
               </label>
@@ -201,7 +201,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="Vegetarian, allergies, etc."
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -519,7 +519,7 @@ export default function GuestsPage() {
         </div>
 
         {/* Overall Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex items-center">
               <Users className="h-6 w-6 text-blue-500 mr-2" />
@@ -529,7 +529,7 @@ export default function GuestsPage() {
               </div>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          {/* <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex items-center">
               <Check className="h-6 w-6 text-green-500 mr-2" />
               <div>
@@ -539,7 +539,7 @@ export default function GuestsPage() {
                 <div className="text-sm text-gray-500">Expected Attendees</div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex items-center">
               <Gift className="h-6 w-6 text-purple-500 mr-2" />
@@ -551,7 +551,7 @@ export default function GuestsPage() {
               </div>
             </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          {/* <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex items-center">
               <X className="h-6 w-6 text-red-500 mr-2" />
               <div>
@@ -561,7 +561,7 @@ export default function GuestsPage() {
                 <div className="text-sm text-gray-500">Declined</div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Search */}
