@@ -73,7 +73,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             >
               Blog
             </Link>
-            {isLoggedIn && (
+            {
               <Link
                 href="/vendor"
                 className={`text-lg font-semibold transition-colors ${
@@ -82,7 +82,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
               >
                 Vendor
               </Link>
-            )}
+            }
             {isLoggedIn && (
               <Link
                 href="/profile"
@@ -142,7 +142,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             >
               Blog
             </Link>
-            {isLoggedIn && (
+            {
               <Link
                 href="/vendor"
                 className={`block py-2 text-lg font-semibold ${
@@ -152,7 +152,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
               >
                 Vendor
               </Link>
-            )}
+            }
             {isLoggedIn && (
               <Link
                 href="/profile"
