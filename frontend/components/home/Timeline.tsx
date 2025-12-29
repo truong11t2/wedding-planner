@@ -7,9 +7,10 @@ import Toast from '@/components/common/Toast';
 
 interface TimelineProps {
   initialWeddingDate?: string;
+  onChangeDate?: (date: string) => void;
 }
 
-export default function Timeline({ initialWeddingDate }: TimelineProps) {
+export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineProps) {
   const {
     timelineItems,
     weddingDate,
@@ -254,6 +255,7 @@ export default function Timeline({ initialWeddingDate }: TimelineProps) {
               onClick={() => {
                 setWeddingDate('');
                 setTempWeddingDate('');
+                if (onChangeDate) { onChangeDate(''); }
               }}
               className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
             >

@@ -37,12 +37,19 @@ export default function HomePage() {
     { icon: Download, text: 'Download as PDF' }
   ];
 
+  const handleChangeDate = () => {
+    setWeddingDate('');
+    setShowPlan(false);
+  };
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {showPlan ? (
         <div id="timeline-section">
-          {/* Pass the wedding date as a prop to Timeline */}
-          <Timeline initialWeddingDate={weddingDate} />
+          <Timeline 
+            initialWeddingDate={weddingDate} 
+            onChangeDate={handleChangeDate}
+          />
         </div>
       ) : (
         <>
@@ -55,18 +62,14 @@ export default function HomePage() {
               setTimeline={setTimeline} 
             />
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 mb-16">
+            {features.map((feature, i) => (
+              <FeatureCard key={i} icon={feature.icon} text={feature.text} />
+            ))}
+          </div>
+          <Testimonials />
         </>
       )}
-      
-      {/* Features Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 mb-16">
-        {features.map((feature, i) => (
-          <FeatureCard key={i} icon={feature.icon} text={feature.text} />
-        ))}
-      </div>
-
-      {/* Testimonials Section - Always show for social proof */}
-      <Testimonials />
     </main>
   );
 }
