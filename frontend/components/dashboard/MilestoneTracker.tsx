@@ -9,7 +9,7 @@ interface MilestoneTrackerProps {
   weddingDate: string | null;
 }
 
-export default function MilestoneTracker({ timelineItems, weddingDate }: MilestoneTrackerProps) {
+export default function MilestoneTracker({ timelineItems }: MilestoneTrackerProps) {
   // Define major milestones
   const majorMilestones = [
     'Set Your Budget',
@@ -60,39 +60,42 @@ export default function MilestoneTracker({ timelineItems, weddingDate }: Milesto
       </div>
 
       <div className="space-y-4">
-        {milestoneItems.map((item, index) => {
-          const isLast = index === milestoneItems.length - 1;
+        {milestoneItems.map((item) => {
           const today = new Date();
           const isOverdue = !item.completed && item.dueDate < today && !item.isWeddingDay;
           const isUpcoming = !item.completed && item.dueDate >= today && !item.isWeddingDay;
 
           return (
-            <div key={item.id} className="relative">
-              {/* Connector line */}
-              {!isLast && (
-                <div className="absolute left-3 top-8 w-0.5 h-8 bg-gray-200"></div>
-              )}
-              
-              <div className={`flex items-start space-x-4 p-4 rounded-lg transition-all ${
+            <div key={item.id} className="relative">              
+              <div className={`items-start p-4 rounded-lg transition-all ${
                 item.completed ? 'bg-green-50 border border-green-200' :
                 isOverdue ? 'bg-red-50 border border-red-200' :
                 isUpcoming ? 'bg-blue-50 border border-blue-200' :
                 'bg-gray-50 border border-gray-200'
               }`}>
-                <div className="flex-shrink-0 mt-1">
+                <div className="flex space-x-4 mt-1">
                   {getStatusIcon(item)}
+                  <h3 className={`font-medium ${
+                    item.completed ? 'text-green-900 line-through' :
+                    isOverdue ? 'text-red-900' :
+                    'text-gray-900'
+                  }`}>
+                    {item.title}
+                  </h3>
+                  <div className={`text-sm font-medium ${
+                    item.completed ? 'text-green-600' :
+                    isOverdue ? 'text-red-600' :
+                    item.isWeddingDay ? 'text-pink-600' :
+                    'text-gray-600'
+                  } ml-auto`}>
+                    {formatDate(item.dueDate)}
+                  </div>
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between">
+                  <div className="flex justify-between">
                     <div>
-                      <h3 className={`font-medium ${
-                        item.completed ? 'text-green-900 line-through' :
-                        isOverdue ? 'text-red-900' :
-                        'text-gray-900'
-                      }`}>
-                        {item.title}
-                      </h3>
+
                       <p className={`text-sm mt-1 ${
                         item.completed ? 'text-green-700' :
                         isOverdue ? 'text-red-700' :
@@ -103,14 +106,6 @@ export default function MilestoneTracker({ timelineItems, weddingDate }: Milesto
                     </div>
                     
                     <div className="flex flex-col items-end ml-4">
-                      <span className={`text-sm font-medium ${
-                        item.completed ? 'text-green-600' :
-                        isOverdue ? 'text-red-600' :
-                        item.isWeddingDay ? 'text-pink-600' :
-                        'text-gray-600'
-                      }`}>
-                        {formatDate(item.dueDate)}
-                      </span>
                       
                       {item.completed && (
                         <span className="text-xs text-green-600 mt-1">✓ Completed</span>
