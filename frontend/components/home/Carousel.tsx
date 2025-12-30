@@ -67,8 +67,6 @@ export default function Carousel() {
           className="object-cover transition-opacity duration-500"
           priority
         />
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60" />
         
         {/* Caption */}
         <div className="absolute bottom-0 left-0 right-0 p-8 text-center text-white">
