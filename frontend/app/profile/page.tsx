@@ -75,63 +75,57 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 p-6">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Profile Header */}
-          <div className="bg-gradient-to-r from-pink-600 to-purple-600 px-6 py-8">
-            <h1 className="text-3xl font-bold text-white">My Profile</h1>
-          </div>
-
-          {/* Profile Content */}
-          <div className="p-6">
-            {profile && (
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Full Name</label>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.firstName} {profile.lastName}</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Email</label>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">{profile.email}</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Wedding Date</label>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">
-                    {new Date(profile.weddingDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Member Since</label>
-                  <p className="mt-1 text-lg font-semibold text-gray-900">
-                    {new Date(profile.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                </div>
-
-                {/* Actions */}
-                <div className="pt-6 border-t border-gray-200">
-                  <button
-                    className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
-                    onClick={() => router.push('/')}
-                  >
-                    Back to Timeline
-                  </button>
-                </div>
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <h1 className="pb-8 text-3xl font-bold text-black">My Profile</h1>
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        {/* Profile Content */}
+        <div className="p-6">
+          {profile && (
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Full Name</label>
+                <p className="mt-1 text-lg font-semibold text-gray-900">{profile.firstName} {profile.lastName}</p>
               </div>
-            )}
-          </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Email</label>
+                <p className="mt-1 text-lg font-semibold text-gray-900">{profile.email}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Wedding Date</label>
+                <p className="mt-1 text-lg font-semibold text-gray-900">
+                  {new Date(profile.weddingDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Member Since</label>
+                <p className="mt-1 text-lg font-semibold text-gray-900">
+                  {new Date(profile.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="pt-6 border-t border-gray-200">
+                <button
+                  className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
+                  onClick={() => router.push('/')}
+                >
+                  Back to Timeline
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

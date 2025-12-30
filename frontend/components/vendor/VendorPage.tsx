@@ -6,8 +6,13 @@ export default async function VendorPage() {
   const categories = [...new Set(vendors.map(vendor => vendor.category))];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Wedding Vendor</h1>
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <h1 className="text-3xl font-bold text-black">
+        Wedding Vendor
+      </h1>
+      <p className="pb-8 text-gray-600 text-lg">
+        Find your perfect wedding vendor 
+      </p>
       {categories.map((categoryName) => (
         <VendorCategory
           key={categoryName}
@@ -15,6 +20,6 @@ export default async function VendorPage() {
           vendors={vendors.filter(v => v.category === categoryName)}
         />
       ))}
-    </div>
+    </main>
   );
 }

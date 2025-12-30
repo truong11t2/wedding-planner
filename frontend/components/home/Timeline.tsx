@@ -239,7 +239,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Wedding Timeline</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Wedding Timeline</h2>
             <p className="text-gray-600">
               Wedding Date: <span className="font-medium">{formatDate(new Date(currentWeddingDate))}</span>
             </p>
