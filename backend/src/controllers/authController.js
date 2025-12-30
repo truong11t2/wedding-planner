@@ -10,7 +10,7 @@ const generateToken = (id) => {
   });
 };
 
-    const { validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 // @desc    Google OAuth initiation
 // @route   GET /api/auth/google
@@ -35,8 +35,17 @@ exports.googleCallback = async (req, res) => {
 
     console.log('Generated JWT token for Google user:', req.user.email);
 
-    // Redirect to frontend with token
-    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=google`;
+    // Set HTTP-only cookie with the token
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      path: '/',
+    });
+
+    // Redirect to frontend callback WITHOUT token in URL
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?provider=google`;
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Google callback error:', error);
@@ -67,8 +76,17 @@ exports.facebookCallback = async (req, res) => {
 
     console.log('Generated JWT token for Facebook user:', req.user.email);
 
-    // Redirect to frontend with token
-    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=facebook`;
+    // Set HTTP-only cookie with the token
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      path: '/',
+    });
+
+    // Redirect to frontend callback WITHOUT token in URL
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?provider=facebook`;
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Facebook callback error:', error);
@@ -80,8 +98,8 @@ exports.facebookCallback = async (req, res) => {
 // @route   GET /api/auth/twitter
 // @access  Public
 exports.initiateTwitterAuth = (req, res) => {
-  res.status(501).json({ 
-    success: false, 
+  res.status(501).json({
+    success: false,
     message: 'Twitter OAuth not implemented yet',
     error: 'NOT_IMPLEMENTED'
   });
@@ -91,8 +109,8 @@ exports.initiateTwitterAuth = (req, res) => {
 // @route   GET /api/auth/outlook
 // @access  Public
 exports.initiateOutlookAuth = (req, res) => {
-  res.status(501).json({ 
-    success: false, 
+  res.status(501).json({
+    success: false,
     message: 'Outlook OAuth not implemented yet',
     error: 'NOT_IMPLEMENTED'
   });
@@ -203,6 +221,13 @@ exports.login = async (req, res) => {
 
     // Generate token
     const token = generateToken(user.id);
+
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 1 week
+    });
 
     res.json({
       success: true,

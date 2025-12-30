@@ -1,8 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.BACKEND_ADDRESS || 'http://localhost:5000';
 
 import { TimelineItem } from '@/lib/timelineGenerator';
 
-// Define proper user interface
 export interface User {
   id: string;
   firstName: string;
@@ -15,28 +14,6 @@ export interface User {
   updatedAt: string;
 }
 
-// Define timeline item interface
-// interface TimelineItem {
-//   id: string;
-//   title: string;
-//   description: string;
-//   dueDate: string;
-//   category: string;
-//   completed: boolean;
-//   selectedOption?: string;
-//   selectedOptions?: Record<string, string>;
-//   options?: Array<{
-//     id: string;
-//     label: string;
-//     description?: string;
-//     price?: string;
-//     image?: string;
-//     rating?: number;
-//     isTextInput?: boolean;
-//   }>;
-// }
-
-// Update interfaces to use proper types
 interface AuthResponse {
   success: boolean;
   message?: string;
@@ -54,6 +31,7 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -67,11 +45,6 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
         success: false,
         message: data.message || 'Login failed',
       };
-    }
-
-    // Store the token if login is successful
-    if (data.token) {
-      localStorage.setItem('authToken', data.token);
     }
 
     return {
@@ -98,7 +71,7 @@ export const registerUser = async (
   success: boolean;
   message?: string;
   token?: string;
-  user?: any;
+  user?: User;
 }> => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
@@ -116,11 +89,6 @@ export const registerUser = async (
 
     const data = await response.json();
     
-    if (data.success && data.token) {
-      // Store the token
-      localStorage.setItem('authToken', data.token);
-    }
-    
     return data;
   } catch (error) {
     console.error('Registration error:', error);
@@ -130,44 +98,6 @@ export const registerUser = async (
     };
   }
 };
-
-// export type Provider = 'Gmail' | 'Outlook' | 'Facebook' | 'Twitter';
-
-// export const socialLogin = async (provider: Provider): Promise<SocialAuthResponse> => {
-//   try {
-//     const response = await fetch('/api/auth/social-login', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ provider }),
-//     });
-
-//     const data = await response.json();
-
-//     if (!response.ok) {
-//       return {
-//         success: false,
-//         message: data.message || `${provider} login failed`,
-//       };
-//     }
-
-//     // Store the token in localStorage or handle it according to your auth strategy
-//     if (data.token) {
-//       localStorage.setItem('authToken', data.token);
-//     }
-
-//     return {
-//       success: true,
-//       token: data.token,
-//     };
-//   } catch (error) {
-//     return {
-//       success: false,
-//       message: `An error occurred during ${provider} login: ${error instanceof Error ? error.message : 'Unknown error'}`,
-//     };
-//   }
-// };
 
 export const getTimelineStatus = async (): Promise<{
   success: boolean;
@@ -179,20 +109,12 @@ export const getTimelineStatus = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
 
     const response = await fetch(`${API_BASE_URL}/api/timeline/status`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -241,20 +163,12 @@ export const checkBackendHealth = async (): Promise<boolean> => {
 // Get user profile
 export const getUserProfile = async (): Promise<AuthResponse> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
 
     const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -321,11 +235,6 @@ export const loginUserWithRetry = async (email: string, password: string): Promi
 
     const data = await response.json();
 
-    // Store the token if login is successful
-    if (data.token) {
-      localStorage.setItem('authToken', data.token);
-    }
-
     return {
       success: true,
       token: data.token,
@@ -343,20 +252,11 @@ export const loginUserWithRetry = async (email: string, password: string): Promi
 
 export const saveWeddingDate = async (weddingDate: string): Promise<AuthResponse> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/auth/wedding-date`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ weddingDate }),
     });
@@ -396,9 +296,9 @@ export async function saveTimeline(timelineData: SavedTimelineData): Promise<Sav
   try {
     const response = await fetch(`${API_BASE_URL}/api/timeline/save`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`, // Adjust based on your auth implementation
       },
       body: JSON.stringify(timelineData),
     });
@@ -418,8 +318,10 @@ export async function saveTimeline(timelineData: SavedTimelineData): Promise<Sav
 export async function loadTimeline(): Promise<SavedTimelineData | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/timeline/get`, {
+      method: 'GET',
+      credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`, // Adjust based on your auth implementation
+        'Content-Type': 'application/json',
       },
     });
 
@@ -442,8 +344,9 @@ export async function deleteTimeline(): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/timeline/delete`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`, // Adjust based on your auth implementation
+        'Content-Type': 'application/json',
       },
     });
 
@@ -471,20 +374,11 @@ export const getChecklist = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/checklist`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -518,20 +412,11 @@ export const saveChecklist = async (checklistItems: ChecklistItem[]): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/checklist`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ checklistItems }),
     });
@@ -566,20 +451,11 @@ export const addChecklistItem = async (item: Omit<ChecklistItem, 'id' | 'complet
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/checklist/item`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(item),
     });
@@ -614,20 +490,11 @@ export const updateChecklistItem = async (itemId: number, updates: Partial<Check
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/checklist/item/${itemId}`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(updates),
     });
@@ -662,20 +529,11 @@ export const deleteChecklistItem = async (itemId: number): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/checklist/item/${itemId}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -709,20 +567,11 @@ export const toggleChecklistItem = async (itemId: number): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/checklist/item/${itemId}/toggle`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -796,20 +645,11 @@ export const getGuestList = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/guests`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -843,20 +683,11 @@ export const saveGuestList = async (guests: Guest[]): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/guests`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ guests }),
     });
@@ -891,20 +722,11 @@ export const addGuest = async (guest: Omit<Guest, 'id' | 'createdAt'>): Promise<
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/guests/add`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(guest),
     });
@@ -939,20 +761,11 @@ export const updateGuest = async (guestId: string, updates: Partial<Guest>): Pro
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/guests/${guestId}`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(updates),
     });
@@ -987,20 +800,11 @@ export const deleteGuest = async (guestId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/guests/${guestId}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1034,20 +838,11 @@ export const updateRSVP = async (guestId: string, rsvpStatus: Guest['rsvpStatus'
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/guests/${guestId}/rsvp`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ rsvpStatus }),
     });
@@ -1082,20 +877,11 @@ export const getGuestStats = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/guests/stats`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1162,20 +948,11 @@ export const getBudgetData = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/budget`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1209,20 +986,11 @@ export const saveBudgetData = async (budgetData: { totalBudget: number; categori
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/budget`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(budgetData),
     });
@@ -1257,20 +1025,11 @@ export const updateTotalBudget = async (totalBudget: number): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/budget/total`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ totalBudget }),
     });
@@ -1305,20 +1064,11 @@ export const addBudgetCategory = async (category: Omit<BudgetCategory, 'id'>): P
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/budget/category`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(category),
     });
@@ -1353,20 +1103,11 @@ export const updateBudgetCategory = async (categoryId: string, updates: Partial<
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/budget/category/${categoryId}`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(updates),
     });
@@ -1401,20 +1142,11 @@ export const deleteBudgetCategory = async (categoryId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/budget/category/${categoryId}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1448,20 +1180,11 @@ export const getBudgetStats = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/budget/stats`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1544,20 +1267,11 @@ export const getPhotos = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1591,20 +1305,11 @@ export const savePhotos = async (photos: Photo[]): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ photos }),
     });
@@ -1645,15 +1350,6 @@ export const uploadPhotos = async (
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     // Create FormData
     const formData = new FormData();
     
@@ -1669,8 +1365,8 @@ export const uploadPhotos = async (
 
     const response = await fetch(`${API_BASE_URL}/api/photos/upload`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${token}`,
         // Don't set Content-Type - let browser set it with boundary for multipart/form-data
       },
       body: formData,
@@ -1708,20 +1404,11 @@ export const updatePhoto = async (photoId: string, updates: Partial<Photo>): Pro
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(updates),
     });
@@ -1756,20 +1443,11 @@ export const deletePhoto = async (photoId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1803,20 +1481,11 @@ export const togglePhotoFavorite = async (photoId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}/favorite`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1850,20 +1519,11 @@ export const getPhotosByCategory = async (category: string): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos/category/${category}`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1897,20 +1557,11 @@ export const searchPhotos = async (query: string): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos/search?query=${encodeURIComponent(query)}`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1944,20 +1595,11 @@ export const getPhotoStats = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return {
-        success: false,
-        message: 'No authentication token found',
-      };
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/photos/stats`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -1980,55 +1622,6 @@ export const getPhotoStats = async (): Promise<{
     return {
       success: false,
       message: 'Network error while fetching photo statistics',
-    };
-  }
-};
-
-
-export type Provider = 'Google' | 'Facebook' | 'Twitter' | 'Outlook' | 'Gmail';
-
-// Social login function
-export const socialLogin = async (provider: Provider): Promise<{
-  success: boolean;
-  message?: string;
-  redirectUrl?: string;
-}> => {
-  try {
-    let authUrl: string;
-    
-    switch (provider) {
-      case 'Google':
-      case 'Gmail':
-        authUrl = `${API_BASE_URL}/api/auth/google`;
-        break;
-      case 'Facebook':
-        authUrl = `${API_BASE_URL}/api/auth/facebook`;
-        break;
-      case 'Twitter':
-        authUrl = `${API_BASE_URL}/api/auth/twitter`;
-        break;
-      case 'Outlook':
-        authUrl = `${API_BASE_URL}/api/auth/outlook`;
-        break;
-      default:
-        return {
-          success: false,
-          message: `${provider} login not supported yet`
-        };
-    }
-
-    // Redirect to OAuth provider
-    window.location.href = authUrl;
-    
-    return {
-      success: true,
-      redirectUrl: authUrl
-    };
-  } catch (error) {
-    console.error('Social login error:', error);
-    return {
-      success: false,
-      message: 'Failed to initiate social login'
     };
   }
 };

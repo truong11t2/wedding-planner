@@ -24,7 +24,6 @@ export default function AuthCallbackPage() {
           return;
         }
 
-        const token = searchParams.get('token');
         const provider = searchParams.get('provider');
         const error = searchParams.get('error');
 
@@ -37,19 +36,8 @@ export default function AuthCallbackPage() {
           return;
         }
 
-        if (!token) {
-          setStatus('error');
-          setMessage('No authentication token received');
-          setTimeout(() => {
-            router.push('/login');
-          }, 3000);
-          return;
-        }
-
-        // Store the token
-        localStorage.setItem('authToken', token);
         
-        // Fetch user profile with the new token
+        // Fetch user profile - the cookie will be sent automatically with credentials: 'include'
         const profileResponse = await getUserProfile();
         
         if (profileResponse.success && profileResponse.user) {
@@ -65,19 +53,12 @@ export default function AuthCallbackPage() {
           }, 2000);
         } else {
           throw new Error('Failed to fetch user profile after authentication');
-        }        
-        setStatus('success');
-        setMessage(`Successfully logged in with ${provider}!`);
-        
-        // // Redirect to dashboard
-        // setTimeout(() => {
-        //   router.push('/dashboard');
-        // }, 2000);
+        }
 
       } catch (error) {
         console.error('Auth callback error:', error);
         setStatus('error');
-        setMessage('Authentication processing failed');
+        setMessage('Authentication processing failed. Please try again.');
         setTimeout(() => {
           router.push('/login');
         }, 3000);
@@ -85,7 +66,7 @@ export default function AuthCallbackPage() {
     };
 
     handleCallback();
-  }, []);
+  }, [searchParams, router, login]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Provider, socialLogin } from '@/lib/api';
+import { Provider, socialLogin } from '@/lib/social-auth';
 
 interface SocialLoginButtonsProps {
   onSuccess: () => void;
