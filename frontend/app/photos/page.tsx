@@ -34,7 +34,7 @@ import {
   updatePhoto as apiUpdatePhoto,
   deletePhoto as apiDeletePhoto,
   togglePhotoFavorite as apiToggleFavorite
-} from '@/lib/api';
+} from '@/api/photo';
 
 interface PhotoViewerProps {
   photo: Photo;

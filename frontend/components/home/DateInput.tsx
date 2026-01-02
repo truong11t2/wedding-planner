@@ -1,7 +1,7 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
 import { generateTimeline } from '@/lib/timelineGenerator';
-import { saveWeddingDate } from '@/lib/api';
+import { saveWeddingDate } from '@/api/timeline';
 import { TimelineItem } from '@/lib/timelineGenerator';
 
 export interface DateInputProps {

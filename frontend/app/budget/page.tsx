@@ -27,7 +27,7 @@ import {
   addBudgetCategory as apiAddCategory,
   updateBudgetCategory as apiUpdateCategory,
   deleteBudgetCategory as apiDeleteCategory
-} from '@/lib/api';
+} from '@/api/budget';
 
 
 interface BudgetModalProps {

@@ -7,7 +7,7 @@ import FeatureCard from '@/components/common/FeatureCard';
 import Testimonials from './Testimonials';
 import { Clock, CheckCircle, Download } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { getUserProfile } from '@/lib/api';
+import { getUserProfile } from '@/api/user';
 import Carousel from './Carousel';
 import { TimelineItem } from '@/lib/timelineGenerator';
 

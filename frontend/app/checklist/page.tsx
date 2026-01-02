@@ -12,7 +12,7 @@ import {
   deleteChecklistItem as apiDeleteItem,
   toggleChecklistItem as apiToggleItem,
   ChecklistItem 
-} from '@/lib/api';
+} from '@/api/checklist';
 
 interface AddTaskModalProps {
   isOpen: boolean;

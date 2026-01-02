@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { getUserProfile } from '@/lib/api';
+import { getUserProfile } from '@/api/user';
 
 export default function AuthCallbackPage() {
   const router = useRouter();

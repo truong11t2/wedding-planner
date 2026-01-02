@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { getUserProfile } from '@/lib/api';
+import { getUserProfile } from '@/api/user';
 
 interface UserProfile {
   firstName: string;

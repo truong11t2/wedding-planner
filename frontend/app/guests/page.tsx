@@ -14,7 +14,7 @@ import {
   getGuestStats,
   Guest,
   GuestStats
-} from '@/lib/api';
+} from '@/api/guest';
 
 interface AddGuestModalProps {
   isOpen: boolean;
@@ -284,10 +284,10 @@ function GuestCard({ guest, onEdit, onDelete }: GuestCardProps) {
       </div>
 
       <div className="space-y-2">
-        <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRSVPStatusColor(guest.rsvpStatus)}`}>
+{/*         <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRSVPStatusColor(guest.rsvpStatus)}`}>
           {getRSVPStatusIcon(guest.rsvpStatus)}
           <span className="ml-1 capitalize">{guest.rsvpStatus.replace('-', ' ')}</span>
-        </div>
+        </div> */}
 
         {guest.email && (
           <div className="flex items-center text-sm text-gray-600">
@@ -492,7 +492,7 @@ export default function GuestsPage() {
     const attending = sideGuests.filter(guest => guest.rsvpStatus === 'attending').length;
     const declined = sideGuests.filter(guest => guest.rsvpStatus === 'declined').length;
     const pending = sideGuests.filter(guest => guest.rsvpStatus === 'pending').length;
-    const totalPlusOnes = sideGuests.filter(guest => guest.plusOne && guest.rsvpStatus === 'attending').length;
+    const totalPlusOnes = sideGuests.filter(guest => guest.plusOne).length;
     
     return {
       total: sideGuests.length,
@@ -596,14 +596,14 @@ export default function GuestsPage() {
                   <div className="text-lg font-semibold text-gray-900">{brideStats.total}</div>
                   <div className="text-gray-500">Total</div>
                 </div>
-                <div className="text-center">
+                {/* <div className="text-center">
                   <div className="text-lg font-semibold text-green-600">{brideStats.attending}</div>
                   <div className="text-gray-500">Attending</div>
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-semibold text-yellow-600">{brideStats.pending}</div>
                   <div className="text-gray-500">Pending</div>
-                </div>
+                </div> */}
               </div>
             </div>
             
@@ -653,14 +653,14 @@ export default function GuestsPage() {
                   <div className="text-lg font-semibold text-gray-900">{groomStats.total}</div>
                   <div className="text-gray-500">Total</div>
                 </div>
-                <div className="text-center">
+                {/* <div className="text-center">
                   <div className="text-lg font-semibold text-green-600">{groomStats.attending}</div>
                   <div className="text-gray-500">Attending</div>
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-semibold text-yellow-600">{groomStats.pending}</div>
                   <div className="text-gray-500">Pending</div>
-                </div>
+                </div> */}
               </div>
             </div>
             

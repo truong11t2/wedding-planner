@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TimelineItem, generateTimeline } from '@/lib/timelineGenerator';
-import { saveTimeline, loadTimeline, SavedTimelineData } from '@/lib/api';
+import { saveTimeline, loadTimeline, SavedTimelineData } from '@/api/timeline';
 import { useAuth } from './AuthContext';
 
 interface TimelineContextType {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getUserProfile, User } from '@/lib/api';
+import { getUserProfile, User } from '@/api/user';
 
 interface AuthContextType {
   isLoggedIn: boolean;

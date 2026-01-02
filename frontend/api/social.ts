@@ -1,6 +1,6 @@
 'use client';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.BACKEND_ADDRESS || 'https://vemotnha.ddns.net';
 
 export type Provider = 'Google' | 'Facebook' | 'Twitter' | 'Outlook' | 'Gmail';
 
@@ -11,6 +11,7 @@ export const socialLogin = async (provider: Provider) => {
     case 'Google':
     case 'Gmail':
       authUrl = `${API_BASE_URL}/api/auth/google`;
+      console.log('Google login URL:', authUrl);
       break;
     case 'Facebook':
       authUrl = `${API_BASE_URL}/api/auth/facebook`;
