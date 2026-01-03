@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { socialLogin } from '@/api/social';
-import { Provider } from '@/app/actions/auth';
+import { socialLogin, type Provider } from '@/api/social';
 
 interface SocialLoginButtonsProps {
   onSuccess: () => void;

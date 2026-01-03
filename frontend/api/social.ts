@@ -1,14 +1,24 @@
-import { getAuthUrl, type Provider } from '@/app/actions/auth';
+export type Provider = 'Google' | 'Facebook' | 'Twitter' | 'Outlook' | 'Gmail';
 
-// Client-side function that uses server action to get URL, then redirects
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+
+// Client-side function to redirect to OAuth provider
 export const socialLogin = async (provider: Provider) => {
-  const { url, error } = await getAuthUrl(provider);
+  let authUrl: string;
   
-  if (error || !url) {
-    return { success: false, message: error || 'Failed to get auth URL' };
+  switch (provider) {
+    case 'Google':
+    case 'Gmail':
+      authUrl = `${API_BASE_URL}/api/auth/google`;
+      break;
+    case 'Facebook':
+      authUrl = `${API_BASE_URL}/api/auth/facebook`;
+      break;
+    default:
+      return { success: false, message: `${provider} login not supported` };
   }
 
-  // Still need client-side redirect for OAuth flow
-  window.location.href = url;
-  return { success: true, redirectUrl: url };
+  // Redirect browser to OAuth provider
+  window.location.href = authUrl;
+  return { success: true, redirectUrl: authUrl };
 };

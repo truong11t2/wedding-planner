@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.BACKEND_ADDRESS || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
 
 // Utility function to check if backend is reachable
 export const checkBackendHealth = async (): Promise<boolean> => {

@@ -1,4 +1,4 @@
-export const BASE_URL =  process.env.BACKEND_ADDRESS || 'http://localhost:5000';
+export const BASE_URL =  process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
 
 export const ENDPOINTS = {
     AUTH: {
