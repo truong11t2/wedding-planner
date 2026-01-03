@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import SocialLoginButtons from './SocialLoginButtons';
 import Toast from '@/components/common/Toast';
-import { loginUser, registerUser } from '@/api/user';
+import { loginUser, registerUser } from '@/api/auth';
 
 export default function LoginPage() {
   const router = useRouter();

@@ -1,5 +1,37 @@
 const User = require('../models/User');
 
+// @desc    Save wedding date
+// @route   POST /api/auth/wedding-date
+// @access  Private
+const saveWeddingDate = async (req, res) => {
+  try {
+    const { weddingDate } = req.body;
+
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    user.weddingDate = weddingDate;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Wedding date saved successfully',
+      weddingDate: user.weddingDate
+    });
+  } catch (error) {
+    console.error('Save wedding date error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
 // Save timeline to user's profile
 const saveTimeline = async (req, res) => {
   try {
@@ -186,6 +218,7 @@ const getTimelineStatus = async (req, res) => {
 };
 
 module.exports = {
+  saveWeddingDate,
   saveTimeline,
   loadTimeline,
   deleteTimeline,

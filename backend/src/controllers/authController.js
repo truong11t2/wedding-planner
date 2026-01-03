@@ -404,38 +404,6 @@ exports.linkSocialAccount = async (req, res) => {
   }
 };
 
-// @desc    Save wedding date
-// @route   POST /api/auth/wedding-date
-// @access  Private
-exports.saveWeddingDate = async (req, res) => {
-  try {
-    const { weddingDate } = req.body;
-
-    const user = await User.findByPk(req.user.id);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    user.weddingDate = weddingDate;
-    await user.save();
-
-    res.json({
-      success: true,
-      message: 'Wedding date saved successfully',
-      weddingDate: user.weddingDate
-    });
-  } catch (error) {
-    console.error('Save wedding date error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
-    });
-  }
-};
-
 // @desc    Unlink social account
 // @route   POST /api/auth/unlink-social
 // @access  Private

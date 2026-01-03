@@ -31,7 +31,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const allowedOrigins = process.env.FRONTEND_URL.split(',');
+const allowedOrigins = process.env.CORS_URL.split(',');
 
 // Middleware
 app.use(cors({

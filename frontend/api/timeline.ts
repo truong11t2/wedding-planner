@@ -127,7 +127,7 @@ export const saveWeddingDate = async (weddingDate: string): Promise<{
 
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/wedding-date`, {
+    const response = await fetch(`${API_BASE_URL}/api/timeline/wedding-date`, {
       method: 'POST',
       credentials: 'include',
       headers: {

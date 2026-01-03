@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getUserProfile, User } from '@/api/user';
+import { getUserProfile, User } from '@/api/auth';
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -20,9 +20,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Check for auth token and fetch user data on initial load
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('authToken');
+      //const token = localStorage.getItem('authToken');
       
-      if (token) {
+      //if (token) {
         try {
           const response = await getUserProfile();
           if (response.success && response.user) {
@@ -30,16 +30,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(response.user);
           } else {
             // Token is invalid or expired
-            localStorage.removeItem('authToken');
+            //localStorage.removeItem('authToken');
           }
         } catch (error) {
           console.error('Error checking auth:', error);
-          localStorage.removeItem('authToken');
+          //localStorage.removeItem('authToken');
         }
       }
       
       setIsLoading(false);
-    };
+    //};
 
     checkAuth();
   }, []);

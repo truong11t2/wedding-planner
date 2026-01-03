@@ -26,7 +26,6 @@ router.post('/logout', logout);
 
 // Protected routes
 router.get('/profile', protect, getProfile);
-router.post('/wedding-date', protect, saveWeddingDate);
 router.put('/profile', protect, updateProfile);
 router.post('/link-social', protect, linkSocialAccount);
 router.post('/unlink-social', protect, unlinkSocialAccount);

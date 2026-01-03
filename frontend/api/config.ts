@@ -1,22 +1,38 @@
-export const API_CONFIG = {
-  BASE_URL: process.env.BACKEND_ADDRESS || 'http://localhost:5000',
-  ENDPOINTS: {
+export const BASE_URL =  process.env.BACKEND_ADDRESS || 'http://localhost:5000';
+
+export const ENDPOINTS = {
     AUTH: {
       LOGIN: '/api/auth/login',
       REGISTER: '/api/auth/register',
       PROFILE: '/api/auth/profile',
       LOGOUT: '/api/auth/logout',
     },
+    BUDGET: {
+      BASE: '/api/budget',
+      TOTAL: '/api/budget/total',
+      CATEGORY: '/api/budget/category',
+      STATS: '/api/budget/stats',
+    },
+    CHECKLIST: {
+      BASE: '/api/checklist',
+      ITEM: '/api/checklist/item',
+    },
+    PHOTO: {
+      BASE: '/api/photos',
+      UPLOAD: '/api/photos/upload',
+      CATEGORY: '/api/photos/category',
+      SEARCH: '/api/photos/search',
+      STATS: '/api/photos/stats',
+    },
+    SOCIAL: {
+
+    },
     TIMELINE: {
-      SAVE: '/api/timeline/save',
-      GET: '/api/timeline/get',
-      DELETE: '/api/timeline/delete',
+      BASE: '/api/timeline',
+      STATUS: '/api/timeline/status',
+      WEDDING_DATE: '/api/timeline/wedding-date'
     },
     HEALTH: '/api/health',
-  },
-  TIMEOUT: 10000, // 10 seconds
-};
+  };
 
-export const getApiUrl = (endpoint: string): string => {
-  return `${API_CONFIG.BASE_URL}${endpoint}`;
-};
+export const  TIMEOUT = 10000; // 10 seconds

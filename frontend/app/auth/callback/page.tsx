@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { getUserProfile } from '@/api/user';
+import { getUserProfile } from '@/api/auth';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -66,7 +66,7 @@ export default function AuthCallbackPage() {
     };
 
     handleCallback();
-  }, [searchParams, router, login]);
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

@@ -17,7 +17,7 @@ const developmentCSP = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: https: https://lh3.googleusercontent.com https://graph.facebook.com",
-  "connect-src 'self' http://localhost:5000 https://apis.google.com https://accounts.google.com",
+  "connect-src 'self' http://localhost:5000 https://apis.google.com https://accounts.google.com https://play.google.com https://connect.facebook.net",
   "frame-src 'self' https://accounts.google.com https://www.facebook.com",
   "object-src 'none'",
   "base-uri 'self'",

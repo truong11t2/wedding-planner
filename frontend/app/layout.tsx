@@ -1,14 +1,9 @@
-'use client';
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/navigation/Header";
-import Footer from "@/components/navigation/Footer";
-import Sidebar from "@/components/navigation/Sidebar";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { TimelineProvider } from "@/context/TimelineContext";
-import { useState } from 'react';
+import ClientLayout from "@/components/layout/ClientLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,37 +15,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-function RootLayoutContent({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isLoggedIn } = useAuth(); // Get login status
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Header onSidebarToggle={() => setSidebarOpen(true)} />
-      {isLoggedIn && (
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      )}
-      
-      {/* Main content area with conditional margin */}
-      <div className={isLoggedIn ? "lg:ml-64" : ""}>
-        <main className="min-h-screen">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
-        </main>
-      </div>
-      
-      {/* Footer with conditional margin */}
-      <div className={isLoggedIn ? "lg:ml-64" : ""}>
-        <Footer />
-      </div>
-    </div>
-  );
-}
+export const metadata: Metadata = {
+  title: "Perfect Day Planner - Wedding Planning Made Easy",
+  description: "Plan your perfect wedding day with our comprehensive wedding planning tools",
+};
 
 export default function RootLayout({
   children,
@@ -62,9 +30,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <TimelineProvider>
-            <RootLayoutContent>
+            <ClientLayout>
               {children}
-            </RootLayoutContent>
+            </ClientLayout>
           </TimelineProvider>
         </AuthProvider>
       </body>
