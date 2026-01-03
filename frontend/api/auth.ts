@@ -150,6 +150,39 @@ export const registerUser = async (
   }
 };
 
+// Logout user
+export const logoutUser = async (): Promise<{ success: boolean; message?: string }> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Logout failed',
+      };
+    }
+
+    return {
+      success: true,
+      message: data.message,
+    };
+  } catch (error) {
+    console.error('Logout error:', error);
+    return {
+      success: false,
+      message: 'Network error during logout',
+    };
+  }
+};
+
 // Get user profile
 export const getUserProfile = async (): Promise<AuthResponse> => {
   try {

@@ -342,12 +342,21 @@ exports.updateProfile = async (req, res) => {
 // @access  Public
 exports.logout = async (req, res) => {
   try {
+    // Clear the authToken cookie
+    res.cookie('authToken', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      expires: new Date(0), // Set expiry to past date
+      path: '/',
+    });
+
     // If using sessions, destroy them
     if (req.session) {
       req.session.destroy();
     }
 
-    console.log('User logged out');
+    console.log('User logged out, cookie cleared');
 
     res.json({
       success: true,

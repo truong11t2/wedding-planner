@@ -25,7 +25,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
     router.push('/login');
   };
 
-    const handleLogout = () => {
+  const handleLogout = async () => {
     logout();
     setMobileMenuOpen(false);
     router.push('/');

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getUserProfile, User } from '@/api/auth';
+import { getUserProfile, logoutUser, User } from '@/api/auth';
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -49,10 +49,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(userData);
   };
 
-  const logout = () => {
-    setIsLoggedIn(false);
-    setUser(null);
-    localStorage.removeItem('authToken');
+  const logout = async () => {
+    try {
+      // Call backend to clear the cookie
+      await logoutUser();
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      // Always clear local state, even if API call fails
+      setIsLoggedIn(false);
+      setUser(null);
+    }
   };
 
   if (isLoading) {
