@@ -35,23 +35,14 @@ class ImageProcessor {
   }
 
   async ensureDirectories(userId) {
-    const userDir = path.join(this.imagesDir, userId);
-    const thumbnailDir = path.join(userDir, 'thumbnails');
-    const mediumDir = path.join(userDir, 'medium');
-    const fullDir = path.join(userDir, '');
-
-    try {
-      await fs.mkdir(this.uploadsDir, { recursive: true });
-      await fs.mkdir(this.imagesDir, { recursive: true });
-      await fs.mkdir(userDir, { recursive: true });
-      await fs.mkdir(thumbnailDir, { recursive: true });
-      await fs.mkdir(mediumDir, { recursive: true });
-      await fs.mkdir(fullDir, { recursive: true });
-      
-      return { userDir, thumbnailDir, mediumDir, fullDir };
-    } catch (error) {
-      throw new Error(`Failed to create directories: ${error.message}`);
-    }
+    // Since we're using S3, we don't need local directories for storage
+    // Only return empty paths for backward compatibility
+    return { 
+      userDir: '',
+      thumbnailDir: '',
+      mediumDir: '',
+      fullDir: ''
+    };
   }
 
   async validateImage(buffer, originalFilename) {
@@ -361,12 +352,6 @@ class ImageProcessor {
       console.log('Processing image sizes...');
       
       for (const [sizeName, config] of Object.entries(this.SIZES)) {
-        // Create local file path for temporary storage
-        const localPath = path.join(
-          directories[sizeName === 'thumbnail' ? 'thumbnailDir' : 'fullDir'], 
-          `${filename}.jpg`
-        );
-
         console.log(`Processing ${sizeName} size...`);
         
         let processedImage = image.clone();
@@ -388,14 +373,11 @@ class ImageProcessor {
           })
           .toBuffer();
 
-        // Save locally for backup/debugging (optional)
-        await fs.writeFile(localPath, processedBuffer);
-        
         if (sizeName === 'full') {
           size = processedBuffer.length;
         }
         
-        // Upload to S3
+        // Upload directly to S3 (no local storage)
         const s3Key = `images/${userId}/${sizeName}/${filename}.jpg`;
         
         const s3Result = await this.uploadToS3(
@@ -421,20 +403,6 @@ class ImageProcessor {
       }
 
       console.log('All sizes processed and uploaded successfully');
-
-      // Clean up local files (optional - keep for debugging or remove to save space)
-      try {
-        for (const [sizeName] of Object.entries(this.SIZES)) {
-          const localPath = path.join(
-            directories[sizeName === 'thumbnail' ? 'thumbnailDir' : 'fullDir'], 
-            `${filename}.jpg`
-          );
-          await fs.unlink(localPath);
-        }
-        console.log('✓ Cleaned up local temporary files');
-      } catch (cleanupError) {
-        console.warn('Warning: Failed to clean up local files:', cleanupError);
-      }
 
       // Return complete photo data
       return {
