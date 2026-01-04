@@ -1,0 +1,68 @@
+---
+id: "how-timeline-is-calculated"
+title: "How Timeline is Calculated"
+date: "2025-10-06"
+excerpt: "Understanding how your wedding planning timeline is dynamically calculated"
+author: "Wedding Expert"
+coverImage: "/images/blog/wedding-planning.jpg"
+---
+
+Here’s a solution outline for a dynamic offset-based wedding timeline:
+
+## Solution Overview
+
+**Goal:**  
+Adjust each task’s due date dynamically based on the total time available until the wedding.  
+- If the wedding is far away (e.g., 1 year), tasks are spaced out as in the default config.
+- If the wedding is soon (e.g., 3 months), tasks with longer offsets are compressed, and urgent tasks are scheduled immediately.
+
+**Key Concepts:**
+1. **Calculate Total Duration:**  
+   - `$D_{total}$` = days between today and wedding date
+
+2. **Assign Relative Offsets:**  
+   - Each task in your config has a recommended offset (monthsBeforeWedding).
+   - Convert all offsets to a normalized range (e.g., 0 to 1, where 1 = earliest task, 0 = wedding day).
+
+3. **Dynamic Scheduling Algorithm:**  
+   - For each task, calculate its “relative position” in the timeline:
+     - `$P_{task} = \frac{{monthsBeforeWedding}_{task}}{max(\text{monthsBeforeWedding})}$`
+   - Compute the due date:
+     - `$\text{dueDate}_{\text{task}} = \text{today} + (D_{\text{total}} \times (1 - P_{\text{task}}))$`
+   - This means:
+     - Tasks with high monthsBeforeWedding (early tasks) are scheduled further from today.
+     - Tasks with low monthsBeforeWedding (urgent tasks) are scheduled closer to today.
+
+4. **Immediate Tasks:**  
+   - If `$D_{total}$` is very short, tasks with `$monthsBeforeWedding > \frac{D_{total}}{30}$` are scheduled as soon as possible (today or within a few days).
+
+5. **Edge Cases:**  
+   - If `$D_{total}$` < minimum required (e.g., 3 months), warn the user or compress all tasks to fit the available time.
+
+## Example
+
+- User sets wedding date 90 days from now.
+- Task A: monthsBeforeWedding = 12 (should be done ASAP)
+- Task B: monthsBeforeWedding = 3 (should be done soon)
+- Task C: monthsBeforeWedding = 0.25 (can be done just before wedding)
+
+**Algorithm:**
+- $max(monthsBeforeWedding)$ = 12
+- $P_A = 1$, $P_B = 0.25$, $P_C = 0.02$
+- $dueDate_A = today + (90 \times (1 - 1)) = today$
+- $dueDate_B = today + (90 \times (1 - 0.25)) = today + 67.5$
+- $dueDate_C = today + (90 \times (1 - 0.02)) = today + 88.2$
+
+## Benefits
+
+- Timeline adapts to any wedding date.
+- Urgent tasks are scheduled immediately if time is short.
+- No tasks are lost; all are rescheduled to fit the available time.
+
+---
+
+**Next Steps:**  
+- Discuss how you want to handle tasks that are “impossible” (e.g., booking a venue 12 months before wedding when only 2 months remain).
+- Decide if you want to show warnings, mark tasks as overdue, or simply compress everything.
+
+Let me know if you want to proceed with this approach or adjust any details!

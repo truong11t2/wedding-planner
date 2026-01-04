@@ -31,7 +31,7 @@
       "id": "choose-party",
       "title": "Choose Wedding Party",
       "description": "Select your bridesmaids, groomsmen, and other key roles",
-      "monthsBeforeWedding": 12,
+      "monthsBeforeWedding": 10,
       "category": "Yourself",
       "options": [
         {
@@ -66,7 +66,7 @@
       "id": "book-photographer",
       "title": "Book Photographer",
       "description": "Research and book your wedding photographer",
-      "monthsBeforeWedding": 9,
+      "monthsBeforeWedding": 8,
       "category": "Vendor",
       "vendorType": "photographer"
     },
