@@ -45,35 +45,32 @@ interface TimelineConfigItem {
 export const generateTimeline = (weddingDate: string): TimelineItem[] => {
   const weddingDay = new Date(weddingDate);
   const today = new Date();
-  
-  // Check if wedding date is at least 3 months away
-  const threeMonthsFromNow = new Date();
-  threeMonthsFromNow.setMonth(today.getMonth() + 3);
-  
-  if (weddingDay < threeMonthsFromNow) {
-    throw new Error("Wedding date must be at least 3 months in advance for proper planning.");
-  }
+  // Calculate total days from today to wedding
+  const D_total = Math.max(1, Math.floor((weddingDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
-  // Helper function to calculate due date based on months before wedding
-  const getDateBeforeWedding = (months: number): Date => {
-    const date = new Date(weddingDay);
-    if (months >= 1) {
-      date.setMonth(date.getMonth() - months);
-    } else {
-      // Convert months to weeks (0.5 months = 2 weeks, 0.25 months = 1 week)
-      const weeks = months * 4;
-      date.setDate(date.getDate() - (weeks * 7));
-    }
-    return date;
-  };
+  // Find the maximum monthsBeforeWedding in config (for normalization)
+  const maxMonths = Math.max(...timelineConfig.timelineItems.map((item: TimelineConfigItem) => item.monthsBeforeWedding));
 
-  // Generate timeline from JSON configuration
+  // Generate timeline with dynamic offsets
   const timeline: TimelineItem[] = timelineConfig.timelineItems.map((configItem: TimelineConfigItem) => {
+    // Normalize offset: 1 = earliest task, 0 = wedding day
+    const P_task = Math.min(1, Math.max(0, configItem.monthsBeforeWedding / maxMonths));
+    // Calculate due date: today + (D_total * (1 - P_task))
+    let dueDate: Date;
+    // If the original offset is greater than available time, schedule ASAP
+    const daysOffset = Math.round(D_total * (1 - P_task));
+    if (configItem.monthsBeforeWedding * 30 > D_total) {
+      dueDate = new Date(today);
+    } else {
+      dueDate = new Date(today);
+      dueDate.setDate(today.getDate() + daysOffset);
+    }
+
     const timelineItem: TimelineItem = {
       id: configItem.id,
       title: configItem.title,
       description: configItem.description,
-      dueDate: getDateBeforeWedding(configItem.monthsBeforeWedding),
+      dueDate,
       completed: false,
       category: configItem.category,
       isWeddingDay: configItem.isWeddingDay || false,
@@ -97,7 +94,7 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
     return timelineItem;
   });
 
-  // Sort timeline by due date (earliest first, but we'll reverse this in the component)
+  // Sort timeline by due date (earliest first)
   return timeline.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
 };
 
