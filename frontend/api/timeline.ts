@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS } from './config';
 
 import { TimelineItem } from '@/lib/timelineGenerator';
 
@@ -13,7 +13,7 @@ export interface SavedTimelineData {
 // Save timeline to backend
 export async function saveTimeline(timelineData: SavedTimelineData): Promise<SavedTimelineData> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/timeline/save`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.TIMELINE.BASE}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -36,7 +36,7 @@ export async function saveTimeline(timelineData: SavedTimelineData): Promise<Sav
 // Load timeline from backend
 export async function loadTimeline(): Promise<SavedTimelineData | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/timeline/get`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.TIMELINE.BASE}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -61,7 +61,7 @@ export async function loadTimeline(): Promise<SavedTimelineData | null> {
 // Delete timeline from backend
 export async function deleteTimeline(): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/timeline/delete`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.TIMELINE.BASE}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -89,7 +89,7 @@ export const getTimelineStatus = async (): Promise<{
 }> => {
   try {
 
-    const response = await fetch(`${API_BASE_URL}/api/timeline/status`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.TIMELINE.STATUS}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -127,7 +127,7 @@ export const saveWeddingDate = async (weddingDate: string): Promise<{
 
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/timeline/wedding-date`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.TIMELINE.WEDDING_DATE}`, {
       method: 'POST',
       credentials: 'include',
       headers: {

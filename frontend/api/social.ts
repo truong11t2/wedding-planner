@@ -1,6 +1,6 @@
-export type Provider = 'Google' | 'Facebook' | 'Twitter' | 'Outlook' | 'Gmail';
+import { API_BASE_URL, ENDPOINTS } from './config';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+export type Provider = 'Google' | 'Facebook' | 'Twitter' | 'Outlook' | 'Gmail';
 
 // Client-side function to redirect to OAuth provider
 export const socialLogin = async (provider: Provider) => {
@@ -9,10 +9,10 @@ export const socialLogin = async (provider: Provider) => {
   switch (provider) {
     case 'Google':
     case 'Gmail':
-      authUrl = `${API_BASE_URL}/api/auth/google`;
+      authUrl = `${API_BASE_URL}${ENDPOINTS.SOCIAL.GOOGLE}`;
       break;
     case 'Facebook':
-      authUrl = `${API_BASE_URL}/api/auth/facebook`;
+      authUrl = `${API_BASE_URL}${ENDPOINTS.SOCIAL.FACEBOOK}`;
       break;
     default:
       return { success: false, message: `${provider} login not supported` };

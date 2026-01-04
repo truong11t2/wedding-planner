@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS } from './config';
 
 // Utility function to check if backend is reachable
 export const checkBackendHealth = async (): Promise<boolean> => {
@@ -6,7 +6,7 @@ export const checkBackendHealth = async (): Promise<boolean> => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     
-    const response = await fetch(`${API_BASE_URL}/api/health`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.HEALTH}`, {
       method: 'GET',
       signal: controller.signal,
     });

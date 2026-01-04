@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS } from './config';
 
 export interface Guest {
   id: string;
@@ -47,7 +47,7 @@ export const getGuestList = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/guests`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.GUEST.BASE}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -85,7 +85,7 @@ export const saveGuestList = async (guests: Guest[]): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/guests`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.GUEST.BASE}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -124,7 +124,7 @@ export const addGuest = async (guest: Omit<Guest, 'id' | 'createdAt'>): Promise<
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/guests/add`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.GUEST.ADD}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -163,7 +163,7 @@ export const updateGuest = async (guestId: string, updates: Partial<Guest>): Pro
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/guests/${guestId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.GUEST.BASE}/${guestId}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -202,7 +202,7 @@ export const deleteGuest = async (guestId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/guests/${guestId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.GUEST.BASE}/${guestId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -240,7 +240,7 @@ export const updateRSVP = async (guestId: string, rsvpStatus: Guest['rsvpStatus'
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/guests/${guestId}/rsvp`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.GUEST.BASE}/${guestId}/rsvp`, {
       method: 'PATCH',
       credentials: 'include',
       headers: {
@@ -279,7 +279,7 @@ export const getGuestStats = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/guests/stats`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.GUEST.STATS}`, {
       method: 'GET',
       credentials: 'include',
       headers: {

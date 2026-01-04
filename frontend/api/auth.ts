@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS } from './config'
 
 export interface User {
   id: string;
@@ -27,7 +27,7 @@ interface SocialAuthResponse {
 
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.AUTH.LOGIN}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -81,7 +81,7 @@ const retryRequest = async (requestFn: () => Promise<Response>, maxRetries = 3):
 export const loginUserWithRetry = async (email: string, password: string): Promise<AuthResponse> => {
   try {
     const response = await retryRequest(async () => {
-      const fetchResponse = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const fetchResponse = await fetch(`${API_BASE_URL}${ENDPOINTS.AUTH.LOGIN}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export const registerUser = async (
   user?: User;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.AUTH.REGISTER}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ export const registerUser = async (
 // Logout user
 export const logoutUser = async (): Promise<{ success: boolean; message?: string }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.AUTH.LOGOUT}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -187,7 +187,7 @@ export const logoutUser = async (): Promise<{ success: boolean; message?: string
 export const getUserProfile = async (): Promise<AuthResponse> => {
   try {
 
-    const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.AUTH.PROFILE}`, {
       method: 'GET',
       credentials: 'include',
       headers: {

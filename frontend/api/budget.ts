@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS } from './config';
 
 export interface BudgetCategory {
   id: string;
@@ -38,7 +38,7 @@ export const getBudgetData = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/budget`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.BUDGET.BASE}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -76,7 +76,7 @@ export const saveBudgetData = async (budgetData: { totalBudget: number; categori
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/budget`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.BUDGET.BASE}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -115,7 +115,7 @@ export const updateTotalBudget = async (totalBudget: number): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/budget/total`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.BUDGET.TOTAL}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -154,7 +154,7 @@ export const addBudgetCategory = async (category: Omit<BudgetCategory, 'id'>): P
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/budget/category`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.BUDGET.CATEGORY}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -193,7 +193,7 @@ export const updateBudgetCategory = async (categoryId: string, updates: Partial<
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/budget/category/${categoryId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.BUDGET.CATEGORY}/${categoryId}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -232,7 +232,7 @@ export const deleteBudgetCategory = async (categoryId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/budget/category/${categoryId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.BUDGET.CATEGORY}/${categoryId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -270,7 +270,7 @@ export const getBudgetStats = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/budget/stats`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.BUDGET.STATS}`, {
       method: 'GET',
       credentials: 'include',
       headers: {

@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS } from './config';
 
 export interface ChecklistItem {
   id: number;
@@ -15,7 +15,7 @@ export const getChecklist = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/checklist`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CHECKLIST.BASE}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -53,7 +53,7 @@ export const saveChecklist = async (checklistItems: ChecklistItem[]): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/checklist`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CHECKLIST.BASE}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -92,7 +92,7 @@ export const addChecklistItem = async (item: Omit<ChecklistItem, 'id' | 'complet
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/checklist/item`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CHECKLIST.ITEM}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -131,7 +131,7 @@ export const updateChecklistItem = async (itemId: number, updates: Partial<Check
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/checklist/item/${itemId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CHECKLIST.ITEM}/${itemId}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -170,7 +170,7 @@ export const deleteChecklistItem = async (itemId: number): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/checklist/item/${itemId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CHECKLIST.ITEM}/${itemId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -208,7 +208,7 @@ export const toggleChecklistItem = async (itemId: number): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/checklist/item/${itemId}/toggle`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CHECKLIST.ITEM}/${itemId}/toggle`, {
       method: 'PATCH',
       credentials: 'include',
       headers: {

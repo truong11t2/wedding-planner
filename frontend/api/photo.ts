@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS } from './config';
 
 export interface Photo {
   id: string;
@@ -56,7 +56,7 @@ export const getPhotos = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.BASE}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -94,7 +94,7 @@ export const savePhotos = async (photos: Photo[]): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.BASE}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -152,7 +152,7 @@ export const uploadPhotos = async (
     if (description) formData.append('description', description);
     if (tags && tags.length > 0) formData.append('tags', tags.join(','));
 
-    const response = await fetch(`${API_BASE_URL}/api/photos/upload`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.UPLOAD}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -193,7 +193,7 @@ export const updatePhoto = async (photoId: string, updates: Partial<Photo>): Pro
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.BASE}/${photoId}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -232,7 +232,7 @@ export const deletePhoto = async (photoId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.BASE}/${photoId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -270,7 +270,7 @@ export const togglePhotoFavorite = async (photoId: string): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos/${photoId}/favorite`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.BASE}/${photoId}/favorite`, {
       method: 'PATCH',
       credentials: 'include',
       headers: {
@@ -308,7 +308,7 @@ export const getPhotosByCategory = async (category: string): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos/category/${category}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.CATEGORY}/${category}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -346,7 +346,7 @@ export const searchPhotos = async (query: string): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos/search?query=${encodeURIComponent(query)}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.SEARCH}?query=${encodeURIComponent(query)}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -384,7 +384,7 @@ export const getPhotoStats = async (): Promise<{
   message?: string;
 }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/photos/stats`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.STATS}`, {
       method: 'GET',
       credentials: 'include',
       headers: {

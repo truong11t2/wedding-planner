@@ -1,38 +1,44 @@
-export const BASE_URL =  process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+export const API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000'}/api`;
 
 export const ENDPOINTS = {
     AUTH: {
-      LOGIN: '/api/auth/login',
-      REGISTER: '/api/auth/register',
-      PROFILE: '/api/auth/profile',
-      LOGOUT: '/api/auth/logout',
+      LOGIN: '/auth/login',
+      REGISTER: '/auth/register',
+      PROFILE: '/auth/profile',
+      LOGOUT: '/auth/logout',
     },
     BUDGET: {
-      BASE: '/api/budget',
-      TOTAL: '/api/budget/total',
-      CATEGORY: '/api/budget/category',
-      STATS: '/api/budget/stats',
+      BASE: '/budget',
+      TOTAL: '/budget/total',
+      CATEGORY: '/budget/category',
+      STATS: '/budget/stats',
     },
     CHECKLIST: {
-      BASE: '/api/checklist',
-      ITEM: '/api/checklist/item',
+      BASE: '/checklist',
+      ITEM: '/checklist/item',
+    },
+    GUEST: {
+      BASE: '/guests',
+      ADD: '/guests/add',
+      STATS: '/guests/stats',
     },
     PHOTO: {
-      BASE: '/api/photos',
-      UPLOAD: '/api/photos/upload',
-      CATEGORY: '/api/photos/category',
-      SEARCH: '/api/photos/search',
-      STATS: '/api/photos/stats',
+      BASE: '/photos',
+      UPLOAD: '/photos/upload',
+      CATEGORY: '/photos/category',
+      SEARCH: '/photos/search',
+      STATS: '/photos/stats',
     },
     SOCIAL: {
-
+      GOOGLE: '/auth/google',
+      FACEBOOK: '/auth/facebook'
     },
     TIMELINE: {
-      BASE: '/api/timeline',
-      STATUS: '/api/timeline/status',
-      WEDDING_DATE: '/api/timeline/wedding-date'
+      BASE: '/timeline',
+      STATUS: '/timeline/status',
+      WEDDING_DATE: '/timeline/wedding-date'
     },
-    HEALTH: '/api/health',
+    HEALTH: '/health',
   };
 
 export const  TIMEOUT = 10000; // 10 seconds
