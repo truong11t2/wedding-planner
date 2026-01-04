@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import styles from '@/styles/article.module.css';
 import { MDXComponents } from '@/components/mdx/MDXComponents';
+import CommentSection from '@/components/blog/CommentSection';
 
 
 interface PageProps {
@@ -54,6 +55,9 @@ export default async function BlogPost({ params }: PageProps) {
           components={MDXComponents}
         />
       </div>
+
+      {/* Comment Section */}
+      <CommentSection blogPostId={slug} />
     </article>
   );
 }

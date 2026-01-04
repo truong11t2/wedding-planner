@@ -7,9 +7,21 @@ const {
   approveComment,
   deleteComment
 } = require('../controllers/commentController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, optionalAuth } = require('../middleware/authMiddleware');
 
-router.post('/', createComment);
+// Optional auth middleware - attaches user if logged in, but doesn't require it
+const optionalAuthMiddleware = async (req, res, next) => {
+  try {
+    if (req.cookies?.authToken || req.headers.authorization) {
+      return protect(req, res, next);
+    }
+    next();
+  } catch (error) {
+    next();
+  }
+};
+
+router.post('/', optionalAuthMiddleware, createComment);
 router.get('/post/:blogPostId', getCommentsByBlogPost);
 router.get('/', protect, getAllComments);
 router.put('/:id/approve', protect, approveComment);

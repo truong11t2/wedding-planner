@@ -10,7 +10,12 @@ const Comment = sequelize.define('Comment', {
   blogPostId: {
     type: DataTypes.STRING,
     allowNull: false,
-    comment: 'Identifier for the blog post'
+    comment: 'Identifier for the blog post (slug)'
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    comment: 'User ID if logged in, null for anonymous'
   },
   name: {
     type: DataTypes.STRING,
@@ -29,7 +34,13 @@ const Comment = sequelize.define('Comment', {
   },
   isApproved: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
+    defaultValue: true, // Auto-approve for now, can add moderation later
+    comment: 'Whether comment is approved for display'
+  },
+  isAnonymous: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    comment: 'True if comment is from non-logged-in user'
   }
 }, {
   timestamps: true,
