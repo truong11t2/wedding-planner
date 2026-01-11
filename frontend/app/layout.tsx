@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Perfect Day Planner - Wedding Planning Made Easy",
   description: "Plan your perfect wedding day with our comprehensive wedding planning tools",
+  other: {
+    'locale': 'vi-VN',
+  },
 };
 
 export default function RootLayout({
@@ -26,7 +29,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="vi-VN">
+      <head>
+        <meta name="locale" content="vi-VN" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <TimelineProvider>

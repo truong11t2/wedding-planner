@@ -130,7 +130,7 @@ export default function BlogPosts() {
                   {post.author}
                 </div>
                 <time dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                  {new Date(post.publishedAt).toLocaleDateString('vi-VN', {
                     month: 'short',
                     day: 'numeric'
                   })}

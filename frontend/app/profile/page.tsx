@@ -95,7 +95,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-sm font-medium text-gray-500">Wedding Date</label>
                 <p className="mt-1 text-lg font-semibold text-gray-900">
-                  {new Date(profile.weddingDate).toLocaleDateString('en-US', {
+                  {new Date(profile.weddingDate).toLocaleDateString('vi-VN', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
@@ -105,7 +105,7 @@ export default function ProfilePage() {
               <div>
                 <label className="block text-sm font-medium text-gray-500">Member Since</label>
                 <p className="mt-1 text-lg font-semibold text-gray-900">
-                  {new Date(profile.createdAt).toLocaleDateString('en-US', {
+                  {new Date(profile.createdAt).toLocaleDateString('vi-VN', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'

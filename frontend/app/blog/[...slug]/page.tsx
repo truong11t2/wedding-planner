@@ -29,7 +29,7 @@ export default async function BlogPost({ params }: PageProps) {
         <h1 className={styles.title}>{post.title}</h1>
         <div className={styles.meta}>
           <time dateTime={post.date}>
-            {new Date(post.date).toLocaleDateString('en-US', {
+            {new Date(post.date).toLocaleDateString('vi-VN', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
