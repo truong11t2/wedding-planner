@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Perfect Day Planner - Wedding Planning Made Easy",
-  description: "Plan your perfect wedding day with our comprehensive wedding planning tools",
+  title: "Về Một Nhà - Giúp bạn một đám cưới hoàn hảo",
+  description: "Lên kế hoạch cho ngày cưới hoàn hảo của bạn với các công cụ lập kế hoạch đám cưới toàn diện của chúng tôi",
   other: {
     'locale': 'vi-VN',
   },

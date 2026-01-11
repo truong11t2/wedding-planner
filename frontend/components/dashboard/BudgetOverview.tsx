@@ -33,9 +33,9 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
   const budgetUsedPercentage = (totalSpent / totalBudget) * 100;
 
   const getBudgetStatus = () => {
-    if (budgetUsedPercentage > 90) return { status: 'danger', message: 'Over budget!' };
-    if (budgetUsedPercentage > 75) return { status: 'warning', message: 'Close to budget limit' };
-    return { status: 'good', message: 'Within budget' };
+    if (budgetUsedPercentage > 90) return { status: 'danger', message: 'Vượt ngân sách!' };
+    if (budgetUsedPercentage > 75) return { status: 'warning', message: 'Gần đạt giới hạn ngân sách' };
+    return { status: 'good', message: 'Trong ngân sách' };
   };
 
   const budgetStatus = getBudgetStatus();
@@ -43,16 +43,15 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Budget Overview</h2>
-        <DollarSign className="h-6 w-6 text-green-500" />
+        <h2 className="text-xl font-semibold text-gray-900">Tổng thể ngân sách</h2>
       </div>
 
       {/* Budget Summary */}
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-600">Budget Used</span>
+          <span className="text-sm text-gray-600">Ngân sách đã dùng</span>
           <span className="text-sm font-medium">
-            ${totalSpent.toLocaleString()} / ${totalBudget.toLocaleString()}
+            ${totalSpent.toLocaleString('vi-VN')} / ${totalBudget.toLocaleString('vi-VN')}
           </span>
         </div>
         
@@ -86,7 +85,7 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
 
       {/* Budget Breakdown */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium text-gray-900">Category Breakdown</h3>
+        <h3 className="text-sm font-medium text-gray-900">Phân bổ ngân sách</h3>
         {budgetCategories.map((category, index) => {
           const percentage = (category.spent / category.budgeted) * 100;
           const isOverBudget = category.spent > category.budgeted;
@@ -96,7 +95,7 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">{category.name}</span>
                 <span className={`font-medium ${isOverBudget ? 'text-red-600' : 'text-gray-900'}`}>
-                  ${category.spent.toLocaleString()} / ${category.budgeted.toLocaleString()}
+                  ${category.spent.toLocaleString('vi-VN')} / ${category.budgeted.toLocaleString('vi-VN')}
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
@@ -117,15 +116,15 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">
-              ${remainingBudget.toLocaleString()}
+              ${remainingBudget.toLocaleString('vi-VN')}
             </div>
-            <div className="text-sm text-gray-500">Remaining</div>
+            <div className="text-sm text-gray-500">Còn lại</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">
               {budgetCategories.filter(cat => cat.spent > 0).length}
             </div>
-            <div className="text-sm text-gray-500">Categories Used</div>
+            <div className="text-sm text-gray-500">Danh mục đã sử dụng</div>
           </div>
         </div>
       </div>

@@ -551,8 +551,8 @@ useEffect(() => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
-          <p className="text-gray-600">Browse wedding venues by logging in first.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui lòng đăng nhập</h1>
+          <p className="text-gray-600">Duyệt địa điểm tổ chức tiệc cưới bằng cách đăng nhập trước.</p>
         </div>
       </div>
     );
@@ -564,8 +564,8 @@ useEffect(() => {
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <h2 className="text-lg font-medium text-gray-900">Loading venues...</h2>
-          <p className="text-gray-600">Please wait while we fetch the latest venue information.</p>
+          <h2 className="text-lg font-medium text-gray-900">Đang tải địa điểm...</h2>
+          <p className="text-gray-600">Vui lòng đợi trong khi chúng tôi lấy thông tin địa điểm mới nhất.</p>
         </div>
       </div>
     );
@@ -595,9 +595,9 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
       <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Wedding Venues</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Địa điểm tổ chức tiệc cưới</h1>
           <p className="text-gray-600">
-            Discover and book the perfect venue for your special day.
+            Khám phá và đặt địa điểm hoàn hảo cho ngày đặc biệt của bạn.
           </p>
         </div>
 
@@ -605,19 +605,19 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-gray-900">{venues.length}</div>
-            <div className="text-sm text-gray-500">Total Venues</div>
+            <div className="text-sm text-gray-500">Tổng số địa điểm</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-red-500">{favoriteCount}</div>
-            <div className="text-sm text-gray-500">Favorites</div>
+            <div className="text-sm text-gray-500">Yêu thích</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-500">{filteredVenues.length}</div>
-            <div className="text-sm text-gray-500">Matches</div>
+            <div className="text-sm text-gray-500">Phù hợp</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-green-500">{venueTypes.length}</div>
-            <div className="text-sm text-gray-500">Categories</div>
+            <div className="text-sm text-gray-500">Danh mục</div>
           </div>
         </div>
 
@@ -630,7 +630,7 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search venues, locations, or types..."
+                  placeholder="Tìm kiếm địa điểm, vị trí hoặc danh mục..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 w-full"
@@ -644,7 +644,7 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
                   onChange={(e) => setFilters(prev => ({ ...prev, venueType: e.target.value }))}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 >
-                  <option value="all">All Types</option>
+                  <option value="all">Tất cả</option>
                   {venueTypes.map(type => (
                     <option key={type} value={type}>{type}</option>
                   ))}
@@ -655,7 +655,7 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
                   className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   <Filter className="h-4 w-4 mr-2" />
-                  More Filters
+                  Thêm bộ lọc
                 </button>
               </div>
             </div>
@@ -692,10 +692,10 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Guest Count</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Lượng khách</label>
                   <input
                     type="number"
-                    placeholder="Number of guests"
+                    placeholder="Số lượng khách"
                     value={filters.guestCount}
                     onChange={(e) => setFilters(prev => ({ ...prev, guestCount: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
@@ -703,29 +703,29 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Mức giá</label>
                   <select
                     value={filters.priceRange}
                     onChange={(e) => setFilters(prev => ({ ...prev, priceRange: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                   >
-                    <option value="all">All Prices</option>
-                    <option value="budget">Under $10,000</option>
-                    <option value="mid">$10,000 - $20,000</option>
-                    <option value="luxury">$20,000+</option>
+                    <option value="all">Tất cả</option>
+                    <option value="budget">Dưới 10.000$</option>
+                    <option value="mid">10.000$ - 20.000$</option>
+                    <option value="luxury">Trên 20.000$</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Min Rating</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Đánh giá tối thiểu</label>
                   <select
                     value={filters.rating}
                     onChange={(e) => setFilters(prev => ({ ...prev, rating: parseInt(e.target.value) }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                   >
-                    <option value="0">Any Rating</option>
-                    <option value="4">4+ Stars</option>
-                    <option value="4.5">4.5+ Stars</option>
+                    <option value="0">Bất kỳ</option>
+                    <option value="4">4+ Sao</option>
+                    <option value="4.5">4.5+ Sao</option>
                   </select>
                 </div>
 
@@ -740,7 +740,7 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
                     })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    Clear Filters
+                    Xóa bộ lọc
                   </button>
                 </div>
               </div>
@@ -753,7 +753,7 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold text-gray-900">
-                {filteredVenues.length} venue{filteredVenues.length !== 1 ? 's' : ''} found
+                {filteredVenues.length} địa điểm{filteredVenues.length !== 1 ? 's' : ''} tìm thấy
               </h2>
             </div>
 
@@ -776,9 +776,9 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
         ) : (
           <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
             <MapPinned className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No venues found</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Không tìm thấy địa điểm nào</h3>
             <p className="text-gray-600 mb-4">
-              Try adjusting your search criteria or filters to find more venues.
+              Thử điều chỉnh tiêu chí tìm kiếm hoặc bộ lọc để tìm thêm địa điểm.
             </p>
             <button
               onClick={() => {
@@ -793,7 +793,7 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
               }}
               className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
             >
-              Clear All Filters
+              Xóa tất cả bộ lọc
             </button>
           </div>
         )}

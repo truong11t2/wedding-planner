@@ -54,17 +54,17 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
           <Calendar className="w-12 h-12 text-pink-600" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          {"When's the Big Day?"}
+          {"Ngày Vui Của Bạn Khi Nào?"}
         </h2>
         <p className="text-gray-600 text-sm sm:text-base">
-          {"Enter your wedding date and we'll create a personalized planning timeline just for you"}
+          {"Nhập ngày cưới và chúng tôi sẽ tạo một lịch trình đám cưới dành riêng cho bạn"}
         </p>
       </div>
 
       <div className="space-y-6">
         <div>
           <label htmlFor="wedding-date" className="block text-sm font-medium text-gray-700 mb-2">
-            Wedding Date
+            Ngày Cưới
           </label>
           <input
             type="date"
@@ -81,7 +81,7 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
           disabled={!weddingDate}
           className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 rounded-lg font-semibold text-base sm:text-lg hover:from-pink-700 hover:to-purple-700 transform hover:scale-105 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
-          Generate My Timeline
+          Tạo Lịch Trình
         </button>
       </div>
     </div>

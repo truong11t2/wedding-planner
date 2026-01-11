@@ -122,7 +122,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat('vi-VN', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -174,10 +174,10 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
             <Bookmark className="h-5 w-5" />
           )}
           <span className="hidden sm:inline">
-            {saveStatus === 'saving' ? 'Saving...' :
-             saveStatus === 'success' ? 'Saved!' :
-             saveStatus === 'error' ? 'Save Failed' :
-             'Save Timeline'}
+            {saveStatus === 'saving' ? 'Đang lưu...' :
+             saveStatus === 'success' ? 'Đã lưu!' :
+             saveStatus === 'error' ? 'Lưu thất bại' :
+             'Lưu'}
           </span>
         </button>
       </div>
@@ -191,16 +191,16 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
     return (
       <div className="max-w-2xl mx-auto p-6">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Create Your Wedding Timeline</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Tạo Lịch Trình Đám Cưới</h2>
           <p className="text-gray-600 mb-6">
-            Enter your wedding date to generate a personalized planning timeline
+            Nhập ngày vui của bạn để chúng tôi lên kế hoạch cá nhân hóa cho riêng bạn.
           </p>
         </div>
 
         <form onSubmit={handleWeddingDateSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="mb-4">
             <label htmlFor="wedding-date" className="block text-sm font-medium text-gray-700 mb-2">
-              Wedding Date *
+              Ngày Cưới *
             </label>
             <input
               type="date"
@@ -212,7 +212,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
               required
             />
             <p className="text-sm text-gray-500 mt-1">
-              Wedding date must be at least 3 months in advance
+              Ngày cưới phải cách ít nhất 3 tháng
             </p>
           </div>
 
@@ -227,7 +227,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
             type="submit"
             className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all"
           >
-            Generate Timeline
+            Tạo Lịch Trình
           </button>
         </form>
       </div>
@@ -239,13 +239,13 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Your Wedding Timeline</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Lịch Trình Đám Cưới</h2>
             <p className="text-gray-600">
-              Wedding Date: <span className="font-medium">{formatDate(new Date(currentWeddingDate))}</span>
+              Ngày vui: <span className="font-medium">{formatDate(new Date(currentWeddingDate))}</span>
             </p>
             {lastSaved && (
               <p className="text-sm text-gray-500 mt-1">
-                Last saved: {formatDate(lastSaved)}
+                Lần lưu cuối: {formatDate(lastSaved)}
               </p>
             )}
           </div>
@@ -259,7 +259,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
               }}
               className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
             >
-              Change Date
+              Đổi Ngày Cưới
             </button>
           </div>
         </div>
@@ -324,7 +324,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                 {/* Due date */}
                 <div className="flex items-center text-sm text-orange-500 mb-4">
                   <Clock className="h-4 w-4 mr-1" />
-                  <span>Due: {formatDate(item.dueDate)}</span>
+                  <span>Hạn cuối: {formatDate(item.dueDate)}</span>
                 </div>
 
               {/* Options */}
@@ -333,8 +333,8 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="text-sm font-medium text-gray-900">
                         {item.selectedOption || (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) 
-                          ? 'Your selection:' 
-                          : 'Choose an option:'}
+                          ? 'Lựa chọn của bạn:' 
+                          : 'Chọn một lựa chọn:'}
                       </h4>
                       
                       {/* Show expand/collapse button only if there's a selection */}
@@ -343,7 +343,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                           onClick={() => toggleOptionsExpansion(item.id)}
                           className="flex items-center space-x-1 text-sm text-pink-600 hover:text-pink-700 transition-colors"
                         >
-                          <span>{expandedItems.has(item.id) ? 'Hide options' : 'Change selection'}</span>
+                          <span>{expandedItems.has(item.id) ? 'Ẩn lựa chọn' : 'Thay đổi lựa chọn'}</span>
                           {expandedItems.has(item.id) ? (
                             <ChevronUp className="h-4 w-4" />
                           ) : (
@@ -393,7 +393,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                                   <div className="flex items-center justify-between mb-2">
                                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-800">
                                       <Check className="h-3 w-3 mr-1" />
-                                      Selected
+                                      Đã chọn
                                     </span>
                                   </div>
                                 )}

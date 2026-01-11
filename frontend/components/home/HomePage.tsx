@@ -32,9 +32,9 @@ export default function HomePage() {
   }, [isLoggedIn]);
 
   const features = [
-    { icon: Clock, text: 'Step-by-step guide' },
-    { icon: CheckCircle, text: 'Complete checklist' },
-    { icon: Download, text: 'Download as PDF' }
+    { icon: Clock, text: 'Hướng dẫn từng bước' },
+    { icon: CheckCircle, text: 'Lịch trình chi tiết' },
+    { icon: Download, text: 'Cá nhân hóa toàn diện' }
   ];
 
   const handleChangeDate = () => {

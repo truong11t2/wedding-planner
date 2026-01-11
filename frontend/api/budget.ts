@@ -7,7 +7,7 @@ export interface BudgetCategory {
   spent: number;
   color: string;
   description: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: 'cao' | 'trung bình' | 'thấp';
 }
 
 export interface BudgetData {

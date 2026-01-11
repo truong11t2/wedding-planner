@@ -19,17 +19,17 @@ export default function SocialLoginButtons({ onSuccess }: SocialLoginButtonsProp
         // socialLogin will redirect to OAuth provider
         // onSuccess will be called from the callback page
       } else {
-        alert(result.message || 'Login failed. Please try again.');
+        alert(result.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
       }
     } catch (error) {
-      alert('Login failed. Please try again.');
+      alert('Đăng nhập thất bại. Vui lòng thử lại.');
     } finally {
       setLoading(null);
     }
   };
 
   const getButtonText = (provider: Provider) => {
-    if (loading === provider) return 'Connecting...';
+    if (loading === provider) return 'Đang kết nối...';
     if (provider === 'Gmail') return 'Google';
     return provider;
   };
@@ -45,7 +45,7 @@ export default function SocialLoginButtons({ onSuccess }: SocialLoginButtonsProp
           <div className="w-full border-t border-gray-300"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          <span className="px-2 bg-white text-gray-500">Hoặc tiếp tục với</span>
         </div>
       </div>
 

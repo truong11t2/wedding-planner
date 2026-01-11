@@ -25,15 +25,15 @@ export default function DashboardStats({ timelineItems, weddingDate, daysUntilWe
 
   const stats = [
     {
-      name: 'Days Until Wedding',
-      value: daysUntilWedding !== null ? (daysUntilWedding > 0 ? daysUntilWedding : 'Today!') : 'Not set',
+      name: 'Số ngày đến đám cưới',
+      value: daysUntilWedding !== null ? (daysUntilWedding > 0 ? daysUntilWedding : 'Hôm nay!') : 'Chưa đặt',
       icon: Calendar,
       color: 'text-pink-600',
       bgColor: 'bg-pink-50',
       borderColor: 'border-pink-200'
     },
     {
-      name: 'Tasks Completed',
+      name: 'Số nhiệm vụ đã hoàn thành',
       value: `${completedTasks}/${totalTasks}`,
       icon: CheckCircle,
       color: 'text-green-600',
@@ -41,7 +41,7 @@ export default function DashboardStats({ timelineItems, weddingDate, daysUntilWe
       borderColor: 'border-green-200'
     },
     {
-      name: 'Completion Rate',
+      name: 'Tỷ lệ hoàn thành',
       value: `${completionRate}%`,
       icon: TrendingUp,
       color: 'text-blue-600',
@@ -49,7 +49,7 @@ export default function DashboardStats({ timelineItems, weddingDate, daysUntilWe
       borderColor: 'border-blue-200'
     },
     {
-      name: 'Due This Week',
+      name: 'Nhiệm vụ trong tuần',
       value: upcomingTasks,
       icon: Clock,
       color: 'text-yellow-600',

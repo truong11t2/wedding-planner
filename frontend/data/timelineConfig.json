@@ -2,295 +2,295 @@
   "timelineItems": [
     {
       "id": "set-budget",
-      "title": "Set Your Budget",
-      "description": "Determine your total budget and how to allocate it",
+      "title": "Thiết Lập Ngân Sách",
+      "description": "Xác định tổng ngân sách của bạn và cách phân bổ nó",
       "monthsBeforeWedding": 12,
-      "category": "Yourself",
+      "category": "Cặp đôi",
       "options": [
         {
           "id": "budget",
-          "label": "Budget Friendly",
-          "description": "Essential services with cost-effective choices",
-          "price": "$5,000 - $15,000"
+          "label": "Tiết Kiệm",
+          "description": "Dịch vụ thiết yếu với các lựa chọn tiết kiệm chi phí",
+          "price": " VND 100tr - 200tr"
         },
         {
           "id": "medium",
-          "label": "Medium Range",
-          "description": "Balance of quality and cost with some premium services",
-          "price": "$15,000 - $30,000"
+          "label": "Trung Bình",
+          "description": "Cân bằng giữa chất lượng và chi phí với một số dịch vụ cao cấp",
+          "price": " VND 200tr - 500tr"
         },
         {
           "id": "luxury",
-          "label": "Luxury",
-          "description": "Premium services and exclusive venues",
-          "price": "$30,000+"
+          "label": "Cao Cấp",
+          "description": "Dịch vụ cao cấp và địa điểm độc quyền",
+          "price": " VND 500tr+"
         }
       ]
     },
     {
       "id": "choose-party",
-      "title": "Choose Wedding Party",
-      "description": "Select your bridesmaids, groomsmen, and other key roles",
+      "title": "Chọn Đội Ngũ Đám Cưới",
+      "description": "Chọn phù dâu, phù rể và các vai trò quan trọng khác",
       "monthsBeforeWedding": 10,
-      "category": "Yourself",
+      "category": "Cặp đôi",
       "options": [
         {
           "id": "bride-side",
-          "label": "Bride Side",
-          "description": "Enter names of bridesmaids",
+          "label": "Phù Dâu",
+          "description": "Nhập tên phù dâu",
           "isTextInput": true
         },
         {
           "id": "groom-side",
-          "label": "Groom Side",
-          "description": "Enter names of groomsmen",
+          "label": "Phù Rể",
+          "description": "Nhập tên phù rể",
           "isTextInput": true
         },
         {
           "id": "other-roles",
-          "label": "Other Roles",
-          "description": "Enter any other important roles",
+          "label": "Vai Trò Khác",
+          "description": "Nhập các vai trò quan trọng khác",
           "isTextInput": true
         }
       ]
     },
     {
       "id": "book-venue",
-      "title": "Book Venue",
-      "description": "Secure your ceremony and reception venues",
+      "title": "Đặt Nhà Hàng",
+      "description": "Đảm bảo địa điểm cho lễ cưới và tiệc cưới của bạn",
       "monthsBeforeWedding": 9,
-      "category": "Vendor",
+      "category": "Nhà cung cấp",
       "vendorType": "venue"
     },
     {
       "id": "book-photographer",
-      "title": "Book Photographer",
-      "description": "Research and book your wedding photographer",
+      "title": "Chụp Hình Cưới",
+      "description": "Nghiên cứu và chọn nhiếp ảnh gia cho đám cưới của bạn",
       "monthsBeforeWedding": 8,
-      "category": "Vendor",
+      "category": "Nhà cung cấp",
       "vendorType": "photographer"
     },
     {
       "id": "order-dress",
-      "title": "Order Wedding Dress",
-      "description": "Start shopping for and order your wedding dress",
+      "title": "Đặt Váy Cưới",
+      "description": "Bắt đầu mua sắm và đặt váy cưới của bạn",
       "monthsBeforeWedding": 6,
-      "category": "Attire",
+      "category": "Trang Phục",
       "options": [
         {
           "id": "ballgown",
-          "label": "Ball Gown",
-          "description": "Classic princess-style dress with full skirt",
-          "price": "$800 - $3,000"
+          "label": "Váy Công Chúa",
+          "description": "Phong cách công chúa cổ điển với váy xòe rộng",
+          "price": "VND 800 - VND 3,000"
         },
         {
           "id": "a-line",
           "label": "A-Line",
-          "description": "Flattering silhouette that suits most body types",
-          "price": "$600 - $2,500"
+          "description": "Phom dáng tôn dáng phù hợp với hầu hết các loại cơ thể",
+          "price": "VND 600 - VND 2,500"
         },
         {
           "id": "mermaid",
-          "label": "Mermaid",
-          "description": "Fitted through hips, flares at knees",
-          "price": "$700 - $2,800"
+          "label": "Đuôi Cá",
+          "description": "Ôm sát qua hông, loe ra ở đầu gối",
+          "price": "VND 700 - VND 2,800"
         },
         {
           "id": "sheath",
-          "label": "Sheath",
-          "description": "Simple, straight silhouette",
-          "price": "$400 - $1,800"
+          "label": "Ôm Dáng",
+          "description": "Phom dáng đơn giản, thẳng",
+          "price": "VND 400 - VND 1,800"
         }
       ]
     },
     {
       "id": "book-caterer",
-      "title": "Book Caterer",
-      "description": "Select your catering service and plan the menu",
+      "title": "Lựa Chọn Thực Đơn",
+      "description": "Chọn thực đơn phù hợp với phong cách và ngân sách đám cưới của bạn",
       "monthsBeforeWedding": 6,
-      "category": "Vendor",
+      "category": "Nhà cung cấp",
       "vendorType": "caterer"
     },
     {
       "id": "send-invitations",
-      "title": "Send Invitations",
-      "description": "Mail out wedding invitations to your guest list",
+      "title": "Gửi Thiệp Mời",
+      "description": "Gửi thiệp mời đám cưới đến danh sách khách mời của bạn",
       "monthsBeforeWedding": 3,
-      "category": "Planning",
+      "category": "Cặp đôi",
       "options": [
         {
           "id": "traditional",
-          "label": "Traditional Paper",
-          "description": "Classic printed invitations with RSVP cards",
-          "price": "$200 - $800"
+          "label": "Thiệp Giấy Truyền Thống",
+          "description": "Thiệp in cổ điển",
+          "price": "VND 200 - VND 800"
         },
         {
           "id": "digital",
-          "label": "Digital Invitations",
-          "description": "Eco-friendly and cost-effective option",
-          "price": "$50 - $200"
+          "label": "Thiệp Mời Kỹ Thuật Số",
+          "description": "Lựa chọn thân thiện với môi trường và tiết kiệm chi phí",
+          "price": "VND 50 - VND 200"
         },
         {
           "id": "luxury",
-          "label": "Luxury Custom",
-          "description": "Premium materials with custom design",
-          "price": "$500 - $1,500"
+          "label": "Thiệp Mời Cao Cấp",
+          "description": "Vật liệu cao cấp với thiết kế tùy chỉnh",
+          "price": "VND 500 - VND 1,500"
         }
       ]
     },
     {
       "id": "order-rings",
-      "title": "Order Wedding Rings",
-      "description": "Choose and order your wedding bands",
+      "title": "Đặt Nhẫn Cưới",
+      "description": "Chọn và đặt nhẫn cưới của bạn",
       "monthsBeforeWedding": 3,
-      "category": "Attire",
+      "category": "Trang phục",
       "options": [
         {
           "id": "gold-classic",
-          "label": "Classic Gold Bands",
-          "description": "Traditional yellow or white gold rings",
-          "price": "$300 - $1,200"
+          "label": "Nhẫn Vàng Cổ Điển",
+          "description": "Nhẫn vàng truyền thống màu vàng hoặc trắng",
+          "price": "VND 300 - VND 1,200"
         },
         {
           "id": "platinum",
-          "label": "Platinum Bands",
-          "description": "Durable and hypoallergenic premium option",
-          "price": "$800 - $2,500"
+          "label": "Nhẫn Bạch Kim",
+          "description": "Lựa chọn cao cấp bền và không gây dị ứng",
+          "price": "VND 800 - VND 2,500"
         },
         {
           "id": "custom",
-          "label": "Custom Design",
-          "description": "Personalized rings with engravings or unique design",
-          "price": "$600 - $3,000"
+          "label": "Cá Nhân Hóa",
+          "description": "Nhẫn cá nhân hóa với khắc hoặc thiết kế độc đáo",
+          "price": "VND 600 - VND 3,000"
         }
       ]
     },
     {
       "id": "book-music",
-      "title": "Book Music/DJ",
-      "description": "Secure entertainment for ceremony and reception",
+      "title": "Đặt Nhạc/Nhạc Sĩ",
+      "description": "Đảm bảo giải trí cho lễ và tiệc cưới",
       "monthsBeforeWedding": 2,
-      "category": "Vendor",
+      "category": "Nhà cung cấp",
       "vendorType": "dj"
     },
     {
       "id": "final-dress-fitting",
-      "title": "Final Dress Fitting",
-      "description": "Schedule final dress alterations and fitting",
+      "title": "Lấy Váy Cưới Cuối Cùng",
+      "description": "Lên lịch chỉnh sửa và thử váy cưới cuối cùng",
       "monthsBeforeWedding": 1,
-      "category": "Attire"
+      "category": "Trang phục"
     },
     {
       "id": "create-timeline",
-      "title": "Create Wedding Day Timeline",
-      "description": "Finalize wedding day schedule with vendors",
+      "title": "Tạo Lịch Trình Ngày Cưới",
+      "description": "Hoàn thiện lịch trình ngày cưới với các nhà cung cấp",
       "monthsBeforeWedding": 1,
-      "category": "Planning"
+      "category": "Kế hoạch"
     },
     {
       "id": "final-vendor-confirmations",
-      "title": "Final Vendor Confirmations",
-      "description": "Confirm final details, timing, and setup with all vendors",
+      "title": "Xác Nhận Cuối Cùng Với Nhà Cung Cấp",
+      "description": "Xác nhận chi tiết cuối cùng, thời gian và setup với tất cả nhà cung cấp",
       "monthsBeforeWedding": 0.5,
-      "category": "Vendor"
+      "category": "Nhà cung cấp"
     },
     {
       "id": "wedding-rehearsal-planning",
-      "title": "Wedding Rehearsal Planning",
-      "description": "Organize rehearsal dinner and ceremony practice details",
+      "title": "Lên Kế Hoạch Tập Dượt",
+      "description": "Tổ chức tiệc tập dượt và thực hành lễ cưới",
       "monthsBeforeWedding": 0.5,
-      "category": "Planning"
+      "category": "Kế hoạch"
     },
     {
       "id": "final-guest-count",
-      "title": "Final Guest Count",
-      "description": "Provide final headcount to venue and caterer",
+      "title": "Đếm Số Lượng Khách Mời Cuối Cùng",
+      "description": "Cung cấp số lượng khách mời cuối cùng cho địa điểm và dịch vụ ăn uống",
       "monthsBeforeWedding": 0.5,
-      "category": "Planning"
+      "category": "Kế hoạch"
     },
     {
       "id": "beauty-appointments",
-      "title": "Beauty Appointments",
-      "description": "Hair trial, facial, and other beauty preparations",
+      "title": "Cuộc Hẹn Làm Đẹp",
+      "description": "Thử tóc, chăm sóc da mặt và các chuẩn bị làm đẹp khác",
       "monthsBeforeWedding": 0.25,
-      "category": "Personal",
+      "category": "Cặp đôi",
       "options": [
         {
           "id": "hair-makeup-trial",
-          "label": "Hair & Makeup Trial",
-          "description": "Test run of your wedding day beauty look",
-          "price": "$150 - $400"
+          "label": "Thử Tóc & Trang Điểm",
+          "description": "Thử nghiệm phong cách làm đẹp cho ngày cưới của bạn",
+          "price": "VND 150 - VND 400"
         },
         {
           "id": "facial-treatment",
-          "label": "Facial Treatment",
-          "description": "Professional facial for glowing skin",
-          "price": "$80 - $200"
+          "label": "Chăm Sóc Da Mặt",
+          "description": "Chăm sóc da chuyên nghiệp để có làn da rạng rỡ",
+          "price": "VND 80 - VND 200"
         },
         {
           "id": "manicure-pedicure",
-          "label": "Manicure & Pedicure",
-          "description": "Perfect nails for your special day",
-          "price": "$50 - $120"
+          "label": "Làm Móng",
+          "description": "Móng tay và móng chân hoàn hảo cho ngày đặc biệt của bạn",
+          "price": "VND 50 - VND 120"
         }
       ]
     },
     {
       "id": "pick-up-wedding-attire",
-      "title": "Pick Up Wedding Attire",
-      "description": "Collect wedding dress, suits, and accessories",
+      "title": "Lấy Trang Phục Cưới",
+      "description": "Nhận váy cưới, vest, và phụ kiện",
       "monthsBeforeWedding": 0.25,
-      "category": "Attire"
+      "category": "Trang phục"
     },
     {
       "id": "pack-wedding-day-kit",
-      "title": "Pack Wedding Day Kit",
-      "description": "Emergency supplies, makeup, accessories, and documents",
+      "title": "Chuẩn Bị Bộ Dụng Cụ Ngày Cưới",
+      "description": "Vật dụng khẩn cấp, trang điểm, phụ kiện và giấy tờ",
       "monthsBeforeWedding": 0.25,
-      "category": "Planning",
+      "category": "Kế hoạch",
       "options": [
         {
           "id": "emergency-kit",
-          "label": "Emergency Kit Items",
-          "description": "List items for your wedding day emergency kit",
+          "label": "Vật Dụng Bộ Dụng Cụ Khẩn Cấp",
+          "description": "Liệt kê các vật dụng cho bộ dụng cụ khẩn cấp ngày cưới của bạn",
           "isTextInput": true
         }
       ]
     },
     {
       "id": "marriage-license",
-      "title": "Obtain Marriage License",
-      "description": "Ensure marriage license is ready and valid",
+      "title": "Đăng Ký Giấy Phép Kết Hôn",
+      "description": "Đảm bảo giấy phép kết hôn đã sẵn sàng và hợp lệ",
       "monthsBeforeWedding": 0.25,
-      "category": "Legal"
+      "category": "Pháp lý"
     },
     {
       "id": "ceremony-items",
-      "title": "Prepare Ceremony Items",
-      "description": "Prepare rings, vows, and other ceremony essentials",
+      "title": "Chuẩn Bị Vật Dụng Lễ Cưới",
+      "description": "Chuẩn bị nhẫn, lời thề và các vật dụng cần thiết cho lễ cưới",
       "monthsBeforeWedding": 0.25,
-      "category": "Planning",
+      "category": "Kế hoạch",
       "options": [
         {
           "id": "vows",
-          "label": "Wedding Vows",
-          "description": "Write your personal wedding vows",
+          "label": "Lời Thề Cưới",
+          "description": "Viết lời thề cưới cá nhân của bạn",
           "isTextInput": true
         },
         {
           "id": "ceremony-music",
-          "label": "Ceremony Music",
-          "description": "Select processional and recessional music",
+          "label": "Âm Nhạc Lễ Cưới",
+          "description": "Chọn nhạc tiến và nhạc rút cho lễ cưới",
           "isTextInput": true
         }
       ]
     },
     {
       "id": "enjoy-wedding-day",
-      "title": "Enjoy Your Wedding Day!",
-      "description": "Relax and celebrate your special day",
+      "title": "Tận Hưởng Ngày Cưới Của Bạn!",
+      "description": "Thư giãn và tận hưởng ngày đặc biệt của bạn",
       "monthsBeforeWedding": 0,
-      "category": "Celebration",
+      "category": "Lễ kỷ niệm",
       "isWeddingDay": true
     }
   ]

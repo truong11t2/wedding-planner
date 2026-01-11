@@ -25,13 +25,13 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
   const [formData, setFormData] = useState({
     task: '',
     category: '',
-    priority: 'medium' as 'high' | 'medium' | 'low'
+    priority: 'trung bình' as 'cao' | 'trung bình' | 'thấp'
   });
 
   const categories = [
-    'Planning', 'Venue', 'Guests', 'Photography', 'Catering', 
-    'Attire', 'Music', 'Flowers', 'Invitations', 'Transportation', 
-    'Honeymoon', 'Legal', 'Other'
+    'Kế hoạch', 'Địa điểm', 'Khách mời', 'Chụp hình', 'Ẩm thực', 
+    'Trang phục', 'Âm nhạc', 'Hoa', 'Thiệp mời', 'Đi lại', 
+    'Tuần trăng mật', 'Pháp lý', 'Khác'
   ];
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
       setFormData({
         task: '',
         category: categories[0],
-        priority: 'medium'
+        priority: 'trung bình'
       });
     }
   }, [editTask, isOpen]);
@@ -59,7 +59,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
         priority: formData.priority
       });
       onClose();
-      setFormData({ task: '', category: categories[0], priority: 'medium' });
+      setFormData({ task: '', category: categories[0], priority: 'trung bình' });
     }
   };
 
@@ -71,7 +71,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-900">
-              {editTask ? 'Edit Task' : 'Add New Task'}
+              {editTask ? 'Chỉnh Sửa Nhiệm Vụ' : 'Thêm Nhiệm Vụ Mới'}
             </h2>
             <button
               onClick={onClose}
@@ -84,7 +84,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Task Description *
+                Mô Tả Nhiệm Vụ *
               </label>
               <input
                 type="text"
@@ -92,13 +92,13 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
                 value={formData.task}
                 onChange={(e) => setFormData({ ...formData, task: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                placeholder="Enter task description"
+                placeholder="Mô tả việc bạn muốn làm"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category
+                Danh Mục
               </label>
               <select
                 value={formData.category}
@@ -115,16 +115,16 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Priority Level
+                Độ Ưu Tiên
               </label>
               <select
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'high' | 'medium' | 'low' })}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'cao' | 'trung bình' | 'thấp' })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
               >
-                <option value="high">High Priority</option>
-                <option value="medium">Medium Priority</option>
-                <option value="low">Low Priority</option>
+                <option value="cao">Cao</option>
+                <option value="trung bình">Trung Bình</option>
+                <option value="thấp">Thấp</option>
               </select>
             </div>
 
@@ -134,13 +134,13 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
                 onClick={onClose}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type="submit"
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
-                {editTask ? 'Update' : 'Add'} Task
+                {editTask ? 'Cập Nhật' : 'Thêm'} Nhiệm Vụ
               </button>
             </div>
           </form>
@@ -187,22 +187,21 @@ export default function ChecklistPage() {
           } else {
             // If no checklist exists, initialize with default tasks
             const initialTasks: ChecklistItem[] = [
-              { id: 1, task: 'Set wedding date', category: 'Planning', completed: false, priority: 'high' },
-              { id: 2, task: 'Create guest list', category: 'Guests', completed: false, priority: 'high' },
-              { id: 3, task: 'Book ceremony venue', category: 'Venue', completed: false, priority: 'high' },
-              { id: 4, task: 'Choose photographer', category: 'Photography', completed: false, priority: 'medium' },
-              { id: 5, task: 'Select catering menu', category: 'Catering', completed: false, priority: 'medium' },
-              { id: 6, task: 'Order wedding invitations', category: 'Invitations', completed: false, priority: 'medium' },
-              { id: 7, task: 'Shop for wedding dress', category: 'Attire', completed: false, priority: 'low' },
-              { id: 8, task: 'Plan honeymoon destination', category: 'Honeymoon', completed: false, priority: 'low' },
+              { id: 1, task: 'Chọn ngày cưới', category: 'Kế Hoạch', completed: false, priority: 'cao' },
+              { id: 2, task: 'Tạo danh sách khách mời', category: 'Khách Mời', completed: false, priority: 'cao' },
+              { id: 3, task: 'Đặt địa điểm tổ chức', category: 'Địa Điểm', completed: false, priority: 'cao' },
+              { id: 4, task: 'Chọn nhiếp ảnh gia', category: 'Chụp Hình', completed: false, priority: 'trung bình' },
+              { id: 5, task: 'Chọn thực đơn tiệc', category: 'Ẩm Thực', completed: false, priority: 'trung bình' },
+              { id: 6, task: 'Đặt thiệp mời', category: 'Thiệp Mời', completed: false, priority: 'trung bình' },
+              { id: 7, task: 'Mua váy cưới', category: 'Trang Phục', completed: false, priority: 'thấp' },
+              { id: 8, task: 'Lên kế hoạch tuần trăng mật', category: 'Tuần Trăng Mật', completed: false, priority: 'thấp' },
             ];
             setTasks(initialTasks);
             // Save initial tasks to backend
             await saveChecklist(initialTasks);
           }
         } catch (error) {
-          console.error('Error loading checklist:', error);
-          showToast('Failed to load checklist', 'error');
+          showToast('Lỗi khi tải danh sách nhiệm vụ', 'error');
         } finally {
           setLoading(false);
         }
@@ -231,8 +230,8 @@ export default function ChecklistPage() {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
-          <p className="text-gray-600">Access your wedding checklist by logging in.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui Lòng Đăng Nhập</h1>
+          <p className="text-gray-600">Truy cập danh sách nhiệm vụ của bạn bằng cách đăng nhập.</p>
         </div>
       </div>
     );
@@ -243,7 +242,7 @@ export default function ChecklistPage() {
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <h2 className="text-lg font-medium text-gray-900">Loading your checklist...</h2>
+          <h2 className="text-lg font-medium text-gray-900">Đang tải danh sách nhiệm vụ của bạn...</h2>
         </div>
       </div>
     );
@@ -261,14 +260,14 @@ export default function ChecklistPage() {
         
         const task = response.data;
         showToast(
-          task.completed ? `"${task.task}" marked as completed!` : `"${task.task}" marked as pending`,
+          task.completed ? `"${task.task}" đã được đánh dấu hoàn thành!` : `"${task.task}" đã được đánh dấu chưa hoàn thành`,
           'success'
         );
       } else {
-        showToast(response.message || 'Failed to toggle task', 'error');
+        showToast(response.message || 'Lỗi khi cập nhật nhiệm vụ', 'error');
       }
     } catch (error) {
-      showToast('Error updating task', 'error');
+      showToast('Lỗi khi cập nhật nhiệm vụ', 'error');
     }
   };
 
@@ -293,38 +292,38 @@ export default function ChecklistPage() {
               task.id === editingTask.id ? response.data! : task
             )
           );
-          showToast(`Task "${taskData.task}" updated successfully`, 'success');
+          showToast(`Nhiệm vụ "${taskData.task}" đã được cập nhật thành công`, 'success');
         } else {
-          showToast(response.message || 'Failed to update task', 'error');
+          showToast(response.message || 'Lỗi khi cập nhật nhiệm vụ', 'error');
         }
       } else {
         // Add new task
         const response = await apiAddItem(taskData);
         if (response.success && response.data) {
           setTasks(prevTasks => [...prevTasks, response.data!]);
-          showToast(`Task "${taskData.task}" added successfully`, 'success');
+          showToast(`Nhiệm vụ "${taskData.task}" đã được thêm thành công`, 'success');
         } else {
-          showToast(response.message || 'Failed to add task', 'error');
+          showToast(response.message || 'Lỗi khi thêm nhiệm vụ', 'error');
         }
       }
     } catch (error) {
-      showToast('Error saving task', 'error');
+      showToast('Lỗi khi lưu nhiệm vụ', 'error');
     }
   };
 
   const handleDeleteTask = async (taskId: number) => {
     const task = tasks.find(t => t.id === taskId);
-    if (task && window.confirm(`Are you sure you want to delete "${task.task}"?`)) {
+    if (task && window.confirm(`Bạn có chắc chắn muốn xóa nhiệm vụ "${task.task}" không?`)) {
       try {
         const response = await apiDeleteItem(taskId);
         if (response.success) {
           setTasks(prevTasks => prevTasks.filter(t => t.id !== taskId));
-          showToast(`Task "${task.task}" deleted successfully`, 'success');
+          showToast(`Nhiệm vụ "${task.task}" đã được xóa thành công`, 'success');
         } else {
-          showToast(response.message || 'Failed to delete task', 'error');
+          showToast(response.message || 'Lỗi khi xóa nhiệm vụ', 'error');
         }
       } catch (error) {
-        showToast('Error deleting task', 'error');
+        showToast('Lỗi khi xóa nhiệm vụ', 'error');
       }
     }
   };
@@ -346,9 +345,9 @@ export default function ChecklistPage() {
   const categories = ['all', ...Array.from(new Set(tasks.map(task => task.category)))];
   
   const getTaskStats = () => {
-    const high = tasks.filter(t => t.priority === 'high').length;
-    const medium = tasks.filter(t => t.priority === 'medium').length;
-    const low = tasks.filter(t => t.priority === 'low').length;
+    const high = tasks.filter(t => t.priority === 'cao').length;
+    const medium = tasks.filter(t => t.priority === 'trung bình').length;
+    const low = tasks.filter(t => t.priority === 'thấp').length;
     
     return { high, medium, low };
   };
@@ -359,9 +358,9 @@ export default function ChecklistPage() {
     <>
       <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Wedding Checklist</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Nhiệm Vụ Cần Làm</h1>
           <p className="text-gray-600">
-            Stay on track with your wedding planning tasks.
+            Giữ tiến độ với các việc cần làm cho đám cưới.
           </p>
         </div>
 
@@ -369,28 +368,28 @@ export default function ChecklistPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-gray-900">{tasks.length}</div>
-            <div className="text-sm text-gray-500">Total Tasks</div>
+            <div className="text-sm text-gray-500">Tổng số nhiệm vụ</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-green-600">{completedCount}</div>
-            <div className="text-sm text-gray-500">Completed</div>
+            <div className="text-sm text-gray-500">Đã hoàn thành</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-red-600">{taskStats.high}</div>
-            <div className="text-sm text-gray-500">High Priority</div>
+            <div className="text-sm text-gray-500">Ưu tiên cao</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-pink-600">{progressPercent}%</div>
-            <div className="text-sm text-gray-500">Progress</div>
+            <div className="text-sm text-gray-500">Tiến độ</div>
           </div>
         </div>
 
         {/* Progress section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Overall Progress</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Tiến độ chung</h2>
             <span className="text-sm text-gray-600">
-              {completedCount} of {tasks.length} completed
+              {completedCount} trong số {tasks.length} nhiệm vụ đã hoàn thành
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
@@ -399,7 +398,7 @@ export default function ChecklistPage() {
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <p className="text-sm text-gray-600 mt-2">{progressPercent}% complete</p>
+          <p className="text-sm text-gray-600 mt-2">{progressPercent}% hoàn thành</p>
         </div>
 
         {/* Filters and Add Task */}
@@ -408,21 +407,21 @@ export default function ChecklistPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Status Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value as 'all' | 'completed' | 'pending')}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 >
-                  <option value="all">All Tasks</option>
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
+                  <option value="all">Tất cả</option>
+                  <option value="pending">Chưa hoàn thành</option>
+                  <option value="completed">Đã hoàn thành</option>
                 </select>
               </div>
 
               {/* Category Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
@@ -430,7 +429,7 @@ export default function ChecklistPage() {
                 >
                   {categories.map((category) => (
                     <option key={category} value={category}>
-                      {category === 'all' ? 'All Categories' : category}
+                      {category === 'all' ? 'Tất cả' : category}
                     </option>
                   ))}
                 </select>
@@ -442,7 +441,7 @@ export default function ChecklistPage() {
               className="inline-flex items-center px-4 py-2 bg-pink-600 text-white text-sm font-medium rounded-lg hover:bg-pink-700 transition-colors"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Task
+              Thêm nhiệm vụ
             </button>
           </div>
         </div>
@@ -451,7 +450,7 @@ export default function ChecklistPage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">
-              Tasks ({filteredTasks.length})
+              Nhiệm vụ ({filteredTasks.length})
             </h2>
           </div>
           
@@ -465,7 +464,7 @@ export default function ChecklistPage() {
                       className={`
                         flex-shrink-0 h-5 w-5 rounded border-2 flex items-center justify-center transition-all
                         ${task.completed 
-                          ? 'bg-pink-500 border-pink-500 text-white' 
+                          ? 'bg-green-500 border-green-500 text-white' 
                           : 'border-gray-300 hover:border-pink-500'
                         }
                       `}
@@ -486,12 +485,12 @@ export default function ChecklistPage() {
                         </span>
                         <span className={`
                           inline-flex px-2 py-1 text-xs font-medium rounded-full
-                          ${task.priority === 'high' ? 'bg-red-100 text-red-800' :
-                            task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                          ${task.priority === 'cao' ? 'bg-red-100 text-red-800' :
+                            task.priority === 'trung bình' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-green-100 text-green-800'
                           }
                         `}>
-                          {task.priority} priority
+                          ưu tiên {task.priority}
                         </span>
                       </div>
                     </div>
@@ -518,9 +517,9 @@ export default function ChecklistPage() {
           ) : (
             <div className="text-center py-12">
               <CircleCheckBig className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Không tìm thấy nhiệm vụ nào</h3>
               <p className="text-gray-600 mb-4">
-                {filter === 'all' ? 'Start by adding your first task' : `No ${filter} tasks in ${categoryFilter === 'all' ? 'any category' : categoryFilter}`}
+                {filter === 'all' ? 'Bắt đầu bằng cách thêm nhiệm vụ đầu tiên của bạn' : `Không có nhiệm vụ ${filter} trong ${categoryFilter === 'all' ? 'bất kỳ danh mục nào' : categoryFilter}`}
               </p>
               {filter === 'all' && (
                 <button
@@ -528,7 +527,7 @@ export default function ChecklistPage() {
                   className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Your First Task
+                  Thêm nhiệm vụ đầu tiên
                 </button>
               )}
             </div>

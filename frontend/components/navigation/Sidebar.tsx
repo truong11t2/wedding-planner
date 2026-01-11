@@ -28,13 +28,13 @@ interface SidebarProps {
 }
 
 const navigationItems: NavItem[] = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Timeline', href: '/timeline', icon: Clock },
-  { name: 'Checklist', href: '/checklist', icon: CircleCheckBig },
-  { name: 'Guests', href: '/guests', icon: Users },
-  { name: 'Venues', href: '/venues', icon: MapPinned },
-  { name: 'Photos', href: '/photos', icon: Camera },
-  { name: 'Budget', href: '/budget', icon: CircleDollarSign },
+  { name: 'Bảng Tổng Hợp', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Dòng Thời Gian', href: '/timeline', icon: Clock },
+  { name: 'Nhiệm Vụ', href: '/checklist', icon: CircleCheckBig },
+  { name: 'Khách Mời', href: '/guests', icon: Users },
+  { name: 'Địa Điểm', href: '/venues', icon: MapPinned },
+  { name: 'Hình Cưới', href: '/photos', icon: Camera },
+  { name: 'Ngân Sách', href: '/budget', icon: CircleDollarSign },
 ];
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
@@ -50,42 +50,42 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
     <div className="flex-1 flex flex-col min-h-0 bg-white">
       {/* Sidebar header */}
       <div className="flex-shrink-0 px-4 py-4 border-b border-gray-200">
-{/* User profile section */}
-      <div className="flex-shrink-0 border-t border-gray-200 p-4">
-        <div className="flex items-center space-x-3">
-          <div className="flex-shrink-0">
-            {user.avatar ? (
-              <img
-                className="h-10 w-10 rounded-full object-cover"
-                src={user.avatar}
-                alt={`${user.lastName}'s avatar`}
-              />
-            ) : (
-            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
-              <span className="text-sm font-semibold text-white">
-                {user.lastName?.charAt(0)?.toUpperCase() || 'U'}
-              </span>
+        {/* User profile section */}
+        <div className="flex-shrink-0 border-t border-gray-200 p-4">
+          <div className="flex items-center space-x-3">
+            <div className="flex-shrink-0">
+              {user.avatar ? (
+                <img
+                  className="h-10 w-10 rounded-full object-cover"
+                  src={user.avatar}
+                  alt={`${user.lastName}'s avatar`}
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
+                  <span className="text-sm font-semibold text-white">
+                    {user.lastName?.charAt(0)?.toUpperCase() || 'U'}
+                  </span>
+                </div>
+              )}
             </div>
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {user.lastName}
-            </p>
-            <p className="text-xs text-gray-500 truncate">
-              {user.email}
-            </p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user.lastName}
+              </p>
+              <p className="text-xs text-gray-500 truncate">
+                {user.email}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-      </div>
-      
+
       {/* Navigation menu */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navigationItems.map((item) => {
           const isCurrentPage = pathname === item.href;
           const IconComponent = item.icon;
-          
+
           return (
             <Link
               key={item.name}
@@ -93,10 +93,9 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
               onClick={() => setSidebarOpen(false)} // Close sidebar on mobile when link is clicked
               className={`
                 group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                ${
-                  isCurrentPage
-                    ? 'bg-pink-50 text-pink-700 border-l-4 border-pink-500'
-                    : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                ${isCurrentPage
+                  ? 'bg-pink-50 text-pink-700 border-l-4 border-pink-500'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                 }
               `}
             >
@@ -157,7 +156,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                       className="-m-2.5 p-2.5"
                       onClick={() => setSidebarOpen(false)}
                     >
-                      <span className="sr-only">Close sidebar</span>
+                      <span className="sr-only">Đóng thanh bên</span>
                       <X className="h-6 w-6 text-white" aria-hidden="true" />
                     </button>
                   </div>

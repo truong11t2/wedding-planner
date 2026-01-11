@@ -82,7 +82,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-900">
-              {editGuest ? 'Edit Guest' : `Add Guest to ${side === 'bride' ? 'Bride\'s' : 'Groom\'s'} Side`}
+              {editGuest ? 'Chỉnh Sửa Khách Mời' : `Thêm Khách Mời Nhà ${side === 'bride' ? 'Cô Dâu' : 'Chú Rể'}`}
             </h2>
             <button
               onClick={onClose}
@@ -95,7 +95,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name *
+                Tên *
               </label>
               <input
                 type="text"
@@ -103,7 +103,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                placeholder="Guest name"
+                placeholder="Tên khách mời"
               />
             </div>
 
@@ -122,7 +122,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
+                Điện thoại
               </label>
               <input
                 type="tel"
@@ -171,21 +171,21 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
               />
               <label htmlFor="plusOne" className="ml-2 text-sm text-gray-700">
-                Plus One
+                Người đi cùng
               </label>
             </div>
 
             {formData.plusOne && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Plus One Name
+                  Tên Người Đi Cùng
                 </label>
                 <input
                   type="text"
                   value={formData.plusOneName}
                   onChange={(e) => setFormData({ ...formData, plusOneName: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                  placeholder="Plus one name (optional)"
+                  placeholder="Tên người đi cùng (tùy chọn)"
                 />
               </div>
             )}
@@ -205,13 +205,13 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Notes
+                Ghi chú
               </label>
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                placeholder="Any additional notes"
+                placeholder="Ghi chú thêm"
                 rows={2}
               />
             </div>
@@ -222,13 +222,13 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 onClick={onClose}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type="submit"
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
-                {editGuest ? 'Update' : 'Add'} Guest
+                {editGuest ? 'Cập Nhật' : 'Thêm'} Khách Mời
               </button>
             </div>
           </form>
@@ -375,7 +375,7 @@ export default function GuestsPage() {
           }
         } catch (error) {
           console.error('Error loading guest list:', error);
-          showToast('Failed to load guest list', 'error');
+          showToast('Lỗi khi tải danh sách khách mời', 'error');
         } finally {
           setLoading(false);
         }
@@ -392,7 +392,7 @@ export default function GuestsPage() {
         try {
           await saveGuestList(guests);
         } catch (error) {
-          console.error('Auto-save failed:', error);
+          console.error('Tự động lưu thất bại:', error);
         }
       }, 1000); // Debounce auto-save by 1 second
 
@@ -404,8 +404,8 @@ export default function GuestsPage() {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
-          <p className="text-gray-600">Manage your guest list by logging in first.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui Lòng Đăng Nhập</h1>
+          <p className="text-gray-600">Quản lý danh sách khách mời của bạn bằng cách đăng nhập trước.</p>
         </div>
       </div>
     );
@@ -416,7 +416,7 @@ export default function GuestsPage() {
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <h2 className="text-lg font-medium text-gray-900">Loading your guest list...</h2>
+          <h2 className="text-lg font-medium text-gray-900">Đang tải danh sách khách mời của bạn...</h2>
         </div>
       </div>
     );
@@ -443,38 +443,38 @@ export default function GuestsPage() {
           setGuests(prev => prev.map(g => 
             g.id === editingGuest.id ? response.data! : g
           ));
-          showToast(`${guestData.name} has been updated successfully`, 'success');
+          showToast(`${guestData.name} đã được cập nhật thành công`, 'success');
         } else {
-          showToast(response.message || 'Failed to update guest', 'error');
+          showToast(response.message || 'Không thể cập nhật khách mời', 'error');
         }
       } else {
         // Add new guest
         const response = await apiAddGuest(guestData);
         if (response.success && response.data) {
           setGuests(prev => [...prev, response.data!]);
-          showToast(`${guestData.name} has been added to your guest list`, 'success');
+          showToast(`${guestData.name} đã được thêm vào danh sách khách mời của bạn`, 'success');
         } else {
-          showToast(response.message || 'Failed to add guest', 'error');
+          showToast(response.message || 'Không thể thêm khách mời', 'error');
         }
       }
     } catch (error) {
-      showToast('Error saving guest', 'error');
+      showToast('Lỗi khi lưu khách mời', 'error');
     }
   };
 
   const handleDeleteGuest = async (guestId: string) => {
     const guest = guests.find(g => g.id === guestId);
-    if (guest && window.confirm(`Are you sure you want to remove ${guest.name} from your guest list?`)) {
+    if (guest && window.confirm(`Bạn có chắc chắn muốn xóa ${guest.name} khỏi danh sách khách mời của bạn không?`)) {
       try {
         const response = await apiDeleteGuest(guestId);
         if (response.success) {
           setGuests(prev => prev.filter(g => g.id !== guestId));
-          showToast(`${guest.name} has been removed from your guest list`, 'success');
+          showToast(`${guest.name} đã được xóa khỏi danh sách khách mời của bạn`, 'success');
         } else {
-          showToast(response.message || 'Failed to delete guest', 'error');
+          showToast(response.message || 'Không thể xóa khách mời', 'error');
         }
       } catch (error) {
-        showToast('Error deleting guest', 'error');
+        showToast('Lỗi khi xóa khách mời', 'error');
       }
     }
   };
@@ -512,9 +512,9 @@ export default function GuestsPage() {
       <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Guest Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản Lí Khách Mời</h1>
           <p className="text-gray-600">
-            Organize your wedding guest list and track RSVPs for both sides.
+            Lên danh sách khách mời đám cưới cho cả nhà trai và nhà gái.
           </p>
         </div>
 
@@ -525,7 +525,7 @@ export default function GuestsPage() {
               <Users className="h-6 w-6 text-blue-500 mr-2" />
               <div>
                 <div className="text-2xl font-bold text-gray-900">{guests.length}</div>
-                <div className="text-sm text-gray-500">Total Guests</div>
+                <div className="text-sm text-gray-500">Tổng Số Khách</div>
               </div>
             </div>
           </div>
@@ -547,7 +547,7 @@ export default function GuestsPage() {
                 <div className="text-2xl font-bold text-gray-900">
                   {brideStats.totalPlusOnes + groomStats.totalPlusOnes}
                 </div>
-                <div className="text-sm text-gray-500">Plus Ones</div>
+                <div className="text-sm text-gray-500">Người Đi Cùng</div>
               </div>
             </div>
           </div>
@@ -568,7 +568,7 @@ export default function GuestsPage() {
         <div className="mb-6">
           <input
             type="text"
-            placeholder="Search guests by name or email..."
+            placeholder="Tìm kiếm khách mời theo tên..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
@@ -581,20 +581,20 @@ export default function GuestsPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Bride's Side</h2>
+                <h2 className="text-xl font-semibold text-gray-900">Nhà Cô Dâu</h2>
                 <button
                   onClick={() => handleAddGuest('bride')}
                   className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Guest
+                  Thêm Khách Mời
                 </button>
               </div>
               
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div className="text-center">
                   <div className="text-lg font-semibold text-gray-900">{brideStats.total}</div>
-                  <div className="text-gray-500">Total</div>
+                  <div className="text-gray-500">Tổng</div>
                 </div>
                 {/* <div className="text-center">
                   <div className="text-lg font-semibold text-green-600">{brideStats.attending}</div>
@@ -622,12 +622,12 @@ export default function GuestsPage() {
               ) : (
                 <div className="text-center py-8">
                   <Users className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <p className="text-gray-500">No guests added yet</p>
+                  <p className="text-gray-500">Chưa có khách mời nào</p>
                   <button
                     onClick={() => handleAddGuest('bride')}
                     className="mt-2 text-pink-600 hover:text-pink-700 font-medium"
                   >
-                    Add your first guest
+                    Thêm khách mời đầu tiên
                   </button>
                 </div>
               )}
@@ -638,20 +638,20 @@ export default function GuestsPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Groom's Side</h2>
+                <h2 className="text-xl font-semibold text-gray-900">Nhà Chú Rể</h2>
                 <button
                   onClick={() => handleAddGuest('groom')}
                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Guest
+                  Thêm Khách Mời
                 </button>
               </div>
               
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div className="text-center">
                   <div className="text-lg font-semibold text-gray-900">{groomStats.total}</div>
-                  <div className="text-gray-500">Total</div>
+                  <div className="text-gray-500">Tổng</div>
                 </div>
                 {/* <div className="text-center">
                   <div className="text-lg font-semibold text-green-600">{groomStats.attending}</div>
@@ -679,12 +679,12 @@ export default function GuestsPage() {
               ) : (
                 <div className="text-center py-8">
                   <Users className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <p className="text-gray-500">No guests added yet</p>
+                  <p className="text-gray-500">Chưa có khách mời nào</p>
                   <button
                     onClick={() => handleAddGuest('groom')}
                     className="mt-2 text-blue-600 hover:text-blue-700 font-medium"
                   >
-                    Add your first guest
+                    Thêm khách mời đầu tiên
                   </button>
                 </div>
               )}

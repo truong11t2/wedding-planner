@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Star, Quote } from 'lucide-react';
 
 interface Testimonial {
@@ -16,51 +16,51 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    name: "Sarah & Michael Johnson",
-    location: "San Francisco, CA",
+    name: "Thắng & Trang",
+    location: "Sài Gòn",
     rating: 5,
-    text: "This wedding planner made our dream wedding come true! The timeline feature helped us stay organized throughout the entire planning process. We couldn't have done it without this amazing tool.",
-    weddingDate: "June 15, 2024"
+    text: "Công cụ lập kế hoạch đám cưới này đã biến đám cưới trong mơ của chúng tôi thành hiện thực! Tính năng lịch trình giúp chúng tôi rất nhiều trong suốt quá trình lên kế hoạch. Đám cưới đã không trọn vẹn nếu không có công cụ tuyệt vời này.",
+    weddingDate: "15  tháng 6, 2025"
   },
   {
     id: 2,
-    name: "Emily & David Chen",
-    location: "New York, NY",
+    name: "Nga & Long",
+    location: "Đồng Nai",
     rating: 5,
-    text: "The photo organization feature was a game-changer! We were able to keep track of all our inspiration photos and vendor portfolios in one place. Highly recommend to any couple planning their big day.",
-    weddingDate: "September 22, 2024"
+    text: "Tính năng tổ chức ảnh đã thay đổi cuộc chơi! Chúng tôi có thể theo dõi tất cả các bức ảnh cảm hứng và danh mục nhà cung cấp trong một nơi. Rất khuyến khích cho bất kỳ cặp đôi nào đang lên kế hoạch cho ngày trọng đại của họ.",
+    weddingDate: "22 tháng 9, 2025"
   },
   {
     id: 3,
-    name: "Jessica & Ryan Martinez",
-    location: "Austin, TX",
+    name: "Khánh & Mai",
+    location: "Long An",
     rating: 5,
-    text: "From timeline creation to vendor management, this platform had everything we needed. The step-by-step guidance made wedding planning so much less stressful. Thank you for making our day perfect!",
-    weddingDate: "March 8, 2024"
+    text: "Từ việc tạo lịch trình đến quản lý nhà cung cấp, nền tảng này có tất cả những gì chúng tôi cần. Hướng dẫn từng bước làm cho việc lập kế hoạch đám cưới trở nên bớt căng thẳng hơn rất nhiều. Cảm ơn vì đã làm cho ngày của chúng tôi trở nên hoàn hảo!",
+    weddingDate: "8 tháng 3, 2024"
   },
   {
     id: 4,
-    name: "Amanda & James Wilson",
-    location: "Chicago, IL",
+    name: "Phương & James",
+    location: "Sài Gòn",
     rating: 5,
-    text: "The budget tracking and vendor coordination features saved us so much time and money. We were able to plan our entire wedding efficiently and stayed within budget. Absolutely love this tool!",
-    weddingDate: "October 12, 2024"
+    text: "Tính năng theo dõi ngân sách và phối hợp nhà cung cấp đã giúp chúng tôi tiết kiệm rất nhiều thời gian và tiền bạc. Chúng tôi có thể lên kế hoạch cho toàn bộ đám cưới một cách hiệu quả và giữ trong ngân sách. Rất yêu công cụ này!",
+    weddingDate: "12 tháng 10, 2025"
   },
   {
     id: 5,
-    name: "Rachel & Kevin Brown",
-    location: "Seattle, WA",
+    name: "Rachel & Thắng",
+    location: "USA",
     rating: 5,
-    text: "As someone who loves to be organized, this wedding planner was perfect for me. The detailed checklists and timeline kept us on track every step of the way. Our wedding was flawless!",
-    weddingDate: "July 30, 2024"
+    text: "Là người yêu thích sự ngăn nắp, công cụ lập kế hoạch đám cưới này thật hoàn hảo cho tôi. Các danh sách kiểm tra chi tiết và lịch trình đã giúp chúng tôi theo dõi từng bước. Đám cưới của chúng tôi thật hoàn hảo!",
+    weddingDate: "30 tháng 7, 2025"
   },
   {
     id: 6,
-    name: "Lauren & Christopher Davis",
-    location: "Miami, FL",
+    name: "Sang & Hoa",
+    location: "Hà Nội",
     rating: 5,
-    text: "Planning a destination wedding seemed overwhelming until we found this platform. The comprehensive planning tools made coordinating everything from afar so much easier. Couldn't be happier!",
-    weddingDate: "December 5, 2024"
+    text: "Lên kế hoạch cho một đám cưới ở xa tưởng chừng như quá sức cho đến khi chúng tôi tìm thấy nền tảng này. Các công cụ lập kế hoạch toàn diện đã giúp việc điều phối mọi thứ từ xa trở nên dễ dàng hơn rất nhiều. Không thể nào hài lòng hơn!",
+    weddingDate: "5 tháng 12, 2025"
   }
 ];
 
@@ -97,7 +97,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
             <p className="font-semibold text-gray-900">{testimonial.name}</p>
             <p className="text-sm text-gray-500">{testimonial.location}</p>
             <p className="text-xs text-pink-600 mt-1">
-              Wedding Date: {testimonial.weddingDate}
+              Ngày Cưới: {testimonial.weddingDate}
             </p>
           </div>
         </div>
@@ -130,11 +130,10 @@ export default function Testimonials() {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            What Our Happy Couples Say
+            Các cặp đôi đã nói gì về chúng tôi
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Don't just take our word for it. See what real couples have to say about their 
-            wedding planning experience with our platform.
+            Đừng chỉ nghe chúng tôi nói. Hãy xem những gì các cặp đôi thực sự nói về trải nghiệm lập kế hoạch đám cưới với nền tảng của chúng tôi.
           </p>
         </div>
 
@@ -149,20 +148,20 @@ export default function Testimonials() {
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="space-y-2">
-              <div className="text-2xl md:text-3xl font-bold text-pink-600">10,000+</div>
-              <div className="text-sm md:text-base text-gray-600">Happy Couples</div>
+              <div className="text-2xl md:text-3xl font-bold text-pink-600">40+</div>
+              <div className="text-sm md:text-base text-gray-600">Cặp Đôi Hạnh Phúc</div>
             </div>
             <div className="space-y-2">
-              <div className="text-2xl md:text-3xl font-bold text-purple-600">4.9/5</div>
-              <div className="text-sm md:text-base text-gray-600">Average Rating</div>
+              <div className="text-2xl md:text-3xl font-bold text-purple-600">4.8/5</div>
+              <div className="text-sm md:text-base text-gray-600">Đánh Giá Trung Bình</div>
             </div>
             <div className="space-y-2">
-              <div className="text-2xl md:text-3xl font-bold text-pink-600">50+</div>
-              <div className="text-sm md:text-base text-gray-600">Countries Served</div>
+              <div className="text-2xl md:text-3xl font-bold text-pink-600">10+</div>
+              <div className="text-sm md:text-base text-gray-600">Tỉnh Thành Phục Vụ</div>
             </div>
             <div className="space-y-2">
-              <div className="text-2xl md:text-3xl font-bold text-purple-600">99%</div>
-              <div className="text-sm md:text-base text-gray-600">Would Recommend</div>
+              <div className="text-2xl md:text-3xl font-bold text-purple-600">94%</div>
+              <div className="text-sm md:text-base text-gray-600">Sẽ Giới Thiệu</div>
             </div>
           </div>
         </div>
@@ -170,13 +169,13 @@ export default function Testimonials() {
         {/* Call to Action */}
         <div className="text-center mt-12">
           <p className="text-lg text-gray-600 mb-6">
-            Ready to join thousands of happy couples?
+            Sẵn sàng tham gia cùng hàng ngàn cặp đôi hạnh phúc?
           </p>
           <button 
             onClick={scrollToWeddingDate}
             className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
-            Start Planning Your Dream Wedding
+            Bắt Đầu Lập Kế Hoạch Ngày Cưới Trong Mơ Của Bạn
           </button>
         </div>
       </div>

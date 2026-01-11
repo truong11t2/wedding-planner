@@ -68,10 +68,10 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Timeline Progress</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Tiến độ</h2>
         <div className="flex items-center space-x-2">
           <Calendar className="h-5 w-5 text-gray-400" />
-          <span className="text-sm text-gray-500">{totalItems} total tasks</span>
+          <span className="text-sm text-gray-500">{totalItems} nhiệm vụ</span>
         </div>
       </div>
 
@@ -102,7 +102,7 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900">{completionPercentage}%</div>
-                <div className="text-sm text-gray-500">Complete</div>
+                <div className="text-sm text-gray-500">Hoàn thành</div>
               </div>
             </div>
           </div>
@@ -114,8 +114,8 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
             <div className="flex items-center">
               <CheckCircle className="h-6 w-6 text-green-500 mr-3" />
               <div>
-                <div className="font-semibold text-green-900">Completed Tasks</div>
-                <div className="text-sm text-green-700">Well done!</div>
+                <div className="font-semibold text-green-900">Nhiệm vụ đã hoàn thành</div>
+                <div className="text-sm text-green-700">Tuyệt vời!</div>
               </div>
             </div>
             <div className="text-2xl font-bold text-green-900">{completedItems.length}</div>
@@ -125,8 +125,8 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
             <div className="flex items-center">
               <Clock className="h-6 w-6 text-yellow-500 mr-3" />
               <div>
-                <div className="font-semibold text-yellow-900">Remaining Tasks</div>
-                <div className="text-sm text-yellow-700">Keep going!</div>
+                <div className="font-semibold text-yellow-900">Nhiệm vụ còn lại</div>
+                <div className="text-sm text-yellow-700">Tiếp tục cố gắng!</div>
               </div>
             </div>
             <div className="text-2xl font-bold text-yellow-900">{remainingItems.length}</div>
@@ -135,7 +135,7 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
           {/* Progress bar */}
           <div className="mt-4">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
-              <span>Overall Progress</span>
+              <span>Tiến độ tổng thể</span>
               <span>{completionPercentage}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
@@ -151,7 +151,7 @@ export default function TimelineProgress({ timelineItems }: TimelineProgressProp
       {/* Recent Activity */}
       {completedItems.length > 0 && (
         <div className="mt-6 pt-6 border-t border-gray-200">
-          <h3 className="text-sm font-medium text-gray-900 mb-3">Recent Completions</h3>
+          <h3 className="text-sm font-medium text-gray-900 mb-3">Hoạt động gần đây</h3>
           <div className="space-y-2">
             {completedItems.slice(-3).map((item) => (
               <div key={item.id} className="flex items-center text-sm">

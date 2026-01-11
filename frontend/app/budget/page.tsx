@@ -187,7 +187,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
     spent: '',
     color: 'bg-blue-500',
     description: '',
-    priority: 'medium' as 'high' | 'medium' | 'low'
+    priority: 'trung bình' as 'cao' | 'trung bình' | 'thấp'
   });
 
   const colorOptions = [
@@ -218,7 +218,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
         spent: '',
         color: 'bg-blue-500',
         description: '',
-        priority: 'medium'
+        priority: 'trung bình'
       });
     }
   }, [editCategory, isOpen]);
@@ -244,7 +244,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-900">
-              {editCategory ? 'Edit Budget Category' : 'Add Budget Category'}
+              {editCategory ? 'Chỉnh Sửa Chi Tiêu' : 'Thêm Chi Tiêu'}
             </h2>
             <button
               onClick={onClose}
@@ -257,7 +257,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category Name *
+                Tên Danh Mục *
               </label>
               <input
                 type="text"
@@ -265,14 +265,14 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                placeholder="e.g., Venue, Catering, Photography"
+                placeholder="ví dụ: Địa điểm, Ăn uống, Chụp hình"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Budgeted Amount *
+                  Số Tiền Dự Kiến *
                 </label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -291,7 +291,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Amount Spent
+                  Số Tiền Đã Chi
                 </label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -310,22 +310,22 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Priority Level
+                Mức Độ Ưu Tiên
               </label>
               <select
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'high' | 'medium' | 'low' })}
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'cao' | 'trung bình' | 'thấp' })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
               >
-                <option value="high">High Priority</option>
-                <option value="medium">Medium Priority</option>
-                <option value="low">Low Priority</option>
+                <option value="cao">Cao</option>
+                <option value="trung bình">Trung Bình</option>
+                <option value="thấp">Thấp</option>
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Color
+                Màu Sắc
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {colorOptions.map((color) => (
@@ -343,13 +343,13 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
+                Mô Tả
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                placeholder="Optional description or notes"
+                placeholder="Mô tả hoặc ghi chú (tùy chọn)"
                 rows={2}
               />
             </div>
@@ -360,13 +360,13 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
                 onClick={onClose}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type="submit"
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
-                {editCategory ? 'Update' : 'Add'} Category
+                {editCategory ? 'Cập Nhật' : 'Thêm'} Danh Mục
               </button>
             </div>
           </form>
@@ -420,7 +420,7 @@ function BudgetCategoryCard({ category, onEdit, onDelete }: BudgetCategoryCardPr
           
           <div className="flex items-center space-x-2 mb-3">
             <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(category.priority)}`}>
-              {category.priority} priority
+              ưu tiên {category.priority}
             </span>
             <div className={`w-3 h-3 rounded-full ${category.color}`}></div>
           </div>
@@ -450,12 +450,12 @@ function BudgetCategoryCard({ category, onEdit, onDelete }: BudgetCategoryCardPr
 
         <div className="flex justify-between items-center">
           <div className="text-xs text-gray-500">
-            {percentage.toFixed(1)}% used
+            {percentage.toFixed(1)}% đã sử dụng
           </div>
           <div className={`text-sm font-medium ${
             remaining >= 0 ? 'text-green-600' : 'text-red-600'
           }`}>
-            {remaining >= 0 ? '+' : ''}${remaining.toLocaleString()} remaining
+            {remaining >= 0 ? '+' : ''}${remaining.toLocaleString()} còn lại
           </div>
         </div>
       </div>
@@ -523,10 +523,10 @@ function BudgetBlogPosts() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <BookOpen className="h-6 w-6 text-green-500 mr-2" />
-          <h2 className="text-xl font-semibold text-gray-900">Budget Management Tips</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Kinh Nghiệm Quản Lý Ngân Sách</h2>
         </div>
         <button className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center">
-          View All
+          Xem Tất Cả
           <ExternalLink className="h-4 w-4 ml-1" />
         </button>
       </div>
@@ -612,7 +612,7 @@ export default function BudgetPage() {
                   spent: 7500,
                   color: 'bg-blue-500',
                   description: 'Ceremony and reception venue costs',
-                  priority: 'high'
+                  priority: 'cao'
                 },
                 {
                   id: '2',
@@ -620,8 +620,8 @@ export default function BudgetPage() {
                   budgeted: 6000,
                   spent: 5800,
                   color: 'bg-green-500',
-                  description: 'Food and beverage for guests',
-                  priority: 'high'
+                  description: 'Đãi tiệc cho khách mời',
+                  priority: 'cao'
                 },
                 {
                   id: '3',
@@ -629,35 +629,35 @@ export default function BudgetPage() {
                   budgeted: 3000,
                   spent: 3200,
                   color: 'bg-purple-500',
-                  description: 'Wedding photographer and videographer',
-                  priority: 'medium'
+                  description: 'Chụp hình và quay phim đám cưới',
+                  priority: 'cao'
                 },
                 {
                   id: '4',
-                  name: 'Attire',
+                  name: 'Trang phục',
                   budgeted: 2500,
                   spent: 1800,
                   color: 'bg-pink-500',
-                  description: 'Wedding dress, suit, and accessories',
-                  priority: 'medium'
+                  description: 'Váy cưới, vest, và phụ kiện',
+                  priority: 'cao'
                 },
                 {
                   id: '5',
-                  name: 'Flowers',
+                  name: 'Hoa',
                   budgeted: 1500,
                   spent: 1200,
                   color: 'bg-yellow-500',
-                  description: 'Bouquet, centerpieces, and decorations',
-                  priority: 'low'
+                  description: 'Hoa cưới, trung tâm bàn tiệc, và trang trí',
+                  priority: 'thấp'
                 },
                 {
                   id: '6',
-                  name: 'Music & Entertainment',
+                  name: 'Âm nhạc & Giải trí',
                   budgeted: 1200,
                   spent: 1000,
                   color: 'bg-indigo-500',
-                  description: 'DJ, band, or entertainment services',
-                  priority: 'medium'
+                  description: 'DJ, ban nhạc, hoặc dịch vụ giải trí khác',
+                  priority: 'trung bình'
                 }
               ];
               setCategories(sampleCategories);
@@ -667,7 +667,7 @@ export default function BudgetPage() {
           }            
         } catch (error) {
           console.error('Error loading budget data:', error);
-          showToast('Failed to load budget data', 'error');
+          showToast('Không thể tải dữ liệu ngân sách', 'error');
         } finally {
           setLoading(false);
         }
@@ -696,8 +696,8 @@ export default function BudgetPage() {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
-          <p className="text-gray-600">Access your wedding budget by logging in first.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui lòng đăng nhập</h1>
+          <p className="text-gray-600">Truy cập ngân sách đám cưới của bạn bằng cách đăng nhập trước.</p>
         </div>
       </div>
     );
@@ -708,7 +708,7 @@ export default function BudgetPage() {
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <h2 className="text-lg font-medium text-gray-900">Loading your budget...</h2>
+          <h2 className="text-lg font-medium text-gray-900">Đang tải ngân sách của bạn...</h2>
         </div>
       </div>
     );
@@ -739,46 +739,46 @@ export default function BudgetPage() {
       setCategories(prev => prev.map(cat => 
             cat.id === editingCategory.id ? response.data! : cat
       ));
-      showToast(`${categoryData.name} category updated successfully`, 'success');
+      showToast(`${categoryData.name} danh mục đã được cập nhật thành công`, 'success');
     } else {
-          showToast(response.message || 'Failed to update category', 'error');
+          showToast(response.message || 'Không thể cập nhật danh mục', 'error');
         }
       } else {
         // Add new category
         const response = await apiAddCategory(categoryData);
         if (response.success && response.data) {
           setCategories(prev => [...prev, response.data!]);
-      showToast(`${categoryData.name} category added successfully`, 'success');
+      showToast(`${categoryData.name} danh mục đã được thêm thành công`, 'success');
         } else {
-          showToast(response.message || 'Failed to add category', 'error');
+          showToast(response.message || 'Không thể thêm danh mục', 'error');
         }
       }
     } catch (error) {
-      showToast('Error saving category', 'error');
+      showToast('Lỗi khi lưu danh mục', 'error');
     }
   };
 
   const handleDeleteCategory = async (categoryId: string) => {
     const category = categories.find(cat => cat.id === categoryId);
-    if (category && window.confirm(`Are you sure you want to delete the ${category.name} category?`)) {
+    if (category && window.confirm(`Bạn có chắc muốn xóa danh mục ${category.name}?`)) {
       try {
         const response = await apiDeleteCategory(categoryId);
         if (response.success) {
       setCategories(prev => prev.filter(cat => cat.id !== categoryId));
-      showToast(`${category.name} category deleted successfully`, 'success');
+      showToast(`${category.name} danh mục đã được xóa thành công`, 'success');
         } else {
-          showToast(response.message || 'Failed to delete category', 'error');
+          showToast(response.message || 'Không thể xóa danh mục', 'error');
         }
       } catch (error) {
-        showToast('Error deleting category', 'error');
+        showToast('Lỗi khi xóa danh mục', 'error');
       }
     }
   };
 
   const getBudgetStatus = () => {
-    if (budgetUsedPercentage > 100) return { status: 'danger', message: 'Over budget!', icon: AlertTriangle };
-    if (budgetUsedPercentage > 85) return { status: 'warning', message: 'Close to budget limit', icon: AlertTriangle };
-    return { status: 'good', message: 'Within budget', icon: CheckCircle };
+    if (budgetUsedPercentage > 100) return { status: 'danger', message: 'Vượt ngân sách!', icon: AlertTriangle };
+    if (budgetUsedPercentage > 85) return { status: 'warning', message: 'Gần đạt giới hạn ngân sách', icon: AlertTriangle };
+    return { status: 'good', message: 'Trong ngân sách', icon: CheckCircle };
   };
 
   const handleUpdateBudget = async (newBudget: number) => {
@@ -786,12 +786,12 @@ export default function BudgetPage() {
       const response = await apiUpdateTotalBudget(newBudget);
       if (response.success) {
     setTotalBudget(newBudget);
-    showToast(`Budget updated to $${newBudget.toLocaleString()}`, 'success');
+    showToast(`Ngân sách đã được cập nhật thành $${newBudget.toLocaleString()}`, 'success');
       } else {
-        showToast(response.message || 'Failed to update budget', 'error');
+        showToast(response.message || 'Không thể cập nhật ngân sách', 'error');
       }
     } catch (error) {
-      showToast('Error updating budget', 'error');
+      showToast('Lỗi khi cập nhật ngân sách', 'error');
     }
   };
 
@@ -802,9 +802,9 @@ export default function BudgetPage() {
       <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Wedding Budget</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Ngân Sách</h1>
           <p className="text-gray-600">
-            Track your wedding expenses and manage your budget effectively.
+            Theo dõi chi tiêu đám cưới và quản lý ngân sách hiệu quả.
           </p>
         </div>
 
@@ -813,7 +813,7 @@ export default function BudgetPage() {
           {/* Total Budget Card */}
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Total Budget</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Tổng</h3>
               <Target className="h-6 w-6 text-blue-500" />
             </div>
             <div className="text-3xl font-bold text-blue-600 mb-2">
@@ -824,28 +824,28 @@ export default function BudgetPage() {
               className="inline-flex text-sm text-blue-600 hover:text-blue-700 hover:underline font-medium"
             >
               <Edit2 className="h-4 w-4 mr-2" />
-              Update Budget
+              Cập nhật Ngân sách
             </button>
           </div>
 
           {/* Spent Card */}
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Total Spent</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Đã Chi</h3>
               <Calculator className="h-6 w-6 text-red-500" />
             </div>
             <div className="text-3xl font-bold text-red-600 mb-2">
-              ${totalSpent.toLocaleString()}
+              VND {totalSpent.toLocaleString()}
             </div>
             <div className="text-sm text-gray-600">
-              {budgetUsedPercentage.toFixed(1)}% of budget used
+              {budgetUsedPercentage.toFixed(1)}% ngân sách đã sử dụng
             </div>
           </div>
 
           {/* Remaining Card */}
           <div className="bg-white border border-gray-200 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Remaining</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Còn Lại</h3>
               {totalRemaining >= 0 ? (
                 <TrendingUp className="h-6 w-6 text-green-500" />
               ) : (
@@ -871,15 +871,15 @@ export default function BudgetPage() {
         {/* Budget Progress Bar */}
         <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Overall Budget Progress</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Tổng Quan</h3>
             <div className="flex items-center space-x-4 text-sm">
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                <span className="text-gray-600">Within Budget</span>
+                <span className="text-gray-600">Trong Ngân Sách</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                <span className="text-gray-600">Over Budget</span>
+                <span className="text-gray-600">Vượt Ngân Sách</span>
               </div>
             </div>
           </div>
@@ -908,36 +908,36 @@ export default function BudgetPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-gray-900">{categories.length}</div>
-            <div className="text-sm text-gray-500">Categories</div>
+            <div className="text-sm text-gray-500">Danh Mục</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-green-600">
               {categories.filter(cat => cat.spent <= cat.budgeted).length}
             </div>
-            <div className="text-sm text-gray-500">On Budget</div>
+            <div className="text-sm text-gray-500">Trong Ngân Sách</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-red-600">{overBudgetCategories}</div>
-            <div className="text-sm text-gray-500">Over Budget</div>
+            <div className="text-sm text-gray-500">Vượt Ngân Sách</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
               ${(totalBudgeted / categories.length || 0).toFixed(0)}
             </div>
-            <div className="text-sm text-gray-500">Avg per Category</div>
+            <div className="text-sm text-gray-500">Trung Bình Mỗi Danh Mục</div>
           </div>
         </div>
 
         {/* Budget Categories */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Budget Categories</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">Danh Mục Ngân Sách</h2>
             <button
               onClick={handleAddCategory}
               className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Category
+              Thêm Danh Mục
             </button>
           </div>
 
@@ -955,14 +955,14 @@ export default function BudgetPage() {
           ) : (
             <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
               <PieChart className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No budget categories yet</h3>
-              <p className="text-gray-600 mb-4">Start by adding your first budget category</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Chưa có danh mục ngân sách</h3>
+              <p className="text-gray-600 mb-4">Bắt đầu bằng cách thêm danh mục ngân sách đầu tiên của bạn</p>
               <button
                 onClick={handleAddCategory}
                 className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Add Your First Category
+                Thêm Danh Mục Đầu Tiên
               </button>
             </div>
           )}

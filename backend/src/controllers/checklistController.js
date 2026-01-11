@@ -10,7 +10,7 @@ exports.getChecklist = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'Không tìm thấy người dùng'
       });
     }
 
@@ -20,14 +20,14 @@ exports.getChecklist = async (req, res) => {
     res.status(200).json({
       success: true,
       data: checklistData,
-      message: 'Checklist retrieved successfully'
+      message: 'Nhiệm vụ đã được lấy thành công'
     });
 
   } catch (error) {
     console.error('Get checklist error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error while retrieving checklist'
+      message: 'Lỗi máy chủ khi lấy nhiệm vụ'
     });
   }
 };
@@ -42,7 +42,7 @@ exports.saveChecklist = async (req, res) => {
     if (!Array.isArray(checklistItems)) {
       return res.status(400).json({
         success: false,
-        message: 'Checklist items must be an array'
+        message: 'Danh sách nhiệm vụ phải là một mảng'
       });
     }
 
@@ -54,7 +54,7 @@ exports.saveChecklist = async (req, res) => {
         typeof item.task === 'string' &&
         typeof item.category === 'string' &&
         typeof item.completed === 'boolean' &&
-        ['high', 'medium', 'low'].includes(item.priority)
+        ['cao', 'trung bình', 'thấp'].includes(item.priority)
       );
     };
 
@@ -62,7 +62,7 @@ exports.saveChecklist = async (req, res) => {
     if (invalidItems.length > 0) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid checklist item format',
+        message: 'Định dạng nhiệm vụ không hợp lệ',
         invalidItems
       });
     }
@@ -73,7 +73,7 @@ exports.saveChecklist = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'Không tìm thấy người dùng'
       });
     }
 
@@ -83,14 +83,14 @@ exports.saveChecklist = async (req, res) => {
     res.status(200).json({
       success: true,
       data: user.checklistData,
-      message: 'Checklist saved successfully'
+      message: 'Nhiệm vụ đã được lưu thành công'
     });
 
   } catch (error) {
     console.error('Save checklist error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error while saving checklist'
+      message: 'Lỗi máy chủ khi lưu nhiệm vụ'
     });
   }
 };
@@ -105,14 +105,14 @@ exports.addChecklistItem = async (req, res) => {
     if (!task || !category || !priority) {
       return res.status(400).json({
         success: false,
-        message: 'Task, category, and priority are required'
+        message: 'Nhiệm vụ, danh mục, và độ ưu tiên là bắt buộc'
       });
     }
 
-    if (!['high', 'medium', 'low'].includes(priority)) {
+    if (!['cao', 'trung bình', 'thấp'].includes(priority)) {
       return res.status(400).json({
         success: false,
-        message: 'Priority must be high, medium, or low'
+        message: 'Độ ưu tiên phải là cao, trung bình, hoặc thấp'
       });
     }
 
@@ -121,7 +121,7 @@ exports.addChecklistItem = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'Không tìm thấy người dùng'
       });
     }
 
@@ -150,14 +150,14 @@ exports.addChecklistItem = async (req, res) => {
     res.status(201).json({
       success: true,
       data: newItem,
-      message: 'Checklist item added successfully'
+      message: 'Nhiệm vụ đã được thêm thành công'
     });
 
   } catch (error) {
     console.error('Add checklist item error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error while adding checklist item'
+      message: 'Lỗi máy chủ khi thêm nhiệm vụ'
     });
   }
 };
@@ -174,7 +174,7 @@ exports.updateChecklistItem = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'Không tìm thấy người dùng'
       });
     }
 
@@ -184,7 +184,7 @@ exports.updateChecklistItem = async (req, res) => {
     if (itemIndex === -1) {
       return res.status(404).json({
         success: false,
-        message: 'Checklist item not found'
+        message: 'Không tìm thấy nhiệm vụ'
       });
     }
 
@@ -198,14 +198,14 @@ exports.updateChecklistItem = async (req, res) => {
     res.status(200).json({
       success: true,
       data: updatedItem,
-      message: 'Checklist item updated successfully'
+      message: 'Nhiệm vụ đã được cập nhật thành công'
     });
 
   } catch (error) {
     console.error('Update checklist item error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error while updating checklist item'
+      message: 'Lỗi máy chủ khi cập nhật nhiệm vụ'
     });
   }
 };
@@ -221,7 +221,7 @@ exports.deleteChecklistItem = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'Không tìm thấy người dùng'
       });
     }
 
@@ -231,7 +231,7 @@ exports.deleteChecklistItem = async (req, res) => {
     if (itemIndex === -1) {
       return res.status(404).json({
         success: false,
-        message: 'Checklist item not found'
+        message: 'Không tìm thấy nhiệm vụ'
       });
     }
 
@@ -244,14 +244,14 @@ exports.deleteChecklistItem = async (req, res) => {
     res.status(200).json({
       success: true,
       data: deletedItem,
-      message: 'Checklist item deleted successfully'
+      message: 'Nhiệm vụ đã được xóa thành công'
     });
 
   } catch (error) {
     console.error('Delete checklist item error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error while deleting checklist item'
+      message: 'Lỗi máy chủ khi xóa nhiệm vụ'
     });
   }
 };
@@ -267,7 +267,7 @@ exports.toggleChecklistItem = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'Không tìm thấy người dùng'
       });
     }
 
@@ -277,7 +277,7 @@ exports.toggleChecklistItem = async (req, res) => {
     if (itemIndex === -1) {
       return res.status(404).json({
         success: false,
-        message: 'Checklist item not found'
+        message: 'Không tìm thấy nhiệm vụ'
       });
     }
 
@@ -290,14 +290,14 @@ exports.toggleChecklistItem = async (req, res) => {
     res.status(200).json({
       success: true,
       data: currentChecklist[itemIndex],
-      message: 'Checklist item toggled successfully'
+      message: 'Nhiệm vụ đã được chuyển đổi trạng thái thành công'
     });
 
   } catch (error) {
     console.error('Toggle checklist item error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error while toggling checklist item'
+      message: 'Lỗi máy chủ khi chuyển đổi trạng thái nhiệm vụ'
     });
   }
 };

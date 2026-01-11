@@ -25,13 +25,13 @@ export default function DashboardPage() {
 
     // Set greeting based on time of day
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good morning');
-    else if (hour < 18) setGreeting('Good afternoon');
-    else setGreeting('Good evening');
+    if (hour < 12) setGreeting('Chào buổi sáng');
+    else if (hour < 18) setGreeting('Chào buổi chiều');
+    else setGreeting('Chào buổi tối');
   }, [isLoggedIn, router]);
 
   const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat('vi-VN', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -65,7 +65,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {greeting}, {user?.lastName || 'there'}!
+                {greeting}, {user?.lastName || 'bạn'}!
               </h1>
               <p className="text-gray-600 mt-2">
                 {weddingDate ? (
@@ -79,18 +79,18 @@ export default function DashboardPage() {
                       </>
                     ) : daysUntilWedding === 0 ? (
                       <span className="font-bold text-pink-600">
-                        🎉 Today is your wedding day! Congratulations! 🎉
+                        🎉 Hôm nay là ngày cưới của bạn! Chúc mừng! 🎉
                       </span>
                     ) : (
                       <>
-                        Hope you had a wonderful wedding on {formatDate(weddingDate)}!
+                        Hy vọng bạn đã có một đám cưới tuyệt vời vào ngày {formatDate(weddingDate)}!
                       </>
                     )
                   ) : (
-                    'Your wedding planning dashboard'
+                    'Bảng điều khiển kế hoạch đám cưới của bạn'
                   )
                 ) : (
-                  'Set your wedding date to get started with planning'
+                  'Đặt ngày cưới của bạn để bắt đầu lên kế hoạch'
                 )}
               </p>
             </div>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
                   <div className="flex items-center">
                     <Calendar className="h-5 w-5 text-pink-500 mr-2" />
                     <div>
-                      <div className="text-sm text-gray-500">Wedding Date</div>
+                      <div className="text-sm text-gray-500">Ngày cưới</div>
                       <div className="font-semibold">{formatDate(weddingDate)}</div>
                     </div>
                   </div>

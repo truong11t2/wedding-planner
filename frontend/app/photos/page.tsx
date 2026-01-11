@@ -320,8 +320,8 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categories = [
-    'ceremony', 'reception', 'engagement', 'pre-wedding', 
-    'getting-ready', 'portraits', 'candid', 'details', 'venue', 'other'
+    'nghi lễ', 'tiệc', 'đính hôn', 'tiền cưới', 'chụp hình cưới',
+    'chuẩn bị', 'chân dung', 'chi tiết', 'địa điểm', 'khác'
   ];
 
   const handleDrag = (e: React.DragEvent) => {
@@ -384,7 +384,7 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-900">Upload Photos</h2>
+            <h2 className="text-xl font-bold text-gray-900">Tải Hình Lên</h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
@@ -408,10 +408,10 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
             >
               <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
               <p className="text-lg font-medium text-gray-900 mb-2">
-                Drop photos here or click to browse
+                Thả hình vào đây hoặc nhấp để duyệt
               </p>
               <p className="text-sm text-gray-500 mb-4">
-                PNG, JPG, GIF up to 10MB each
+                PNG, JPG, GIF lên đến 10MB mỗi hình
               </p>
               <button
                 type="button"
@@ -419,7 +419,7 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
                 className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Select Photos
+                Chọn Hình
               </button>
               <input
                 ref={fileInputRef}
@@ -461,7 +461,7 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
             {/* Category Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category
+                Danh Mục
               </label>
               <select
                 value={category}
@@ -479,28 +479,28 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
             {/* Description */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description (Optional)
+                Mô tả (Tùy chọn)
               </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 rows={3}
-                placeholder="Describe these photos..."
+                placeholder="Mô tả bức hình này..."
               />
             </div>
 
             {/* Tags */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tags (Optional)
+                Thẻ (Tùy chọn)
               </label>
               <input
                 type="text"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                placeholder="Enter tags separated by commas (e.g., bride, groom, family)"
+                placeholder="Nhập các thẻ, cách nhau bằng dấu phẩy (ví dụ: cô dâu, chú rể, gia đình)"
               />
             </div>
 
@@ -511,7 +511,7 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
                 onClick={onClose}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type="submit"
@@ -519,8 +519,8 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {uploading 
-                  ? 'Processing...' 
-                  : `Upload ${files.length} Photo${files.length !== 1 ? 's' : ''}`
+                  ? 'Đang xử lý...' 
+                  : `Tải lên ${files.length} hình`
                 }
               </button>
             </div>
@@ -574,7 +574,7 @@ export default function PhotosPage() {
         }
         } catch (error) {
           console.error('Error loading photos:', error);
-          showToast('Failed to load photos', 'error');
+          showToast('Không thể tải hình', 'error');
         } finally {
           setLoading(false);
     }
@@ -603,8 +603,8 @@ export default function PhotosPage() {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
-          <p className="text-gray-600">Access your wedding photos by logging in first.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui Lòng Đăng Nhập</h1>
+          <p className="text-gray-600">Truy cập hình cưới của bạn bằng cách đăng nhập trước.</p>
         </div>
       </div>
     );
@@ -615,7 +615,7 @@ export default function PhotosPage() {
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <h2 className="text-lg font-medium text-gray-900">Loading your photos...</h2>
+          <h2 className="text-lg font-medium text-gray-900">Đang tải hình của bạn...</h2>
         </div>
       </div>
     );
@@ -641,16 +641,16 @@ export default function PhotosPage() {
       if (response.success && response.data) {
         setPhotos(prev => [...response.data!, ...prev]);
         
-        let message = `Successfully uploaded ${response.data.length} photo${response.data.length !== 1 ? 's' : ''}`;
+        let message = `Đã tải lên thành công ${response.data.length} hình${response.data.length !== 1 ? 's' : ''}`;
         
         if (response.errors && response.errors.length > 0) {
-          message += `. ${response.errors.length} photos failed to process.`;
+          message += `. ${response.errors.length} hình không thể xử lý.`;
           console.warn('Upload errors:', response.errors);
         }
         
         showToast(message, 'success');
       } else {
-        showToast(response.message || 'Failed to upload photos', 'error');
+        showToast(response.message || 'Không thể tải hình', 'error');
         
         if (response.errors) {
           console.error('Upload errors:', response.errors);
@@ -658,7 +658,7 @@ export default function PhotosPage() {
       }
     } catch (error) {
       console.error('Upload error:', error);
-      showToast('Failed to upload photos', 'error');
+      showToast('Không thể tải hình', 'error');
     }
   };
 
@@ -673,32 +673,32 @@ export default function PhotosPage() {
     const photo = photos.find(p => p.id === photoId);
     if (photo) {
       showToast(
-            response.data.isFavorite ? 'Added to favorites' : 'Removed from favorites',
+            response.data.isFavorite ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
         'success'
       );
         }
       } else {
-        showToast(response.message || 'Failed to update favorite', 'error');
+        showToast(response.message || 'Không thể cập nhật yêu thích', 'error');
       }
     } catch (error) {
-      showToast('Error updating favorite', 'error');
+      showToast('Không thể cập nhật yêu thích', 'error');
     }
   };
 
   const handleDeletePhoto = async (photoId: string) => {
     const photo = photos.find(p => p.id === photoId);
-    if (photo && window.confirm(`Are you sure you want to delete "${photo.name}"?`)) {
+    if (photo && window.confirm(`Bạn có chắc chắn muốn xóa "${photo.name}"?`)) {
       try {
         const response = await apiDeletePhoto(photoId);
         if (response.success) {
       setPhotos(prev => prev.filter(p => p.id !== photoId));
       setSelectedPhoto(null);
-      showToast(`Deleted "${photo.name}"`, 'success');
+      showToast(`Đã xóa "${photo.name}"`, 'success');
         } else {
-          showToast(response.message || 'Failed to delete photo', 'error');
+          showToast(response.message || 'Không thể xóa hình', 'error');
         }
       } catch (error) {
-        showToast('Error deleting photo', 'error');
+        showToast('Không thể xóa hình', 'error');
       }
     }
   };
@@ -728,9 +728,9 @@ export default function PhotosPage() {
       <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Wedding Photos</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản Lí Hình Cưới</h1>
           <p className="text-gray-600">
-            Capture and organize all your precious wedding memories.
+            Tải lên và tổ chức tất cả những kỷ niệm quý giá trong ngày cưới của bạn.
           </p>
         </div>
 
@@ -738,21 +738,21 @@ export default function PhotosPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-gray-900">{photos.length}</div>
-            <div className="text-sm text-gray-500">Total Photos</div>
+            <div className="text-sm text-gray-500">Tổng Số Ảnh</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-red-500">{favoriteCount}</div>
-            <div className="text-sm text-gray-500">Favorites</div>
+            <div className="text-sm text-gray-500">Yêu Thích</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-500">{categories.length - 1}</div>
-            <div className="text-sm text-gray-500">Categories</div>
+            <div className="text-sm text-gray-500">Danh Mục</div>
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-green-500">
               {(totalSize / 1024 / 1024).toFixed(1)}MB
             </div>
-            <div className="text-sm text-gray-500">Total Size</div>
+            <div className="text-sm text-gray-500">Tổng Dung Lượng</div>
           </div>
         </div>
 
@@ -765,7 +765,7 @@ export default function PhotosPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search photos, tags, or descriptions..."
+                  placeholder="Tìm theo hình, thẻ, mô tả..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 w-full sm:w-64"
@@ -780,7 +780,7 @@ export default function PhotosPage() {
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}
+                    {category === 'all' ? 'Tất Cả Danh Mục' : category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ')}
                   </option>
                 ))}
               </select>
@@ -795,7 +795,7 @@ export default function PhotosPage() {
                 }`}
               >
                 <Heart className={`h-4 w-4 mr-2 ${showFavoritesOnly ? 'fill-current' : ''}`} />
-                Favorites Only
+                Yêu Thích
               </button>
             </div>
 
@@ -830,7 +830,7 @@ export default function PhotosPage() {
                 className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
                <Upload className="h-4 w-4 mr-2" />
-                Upload Photos
+                Tải Hình Lên
               </button>
             </div>
           </div>
@@ -971,7 +971,7 @@ export default function PhotosPage() {
                             ))}
                             {photo.tags.length > 3 && (
                               <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                                +{photo.tags.length - 3} more
+                                +{photo.tags.length - 3} thêm
                               </span>
                             )}
                           </div>
@@ -988,12 +988,12 @@ export default function PhotosPage() {
           <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
             <Camera className="mx-auto h-12 w-12 text-gray-400 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {photos.length === 0 ? 'No photos yet' : 'No photos match your filters'}
+              {photos.length === 0 ? 'Chưa có hình nào' : 'Không có hình nào phù hợp với bộ lọc của bạn'}
             </h3>
             <p className="text-gray-600 mb-4">
               {photos.length === 0 
-                ? 'Start building your wedding photo collection by uploading your first photos'
-                : 'Try adjusting your search or filter criteria'
+                ? 'Bắt đầu xây dựng bộ sưu tập hình cưới của bạn bằng cách tải lên những bức hình đầu tiên'
+                : 'Hãy thử điều chỉnh tiêu chí tìm kiếm hoặc bộ lọc của bạn'
               }
             </p>
             {photos.length === 0 && (
@@ -1002,7 +1002,7 @@ export default function PhotosPage() {
                 className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                Upload Your First Photos
+                Tải Lên Hình Đầu Tiên
               </button>
             )}
           </div>

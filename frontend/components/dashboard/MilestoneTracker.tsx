@@ -45,17 +45,17 @@ export default function MilestoneTracker({ timelineItems }: MilestoneTrackerProp
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
+    return date.toLocaleDateString('vi-VN', {
+      month: 'long',
       day: 'numeric',
       year: 'numeric'
-    }).format(date);
+    });
   };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Major Milestones</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Các mốc quan trọng</h2>
         <Calendar className="h-6 w-6 text-gray-400" />
       </div>
 
@@ -108,15 +108,15 @@ export default function MilestoneTracker({ timelineItems }: MilestoneTrackerProp
                     <div className="flex flex-col items-end ml-4">
                       
                       {item.completed && (
-                        <span className="text-xs text-green-600 mt-1">✓ Completed</span>
+                        <span className="text-xs text-green-600 mt-1">Hoàn thành</span>
                       )}
                       
                       {isOverdue && (
-                        <span className="text-xs text-red-600 mt-1">Overdue</span>
+                        <span className="text-xs text-red-600 mt-1">Quá hạn</span>
                       )}
                       
                       {item.isWeddingDay && (
-                        <span className="text-xs text-pink-600 mt-1">Wedding Day!</span>
+                        <span className="text-xs text-pink-600 mt-1">Ngày cưới!</span>
                       )}
                     </div>
                   </div>
@@ -130,9 +130,9 @@ export default function MilestoneTracker({ timelineItems }: MilestoneTrackerProp
       {/* Progress Summary */}
       <div className="mt-6 pt-6 border-t border-gray-200">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Milestone Progress</span>
+          <span className="text-sm text-gray-600">Tiến độ các mốc quan trọng</span>
           <span className="text-sm font-medium text-gray-900">
-            {milestoneItems.filter(item => item.completed).length} of {milestoneItems.length} completed
+            {milestoneItems.filter(item => item.completed).length} trong tổng số {milestoneItems.length} hoàn thành
           </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2 mt-2">

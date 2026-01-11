@@ -67,7 +67,7 @@ exports.saveBudget = async (req, res) => {
         typeof category.spent === 'number' &&
         typeof category.color === 'string' &&
         typeof category.description === 'string' &&
-        ['high', 'medium', 'low'].includes(category.priority) &&
+        ['cao', 'trung bình', 'thấp'].includes(category.priority) &&
         category.budgeted >= 0 &&
         category.spent >= 0
       );
@@ -192,10 +192,10 @@ exports.addBudgetCategory = async (req, res) => {
       });
     }
 
-    if (!['high', 'medium', 'low'].includes(priority)) {
+    if (!['cao', 'trung bình', 'thấp'].includes(priority)) {
       return res.status(400).json({
         success: false,
-        message: 'Priority must be high, medium, or low'
+        message: 'Độ ưu tiên phải là cao, trung bình, hoặc thấp'
       });
     }
 
@@ -301,10 +301,10 @@ exports.updateBudgetCategory = async (req, res) => {
       });
     }
 
-    if (updates.priority && !['high', 'medium', 'low'].includes(updates.priority)) {
+    if (updates.priority && !['cao', 'trung bình', 'thấp'].includes(updates.priority)) {
       return res.status(400).json({
         success: false,
-        message: 'Priority must be high, medium, or low'
+        message: 'Độ ưu tiên phải là cao, trung bình, hoặc thấp'
       });
     }
 

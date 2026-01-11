@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Heart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -49,9 +49,8 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             href="/"
             className="flex items-center gap-3"
           >
-            <Heart className="w-8 h-8 text-pink-500 fill-pink-500" />
             <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-              Perfect Day Planner
+              Về Một Nhà
             </h1>
           </Link>
 
@@ -63,7 +62,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 pathname === '/' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
-              Home
+              Trang Chủ
             </Link>
             <Link
               href="/blog"
@@ -71,7 +70,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 pathname === '/blog' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
-              Blog
+              Bài Viết
             </Link>
             {
               <Link
@@ -80,7 +79,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                   pathname === '/vendor' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
                 }`}
               >
-                Vendor
+                Nhà Cung Cấp
               </Link>
             }
             {isLoggedIn && (
@@ -90,7 +89,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                   pathname === '/profile' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
                 }`}
               >
-                Profile
+                Hồ Sơ
               </Link>
             )}
             {!isLoggedIn ? (
@@ -98,7 +97,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 onClick={handleLogin}
                 className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
               >
-                Login
+                Đăng Nhập
               </button>
             ) : (
               <button
@@ -108,7 +107,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 }}
                 className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
               >
-                Logout
+                Đăng Xuất
               </button>
             )}
           </nav>
@@ -131,7 +130,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
               }`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Home
+              Trang Chủ
             </Link>
             <Link
               href="/blog"
@@ -140,7 +139,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
               }`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Blog
+              Bài Viết
             </Link>
             {
               <Link
@@ -150,7 +149,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Vendor
+                Nhà Cung Cấp
               </Link>
             }
             {isLoggedIn && (
@@ -161,7 +160,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Profile
+                Hồ Sơ
               </Link>
             )}
             {isLoggedIn ? (
@@ -172,7 +171,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 }}
                 className="block w-full text-left py-2 text-lg font-semibold text-gray-700"
               >
-                Logout
+                Đăng Xuất
               </button>
             ) : (
               <Link
@@ -180,7 +179,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 className="block py-2 text-lg font-semibold text-gray-700"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Login
+                Đăng Nhập
               </Link>
             )}
           </nav>

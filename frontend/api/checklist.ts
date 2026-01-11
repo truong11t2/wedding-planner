@@ -5,7 +5,7 @@ export interface ChecklistItem {
   task: string;
   category: string;
   completed: boolean;
-  priority: 'high' | 'medium' | 'low';
+  priority: 'cao' | 'trung bình' | 'thấp';
 }
 
 // Get user's checklist
