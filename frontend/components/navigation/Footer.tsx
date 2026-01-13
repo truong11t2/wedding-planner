@@ -6,12 +6,27 @@ export default function Footer() {
   
   return (
     <footer className="bg-white border-t-2 border-pink-100 py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
-        <p>
-          <Link href="/" className="text-pink-500 hover:text-pink-700 transition-colors font-medium">
-            Về Một Nhà {' • '}© {currentYear} • Giúp ngày cưới trở nên hoàn hảo.
-          </Link>
-        </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center space-y-4">
+          {/* Main footer text */}
+          <p className="text-center text-gray-600 text-sm">
+            <Link href="/" className="text-gray-600 hover:text-pink-600 transition-colors font-medium">
+              Về Một Nhà
+            </Link>
+            {' '}© {currentYear} • Ngày cưới hoàn hảo.
+          </p>
+          
+          {/* Links */}
+          <div className="flex items-center space-x-4 text-sm text-gray-600">
+            <Link href="/terms" className="hover:text-pink-600 transition-colors">
+              Điều Khoản Sử Dụng
+            </Link>
+            <span>•</span>
+            <Link href="/privacy" className="hover:text-pink-600 transition-colors">
+              Chính Sách Bảo Mật
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );
