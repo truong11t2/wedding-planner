@@ -80,7 +80,7 @@ export default function BlogPosts() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <Heart className="h-6 w-6 text-pink-500 mr-2" />
-          <h2 className="text-xl font-semibold text-gray-900">Wedding Planning Blog</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Bài Viết Hữu Ích</h2>
         </div>
         <a
           href="#"

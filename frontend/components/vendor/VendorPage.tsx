@@ -8,10 +8,10 @@ export default async function VendorPage() {
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <h1 className="text-3xl font-bold text-black">
-        Wedding Vendor
+        Nhà Cung Cấp Dịch Vụ Đám Cưới
       </h1>
       <p className="pb-8 text-gray-600 text-lg">
-        Find your perfect wedding vendor 
+        Tìm nhà cung cấp dịch vụ đám cưới hoàn hảo cho bạn
       </p>
       {categories.map((categoryName) => (
         <VendorCategory

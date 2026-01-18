@@ -46,7 +46,6 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
   // Set the wedding date if passed as prop and context doesn't have one
   useEffect(() => {
     if (initialWeddingDate && !weddingDate) {
-      console.log('Setting wedding date from prop:', initialWeddingDate);
       setWeddingDate(initialWeddingDate);
       setTempWeddingDate(initialWeddingDate);
     }
@@ -70,11 +69,11 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
     setSaveStatus('saving');
     try {
       await saveTimelineData();
-      showToast('Timeline data saved successfully', 'success');
+      showToast('Lưu lịch trình thành công', 'success');
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (error) {
-      showToast('Failed to save timeline data. Please login to continue.', 'error');
+      showToast('Lưu lịch trình thất bại. Vui lòng đăng nhập để tiếp tục.', 'error');
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 5000);
     }

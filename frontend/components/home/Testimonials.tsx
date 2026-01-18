@@ -175,7 +175,7 @@ export default function Testimonials() {
             onClick={scrollToWeddingDate}
             className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
-            Bắt Đầu Lập Kế Hoạch Ngày Cưới Trong Mơ Của Bạn
+            Bắt Đầu Ngay!
           </button>
         </div>
       </div>

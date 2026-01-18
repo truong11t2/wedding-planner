@@ -140,7 +140,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
                 type="submit"
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
-                {editTask ? 'Cập Nhật' : 'Thêm'} Nhiệm Vụ
+                {editTask ? 'Cập Nhật' : 'Thêm'}
               </button>
             </div>
           </form>
