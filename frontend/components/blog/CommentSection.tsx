@@ -43,20 +43,20 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
 
     // Validation
     if (!message.trim()) {
-      setError('Please enter a comment');
+      setError('Vui lòng nhập nội dung bình luận');
       return;
     }
 
     if (!isLoggedIn) {
       if (!name.trim() || !email.trim()) {
-        setError('Name and email are required for anonymous comments');
+        setError('Tên và thư điện tử là bắt buộc đối với bình luận ẩn danh');
         return;
       }
 
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        setError('Please enter a valid email address');
+        setError('Vui lòng nhập địa chỉ email hợp lệ');
         return;
       }
     }
@@ -75,7 +75,7 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
     const result = await createComment(commentData);
 
     if (result.success && result.comment) {
-      setSuccess('Comment posted successfully!');
+      setSuccess('Đăng bình luận thành công!');
       setMessage('');
       if (!isLoggedIn) {
         setName('');
@@ -84,7 +84,7 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
       // Reload comments
       await loadComments();
     } else {
-      setError(result.message || 'Failed to post comment');
+      setError(result.message || 'Đăng bình luận thất bại');
     }
 
     setSubmitting(false);
@@ -105,13 +105,13 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
     <div className="mt-12 border-t-2 border-pink-100 pt-8">
       <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
         <MessageCircle className="w-8 h-8 text-pink-600" />
-        Comments ({comments.length})
+        Bình Luận ({comments.length})
       </h2>
 
       {/* Comment Form */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">
-          Leave a Comment
+          Để lại bình luận
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -119,7 +119,7 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Name *
+                  Tên *
                 </label>
                 <input
                   id="name"
@@ -127,13 +127,13 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-gray-900"
-                  placeholder="Your name"
+                  placeholder="Tên của bạn"
                   required
                 />
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email *
+                  Thư điện tử *
                 </label>
                 <input
                   id="email"
@@ -151,13 +151,13 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
           {isLoggedIn && (
             <div className="flex items-center gap-2 text-sm text-gray-600 bg-pink-50 px-4 py-2 rounded-lg">
               <User className="w-4 h-4 text-pink-600" />
-              <span>Posting as <strong>{user?.firstName} {user?.lastName}</strong></span>
+              <span>Bình luận với tư cách <strong>{user?.firstName} {user?.lastName}</strong></span>
             </div>
           )}
 
           <div>
             <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-              Comment *
+              Bình luận *
             </label>
             <textarea
               id="message"
@@ -165,7 +165,7 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
               className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-gray-900"
-              placeholder="Share your thoughts..."
+              placeholder="Chia sẻ suy nghĩ của bạn..."
               required
             />
           </div>
@@ -188,7 +188,7 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
             className="flex items-center gap-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-5 h-5" />
-            {submitting ? 'Posting...' : 'Post Comment'}
+            {submitting ? 'Đang đăng...' : 'Đăng bình luận'}
           </button>
         </form>
       </div>
@@ -198,12 +198,12 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
         {loading ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto"></div>
-            <p className="text-gray-600 mt-2">Loading comments...</p>
+            <p className="text-gray-600 mt-2">Đang tải bình luận...</p>
           </div>
         ) : comments.length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
             <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-600">No comments yet. Be the first to comment!</p>
+            <p className="text-gray-600">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
           </div>
         ) : (
           comments.map((comment) => (
@@ -219,7 +219,7 @@ export default function CommentSection({ blogPostId }: CommentSectionProps) {
                     <h4 className="font-semibold text-gray-900">{comment.name}</h4>
                     {!comment.isAnonymous && (
                       <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded">
-                        Verified User
+                        Người dùng đã xác minh
                       </span>
                     )}
                   </div>

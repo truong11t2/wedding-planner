@@ -50,7 +50,7 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center">
+      <div className="min-h-screen p-6 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
       </div>
     );
@@ -58,7 +58,7 @@ export default function ProfilePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 p-6">
+      <div className="min-h-screen p-6">
         <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
           <div className="text-red-600 text-center">
             <p>{error}</p>
@@ -76,24 +76,24 @@ export default function ProfilePage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <h1 className="pb-8 text-3xl font-bold text-black">My Profile</h1>
+      <h1 className="pb-8 text-3xl font-bold text-black">Hồ sơ của tôi</h1>
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         {/* Profile Content */}
         <div className="p-6">
           {profile && (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-500">Full Name</label>
+                <label className="block text-sm font-medium text-gray-500">Họ và tên</label>
                 <p className="mt-1 text-lg font-semibold text-gray-900">{profile.firstName} {profile.lastName}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-500">Email</label>
+                <label className="block text-sm font-medium text-gray-500">Thư điện tử</label>
                 <p className="mt-1 text-lg font-semibold text-gray-900">{profile.email}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-500">Wedding Date</label>
+                <label className="block text-sm font-medium text-gray-500">Ngày cưới</label>
                 <p className="mt-1 text-lg font-semibold text-gray-900">
                   {new Date(profile.weddingDate).toLocaleDateString('vi-VN', {
                     year: 'numeric',
@@ -103,7 +103,7 @@ export default function ProfilePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-500">Member Since</label>
+                <label className="block text-sm font-medium text-gray-500">Thành viên từ</label>
                 <p className="mt-1 text-lg font-semibold text-gray-900">
                   {new Date(profile.createdAt).toLocaleDateString('vi-VN', {
                     year: 'numeric',
@@ -119,7 +119,7 @@ export default function ProfilePage() {
                   className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
                   onClick={() => router.push('/')}
                 >
-                  Back to Timeline
+                  Quay về Trang Chủ
                 </button>
               </div>
             </div>
