@@ -30,10 +30,12 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
     email: '',
     phone: '',
     address: '',
+    category: 'friend' as 'family' | 'friend' | 'coworker' | 'other',
     plusOne: false,
     plusOneName: '',
     dietaryRestrictions: '',
     notes: '',
+    tableNumber: undefined as number | undefined,
     rsvpStatus: 'pending' as 'pending' | 'attending' | 'declined' | 'no-response'
   });
 
@@ -44,10 +46,12 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
         email: editGuest.email || '',
         phone: editGuest.phone || '',
         address: editGuest.address || '',
+        category: editGuest.category || 'friend',
         plusOne: editGuest.plusOne,
         plusOneName: editGuest.plusOneName || '',
         dietaryRestrictions: editGuest.dietaryRestrictions || '',
         notes: editGuest.notes || '',
+        tableNumber: editGuest.tableNumber,
         rsvpStatus: editGuest.rsvpStatus
       });
     } else {
@@ -56,10 +60,12 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
         email: '',
         phone: '',
         address: '',
+        category: 'friend',
         plusOne: false,
         plusOneName: '',
         dietaryRestrictions: '',
         notes: '',
+        tableNumber: undefined,
         rsvpStatus: 'pending'
       });
     }
@@ -82,7 +88,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-900">
-              {editGuest ? 'Chỉnh Sửa Khách Mời' : `Thêm Khách Mời Nhà ${side === 'bride' ? 'Cô Dâu' : 'Chú Rể'}`}
+              {editGuest ? 'Chỉnh Sửa Khách Mời' : `Thêm Khách Nhà ${side === 'bride' ? 'Gái' : 'Trai'}`}
             </h2>
             <button
               onClick={onClose}
@@ -130,6 +136,37 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                 placeholder="(123) 456-7890"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phân Loại *
+              </label>
+              <select
+                required
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value as 'family' | 'friend' | 'coworker' | 'other' })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              >
+                <option value="family">Gia Đình</option>
+                <option value="friend">Bạn Bè</option>
+                <option value="coworker">Đồng Nghiệp</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Số Bàn (Tùy chọn)
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={formData.tableNumber || ''}
+                onChange={(e) => setFormData({ ...formData, tableNumber: e.target.value ? parseInt(e.target.value) : undefined })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                placeholder="Chọn số bàn"
               />
             </div>
 
@@ -228,7 +265,7 @@ function AddGuestModal({ isOpen, onClose, onSave, side, editGuest }: AddGuestMod
                 type="submit"
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
-                {editGuest ? 'Cập Nhật' : 'Thêm'} Khách Mời
+                {editGuest ? 'Cập Nhật' : 'Thêm'}
               </button>
             </div>
           </form>
@@ -263,10 +300,42 @@ function GuestCard({ guest, onEdit, onDelete }: GuestCardProps) {
     }
   };
 
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case 'family': return 'Gia Đình';
+      case 'friend': return 'Bạn Bè';
+      case 'coworker': return 'Đồng Nghiệp';
+      case 'other': return 'Khác';
+      default: return category;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'family': return 'bg-purple-100 text-purple-800';
+      case 'friend': return 'bg-blue-100 text-blue-800';
+      case 'coworker': return 'bg-green-100 text-green-800';
+      case 'other': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-3">
-        <h3 className="font-semibold text-gray-900">{guest.name}</h3>
+        <div className="flex-1">
+          <h3 className="font-semibold text-gray-900">{guest.name}</h3>
+          <div className="flex flex-wrap gap-2 mt-2">
+            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(guest.category)}`}>
+              {getCategoryLabel(guest.category)}
+            </span>
+            {guest.tableNumber && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                Bàn {guest.tableNumber}
+              </span>
+            )}
+          </div>
+        </div>
         <div className="flex space-x-1">
           <button
             onClick={() => onEdit(guest)}
@@ -312,19 +381,19 @@ function GuestCard({ guest, onEdit, onDelete }: GuestCardProps) {
 
         {guest.plusOne && (
           <div className="text-sm text-gray-600">
-            <span className="font-medium">Plus One:</span> {guest.plusOneName || 'TBD'}
+            <span className="font-medium">Đi Cùng:</span> {guest.plusOneName || 'TBD'}
           </div>
         )}
 
         {guest.dietaryRestrictions && (
           <div className="text-sm text-gray-600">
-            <span className="font-medium">Dietary:</span> {guest.dietaryRestrictions}
+            <span className="font-medium">Chế Độ Ăn:</span> {guest.dietaryRestrictions}
           </div>
         )}
 
         {guest.notes && (
           <div className="text-sm text-gray-600">
-            <span className="font-medium">Notes:</span> {guest.notes}
+            <span className="font-medium">Ghi Chú:</span> {guest.notes}
           </div>
         )}
       </div>
@@ -340,6 +409,8 @@ export default function GuestsPage() {
   const [modalSide, setModalSide] = useState<'bride' | 'groom'>('bride');
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState<'all' | 'family' | 'friend' | 'coworker' | 'other'>('all');
+  const [filterSide, setFilterSide] = useState<'all' | 'bride' | 'groom'>('all');
   
   // Toast state
   const [toast, setToast] = useState<{
@@ -479,10 +550,14 @@ export default function GuestsPage() {
     }
   };
 
-  const filteredGuests = guests.filter(guest =>
-    guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    guest.email?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredGuests = guests.filter(guest => {
+    const matchesSearch = guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      guest.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory === 'all' || guest.category === filterCategory;
+    const matchesSide = filterSide === 'all' || guest.side === filterSide;
+    
+    return matchesSearch && matchesCategory && matchesSide;
+  });
 
   const brideGuests = filteredGuests.filter(guest => guest.side === 'bride');
   const groomGuests = filteredGuests.filter(guest => guest.side === 'groom');
@@ -506,6 +581,18 @@ export default function GuestsPage() {
 
   const brideStats = getGuestStats('bride');
   const groomStats = getGuestStats('groom');
+  
+  // Category statistics
+  const getCategoryStats = () => {
+    const family = filteredGuests.filter(g => g.category === 'family').length;
+    const friend = filteredGuests.filter(g => g.category === 'friend').length;
+    const coworker = filteredGuests.filter(g => g.category === 'coworker').length;
+    const other = filteredGuests.filter(g => g.category === 'other').length;
+    
+    return { family, friend, coworker, other };
+  };
+  
+  const categoryStats = getCategoryStats();
 
   return (
     <>
@@ -564,8 +651,8 @@ export default function GuestsPage() {
           </div> */}
         </div>
 
-        {/* Search */}
-        <div className="mb-6">
+        {/* Search and Filters */}
+        <div className="mb-6 space-y-4">
           <input
             type="text"
             placeholder="Tìm kiếm khách mời theo tên..."
@@ -573,6 +660,63 @@ export default function GuestsPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
           />
+          
+          <div className="flex flex-wrap gap-3">
+            <div className="flex-1 min-w-[200px]">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phân Loại
+              </label>
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value as typeof filterCategory)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              >
+                <option value="all">Tất Cả</option>
+                <option value="family">Gia Đình</option>
+                <option value="friend">Bạn Bè</option>
+                <option value="coworker">Đồng Nghiệp</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+            
+            <div className="flex-1 min-w-[200px]">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Bên
+              </label>
+              <select
+                value={filterSide}
+                onChange={(e) => setFilterSide(e.target.value as typeof filterSide)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              >
+                <option value="all">Cả Hai Bên</option>
+                <option value="bride">Nhà Gái</option>
+                <option value="groom">Nhà Trai</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Category Breakdown */}
+        <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Phân Loại Khách Mời</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{categoryStats.family}</div>
+              <div className="text-sm text-gray-600">Gia Đình</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{categoryStats.friend}</div>
+              <div className="text-sm text-gray-600">Bạn Bè</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{categoryStats.coworker}</div>
+              <div className="text-sm text-gray-600">Đồng Nghiệp</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-gray-600">{categoryStats.other}</div>
+              <div className="text-sm text-gray-600">Khác</div>
+            </div>
+          </div>
         </div>
 
         {/* Guest Lists */}
@@ -581,13 +725,13 @@ export default function GuestsPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Nhà Cô Dâu</h2>
+                <h2 className="text-xl font-semibold text-gray-900">Nhà Gái</h2>
                 <button
                   onClick={() => handleAddGuest('bride')}
                   className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Thêm Khách Mời
+                  Thêm Khách
                 </button>
               </div>
               
@@ -638,13 +782,13 @@ export default function GuestsPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Nhà Chú Rể</h2>
+                <h2 className="text-xl font-semibold text-gray-900">Nhà Trai</h2>
                 <button
                   onClick={() => handleAddGuest('groom')}
                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Thêm Khách Mời
+                  Thêm Khách
                 </button>
               </div>
               

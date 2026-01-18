@@ -53,6 +53,7 @@ exports.saveGuestList = async (req, res) => {
         typeof guest.id === 'string' &&
         typeof guest.name === 'string' &&
         ['bride', 'groom'].includes(guest.side) &&
+        ['family', 'friend', 'coworker', 'other'].includes(guest.category) &&
         ['pending', 'attending', 'declined', 'no-response'].includes(guest.rsvpStatus) &&
         typeof guest.plusOne === 'boolean' &&
         guest.createdAt
@@ -105,19 +106,21 @@ exports.addGuest = async (req, res) => {
       email, 
       phone, 
       address, 
-      side, 
+      side,
+      category,
       rsvpStatus, 
       plusOne, 
       plusOneName, 
       dietaryRestrictions, 
-      notes 
+      notes,
+      tableNumber
     } = req.body;
 
     // Validate required fields
-    if (!name || !side) {
+    if (!name || !side || !category) {
       return res.status(400).json({
         success: false,
-        message: 'Name and side are required'
+        message: 'Name, side, and category are required'
       });
     }
 
@@ -125,6 +128,13 @@ exports.addGuest = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Side must be bride or groom'
+      });
+    }
+
+    if (!['family', 'friend', 'coworker', 'other'].includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Category must be family, friend, coworker, or other'
       });
     }
 
@@ -162,11 +172,13 @@ exports.addGuest = async (req, res) => {
       phone: phone?.trim() || '',
       address: address?.trim() || '',
       side,
+      category,
       rsvpStatus: rsvpStatus || 'pending',
       plusOne: Boolean(plusOne),
       plusOneName: plusOneName?.trim() || '',
       dietaryRestrictions: dietaryRestrictions?.trim() || '',
       notes: notes?.trim() || '',
+      tableNumber: tableNumber ? parseInt(tableNumber) : undefined,
       createdAt: new Date().toISOString()
     };
 

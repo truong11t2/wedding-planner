@@ -7,11 +7,13 @@ export interface Guest {
   phone?: string;
   address?: string;
   side: 'bride' | 'groom';
+  category: 'family' | 'friend' | 'coworker' | 'other';
   rsvpStatus: 'pending' | 'attending' | 'declined' | 'no-response';
   plusOne: boolean;
   plusOneName?: string;
   dietaryRestrictions?: string;
   notes?: string;
+  tableNumber?: number;
   createdAt: string;
 }
 
