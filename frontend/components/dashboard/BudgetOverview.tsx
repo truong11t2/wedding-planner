@@ -2,30 +2,69 @@
 
 import React, { useState, useEffect } from 'react';
 import { TimelineItem } from '@/lib/timelineGenerator';
-import { DollarSign, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
+import { PiggyBank, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
+import { getBudgetData, BudgetCategory } from '@/api/budget';
+import { useAuth } from '@/context/AuthContext';
 
 interface BudgetOverviewProps {
   timelineItems: TimelineItem[];
 }
 
-interface BudgetCategory {
-  name: string;
-  budgeted: number;
-  spent: number;
-  color: string;
-}
-
 export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
+  const { isLoggedIn } = useAuth();
   const [totalBudget, setTotalBudget] = useState(25000);
-  const [budgetCategories, setBudgetCategories] = useState<BudgetCategory[]>([
-    { name: 'Venue', budgeted: 8000, spent: 7500, color: 'bg-blue-500' },
-    { name: 'Catering', budgeted: 6000, spent: 5800, color: 'bg-green-500' },
-    { name: 'Photography', budgeted: 3000, spent: 3200, color: 'bg-purple-500' },
-    { name: 'Attire', budgeted: 2500, spent: 1800, color: 'bg-pink-500' },
-    { name: 'Flowers', budgeted: 1500, spent: 1200, color: 'bg-yellow-500' },
-    { name: 'Music', budgeted: 1200, spent: 1000, color: 'bg-indigo-500' },
-    { name: 'Other', budgeted: 2800, spent: 1500, color: 'bg-gray-500' }
-  ]);
+  const [budgetCategories, setBudgetCategories] = useState<BudgetCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load budget data from database
+  useEffect(() => {
+    const loadBudgetData = async () => {
+      if (isLoggedIn) {
+        setLoading(true);
+        try {
+          const response = await getBudgetData();
+          if (response.success && response.data) {
+            setTotalBudget(response.data.totalBudget);
+            setBudgetCategories(response.data.categories);
+          }
+        } catch (error) {
+          console.error('Error loading budget data:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    loadBudgetData();
+  }, [isLoggedIn]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn || budgetCategories.length === 0) {
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-900">Tổng thể ngân sách</h2>
+        </div>
+        <div className="text-center py-8">
+          <PiggyBank className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+          <p className="text-gray-500">
+            {!isLoggedIn ? 'Vui lòng đăng nhập để xem ngân sách' : 'Chưa có dữ liệu ngân sách. Hãy thêm danh mục trong trang Ngân Sách.'}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const totalSpent = budgetCategories.reduce((sum, cat) => sum + cat.spent, 0);
   const totalBudgeted = budgetCategories.reduce((sum, cat) => sum + cat.budgeted, 0);
@@ -51,7 +90,7 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-gray-600">Ngân sách đã dùng</span>
           <span className="text-sm font-medium">
-            ${totalSpent.toLocaleString('vi-VN')} / ${totalBudget.toLocaleString('vi-VN')}
+            {totalSpent.toLocaleString('vi-VN')}₫ / {totalBudget.toLocaleString('vi-VN')}₫
           </span>
         </div>
         
@@ -95,7 +134,7 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">{category.name}</span>
                 <span className={`font-medium ${isOverBudget ? 'text-red-600' : 'text-gray-900'}`}>
-                  ${category.spent.toLocaleString('vi-VN')} / ${category.budgeted.toLocaleString('vi-VN')}
+                  {category.spent.toLocaleString('vi-VN')}₫ / {category.budgeted.toLocaleString('vi-VN')}₫
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
@@ -116,7 +155,7 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">
-              ${remainingBudget.toLocaleString('vi-VN')}
+              {remainingBudget.toLocaleString('vi-VN')}₫
             </div>
             <div className="text-sm text-gray-500">Còn lại</div>
           </div>
@@ -124,7 +163,7 @@ export default function BudgetOverview({ timelineItems }: BudgetOverviewProps) {
             <div className="text-2xl font-bold text-blue-600">
               {budgetCategories.filter(cat => cat.spent > 0).length}
             </div>
-            <div className="text-sm text-gray-500">Danh mục đã sử dụng</div>
+            <div className="text-sm text-gray-500">Danh mục đã dùng</div>
           </div>
         </div>
       </div>

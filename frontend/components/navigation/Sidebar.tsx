@@ -13,7 +13,7 @@ import {
   Users,
   MapPinned,
   Camera,
-  CircleDollarSign,
+  PiggyBank,
 } from 'lucide-react';
 
 interface NavItem {
@@ -34,7 +34,7 @@ const navigationItems: NavItem[] = [
   { name: 'Khách Mời', href: '/guests', icon: Users },
   { name: 'Địa Điểm', href: '/venues', icon: MapPinned },
   { name: 'Hình Cưới', href: '/photos', icon: Camera },
-  { name: 'Ngân Sách', href: '/budget', icon: CircleDollarSign },
+  { name: 'Ngân Sách', href: '/budget', icon: PiggyBank },
 ];
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {

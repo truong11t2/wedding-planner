@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Toast from '@/components/common/Toast';
 import { 
-  DollarSign, 
+  PiggyBank, 
   PieChart, 
   TrendingUp, 
   TrendingDown, 
@@ -49,6 +49,7 @@ function UpdateBudgetModal({ isOpen, onClose, onSave, currentBudget }: UpdateBud
     totalBudget: '',
     notes: ''
   });
+  const [displayBudget, setDisplayBudget] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -56,12 +57,13 @@ function UpdateBudgetModal({ isOpen, onClose, onSave, currentBudget }: UpdateBud
         totalBudget: currentBudget.toString(),
         notes: ''
       });
+      setDisplayBudget(currentBudget.toLocaleString('vi-VN'));
     }
   }, [isOpen, currentBudget]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const budget = parseFloat(formData.totalBudget);
+    const budget = parseInt(formData.totalBudget);
     if (!isNaN(budget) && budget >= 0) {
       onSave(budget);
       onClose();
@@ -70,13 +72,22 @@ function UpdateBudgetModal({ isOpen, onClose, onSave, currentBudget }: UpdateBud
 
   if (!isOpen) return null;
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove all non-digit characters
+    const rawValue = e.target.value.replace(/\D/g, "");
+    // Format for display
+    const formatted = rawValue ? Number(rawValue).toLocaleString("vi-VN") : "";
+    setDisplayBudget(formatted);
+    setFormData({ ...formData, totalBudget: rawValue });
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-md w-full">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-900">
-              Update Wedding Budget
+              Cập Nhật Tổng Ngân Sách
             </h2>
             <button
               onClick={onClose}
@@ -89,69 +100,69 @@ function UpdateBudgetModal({ isOpen, onClose, onSave, currentBudget }: UpdateBud
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Total Budget *
+                Tổng Ngân Sách *
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <PiggyBank className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
-                  type="number"
+                  type="text"
                   required
-                  min="0"
-                  step="1"
-                  value={formData.totalBudget}
-                  onChange={(e) => setFormData({ ...formData, totalBudget: e.target.value })}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  onChange={handleInputChange}
+                  value={displayBudget}
                   className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-                  placeholder="25000"
+                  placeholder="250.000.000"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Enter your total wedding budget in dollars
-              </p>
+              {/* <div className="text-xs text-gray-500 mt-1">
+                Nhập tổng ngân sách đám cưới của bạn
+              </div> */}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Budget Notes (Optional)
+                Ghi Chú (Tùy chọn)
               </label>
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Any notes about your budget planning..."
+                placeholder="Thêm ghi chú về ngân sách..."
                 rows={3}
               />
             </div>
 
             {/* Budget Guidelines */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="text-sm font-medium text-blue-900 mb-2">💡 Budget Planning Tips:</h4>
+              <h4 className="text-sm font-medium text-blue-900 mb-2">💡 Mẹo Lập Ngân Sách:</h4>
               <ul className="text-xs text-blue-700 space-y-1">
-                <li>• Average wedding cost: $20,000 - $35,000</li>
-                <li>• Add 10-20% buffer for unexpected expenses</li>
-                <li>• Consider seasonal and location factors</li>
-                <li>• Prioritize your most important elements</li>
+                <li>• Chi phí đám cưới trung bình: 200-350 triệu VNĐ</li>
+                <li>• Thêm 10-20% dự phòng cho chi phí phát sinh</li>
+                <li>• Xem xét yếu tố mùa vụ và địa điểm</li>
+                <li>• Ưu tiên các yếu tố quan trọng nhất</li>
               </ul>
             </div>
 
             {/* Current vs New Budget Comparison */}
-            {parseFloat(formData.totalBudget) > 0 && parseFloat(formData.totalBudget) !== currentBudget && (
+            {parseInt(formData.totalBudget) > 0 && parseInt(formData.totalBudget) !== currentBudget && (
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Budget Comparison:</h4>
+                <h4 className="text-sm font-medium text-gray-900 mb-2">So Sánh Ngân Sách:</h4>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Current Budget:</span>
-                  <span className="font-medium text-gray-900">${currentBudget.toLocaleString()}</span>
+                  <span className="text-gray-600">Hiện tại:</span>
+                  <span className="font-medium text-gray-900">{currentBudget.toLocaleString('vi-VN')}₫</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">New Budget:</span>
-                  <span className="font-medium text-blue-600">${parseFloat(formData.totalBudget).toLocaleString()}</span>
+                  <span className="text-gray-600">Mới:</span>
+                  <span className="font-medium text-blue-600">{parseInt(formData.totalBudget).toLocaleString('vi-VN')}₫</span>
                 </div>
                 <div className="flex justify-between text-sm mt-1 pt-1 border-t border-gray-200">
-                  <span className="text-gray-600">Difference:</span>
+                  <span className="text-gray-600">Chênh lệch:</span>
                   <span className={`font-medium ${
-                    parseFloat(formData.totalBudget) > currentBudget ? 'text-green-600' : 'text-red-600'
+                    parseInt(formData.totalBudget) > currentBudget ? 'text-green-600' : 'text-red-600'
                   }`}>
-                    {parseFloat(formData.totalBudget) > currentBudget ? '+' : ''}
-                    ${(parseFloat(formData.totalBudget) - currentBudget).toLocaleString()}
+                    {parseInt(formData.totalBudget) > currentBudget ? '+' : ''}
+                    {(parseInt(formData.totalBudget) - currentBudget).toLocaleString('vi-VN')}₫
                   </span>
                 </div>
               </div>
@@ -163,14 +174,14 @@ function UpdateBudgetModal({ isOpen, onClose, onSave, currentBudget }: UpdateBud
                 onClick={onClose}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                Hủy
               </button>
               <button
                 type="submit"
-                disabled={!formData.totalBudget || parseFloat(formData.totalBudget) <= 0}
+                disabled={!formData.totalBudget || parseInt(formData.totalBudget) <= 0}
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Update Budget
+                Cập Nhật
               </button>
             </div>
           </form>
@@ -189,6 +200,8 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
     description: '',
     priority: 'trung bình' as 'cao' | 'trung bình' | 'thấp'
   });
+  const [displayBudgeted, setDisplayBudgeted] = useState('');
+  const [displaySpent, setDisplaySpent] = useState('');
 
   const colorOptions = [
     { value: 'bg-blue-500', label: 'Blue', class: 'bg-blue-500' },
@@ -211,6 +224,8 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
         description: editCategory.description,
         priority: editCategory.priority
       });
+      setDisplayBudgeted(editCategory.budgeted.toLocaleString('vi-VN'));
+      setDisplaySpent(editCategory.spent.toLocaleString('vi-VN'));
     } else {
       setFormData({
         name: '',
@@ -220,6 +235,8 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
         description: '',
         priority: 'trung bình'
       });
+      setDisplayBudgeted('');
+      setDisplaySpent('');
     }
   }, [editCategory, isOpen]);
 
@@ -227,8 +244,8 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
     e.preventDefault();
     onSave({
       name: formData.name,
-      budgeted: parseFloat(formData.budgeted) || 0,
-      spent: parseFloat(formData.spent) || 0,
+      budgeted: parseInt(formData.budgeted) || 0,
+      spent: parseInt(formData.spent) || 0,
       color: formData.color,
       description: formData.description,
       priority: formData.priority
@@ -237,6 +254,24 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
   };
 
   if (!isOpen) return null;
+
+  const handleBudgetedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove all non-digit characters
+    const rawValue = e.target.value.replace(/\D/g, "");
+    // Format for display
+    const formatted = rawValue ? Number(rawValue).toLocaleString("vi-VN") : "";
+    setDisplayBudgeted(formatted);
+    setFormData({ ...formData, budgeted: rawValue });
+  };
+
+  const handleSpentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove all non-digit characters
+    const rawValue = e.target.value.replace(/\D/g, "");
+    // Format for display
+    const formatted = rawValue ? Number(rawValue).toLocaleString("vi-VN") : "";
+    setDisplaySpent(formatted);
+    setFormData({ ...formData, spent: rawValue });
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -275,16 +310,16 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
                   Số Tiền Dự Kiến *
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <PiggyBank className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
-                    type="number"
+                    type="text"
                     required
-                    min="0"
-                    step="0.01"
-                    value={formData.budgeted}
-                    onChange={(e) => setFormData({ ...formData, budgeted: e.target.value })}
+                    inputMode="numeric"
+                    autoComplete="off"
+                    onChange={handleBudgetedChange}
+                    value={displayBudgeted}
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                    placeholder="0.00"
+                    placeholder="1.000.000"
                   />
                 </div>
               </div>
@@ -294,15 +329,16 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
                   Số Tiền Đã Chi
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <PiggyBank className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={formData.spent}
-                    onChange={(e) => setFormData({ ...formData, spent: e.target.value })}
+                    type="text"
+                    required
+                    inputMode="numeric"
+                    autoComplete="off"
+                    onChange={handleSpentChange}
+                    value={displaySpent}
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                    placeholder="0.00"
+                    placeholder="0"
                   />
                 </div>
               </div>
@@ -366,7 +402,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
                 type="submit"
                 className="flex-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
-                {editCategory ? 'Cập Nhật' : 'Thêm'} Danh Mục
+                {editCategory ? 'Cập Nhật' : 'Thêm'}
               </button>
             </div>
           </form>
@@ -435,7 +471,7 @@ function BudgetCategoryCard({ category, onEdit, onDelete }: BudgetCategoryCardPr
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Progress</span>
           <span className={`font-medium ${isOverBudget ? 'text-red-600' : 'text-gray-900'}`}>
-            ${category.spent.toLocaleString()} / ${category.budgeted.toLocaleString()}
+            {category.spent.toLocaleString('vi-VN')}₫ / {category.budgeted.toLocaleString('vi-VN')}₫
           </span>
         </div>
 
@@ -455,7 +491,7 @@ function BudgetCategoryCard({ category, onEdit, onDelete }: BudgetCategoryCardPr
           <div className={`text-sm font-medium ${
             remaining >= 0 ? 'text-green-600' : 'text-red-600'
           }`}>
-            {remaining >= 0 ? '+' : ''}${remaining.toLocaleString()} còn lại
+            {remaining >= 0 ? '+' : ''}{remaining.toLocaleString('vi-VN')}₫ còn lại
           </div>
         </div>
       </div>
@@ -786,7 +822,7 @@ export default function BudgetPage() {
       const response = await apiUpdateTotalBudget(newBudget);
       if (response.success) {
     setTotalBudget(newBudget);
-    showToast(`Ngân sách đã được cập nhật thành $${newBudget.toLocaleString()}`, 'success');
+    showToast(`Ngân sách đã được cập nhật thành ${newBudget.toLocaleString('vi-VN')}₫`, 'success');
       } else {
         showToast(response.message || 'Không thể cập nhật ngân sách', 'error');
       }
@@ -817,14 +853,14 @@ export default function BudgetPage() {
               <Target className="h-6 w-6 text-blue-500" />
             </div>
             <div className="text-3xl font-bold text-blue-600 mb-2">
-              ${totalBudget.toLocaleString()}
+              {totalBudget.toLocaleString('vi-VN')}₫
             </div>
             <button
               onClick={() => setIsBudgetModalOpen(true)} // Update this onClick
               className="inline-flex text-sm text-blue-600 hover:text-blue-700 hover:underline font-medium"
             >
               <Edit2 className="h-4 w-4 mr-2" />
-              Cập nhật Ngân sách
+              Cập nhật ngân sách
             </button>
           </div>
 
@@ -835,7 +871,7 @@ export default function BudgetPage() {
               <Calculator className="h-6 w-6 text-red-500" />
             </div>
             <div className="text-3xl font-bold text-red-600 mb-2">
-              VND {totalSpent.toLocaleString()}
+              {totalSpent.toLocaleString('vi-VN')}₫
             </div>
             <div className="text-sm text-gray-600">
               {budgetUsedPercentage.toFixed(1)}% ngân sách đã sử dụng
@@ -855,7 +891,7 @@ export default function BudgetPage() {
             <div className={`text-3xl font-bold mb-2 ${
               totalRemaining >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
-              ${Math.abs(totalRemaining).toLocaleString()}
+              {Math.abs(totalRemaining).toLocaleString('vi-VN')}₫
             </div>
             <div className={`text-sm flex items-center ${
               budgetStatus.status === 'danger' ? 'text-red-600' :
@@ -869,7 +905,7 @@ export default function BudgetPage() {
         </div>
 
         {/* Budget Progress Bar */}
-        <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+{/*         <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Tổng Quan</h3>
             <div className="flex items-center space-x-4 text-sm">
@@ -896,13 +932,13 @@ export default function BudgetPage() {
           </div>
 
           <div className="flex justify-between text-sm text-gray-600">
-            <span>$0</span>
+            <span>0₫</span>
             <span className="font-medium">
-              ${totalSpent.toLocaleString()} / ${totalBudget.toLocaleString()}
+              {totalSpent.toLocaleString('vi-VN')}₫ / {totalBudget.toLocaleString('vi-VN')}₫
             </span>
-            <span>${totalBudget.toLocaleString()}</span>
+            <span>{totalBudget.toLocaleString('vi-VN')}₫</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -922,7 +958,7 @@ export default function BudgetPage() {
           </div>
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">
-              ${(totalBudgeted / categories.length || 0).toFixed(0)}
+              {(totalBudgeted / categories.length || 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})}₫
             </div>
             <div className="text-sm text-gray-500">Trung Bình Mỗi Danh Mục</div>
           </div>
@@ -937,7 +973,7 @@ export default function BudgetPage() {
               className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Thêm Danh Mục
+              Thêm
             </button>
           </div>
 
