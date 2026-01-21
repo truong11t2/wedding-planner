@@ -32,4 +32,18 @@ export const MDXComponents = {
       />
     </span>
   ),
+  table: (props: ComponentPropsWithoutRef<'table'>) => (
+    <div className="overflow-x-auto my-8">
+      <table className="min-w-full divide-y divide-gray-300 border border-gray-300" {...props} />
+    </div>
+  ),
+  thead: (props: ComponentPropsWithoutRef<'thead'>) => <thead className="bg-gray-50" {...props} />,
+  tbody: (props: ComponentPropsWithoutRef<'tbody'>) => <tbody className="divide-y divide-gray-200 bg-white" {...props} />,
+  tr: (props: ComponentPropsWithoutRef<'tr'>) => <tr {...props} />,
+  th: (props: ComponentPropsWithoutRef<'th'>) => (
+    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-r border-gray-300 last:border-r-0" {...props} />
+  ),
+  td: (props: ComponentPropsWithoutRef<'td'>) => (
+    <td className="px-4 py-3 text-sm text-gray-700 border-r border-gray-300 last:border-r-0" {...props} />
+  ),
 };

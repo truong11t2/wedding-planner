@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import styles from '@/styles/article.module.css';
 import { MDXComponents } from '@/components/mdx/MDXComponents';
 import CommentSection from '@/components/blog/CommentSection';
+import remarkGfm from 'remark-gfm';
 
 
 interface PageProps {
@@ -52,7 +53,16 @@ export default async function BlogPost({ params }: PageProps) {
       <div className={`${styles.content} prose prose-lg`}>
         <MDXRemote 
           source={post.content} 
-          components={MDXComponents}
+          components={{
+            ...MDXComponents
+          }}
+          options={{
+            parseFrontmatter: true,
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+              rehypePlugins: [],
+            },
+          }}
         />
       </div>
 
