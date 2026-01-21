@@ -595,7 +595,7 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
       <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Địa điểm tổ chức tiệc cưới</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Địa Điểm Tổ Chức Tiệc Cưới</h1>
           <p className="text-gray-600">
             Khám phá và đặt địa điểm hoàn hảo cho ngày đặc biệt của bạn.
           </p>

@@ -49,11 +49,11 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   const SidebarContent = () => (
     <div className="flex-1 flex flex-col min-h-0 bg-white">
       {/* Sidebar header */}
-      <div className="flex-shrink-0 px-4 py-4 border-b border-gray-200">
+      <div className="shrink-0 px-4 py-4 border-b border-gray-200">
         {/* User profile section */}
-        <div className="flex-shrink-0 border-t border-gray-200 p-4">
+        <div className="shrink-0 p-4">
           <div className="flex items-center space-x-3">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               {user.avatar ? (
                 <img
                   className="h-10 w-10 rounded-full object-cover"
@@ -61,7 +61,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                   alt={`${user.lastName}'s avatar`}
                 />
               ) : (
-                <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full bg-linear-to-r from-pink-400 to-purple-500 flex items-center justify-center">
                   <span className="text-sm font-semibold text-white">
                     {user.lastName?.charAt(0)?.toUpperCase() || 'U'}
                   </span>
@@ -101,7 +101,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             >
               <IconComponent
                 className={`
-                  mr-3 flex-shrink-0 h-5 w-5 transition-colors
+                  mr-3 shrink-0 h-5 w-5 transition-colors
                   ${isCurrentPage ? 'text-pink-500' : 'text-gray-400 group-hover:text-gray-500'}
                 `}
               />

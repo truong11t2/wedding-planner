@@ -31,7 +31,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
     router.push('/');
   };
   return (
-    <header className="bg-white shadow-md border-b-2 border-pink-200 sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-pink-50 via-purple-50 to-pink-50 shadow-md border-b-2 border-pink-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
                     {/* Sidebar toggle button - only show when user is authenticated and on mobile */}
@@ -62,7 +62,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 pathname === '/' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
-              Trang Chủ
+              TRANG CHỦ
             </Link>
             <Link
               href="/blog"
@@ -70,7 +70,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 pathname === '/blog' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
-              Bài Viết
+              BÀI VIẾT
             </Link>
             {
               <Link
@@ -79,7 +79,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                   pathname === '/vendor' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
                 }`}
               >
-                Nhà Cung Cấp
+                NHÀ CUNG CẤP
               </Link>
             }
             {isLoggedIn && (
@@ -89,7 +89,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                   pathname === '/profile' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
                 }`}
               >
-                Hồ Sơ
+                HỒ SƠ
               </Link>
             )}
             {!isLoggedIn ? (
@@ -130,7 +130,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
               }`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Trang Chủ
+              TRANG CHỦ
             </Link>
             <Link
               href="/blog"
@@ -139,7 +139,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
               }`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Bài Viết
+              BÀI VIẾT
             </Link>
             {
               <Link
@@ -149,7 +149,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Nhà Cung Cấp
+                NHÀ CUNG CẤP
               </Link>
             }
             {isLoggedIn && (
@@ -160,7 +160,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Hồ Sơ
+                HỒ SƠ
               </Link>
             )}
             {isLoggedIn ? (

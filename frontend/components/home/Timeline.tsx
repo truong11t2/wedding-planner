@@ -313,43 +313,58 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                   <div>
                     <p className="text-gray-600 text-sm mt-1">{item.description}</p>
                   </div>
-                  <div className="flex items-center space-x-2 ml-4">
+                  {/* <div className="flex items-center space-x-2 ml-4">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(item.category)}`}>
                       {item.category}
                     </span>
+                  </div> */}
+                </div>
+
+                <div className="flex items-center justify-between mb-3">
+                  {/* Due date */}
+                  <div className="flex items-center text-sm text-orange-500">
+                    <Clock className="h-4 w-4 mr-1" />
+                    <span>Hạn cuối: {formatDate(item.dueDate)}</span>
                   </div>
+                  {/* Show expand/collapse button only if there's a selection */}
+                  {item.options && item.options.length > 0 && (item.selectedOption || (item.selectedOptions && Object.keys(item.selectedOptions).length > 0)) && (
+                    <button
+                      onClick={() => toggleOptionsExpansion(item.id)}
+                      className="flex items-center space-x-1 text-sm text-pink-600 hover:text-pink-700 transition-colors"
+                    >
+                      <span>{expandedItems.has(item.id) ? 'Ẩn' : 'Thay đổi'}</span>
+                      {expandedItems.has(item.id) ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </button>
+                  )}
                 </div>
-
-                {/* Due date */}
-                <div className="flex items-center text-sm text-orange-500 mb-4">
-                  <Clock className="h-4 w-4 mr-1" />
-                  <span>Hạn cuối: {formatDate(item.dueDate)}</span>
-                </div>
-
               {/* Options */}
                 {item.options && item.options.length > 0 && (
                   <div className="mt-4">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-medium text-gray-900">
+                      {/* <h4 className="text-sm font-medium text-gray-900">
                         {item.selectedOption || (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) 
                           ? 'Lựa chọn của bạn:' 
                           : 'Chọn một lựa chọn:'}
-                      </h4>
+                      </h4> */}
                       
                       {/* Show expand/collapse button only if there's a selection */}
-                      {(item.selectedOption || (item.selectedOptions && Object.keys(item.selectedOptions).length > 0)) && (
+                      {/* {(item.selectedOption || (item.selectedOptions && Object.keys(item.selectedOptions).length > 0)) && (
                         <button
                           onClick={() => toggleOptionsExpansion(item.id)}
                           className="flex items-center space-x-1 text-sm text-pink-600 hover:text-pink-700 transition-colors"
                         >
-                          <span>{expandedItems.has(item.id) ? 'Ẩn lựa chọn' : 'Thay đổi lựa chọn'}</span>
+                          <span>{expandedItems.has(item.id) ? 'Ẩn' : 'Thay đổi'}</span>
                           {expandedItems.has(item.id) ? (
                             <ChevronUp className="h-4 w-4" />
                           ) : (
                             <ChevronDown className="h-4 w-4" />
                           )}
                         </button>
-                      )}
+                      )} */}
                     </div>
 
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
