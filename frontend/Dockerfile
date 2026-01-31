@@ -16,12 +16,20 @@ WORKDIR /app
 
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# Disable Next.js telemetry
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NEXT_PRIVATE_STANDALONE true
-
+COPY ./api ./api
+COPY ./app ./app
+COPY ./components ./components
+COPY ./content ./content
+COPY ./context ./context
+COPY ./data ./data
+COPY ./lib ./lib
+COPY ./public ./public
+COPY ./styles ./styles
+COPY ./types ./types
+COPY ./*config* ./
+COPY ./next-env.d.ts ./next-env.d.ts
+COPY ./package* ./
+COPY ./.env.production ./
 
 # Build the application with standalone output
 RUN npm run build
@@ -34,8 +42,8 @@ WORKDIR /app
 RUN apk add --no-cache curl
 
 # Set production environment
-ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_STANDALONE true
 
 # Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
@@ -50,11 +58,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3001
 
 # Set host binding
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT 3001
 
 # Start the server
 CMD ["node", "server.js"]

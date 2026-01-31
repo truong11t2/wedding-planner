@@ -28,9 +28,6 @@ WORKDIR /app
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Set production environment
-ENV NODE_ENV=production
-
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodeapp
@@ -38,13 +35,14 @@ RUN addgroup --system --gid 1001 nodejs && \
 # Copy built files and dependencies
 COPY --from=builder --chown=nodeapp:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodeapp:nodejs /app/src ./src
+COPY --from=builder --chown=nodeapp:nodejs /app/public ./public
 COPY --from=builder --chown=nodeapp:nodejs /app/package.json ./
 
 # Switch to non-root user
 USER nodeapp
 
 # Expose port
-EXPOSE 5000
+EXPOSE 5001
 
 # Start the server
 CMD ["node", "src/server.js"]
