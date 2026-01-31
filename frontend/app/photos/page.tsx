@@ -24,7 +24,10 @@ import {
   ChevronLeft,
   ChevronRight,
   ZoomIn,
-  ZoomOut
+  ZoomOut,
+  Copy,
+  Check,
+  Loader2
 } from 'lucide-react';
 import {
   Photo,
@@ -35,6 +38,8 @@ import {
   deletePhoto as apiDeletePhoto,
   togglePhotoFavorite as apiToggleFavorite
 } from '@/api/photo';
+import { generateAlbum, updateAlbum, getAlbum } from '@/api/album';
+import { API_BASE_URL } from '@/api/config';
 
 interface PhotoViewerProps {
   photo: Photo;
@@ -542,6 +547,17 @@ export default function PhotosPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'photos' | 'album'>('photos');
+  
+  // Album states
+  const [selectedPhotoIds, setSelectedPhotoIds] = useState<Set<string>>(new Set());
+  const [albumTitle, setAlbumTitle] = useState('');
+  const [weddingDate, setWeddingDate] = useState('');
+  const [coupleNames, setCoupleNames] = useState('');
+  const [generatedUrl, setGeneratedUrl] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [copied, setCopied] = useState(false);
+  
   const [toast, setToast] = useState<{
     show: boolean;
     message: string;
@@ -582,6 +598,27 @@ export default function PhotosPage() {
     };
 
     loadPhotosData();
+  }, [isLoggedIn]);
+
+  // Load existing album data
+  useEffect(() => {
+    const fetchExistingAlbum = async () => {
+      try {
+        const response = await getAlbum();
+        if (response.success && response.album) {
+          setGeneratedUrl(response.album.publicUrl);
+          setCoupleNames(response.album.coupleNames || '');
+          setAlbumTitle(response.album.albumTitle || '');
+          setWeddingDate(response.album.weddingDate || '');
+        }
+      } catch (error) {
+        console.log('No existing album found');
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchExistingAlbum();
+    }
   }, [isLoggedIn]);
 
   // Auto-save photos whenever photos change (debounced)
@@ -693,6 +730,11 @@ export default function PhotosPage() {
         if (response.success) {
       setPhotos(prev => prev.filter(p => p.id !== photoId));
       setSelectedPhoto(null);
+      setSelectedPhotoIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(photoId);
+        return newSet;
+      });
       showToast(`Đã xóa "${photo.name}"`, 'success');
         } else {
           showToast(response.message || 'Không thể xóa hình', 'error');
@@ -720,6 +762,72 @@ export default function PhotosPage() {
     setSelectedPhoto(filteredPhotos[prevIndex]);
   };
 
+  const togglePhotoSelection = (photoId: string) => {
+    setSelectedPhotoIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(photoId)) {
+        newSet.delete(photoId);
+      } else {
+        newSet.add(photoId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleGenerateAlbum = async () => {
+    if (!coupleNames || !albumTitle || selectedPhotoIds.size === 0) {
+      showToast('Vui lòng điền tên cặp đôi, tiêu đề album và chọn ít nhất một hình', 'error');
+      return;
+    }
+
+    setIsGenerating(true);
+
+    try {
+      const selectedPhotos = photos
+        .filter(p => selectedPhotoIds.has(p.id))
+        .map((photo, index) => ({
+          id: photo.id,
+          url: photo.url,
+          caption: photo.description || '',
+          order: index
+        }));
+
+      const albumData = {
+        coupleNames,
+        albumTitle,
+        weddingDate,
+        photos: selectedPhotos
+      };
+
+      const response = generatedUrl 
+        ? await updateAlbum(albumData)
+        : await generateAlbum(albumData);
+
+      if (response.success) {
+        setGeneratedUrl(response.album.publicUrl);
+        const baseUrl = API_BASE_URL.replace('/api', '');
+        const fullUrl = `${baseUrl}${response.album.publicUrl}`;
+        window.open(fullUrl, '_blank');
+        showToast(generatedUrl ? 'Album đã được cập nhật!' : 'Album đã được tạo!', 'success');
+      }
+    } catch (error) {
+      showToast(`Không thể ${generatedUrl ? 'cập nhật' : 'tạo'} album`, 'error');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const copyLinkToClipboard = () => {
+    if (generatedUrl) {
+      const baseUrl = API_BASE_URL.replace('/api', '');
+      const link = `${baseUrl}${generatedUrl}`;
+      navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      showToast('Đã sao chép link!', 'success');
+    }
+  };
+
   const favoriteCount = photos.filter(p => p.isFavorite).length;
   const totalSize = photos.reduce((sum, photo) => sum + photo.size, 0);
 
@@ -730,10 +838,42 @@ export default function PhotosPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản Lí Hình Cưới</h1>
           <p className="text-gray-600">
-            Tải lên và tổ chức tất cả những kỷ niệm quý giá trong ngày cưới của bạn.
+            Tải lên và xem tất cả những kỷ niệm quý giá trong ngày cưới của bạn.
           </p>
         </div>
 
+        {/* Tabs */}
+        <div className="mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              <button
+                onClick={() => setActiveTab('photos')}
+                className={`${
+                  activeTab === 'photos'
+                    ? 'border-pink-500 text-pink-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+              >
+                <Camera className="inline-block w-5 h-5 mr-2" />
+                Hình Ảnh
+              </button>
+              <button
+                onClick={() => setActiveTab('album')}
+                className={`${
+                  activeTab === 'album'
+                    ? 'border-pink-500 text-pink-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+              >
+                <Heart className="inline-block w-5 h-5 mr-2" />
+                Tạo Album
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        {activeTab === 'photos' ? (
+          <>
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
@@ -1005,6 +1145,174 @@ export default function PhotosPage() {
                 Tải Lên Hình Đầu Tiên
               </button>
             )}
+          </div>
+        )}
+        </>
+        ) : (
+          /* Album Creation Tab */
+          <div className="space-y-6">
+            {/* Instructions */}
+            {/* <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-3">💡 Hướng Dẫn</h3>
+              <ul className="space-y-2 text-gray-700">
+                <li>• Điền thông tin album (tiêu đề, tên cặp đôi, ngày cưới)</li>
+                <li>• Chọn các hình ảnh muốn đưa vào album bằng cách nhấp vào hình</li>
+                <li>• Hình đầu tiên sẽ được dùng làm ảnh nền cho trang chủ album</li>
+                <li>• Nhấn "Tạo & Xem Album" để tạo trang album độc lập với template đẹp mắt</li>
+                <li>• Album sẽ tự động mở trong tab mới để bạn xem trước</li>
+                <li>• Nhấn "Sao Chép Link" để sao chép đường link chia sẻ</li>
+                <li>• Gửi link cho khách mời - Mọi người có thể xem album của bạn!</li>
+              </ul>
+            </div> */}
+            {/* Album Details */}
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Thông Tin Album</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Tiêu Đề Album
+                  </label>
+                  <input
+                    type="text"
+                    value={albumTitle}
+                    onChange={(e) => setAlbumTitle(e.target.value)}
+                    placeholder="VD: Ngày Cưới Của Chúng Mình"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Tên Cặp Đôi
+                  </label>
+                  <input
+                    type="text"
+                    value={coupleNames}
+                    onChange={(e) => setCoupleNames(e.target.value)}
+                    placeholder="VD: Anh & Em"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Ngày Cưới
+                  </label>
+                  <input
+                    type="date"
+                    value={weddingDate}
+                    onChange={(e) => setWeddingDate(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="flex items-end gap-3">
+                  <button
+                    onClick={handleGenerateAlbum}
+                    disabled={isGenerating || !coupleNames || !albumTitle || selectedPhotoIds.size === 0}
+                    className="flex-1 bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        {generatedUrl ? 'Đang Cập Nhật Album...' : 'Đang Tạo Album...'}
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-5 h-5" />
+                        {generatedUrl ? 'Sửa & Xem Album' : 'Tạo & Xem Album'}
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={copyLinkToClipboard}
+                    disabled={!generatedUrl}
+                    className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                    {copied ? 'Đã Sao Chép!' : 'Sao Chép Link'}
+                  </button>
+                </div>
+              </div>
+
+              {generatedUrl && (
+                <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                  <p className="font-semibold mb-2">✅ Album đã được tạo thành công!</p>
+                  <p className="text-sm">Link chia sẻ: <span className="font-mono">{API_BASE_URL.replace('/api', '')}{generatedUrl}</span></p>
+                </div>
+              )}
+            </div>
+
+            {/* Photo Selection */}
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">Chọn Hình Cho Album</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Đã chọn {selectedPhotoIds.size} hình
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSelectedPhotoIds(new Set(photos.map(p => p.id)))}
+                    className="px-4 py-2 text-sm bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition-colors"
+                  >
+                    Chọn Tất Cả
+                  </button>
+                  <button
+                    onClick={() => setSelectedPhotoIds(new Set())}
+                    className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Bỏ Chọn Tất Cả
+                  </button>
+                </div>
+              </div>
+
+              {photos.length === 0 ? (
+                <div className="text-center py-16">
+                  <Camera className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-500 text-lg">Chưa có hình ảnh nào</p>
+                  <p className="text-gray-400 mt-2">Vui lòng tải hình lên trong tab "Hình Ảnh"</p>
+                  <button
+                    onClick={() => setActiveTab('photos')}
+                    className="mt-4 inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Đi Tới Tải Hình
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {photos.map((photo) => (
+                    <div
+                      key={photo.id}
+                      onClick={() => togglePhotoSelection(photo.id)}
+                      className={`group relative bg-gray-50 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all cursor-pointer ${
+                        selectedPhotoIds.has(photo.id) ? 'ring-4 ring-pink-500' : ''
+                      }`}
+                    >
+                      <div className="aspect-square relative overflow-hidden">
+                        <img
+                          src={photo.thumbnailUrl}
+                          alt={photo.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        {selectedPhotoIds.has(photo.id) && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-xl border-2 border-pink-500">
+                              <Check className="w-8 h-8 text-pink-500 stroke-[3]" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-3">
+                        <p className="text-sm font-medium text-gray-900 truncate">{photo.name}</p>
+                        {photo.description && (
+                          <p className="text-xs text-gray-500 truncate mt-1">{photo.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
