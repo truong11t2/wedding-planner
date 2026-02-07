@@ -29,7 +29,7 @@
     },
     {
       "id": "choose-party",
-      "title": "Chọn Đội Ngũ Đám Cưới",
+      "title": "Chọn Phù Dâu & Phù Rể",
       "description": "Chọn phù dâu, phù rể và các vai trò quan trọng khác",
       "monthsBeforeWedding": 10,
       "category": "Cặp đôi",
@@ -167,7 +167,7 @@
     },
     {
       "id": "book-music",
-      "title": "Đặt Nhạc/Nhạc Sĩ",
+      "title": "Đặt Nhạc/Ca Sĩ",
       "description": "Đảm bảo giải trí cho lễ và tiệc cưới",
       "monthsBeforeWedding": 2,
       "category": "Nhà cung cấp",
@@ -175,7 +175,7 @@
     },
     {
       "id": "final-dress-fitting",
-      "title": "Lấy Váy Cưới Cuối Cùng",
+      "title": "Lấy Váy Cưới",
       "description": "Lên lịch chỉnh sửa và thử váy cưới cuối cùng",
       "monthsBeforeWedding": 1,
       "category": "Trang phục"
@@ -210,7 +210,7 @@
     },
     {
       "id": "beauty-appointments",
-      "title": "Cuộc Hẹn Làm Đẹp",
+      "title": "Hẹn Làm Đẹp",
       "description": "Thử tóc, chăm sóc da mặt và các chuẩn bị làm đẹp khác",
       "monthsBeforeWedding": 0.25,
       "category": "Cặp đôi",
@@ -243,23 +243,8 @@
       "category": "Trang phục"
     },
     {
-      "id": "pack-wedding-day-kit",
-      "title": "Chuẩn Bị Bộ Dụng Cụ Ngày Cưới",
-      "description": "Vật dụng khẩn cấp, trang điểm, phụ kiện và giấy tờ",
-      "monthsBeforeWedding": 0.25,
-      "category": "Kế hoạch",
-      "options": [
-        {
-          "id": "emergency-kit",
-          "label": "Vật Dụng Bộ Dụng Cụ Khẩn Cấp",
-          "description": "Liệt kê các vật dụng cho bộ dụng cụ khẩn cấp ngày cưới của bạn",
-          "isTextInput": true
-        }
-      ]
-    },
-    {
       "id": "marriage-license",
-      "title": "Đăng Ký Giấy Phép Kết Hôn",
+      "title": "Đăng Ký Kết Hôn",
       "description": "Đảm bảo giấy phép kết hôn đã sẵn sàng và hợp lệ",
       "monthsBeforeWedding": 0.25,
       "category": "Pháp lý"
@@ -287,7 +272,7 @@
     },
     {
       "id": "enjoy-wedding-day",
-      "title": "Tận Hưởng Ngày Cưới Của Bạn!",
+      "title": "Tận Hưởng Ngày Cưới!",
       "description": "Thư giãn và tận hưởng ngày đặc biệt của bạn",
       "monthsBeforeWedding": 0,
       "category": "Lễ kỷ niệm",

@@ -1,6 +1,7 @@
 import photographersData from '@/data/vendors/photographers.json';
 import venuesData from '@/data/vendors/venues.json';
 import caterersData from '@/data/vendors/caterers.json';
+import djsData from '@/data/vendors/djs.json';
 
 export interface VendorOption {
   id: string;
@@ -20,11 +21,19 @@ export interface VendorOption {
 const vendorData: { [key: string]: VendorOption[] } = {
   photographer: photographersData,
   venue: venuesData,
-  caterer: caterersData
+  caterer: caterersData,
+  dj: djsData
 };
 
-export const getVendorOptions = (category: string): VendorOption[] => {
-  return vendorData[category] || [];
+export const getVendorOptions = (category: string, location?: string): VendorOption[] => {
+  const vendors = vendorData[category] || [];
+  
+  // Filter by location if provided
+  if (location) {
+    return vendors.filter(vendor => vendor.location === location);
+  }
+  
+  return vendors;
 };
 
 export const getVendorById = (category: string, id: string): VendorOption | undefined => {

@@ -1,17 +1,18 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
-import { generateTimeline } from '@/lib/timelineGenerator';
 import { saveWeddingDate } from '@/api/timeline';
-import { TimelineItem } from '@/lib/timelineGenerator';
+import { useTimeline } from '@/context/TimelineContext';
 
 export interface DateInputProps {
   weddingDate: string;
   setWeddingDate: (date: string) => void;
+  location: string;
+  setLocation: (location: string) => void;
   setShowPlan: (show: boolean) => void;
-  setTimeline: (timeline: TimelineItem[]) => void;
 }
 
-export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, setTimeline }: DateInputProps) {
+export default function DateInput({ weddingDate, setWeddingDate, location, setLocation, setShowPlan }: DateInputProps) {
+  const { setWeddingDate: setContextWeddingDate, setLocation: setContextLocation } = useTimeline();
   // TODO: Remove this in production
   React.useEffect(() => {
     if (!weddingDate) {
@@ -23,14 +24,14 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
   }, []);
 
   const handleGeneratePlan = () => {
-    console.log('Generating plan for date:', weddingDate);
-    if (weddingDate) {
+    console.log('Generating plan for date:', weddingDate, 'location:', location);
+    if (weddingDate && location) {
       try {
         // Save wedding date to backend if user is logged in
         saveWeddingDate(weddingDate);
-        // Generate timeline
-        const plan = generateTimeline(weddingDate);
-        setTimeline(plan);
+        // Update context with wedding date and location
+        setContextLocation(location);
+        setContextWeddingDate(weddingDate, location);
         setShowPlan(true);
 
         // Scroll to top of the page after timeline is generated
@@ -63,6 +64,22 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
 
       <div className="space-y-6">
         <div>
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+            Địa Điểm
+          </label>
+          <select
+            id="location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="w-full px-4 py-3 border-2 border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-base sm:text-lg text-gray-900"
+          >
+            <option value="">Chọn địa điểm</option>
+            <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+            <option value="Hà Nội">Hà Nội</option>
+          </select>
+        </div>
+
+        <div>
           <label htmlFor="wedding-date" className="block text-sm font-medium text-gray-700 mb-2">
             Ngày Cưới
           </label>
@@ -78,7 +95,7 @@ export default function DateInput({ weddingDate, setWeddingDate, setShowPlan, se
 
         <button
           onClick={handleGeneratePlan}
-          disabled={!weddingDate}
+          disabled={!weddingDate || !location}
           className="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 rounded-lg font-semibold text-base sm:text-lg hover:from-pink-700 hover:to-purple-700 transform hover:scale-105 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           Tạo Lịch Trình

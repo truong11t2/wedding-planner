@@ -2,7 +2,6 @@
 
 import { useAuth } from '@/context/AuthContext';
 import Timeline from '@/components/home/Timeline';
-import { TimelineItem } from '@/lib/timelineGenerator';
 
 export default function TimelinePage() {
   const { isLoggedIn } = useAuth();

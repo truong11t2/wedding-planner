@@ -42,7 +42,7 @@ interface TimelineConfigItem {
   }[];
 }
 
-export const generateTimeline = (weddingDate: string): TimelineItem[] => {
+export const generateTimeline = (weddingDate: string, location?: string): TimelineItem[] => {
   const weddingDay = new Date(weddingDate);
   const today = new Date();
   // Calculate total days from today to wedding
@@ -76,9 +76,9 @@ export const generateTimeline = (weddingDate: string): TimelineItem[] => {
       isWeddingDay: configItem.isWeddingDay || false,
     };
 
-    // Handle vendor options
+    // Handle vendor options with location filtering
     if (configItem.vendorType) {
-      timelineItem.options = getVendorOptions(configItem.vendorType);
+      timelineItem.options = getVendorOptions(configItem.vendorType, location);
     } 
     // Handle predefined options from config
     else if (configItem.options) {

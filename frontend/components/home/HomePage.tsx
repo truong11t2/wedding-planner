@@ -9,12 +9,11 @@ import { Clock, CheckCircle, Download } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getUserProfile } from '@/api/auth';
 import Carousel from './Carousel';
-import { TimelineItem } from '@/lib/timelineGenerator';
 
 export default function HomePage() {
   const [weddingDate, setWeddingDate] = useState('');
+  const [location, setLocation] = useState('');
   const [showPlan, setShowPlan] = useState(false);
-  const [, setTimeline] = useState<TimelineItem[]>([]);
   const { isLoggedIn } = useAuth();
 
   const checkWeddingDate = async () => {
@@ -39,6 +38,7 @@ export default function HomePage() {
 
   const handleChangeDate = () => {
     setWeddingDate('');
+    setLocation('');
     setShowPlan(false);
   };
 
@@ -58,8 +58,9 @@ export default function HomePage() {
             <DateInput
               weddingDate={weddingDate}
               setWeddingDate={setWeddingDate}
+              location={location}
+              setLocation={setLocation}
               setShowPlan={setShowPlan}
-              setTimeline={setTimeline} 
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 mb-16">
