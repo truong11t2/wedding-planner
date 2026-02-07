@@ -120,11 +120,11 @@ export const getTimelineStatus = async (): Promise<{
   }
 };
 
-export const saveWeddingDate = async (weddingDate: string): Promise<{
+export const saveUserInput = async (weddingDate: string, location?: string): Promise<{
   success: boolean;
   message?: string;
   weddingDate?: string;
-
+  location?: string;
 }> => {
   try {
     const response = await fetch(`${API_BASE_URL}${ENDPOINTS.TIMELINE.WEDDING_DATE}`, {
@@ -133,7 +133,7 @@ export const saveWeddingDate = async (weddingDate: string): Promise<{
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ weddingDate }),
+      body: JSON.stringify({ weddingDate, location }),
     });
 
     const data = await response.json();
@@ -148,7 +148,8 @@ export const saveWeddingDate = async (weddingDate: string): Promise<{
     return {
       success: true,
       message: data.message,
-      weddingDate: data.weddingDate
+      weddingDate: data.weddingDate,
+      location: data.location
     };
   } catch (error) {
     console.error('Error saving wedding date:', error);

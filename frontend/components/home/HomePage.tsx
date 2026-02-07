@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import DateInput from './DateInput';
+import UserInput from './UserInput';
 import Timeline from './Timeline';
 import FeatureCard from '@/components/common/FeatureCard';
 import Testimonials from './Testimonials';
@@ -55,7 +55,7 @@ export default function HomePage() {
         <>
           <Carousel />
           <div id="date-input-section" className="mt-12">
-            <DateInput
+            <UserInput
               weddingDate={weddingDate}
               setWeddingDate={setWeddingDate}
               location={location}

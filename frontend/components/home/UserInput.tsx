@@ -1,9 +1,9 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
-import { saveWeddingDate } from '@/api/timeline';
+import { saveUserInput } from '@/api/timeline';
 import { useTimeline } from '@/context/TimelineContext';
 
-export interface DateInputProps {
+export interface UserInputProps {
   weddingDate: string;
   setWeddingDate: (date: string) => void;
   location: string;
@@ -11,8 +11,8 @@ export interface DateInputProps {
   setShowPlan: (show: boolean) => void;
 }
 
-export default function DateInput({ weddingDate, setWeddingDate, location, setLocation, setShowPlan }: DateInputProps) {
-  const { setWeddingDate: setContextWeddingDate, setLocation: setContextLocation } = useTimeline();
+export default function UserInput({ weddingDate, setWeddingDate, location, setLocation, setShowPlan }: UserInputProps) {
+  const { setWeddingDate: setContextWeddingDate } = useTimeline();
   // TODO: Remove this in production
   React.useEffect(() => {
     if (!weddingDate) {
@@ -27,10 +27,9 @@ export default function DateInput({ weddingDate, setWeddingDate, location, setLo
     console.log('Generating plan for date:', weddingDate, 'location:', location);
     if (weddingDate && location) {
       try {
-        // Save wedding date to backend if user is logged in
-        saveWeddingDate(weddingDate);
-        // Update context with wedding date and location
-        setContextLocation(location);
+        // Save wedding date and location to backend if user is logged in
+        saveUserInput(weddingDate, location);
+        // Update context with wedding date and location (pass location directly to avoid async state issue)
         setContextWeddingDate(weddingDate, location);
         setShowPlan(true);
 

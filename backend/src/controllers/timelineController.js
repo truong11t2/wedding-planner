@@ -5,7 +5,7 @@ const User = require('../models/User');
 // @access  Private
 const saveWeddingDate = async (req, res) => {
   try {
-    const { weddingDate } = req.body;
+    const { weddingDate, location } = req.body;
 
     const user = await User.findByPk(req.user.id);
     if (!user) {
@@ -16,12 +16,16 @@ const saveWeddingDate = async (req, res) => {
     }
 
     user.weddingDate = weddingDate;
+    if (location !== undefined) {
+      user.location = location;
+    }
     await user.save();
 
     res.json({
       success: true,
-      message: 'Wedding date saved successfully',
-      weddingDate: user.weddingDate
+      message: 'Wedding date and location saved successfully',
+      weddingDate: user.weddingDate,
+      location: user.location
     });
   } catch (error) {
     console.error('Save wedding date error:', error);

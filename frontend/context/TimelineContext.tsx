@@ -12,7 +12,6 @@ interface TimelineContextType {
   isLoading: boolean;
   error: string | null;
   setWeddingDate: (date: string, location?: string) => void;
-  setLocation: (location: string) => void;
   updateTimelineItem: (itemId: string, updates: Partial<TimelineItem>) => void;
   saveTimelineData: () => Promise<void>;
   loadTimelineData: () => Promise<void>;
@@ -41,10 +40,10 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
 
   const setWeddingDate = (date: string, loc?: string) => {
     setWeddingDateState(date);
-    const locationToUse = loc || location;
     if (loc) {
       setLocationState(loc);
     }
+    const locationToUse = loc || location;
     if (date) {
       try {
         const newTimeline = generateTimeline(date, locationToUse);
@@ -56,20 +55,6 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
     } else {
       // Only clear timeline if date is explicitly cleared
       setTimelineItems([]);
-    }
-  };
-
-  const setLocation = (loc: string) => {
-    setLocationState(loc);
-    // Regenerate timeline with new location if we have a wedding date
-    if (weddingDate) {
-      try {
-        const newTimeline = generateTimeline(weddingDate, loc);
-        setTimelineItems(newTimeline);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error generating timeline');
-      }
     }
   };
 
@@ -162,7 +147,6 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         error,
         setWeddingDate,
-        setLocation,
         updateTimelineItem,
         saveTimelineData,
         loadTimelineData,

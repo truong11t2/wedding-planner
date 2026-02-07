@@ -56,6 +56,10 @@ const User = sequelize.define('User', {
     type: DataTypes.DATEONLY,
     allowNull: true
   },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   timelineData: {
     type: DataTypes.JSON,
     allowNull: true,
