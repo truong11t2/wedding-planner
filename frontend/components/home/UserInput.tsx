@@ -57,7 +57,7 @@ export default function UserInput({ weddingDate, setWeddingDate, location, setLo
           {"Ngày Vui Của Bạn Khi Nào?"}
         </h2>
         <p className="text-gray-600 text-sm sm:text-base">
-          {"Nhập ngày cưới và chúng tôi sẽ tạo một lịch trình đám cưới dành riêng cho bạn"}
+          {"Nhập ngày cưới và địa điểm, chúng tôi sẽ tạo một lịch trình đám cưới dành riêng cho bạn"}
         </p>
       </div>
 

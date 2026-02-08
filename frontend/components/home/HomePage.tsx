@@ -31,9 +31,9 @@ export default function HomePage() {
   }, [isLoggedIn]);
 
   const features = [
-    { icon: Clock, text: 'Hướng dẫn từng bước' },
-    { icon: CheckCircle, text: 'Lịch trình chi tiết' },
-    { icon: Download, text: 'Cá nhân hóa toàn diện' }
+    { icon: Clock, text: 'Hướng dẫn từng bước', link: '/blog/huong-dan-tung-buoc-lap-ke-hoach-dam-cuoi' },
+    { icon: CheckCircle, text: 'Lịch trình chi tiết', link: '/blog/lich-trinh-chi-tiet-dam-cuoi' },
+    { icon: Download, text: 'Cá nhân hóa toàn diện', link: '/blog/ca-nhan-hoa-toan-dien-ke-hoach-dam-cuoi' }
   ];
 
   const handleChangeDate = () => {
@@ -65,7 +65,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 mb-16">
             {features.map((feature, i) => (
-              <FeatureCard key={i} icon={feature.icon} text={feature.text} />
+              <FeatureCard key={i} icon={feature.icon} text={feature.text} link={feature.link} />
             ))}
           </div>
           <Testimonials />
