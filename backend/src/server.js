@@ -11,6 +11,7 @@ const sequelize = require('./config/database');
 const User = require('./models/User');
 const Comment = require('./models/Comment');
 const Album = require('./models/Album');
+const VendorContact = require('./models/VendorContact');
 
 // Set up model associations if they exist
 if (Album.associate) {
@@ -25,6 +26,7 @@ const guestRoutes = require('./routes/guestRoutes');
 const photosRoutes = require('./routes/photoRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 const albumRoutes = require('./routes/albumRoutes');
+const vendorRoutes = require('./routes/vendorRoutes');
 
 const app = express();
 
@@ -73,6 +75,7 @@ app.use('/api/guests', guestRoutes);
 app.use('/api/photos', photosRoutes);
 app.use('/api/budget', budgetRoutes);
 app.use('/api/albums', albumRoutes);
+app.use('/api/vendor', vendorRoutes);
 
 // Serve static album files
 app.use('/albums', express.static('public/albums'));
