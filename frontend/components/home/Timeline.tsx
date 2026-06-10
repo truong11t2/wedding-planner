@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTimeline } from '@/context/TimelineContext';
 import { CheckCircle, TriangleAlert, Clock, Bookmark, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
-import Toast from '@/components/common/Toast';
+import WeddingDateInput from '@/components/common/WeddingDateInput';
 
 interface TimelineProps {
   initialWeddingDate?: string;
@@ -15,7 +15,6 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
     timelineItems,
     weddingDate,
     isLoading,
-    error,
     setWeddingDate,
     updateTimelineItem,
     saveTimelineData,
@@ -25,23 +24,6 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
   const [tempWeddingDate, setTempWeddingDate] = useState(weddingDate || initialWeddingDate || '');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-
-    const [toast, setToast] = useState<{
-      show: boolean;
-      message: string;
-      type: 'success' | 'error';
-    }>({
-      show: false,
-      message: '',
-      type: 'success'
-    });
-  
-    const showToast = (message: string, type: 'success' | 'error' = 'success') => {
-      setToast({ show: true, message, type });
-      setTimeout(() => {
-        setToast(prev => ({ ...prev, show: false }));
-      }, 3000);
-    };
     
   // Set the wedding date if passed as prop and context doesn't have one
   useEffect(() => {
@@ -69,11 +51,9 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
     setSaveStatus('saving');
     try {
       await saveTimelineData();
-      showToast('Lưu lịch trình thành công', 'success');
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (error) {
-      showToast('Lưu lịch trình thất bại. Vui lòng đăng nhập để tiếp tục.', 'error');
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 5000);
     }
@@ -188,47 +168,13 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
   
   if (!currentWeddingDate) {
     return (
-      <div className="max-w-2xl mx-auto p-6">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Tạo Lịch Trình Đám Cưới</h2>
-          <p className="text-gray-600 mb-6">
-            Nhập ngày vui của bạn để chúng tôi lên kế hoạch cá nhân hóa cho riêng bạn.
-          </p>
-        </div>
-
-        <form onSubmit={handleWeddingDateSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="mb-4">
-            <label htmlFor="wedding-date" className="block text-sm font-medium text-gray-700 mb-2">
-              Ngày Cưới *
-            </label>
-            <input
-              type="date"
-              id="wedding-date"
-              value={tempWeddingDate}
-              onChange={(e) => setTempWeddingDate(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-              min={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]} // 3 months from now
-              required
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Ngày cưới phải cách ít nhất 3 tháng
-            </p>
-          </div>
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center">
-              <TriangleAlert className="h-5 w-5 text-red-500 mr-2" />
-              <span className="text-red-700 text-sm">{error}</span>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:from-pink-600 hover:to-purple-700 transition-all"
-          >
-            Tạo Lịch Trình
-          </button>
-        </form>
+      <div className="p-6">
+        <WeddingDateInput
+          onSubmit={(date) => setWeddingDate(date)}
+          initialDate={tempWeddingDate}
+          title="Tạo Lịch Trình Đám Cưới"
+          description="Nhập ngày vui của bạn để chúng tôi lên kế hoạch cá nhân hóa cho riêng bạn."
+        />
       </div>
     );
   }
@@ -262,13 +208,6 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
             </button>
           </div>
         </div>
-
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
-            <TriangleAlert className="h-5 w-5 text-red-500 mr-3" />
-            <span className="text-red-700">{error}</span>
-          </div>
-        )}
 
         {/* Timeline Items */}
         <div className="space-y-6">
@@ -469,13 +408,6 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
         </div>
       {/* Floating Save Button */}
       <FloatingSaveButton />
-            {/* Toast */}
-      <Toast
-        message={toast.message}
-        type={toast.type}
-        show={toast.show}
-        onClose={() => setToast(prev => ({ ...prev, show: false }))}
-      />
     </>
   );
 }

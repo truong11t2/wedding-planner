@@ -43,6 +43,10 @@ export const ENDPOINTS = {
     STATUS: '/timeline/status',
     WEDDING_DATE: '/timeline/wedding-date'
   },
+  VENDOR: {
+    BASE: '/vendor',
+    CONTACT: '/vendor/contact',
+  },
   HEALTH: '/health',
 };
 

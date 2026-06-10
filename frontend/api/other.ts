@@ -18,3 +18,30 @@ export const checkBackendHealth = async (): Promise<boolean> => {
     return false;
   }
 };
+
+// Submit vendor contact form
+export const submitVendorContact = async (data: {
+  email: string;
+  message: string;
+}): Promise<any> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.VENDOR.CONTACT}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Đã xảy ra lỗi khi gửi thông tin');
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    console.error('Error submitting vendor contact:', error);
+    throw error;
+  }
+};
+

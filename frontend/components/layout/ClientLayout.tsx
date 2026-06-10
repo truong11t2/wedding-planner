@@ -24,9 +24,9 @@ export default function ClientLayout({
       {/* Main content area with conditional margin */}
       <div className={isLoggedIn ? "lg:ml-64" : ""}>
         <main className="min-h-screen">
-          <div className="max-w-7xl mx-auto">
+          {/* <div className="max-w-7xl mx-auto"> */}
             {children}
-          </div>
+          {/* </div> */}
         </main>
       </div>
       
