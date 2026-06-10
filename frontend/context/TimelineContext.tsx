@@ -4,19 +4,22 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TimelineItem, generateTimeline } from '@/lib/timelineGenerator';
 import { saveTimeline, loadTimeline, SavedTimelineData } from '@/api/timeline';
 import { useAuth } from './AuthContext';
+import Toast from '@/components/common/Toast';
 
 interface TimelineContextType {
   timelineItems: TimelineItem[];
   weddingDate: string;
   location: string;
   isLoading: boolean;
-  error: string | null;
   setWeddingDate: (date: string, location?: string) => void;
   updateTimelineItem: (itemId: string, updates: Partial<TimelineItem>) => void;
   saveTimelineData: () => Promise<void>;
   loadTimelineData: () => Promise<void>;
   resetTimeline: () => void;
   lastSaved: Date | null;
+  toast: { show: boolean; message: string; type: 'success' | 'error' };
+  showToast: (message: string, type?: 'success' | 'error') => void;
+  hideToast: () => void;
 }
 
 const TimelineContext = createContext<TimelineContextType | undefined>(undefined);
@@ -27,8 +30,27 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
   const [weddingDate, setWeddingDateState] = useState<string>('');
   const [location, setLocationState] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error';
+  }>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, show: false }));
+    }, 3000);
+  };
+
+  const hideToast = () => {
+    setToast(prev => ({ ...prev, show: false }));
+  };
 
   // Load timeline when user logs in
   useEffect(() => {
@@ -48,9 +70,8 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
       try {
         const newTimeline = generateTimeline(date, locationToUse);
         setTimelineItems(newTimeline);
-        setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error generating timeline');
+        showToast(err instanceof Error ? err.message : 'Lỗi tạo lịch trình', 'error');
       }
     } else {
       // Only clear timeline if date is explicitly cleared
@@ -71,17 +92,16 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
   const saveTimelineData = async () => {
     // Allow saving attempt but show appropriate message
     if (!isLoggedIn || !user?.id) {
-      setError('Please log in to save your timeline');
+      showToast('Vui lòng đăng nhập để lưu lịch trình', 'error');
       throw new Error('Please log in to save your timeline');
     }
 
     if (!weddingDate) {
-      setError('Wedding date must be set');
+      showToast('Ngày cưới phải được thiết lập', 'error');
       throw new Error('Wedding date must be set');
     }
 
     setIsLoading(true);
-    setError(null);
 
     try {
       const timelineData: SavedTimelineData = {
@@ -92,9 +112,10 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
 
       await saveTimeline(timelineData);
       setLastSaved(new Date());
+      showToast('Lưu lịch trình thành công', 'success');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to save timeline';
-      setError(errorMessage);
+      const errorMessage = err instanceof Error ? err.message : 'Lưu lịch trình thất bại';
+      showToast(errorMessage, 'error');
       throw err;
     } finally {
       setIsLoading(false);
@@ -108,7 +129,6 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
     }
 
     setIsLoading(true);
-    setError(null);
 
     try {
       const savedTimeline = await loadTimeline();
@@ -122,9 +142,9 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
         setLastSaved(savedTimeline.updatedAt ? new Date(savedTimeline.updatedAt) : null);
       }
     } catch (err) {
-      // Don't show error for missing timelines
+      // Don't show toast for missing timelines
       if (!(err instanceof Error && err.message?.includes('No timeline found'))) {
-        setError(err instanceof Error ? err.message : 'Failed to load timeline');
+        showToast(err instanceof Error ? err.message : 'Tải lịch trình thất bại', 'error');
       }
     } finally {
       setIsLoading(false);
@@ -134,28 +154,37 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
   const resetTimeline = () => {
     setTimelineItems([]);
     setWeddingDateState('');
-    setError(null);
     setLastSaved(null);
   };
 
   return (
-    <TimelineContext.Provider
-      value={{
-        timelineItems,
-        weddingDate,
-        location,
-        isLoading,
-        error,
-        setWeddingDate,
-        updateTimelineItem,
-        saveTimelineData,
-        loadTimelineData,
-        resetTimeline,
-        lastSaved,
-      }}
-    >
-      {children}
-    </TimelineContext.Provider>
+    <>
+      <TimelineContext.Provider
+        value={{
+          timelineItems,
+          weddingDate,
+          location,
+          isLoading,
+          setWeddingDate,
+          updateTimelineItem,
+          saveTimelineData,
+          loadTimelineData,
+          resetTimeline,
+          lastSaved,
+          toast,
+          showToast,
+          hideToast,
+        }}
+      >
+        {children}
+      </TimelineContext.Provider>
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        show={toast.show}
+        onClose={hideToast}
+      />
+    </>
   );
 }
 
