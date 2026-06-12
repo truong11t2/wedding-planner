@@ -82,6 +82,16 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 NHÀ CUNG CẤP
               </Link>
             }
+            {
+              <Link
+                href="/contact"
+                className={`text-lg font-semibold transition-colors ${
+                  pathname === '/contact' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
+                }`}
+              >
+                HỖ TRỢ
+              </Link>
+            }
             {isLoggedIn && (
               <Link
                 href="/profile"
@@ -150,6 +160,17 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 NHÀ CUNG CẤP
+              </Link>
+            }
+            {
+              <Link
+                href="/contact"
+                className={`block py-2 text-lg font-semibold ${
+                  pathname === '/contact' ? 'text-pink-600' : 'text-gray-700'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                LIÊN HỆ
               </Link>
             }
             {isLoggedIn && (

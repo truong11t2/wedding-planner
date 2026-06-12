@@ -19,13 +19,14 @@ export const checkBackendHealth = async (): Promise<boolean> => {
   }
 };
 
-// Submit vendor contact form
-export const submitVendorContact = async (data: {
+// Submit general contact form
+export const submitContact = async (data: {
   email: string;
   message: string;
+  name?: string;
 }): Promise<any> => {
   try {
-    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.VENDOR.CONTACT}`, {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CONTACT}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ export const submitVendorContact = async (data: {
 
     return await response.json();
   } catch (error: any) {
-    console.error('Error submitting vendor contact:', error);
+    console.error('Error submitting contact:', error);
     throw error;
   }
 };

@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Heart, Send, Mail, MessageSquare, Loader2, CheckCircle2 } from 'lucide-react';
-import { submitVendorContact } from '@/api/other';
+import { Heart, Send, Mail, MessageSquare, Loader2, CheckCircle2, User } from 'lucide-react';
+import { submitContact } from '@/api/other';
 
 export default function CTASection() {
   const [isVisible, setIsVisible] = useState(false);
+  const [vendorName, setVendorName] = useState('');
   const [vendorEmail, setVendorEmail] = useState('');
   const [vendorMessage, setVendorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,16 +53,17 @@ export default function CTASection() {
     setSubmitSuccess(false);
 
     try {
-      await submitVendorContact({ email: vendorEmail, message: vendorMessage });
+      await submitContact({ name: vendorName, email: vendorEmail, message: vendorMessage });
       setSubmitSuccess(true);
+      setVendorName('');
       setVendorEmail('');
       setVendorMessage('');
       
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-    } catch (error: any) {
-      setSubmitError(error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+    } catch (error) {
+      setSubmitError('Đã xảy ra lỗi. Vui lòng thử lại.');
     } finally {
       setIsSubmitting(false);
     }
@@ -175,6 +177,19 @@ export default function CTASection() {
               
               <div className="flex-1 flex flex-col">
               <form onSubmit={handleVendorSubmit} className="space-y-5 flex-1 flex flex-col">
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    value={vendorName}
+                    onChange={(e) => setVendorName(e.target.value)}
+                    placeholder="Họ và tên"
+                    className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
