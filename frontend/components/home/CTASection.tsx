@@ -62,7 +62,7 @@ export default function CTASection() {
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-    } catch (error) {
+    } catch {
       setSubmitError('Đã xảy ra lỗi. Vui lòng thử lại.');
     } finally {
       setIsSubmitting(false);

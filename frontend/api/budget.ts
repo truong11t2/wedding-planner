@@ -60,8 +60,7 @@ export const getBudgetData = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting budget data:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching budget data',
@@ -99,8 +98,7 @@ export const saveBudgetData = async (budgetData: { totalBudget: number; categori
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error saving budget data:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while saving budget data',
@@ -138,8 +136,7 @@ export const updateTotalBudget = async (totalBudget: number): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error updating total budget:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while updating total budget',
@@ -177,8 +174,7 @@ export const addBudgetCategory = async (category: Omit<BudgetCategory, 'id'>): P
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error adding budget category:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while adding budget category',
@@ -216,8 +212,7 @@ export const updateBudgetCategory = async (categoryId: string, updates: Partial<
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error updating budget category:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while updating budget category',
@@ -254,8 +249,7 @@ export const deleteBudgetCategory = async (categoryId: string): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error deleting budget category:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while deleting budget category',
@@ -292,8 +286,7 @@ export const getBudgetStats = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting budget statistics:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching budget statistics',

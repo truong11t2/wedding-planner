@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ExternalLink, Clock, User, Heart } from 'lucide-react';
+import Image from 'next/image';
 
 interface BlogPost {
   id: string;
@@ -98,9 +99,11 @@ export default function BlogPosts() {
             className="group border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200"
           >
             <div className="aspect-w-16 aspect-h-9 bg-gray-200">
-              <img
+              <Image
                 src={post.image}
                 alt={post.title}
+                width={300}
+                height={200}
                 className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
               />
             </div>

@@ -12,6 +12,7 @@ interface ErrorProps {
 export default function Error({ error, reset }: ErrorProps) {
   React.useEffect(() => {
     // Log the error to an error reporting service
+    // eslint-disable-next-line no-console
     console.error('Application Error:', error);
   }, [error]);
 

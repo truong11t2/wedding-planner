@@ -13,8 +13,7 @@ export const checkBackendHealth = async (): Promise<boolean> => {
     
     clearTimeout(timeoutId);
     return response.ok;
-  } catch (error) {
-    console.error('Backend health check failed:', error);
+  } catch {
     return false;
   }
 };
@@ -24,7 +23,7 @@ export const submitContact = async (data: {
   email: string;
   message: string;
   name?: string;
-}): Promise<any> => {
+}): Promise<{ success: boolean; message: string }> => {
   try {
     const response = await fetch(`${API_BASE_URL}${ENDPOINTS.CONTACT}`, {
       method: 'POST',
@@ -40,9 +39,8 @@ export const submitContact = async (data: {
     }
 
     return await response.json();
-  } catch (error: any) {
-    console.error('Error submitting contact:', error);
-    throw error;
+  } catch {
+    throw new Error('Đã xảy ra lỗi khi gửi thông tin');
   }
 };
 

@@ -44,8 +44,7 @@ export const getCommentsByBlogPost = async (blogPostId: string): Promise<{
     }
 
     return data;
-  } catch (error) {
-    console.error('Get comments error:', error);
+  } catch {
     return {
       success: false,
       comments: [],
@@ -79,8 +78,7 @@ export const createComment = async (commentData: CreateCommentData): Promise<{
     }
 
     return data;
-  } catch (error) {
-    console.error('Create comment error:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error. Please try again.',

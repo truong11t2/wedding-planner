@@ -71,8 +71,7 @@ export const getGuestList = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting guest list:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching guest list',
@@ -110,8 +109,7 @@ export const saveGuestList = async (guests: Guest[]): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error saving guest list:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while saving guest list',
@@ -149,8 +147,7 @@ export const addGuest = async (guest: Omit<Guest, 'id' | 'createdAt'>): Promise<
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error adding guest:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while adding guest',
@@ -188,8 +185,7 @@ export const updateGuest = async (guestId: string, updates: Partial<Guest>): Pro
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error updating guest:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while updating guest',
@@ -226,8 +222,7 @@ export const deleteGuest = async (guestId: string): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error deleting guest:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while deleting guest',
@@ -265,8 +260,7 @@ export const updateRSVP = async (guestId: string, rsvpStatus: Guest['rsvpStatus'
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error updating RSVP:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while updating RSVP',
@@ -303,8 +297,7 @@ export const getGuestStats = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting guest statistics:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching guest statistics',

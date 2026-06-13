@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTimeline } from '@/context/TimelineContext';
-import { CheckCircle, TriangleAlert, Clock, Bookmark, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle, Clock, Bookmark, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 import WeddingDateInput from '@/components/common/WeddingDateInput';
+import Image from 'next/image';
 
 interface TimelineProps {
   initialWeddingDate?: string;
@@ -40,20 +41,13 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
     }
   }, [weddingDate]);
 
-  const handleWeddingDateSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (tempWeddingDate) {
-      setWeddingDate(tempWeddingDate);
-    }
-  };
-
   const handleSaveTimeline = async () => {
     setSaveStatus('saving');
     try {
       await saveTimelineData();
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
-    } catch (error) {
+    } catch {
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 5000);
     }
@@ -108,18 +102,6 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
     }).format(date);
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors = {
-      'Yourself': 'bg-blue-100 text-blue-800',
-      'Vendor': 'bg-green-100 text-green-800',
-      'Attire': 'bg-purple-100 text-purple-800',
-      'Planning': 'bg-yellow-100 text-yellow-800',
-      'Personal': 'bg-pink-100 text-pink-800',
-      'Legal': 'bg-red-100 text-red-800',
-      'Celebration': 'bg-orange-100 text-orange-800'
-    };
-    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
 
   // Floating Save Button Component
   const FloatingSaveButton = () => {
@@ -211,7 +193,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
 
         {/* Timeline Items */}
         <div className="space-y-6">
-          {timelineItems.map((item, index) => (
+          {timelineItems.map((item) => (
             <div 
               key={item.id} 
               className={`
@@ -352,10 +334,12 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                                 )}
                                 
                                 {option.image && (
-                                  <img 
+                                  <Image 
                                     src={option.image} 
                                     alt={option.label}
                                     className="w-full h-32 object-cover rounded-lg mb-2"
+                                    width={128}
+                                    height={128}
                                   />
                                 )}
                                 <h5 className="font-medium text-gray-900">{option.label}</h5>

@@ -13,13 +13,9 @@ import {
   Grid3X3, 
   List,
   Search,
-  Filter,
   Heart,
-  Share2,
   Calendar,
   Camera,
-  Users,
-  MapPin,
   Plus,
   ChevronLeft,
   ChevronRight,
@@ -34,12 +30,12 @@ import {
   getPhotos,
   savePhotos,
   uploadPhotos as apiUploadPhotos,
-  updatePhoto as apiUpdatePhoto,
   deletePhoto as apiDeletePhoto,
   togglePhotoFavorite as apiToggleFavorite
 } from '@/api/photo';
 import { generateAlbum, updateAlbum, getAlbum } from '@/api/album';
 import { API_BASE_URL } from '@/api/config';
+import Image from 'next/image';
 
 interface PhotoViewerProps {
   photo: Photo;
@@ -70,7 +66,7 @@ function PhotoViewer({
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.25, 3));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.25, 0.5));
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = () => {
     if (zoom > 1) {
       setIsDragging(true);
     }
@@ -211,12 +207,14 @@ function PhotoViewer({
 
       {/* Main Image */}
       <div className="flex-1 flex items-center justify-center p-16 overflow-hidden">
-        <img
+        <Image
           src={photo.url}
           alt={photo.name}
           className={`max-w-full max-h-full object-contain transition-transform ${
             zoom > 1 ? 'cursor-move' : 'cursor-zoom-in'
           }`}
+          width={800}
+          height={600}
           style={{
             transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
             transformOrigin: 'center'
@@ -588,8 +586,7 @@ export default function PhotosPage() {
             // Initialize with empty array if no photos exist
             setPhotos([]);
         }
-        } catch (error) {
-          console.error('Error loading photos:', error);
+        } catch {
           showToast('Không thể tải hình', 'error');
         } finally {
           setLoading(false);
@@ -611,7 +608,8 @@ export default function PhotosPage() {
           setAlbumTitle(response.album.albumTitle || '');
           setWeddingDate(response.album.weddingDate || '');
         }
-      } catch (error) {
+      } catch {
+        // eslint-disable-next-line no-console
         console.log('No existing album found');
       }
     };
@@ -628,6 +626,7 @@ export default function PhotosPage() {
         try {
           await savePhotos(photos);
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Auto-save failed:', error);
         }
       }, 1000); // Debounce auto-save by 1 second
@@ -682,6 +681,7 @@ export default function PhotosPage() {
         
         if (response.errors && response.errors.length > 0) {
           message += `. ${response.errors.length} hình không thể xử lý.`;
+          // eslint-disable-next-line no-console
           console.warn('Upload errors:', response.errors);
         }
         
@@ -690,11 +690,11 @@ export default function PhotosPage() {
         showToast(response.message || 'Không thể tải hình', 'error');
         
         if (response.errors) {
+          // eslint-disable-next-line no-console
           console.error('Upload errors:', response.errors);
         }
       }
-    } catch (error) {
-      console.error('Upload error:', error);
+    } catch {
       showToast('Không thể tải hình', 'error');
     }
   };
@@ -717,7 +717,7 @@ export default function PhotosPage() {
       } else {
         showToast(response.message || 'Không thể cập nhật yêu thích', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Không thể cập nhật yêu thích', 'error');
     }
   };
@@ -739,7 +739,7 @@ export default function PhotosPage() {
         } else {
           showToast(response.message || 'Không thể xóa hình', 'error');
         }
-      } catch (error) {
+      } catch {
         showToast('Không thể xóa hình', 'error');
       }
     }
@@ -810,7 +810,7 @@ export default function PhotosPage() {
         window.open(fullUrl, '_blank');
         showToast(generatedUrl ? 'Album đã được cập nhật!' : 'Album đã được tạo!', 'success');
       }
-    } catch (error) {
+    } catch {
       showToast(`Không thể ${generatedUrl ? 'cập nhật' : 'tạo'} album`, 'error');
     } finally {
       setIsGenerating(false);
@@ -988,9 +988,11 @@ export default function PhotosPage() {
                     className="group relative aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200"
                     onClick={() => openPhotoViewer(photo)}
                   >
-                    <img
+                    <Image
                       src={photo.thumbnailUrl}
                       alt={photo.name}
+                      width={800}
+                      height={600}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                     />
                     
@@ -1046,9 +1048,11 @@ export default function PhotosPage() {
                     onClick={() => openPhotoViewer(photo)}
                   >
                     <div className="flex items-center space-x-4">
-                      <img
+                      <Image
                         src={photo.thumbnailUrl}
                         alt={photo.name}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                       
@@ -1289,9 +1293,11 @@ export default function PhotosPage() {
                       }`}
                     >
                       <div className="aspect-square relative overflow-hidden">
-                        <img
+                        <Image
                           src={photo.thumbnailUrl}
                           alt={photo.name}
+                          width={256}
+                          height={256}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         {selectedPhotoIds.has(photo.id) && (

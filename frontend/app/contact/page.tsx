@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, MessageSquare, Send, Loader2, CheckCircle2, MapPin, Phone, Clock } from 'lucide-react';
+import { Mail, MessageSquare, Send, Loader2, CheckCircle2 } from 'lucide-react';
 import { submitContact } from '@/api/other';
 
 export default function ContactPage() {
@@ -28,8 +28,8 @@ export default function ContactPage() {
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
-    } catch (error: any) {
-      setSubmitError(error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+    } catch {
+      setSubmitError('Đã xảy ra lỗi. Vui lòng thử lại.');
     } finally {
       setIsSubmitting(false);
     }

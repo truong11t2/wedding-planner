@@ -10,6 +10,7 @@ interface GlobalErrorProps {
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
   React.useEffect(() => {
+    // eslint-disable-next-line no-console
     console.error('Global Application Error:', error);
   }, [error]);
 

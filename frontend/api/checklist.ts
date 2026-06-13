@@ -37,8 +37,7 @@ export const getChecklist = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting checklist:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching checklist',
@@ -76,8 +75,7 @@ export const saveChecklist = async (checklistItems: ChecklistItem[]): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error saving checklist:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while saving checklist',
@@ -115,8 +113,7 @@ export const addChecklistItem = async (item: Omit<ChecklistItem, 'id' | 'complet
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error adding checklist item:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while adding checklist item',
@@ -154,8 +151,7 @@ export const updateChecklistItem = async (itemId: number, updates: Partial<Check
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error updating checklist item:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while updating checklist item',
@@ -192,8 +188,7 @@ export const deleteChecklistItem = async (itemId: number): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error deleting checklist item:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while deleting checklist item',
@@ -230,8 +225,7 @@ export const toggleChecklistItem = async (itemId: number): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error toggling checklist item:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while toggling checklist item',

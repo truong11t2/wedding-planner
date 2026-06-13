@@ -37,9 +37,8 @@ export default function ProfilePage() {
         } else {
           setError(response.message || 'Failed to load profile');
         }
-      } catch (error) {
+      } catch {
         setError('An error occurred while fetching profile');
-        console.error('Profile fetch error:', error);
       } finally {
         setIsLoading(false);
       }

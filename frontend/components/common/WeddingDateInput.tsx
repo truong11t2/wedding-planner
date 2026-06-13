@@ -21,7 +21,6 @@ export default function WeddingDateInput({
   className = '',
 }: WeddingDateInputProps) {
   const [weddingDate, setWeddingDate] = useState(initialDate);
-  const [isVisible, setIsVisible] = useState(true);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,7 +135,7 @@ export default function WeddingDateInput({
             {/* Footer Note */}
             <div className="mt-8 pt-6 border-t border-gray-100 text-center">
               <p className="text-sm text-gray-500 flex items-center justify-center">
-                {/* <Heart className="w-4 h-4 mr-2 text-pink-400" fill="currentColor" /> */}
+                <Heart className="w-4 h-4 mr-2 text-pink-400" fill="currentColor" />
                 Chúng tôi rất vui được đồng hành cùng bạn trên hành trình này!
               </p>
             </div>

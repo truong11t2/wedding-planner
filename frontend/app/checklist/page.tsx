@@ -151,7 +151,7 @@ function AddTaskModal({ isOpen, onClose, onSave, editTask }: AddTaskModalProps) 
 }
 
 export default function ChecklistPage() {
-  const { user, isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [tasks, setTasks] = useState<ChecklistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -200,7 +200,7 @@ export default function ChecklistPage() {
             // Save initial tasks to backend
             await saveChecklist(initialTasks);
           }
-        } catch (error) {
+        } catch {
           showToast('Lỗi khi tải danh sách nhiệm vụ', 'error');
         } finally {
           setLoading(false);
@@ -217,8 +217,8 @@ export default function ChecklistPage() {
       const timeoutId = setTimeout(async () => {
         try {
           await saveChecklist(tasks);
-        } catch (error) {
-          console.error('Auto-save failed:', error);
+        } catch {
+          showToast('Tự động lưu thất bại', 'error');
         }
       }, 1000); // Debounce auto-save by 1 second
 
@@ -266,7 +266,7 @@ export default function ChecklistPage() {
       } else {
         showToast(response.message || 'Lỗi khi cập nhật nhiệm vụ', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Lỗi khi cập nhật nhiệm vụ', 'error');
     }
   };
@@ -306,7 +306,7 @@ export default function ChecklistPage() {
           showToast(response.message || 'Lỗi khi thêm nhiệm vụ', 'error');
         }
       }
-    } catch (error) {
+    } catch {
       showToast('Lỗi khi lưu nhiệm vụ', 'error');
     }
   };
@@ -322,7 +322,7 @@ export default function ChecklistPage() {
         } else {
           showToast(response.message || 'Lỗi khi xóa nhiệm vụ', 'error');
         }
-      } catch (error) {
+      } catch {
         showToast('Lỗi khi xóa nhiệm vụ', 'error');
       }
     }

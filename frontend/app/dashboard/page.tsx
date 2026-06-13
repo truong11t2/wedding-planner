@@ -9,7 +9,7 @@ import BudgetOverview from '@/components/dashboard/BudgetOverview';
 import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import BlogPosts from '@/components/dashboard/BlogPosts';
 import DashboardStats from '@/components/dashboard/DashboardStats';
-import { Calendar, Heart } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 export default function DashboardPage() {
   const { user, isLoggedIn } = useAuth();

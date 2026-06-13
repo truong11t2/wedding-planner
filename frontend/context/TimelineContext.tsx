@@ -124,6 +124,7 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
 
   const loadTimelineData = async () => {
     if (!user?.id) {
+      // eslint-disable-next-line no-console
       console.log('No user ID, skipping timeline load');
       return;
     }

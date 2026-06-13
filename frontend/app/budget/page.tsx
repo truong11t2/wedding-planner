@@ -28,6 +28,7 @@ import {
   updateBudgetCategory as apiUpdateCategory,
   deleteBudgetCategory as apiDeleteCategory
 } from '@/api/budget';
+import Image from 'next/image';
 
 
 interface BudgetModalProps {
@@ -574,10 +575,12 @@ function BudgetBlogPosts() {
             className="group border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-all duration-200"
           >
             <div className="aspect-w-16 aspect-h-9 bg-gray-200">
-              <img
+              <Image
                 src={post.image}
                 alt={post.title}
                 className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-200"
+                width={400}
+                height={250}
               />
             </div>
             
@@ -701,8 +704,7 @@ export default function BudgetPage() {
               await saveBudgetData({ totalBudget: 25000, categories: sampleCategories });
             }
           }            
-        } catch (error) {
-          console.error('Error loading budget data:', error);
+        } catch {
           showToast('Không thể tải dữ liệu ngân sách', 'error');
         } finally {
           setLoading(false);
@@ -719,8 +721,8 @@ export default function BudgetPage() {
       const timeoutId = setTimeout(async () => {
         try {
           await saveBudgetData({ totalBudget, categories });
-        } catch (error) {
-          console.error('Auto-save failed:', error);
+        } catch {
+          showToast('Tự động lưu thất bại', 'error');
         }
       }, 1000); // Debounce auto-save by 1 second
 
@@ -789,7 +791,7 @@ export default function BudgetPage() {
           showToast(response.message || 'Không thể thêm danh mục', 'error');
         }
       }
-    } catch (error) {
+    } catch {
       showToast('Lỗi khi lưu danh mục', 'error');
     }
   };
@@ -805,7 +807,7 @@ export default function BudgetPage() {
         } else {
           showToast(response.message || 'Không thể xóa danh mục', 'error');
         }
-      } catch (error) {
+      } catch {
         showToast('Lỗi khi xóa danh mục', 'error');
       }
     }
@@ -826,7 +828,7 @@ export default function BudgetPage() {
       } else {
         showToast(response.message || 'Không thể cập nhật ngân sách', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Lỗi khi cập nhật ngân sách', 'error');
     }
   };

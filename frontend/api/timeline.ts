@@ -27,9 +27,8 @@ export async function saveTimeline(timelineData: SavedTimelineData): Promise<Sav
     }
 
     return await response.json();
-  } catch (error) {
-    console.error('Error saving timeline:', error);
-    throw error;
+  } catch {
+    throw new Error('Network error while saving timeline');
   }
 }
 
@@ -52,9 +51,8 @@ export async function loadTimeline(): Promise<SavedTimelineData | null> {
     }
 
     return await response.json();
-  } catch (error) {
-    console.error('Error loading timeline:', error);
-    throw error;
+  } catch {
+    throw new Error('Network error while loading timeline');
   }
 }
 
@@ -72,9 +70,8 @@ export async function deleteTimeline(): Promise<void> {
     if (!response.ok) {
       throw new Error('Failed to delete timeline');
     }
-  } catch (error) {
-    console.error('Error deleting timeline:', error);
-    throw error;
+  } catch {
+    throw new Error('Network error while deleting timeline');
   }
 }
 
@@ -111,8 +108,7 @@ export const getTimelineStatus = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting timeline status:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching timeline status',
@@ -151,8 +147,7 @@ export const saveUserInput = async (weddingDate: string, location?: string): Pro
       weddingDate: data.weddingDate,
       location: data.location
     };
-  } catch (error) {
-    console.error('Error saving wedding date:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while saving wedding date',

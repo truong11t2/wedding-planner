@@ -55,8 +55,7 @@ export default function AuthCallbackPage() {
           throw new Error('Failed to fetch user profile after authentication');
         }
 
-      } catch (error) {
-        console.error('Auth callback error:', error);
+      } catch {
         setStatus('error');
         setMessage('Authentication processing failed. Please try again.');
         setTimeout(() => {

@@ -33,6 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             //localStorage.removeItem('authToken');
           }
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Error checking auth:', error);
           //localStorage.removeItem('authToken');
         }
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Call backend to clear the cookie
       await logoutUser();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error during logout:', error);
     } finally {
       // Always clear local state, even if API call fails

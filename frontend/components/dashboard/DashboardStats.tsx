@@ -10,7 +10,7 @@ interface DashboardStatsProps {
   daysUntilWedding: number | null;
 }
 
-export default function DashboardStats({ timelineItems, weddingDate, daysUntilWedding }: DashboardStatsProps) {
+export default function DashboardStats({ timelineItems, daysUntilWedding }: DashboardStatsProps) {
   const completedTasks = timelineItems.filter(item => item.completed && !item.isWeddingDay).length;
   const totalTasks = timelineItems.filter(item => !item.isWeddingDay).length;
   const upcomingTasks = timelineItems.filter(item => {

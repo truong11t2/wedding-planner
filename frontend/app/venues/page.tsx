@@ -29,6 +29,7 @@ import {
   MapPinned
 } from 'lucide-react';
 import { venueService, Venue } from '@/lib/venueService';
+import Image from 'next/image';
 
 interface VenueCardProps {
   venue: Venue;
@@ -43,9 +44,11 @@ function VenueCard({ venue, onToggleFavorite, onViewDetails, viewMode }: VenueCa
       <div className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-200 overflow-hidden">
         <div className="flex">
           <div className="relative w-64 h-48 flex-shrink-0">
-            <img
+            <Image
               src={venue.images[0]}
               alt={venue.name}
+              width={256}
+              height={192}
               className="w-full h-full object-cover"
             />
             <button
@@ -115,9 +118,11 @@ function VenueCard({ venue, onToggleFavorite, onViewDetails, viewMode }: VenueCa
   return (
     <div className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-200 overflow-hidden">
       <div className="relative">
-        <img
+        <Image
           src={venue.images[0]}
           alt={venue.name}
+          width={256}
+          height={192}
           className="w-full h-48 object-cover"
         />
         <button
@@ -250,9 +255,11 @@ function VenueDetailsModal({ venue, onClose, onToggleFavorite }: VenueDetailsMod
           {/* Image Gallery */}
           <div className="relative">
             <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-              <img
+              <Image
                 src={venue.images[currentImageIndex]}
                 alt={`${venue.name} - Image ${currentImageIndex + 1}`}
+                width={640}
+                height={360}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -502,8 +509,7 @@ useEffect(() => {
       const venuesData = venueService.getAllVenues();
       setVenues(venuesData);
       setFilteredVenues(venuesData);
-    } catch (error) {
-      console.error('Error loading venues:', error);
+    } catch {
       showToast('Failed to load venues', 'error');
     } finally {
       setLoading(false);
@@ -815,8 +821,4 @@ const favoriteCount = venues.filter(v => v.isFavorite).length;
       />
     </>
   );
-}
-
-function setLoading(arg0: boolean) {
-  throw new Error('Function not implemented.');
 }

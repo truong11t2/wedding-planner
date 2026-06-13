@@ -153,6 +153,7 @@ export const validateTimelineConfig = (): boolean => {
       return requiredFields.every(field => field in item);
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Timeline configuration validation failed:', error);
     return false;
   }

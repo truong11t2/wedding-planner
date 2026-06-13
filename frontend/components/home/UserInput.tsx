@@ -24,7 +24,7 @@ export default function UserInput({ weddingDate, setWeddingDate, location, setLo
   }, []);
 
   const handleGeneratePlan = () => {
-    console.log('Generating plan for date:', weddingDate, 'location:', location);
+    // console.log('Generating plan for date:', weddingDate, 'location:', location);
     if (weddingDate && location) {
       try {
         // Save wedding date and location to backend if user is logged in

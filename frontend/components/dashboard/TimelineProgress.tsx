@@ -3,7 +3,7 @@
 import React from 'react';
 import { TimelineItem } from '@/lib/timelineGenerator';
 import { CheckCircle, Clock, Calendar } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, TooltipProps } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, TooltipProps } from 'recharts';
 
 interface TimelineProgressProps {
   timelineItems: TimelineItem[];

@@ -78,8 +78,7 @@ export const getPhotos = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting photos:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching photos',
@@ -117,8 +116,7 @@ export const savePhotos = async (photos: Photo[]): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error saving photos:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while saving photos',
@@ -177,8 +175,7 @@ export const uploadPhotos = async (
       errors: data.errors,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error uploading photos:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while uploading photos',
@@ -216,8 +213,7 @@ export const updatePhoto = async (photoId: string, updates: Partial<Photo>): Pro
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error updating photo:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while updating photo',
@@ -254,8 +250,7 @@ export const deletePhoto = async (photoId: string): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error deleting photo:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while deleting photo',
@@ -292,8 +287,7 @@ export const togglePhotoFavorite = async (photoId: string): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error toggling favorite:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while toggling favorite',
@@ -330,8 +324,7 @@ export const getPhotosByCategory = async (category: string): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting photos by category:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching photos by category',
@@ -368,8 +361,7 @@ export const searchPhotos = async (query: string): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error searching photos:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while searching photos',
@@ -406,8 +398,7 @@ export const getPhotoStats = async (): Promise<{
       data: data.data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting photo statistics:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching photo statistics',

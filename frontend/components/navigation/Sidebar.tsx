@@ -15,6 +15,7 @@ import {
   Camera,
   PiggyBank,
 } from 'lucide-react';
+import Image from 'next/image';
 
 interface NavItem {
   name: string;
@@ -55,10 +56,12 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
           <div className="flex items-center space-x-3">
             <div className="shrink-0">
               {user.avatar ? (
-                <img
+                <Image
                   className="h-10 w-10 rounded-full object-cover"
                   src={user.avatar}
                   alt={`${user.lastName}'s avatar`}
+                  width={40}
+                  height={40}
                 />
               ) : (
                 <div className="h-10 w-10 rounded-full bg-linear-to-r from-pink-400 to-purple-500 flex items-center justify-center">

@@ -19,12 +19,6 @@ interface AuthResponse {
   user?: User;
 }
 
-interface SocialAuthResponse {
-  success: boolean;
-  message?: string;
-  token?: string;
-}
-
 export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
   try {
     const response = await fetch(`${API_BASE_URL}${ENDPOINTS.AUTH.LOGIN}`, {
@@ -51,8 +45,7 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
       user: data.user,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Login error:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error. Please check your connection.',
@@ -66,8 +59,7 @@ const retryRequest = async (requestFn: () => Promise<Response>, maxRetries = 3):
   for (let i = 0; i < maxRetries; i++) {
     try {
       return await requestFn();
-    } catch (error) {
-      lastError = error;
+    } catch {
       if (i < maxRetries - 1) {
         // Wait before retrying (exponential backoff)
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
@@ -104,8 +96,7 @@ export const loginUserWithRetry = async (email: string, password: string): Promi
       user: data.user,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Login error after retries:', error);
+  } catch {
     return {
       success: false,
       message: 'Unable to connect to server. Please try again.',
@@ -141,8 +132,7 @@ export const registerUser = async (
     const data = await response.json();
     
     return data;
-  } catch (error) {
-    console.error('Registration error:', error);
+  } catch {
     return {
       success: false,
       message: 'Registration failed. Please try again.',
@@ -174,8 +164,7 @@ export const logoutUser = async (): Promise<{ success: boolean; message?: string
       success: true,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Logout error:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error during logout',
@@ -209,8 +198,7 @@ export const getUserProfile = async (): Promise<AuthResponse> => {
       user: data.user || data,
       message: data.message,
     };
-  } catch (error) {
-    console.error('Error getting user profile:', error);
+  } catch {
     return {
       success: false,
       message: 'Network error while fetching profile',

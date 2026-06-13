@@ -56,7 +56,6 @@ export async function getVendors(): Promise<Vendor[]> {
         services: data.services,
         pricing: data.pricing,
         contact: data.contact,
-        // Add other properties as needed
         ...data,
       }
     })
@@ -76,6 +75,8 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       ...data,
     } as BlogPost
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Error fetching blog post with slug "${slug}":`, error)
     return null
   }
 }
@@ -96,10 +97,11 @@ export async function getVendor(slug: string) {
       price: data.price,
       rating: data.rating,
       location: data.location,
-      // Add other properties as needed
       ...data,
     };
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Error fetching vendor with slug "${slug}":`, error);
     return null;
   }
 }

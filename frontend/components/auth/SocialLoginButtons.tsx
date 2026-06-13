@@ -3,11 +3,7 @@
 import React, { useState } from 'react';
 import { socialLogin, type Provider } from '@/api/social';
 
-interface SocialLoginButtonsProps {
-  onSuccess: () => void;
-}
-
-export default function SocialLoginButtons({ onSuccess }: SocialLoginButtonsProps) {
+export default function SocialLoginButtons() {
   const [loading, setLoading] = useState<Provider | null>(null);
 
   const handleSocialLogin = async (provider: Provider) => {
@@ -21,7 +17,7 @@ export default function SocialLoginButtons({ onSuccess }: SocialLoginButtonsProp
       } else {
         alert(result.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
       }
-    } catch (error) {
+    } catch {
       alert('Đăng nhập thất bại. Vui lòng thử lại.');
     } finally {
       setLoading(null);

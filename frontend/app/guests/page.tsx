@@ -3,18 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Toast from '@/components/common/Toast';
-import { Users, Plus, Edit2, Trash2, Mail, Phone, MapPin, Gift, Check, X } from 'lucide-react';
+import { Users, Plus, Edit2, Trash2, Mail, Phone, MapPin, Gift, X } from 'lucide-react';
 import { 
   getGuestList, 
   saveGuestList, 
   addGuest as apiAddGuest,
   updateGuest as apiUpdateGuest,
   deleteGuest as apiDeleteGuest,
-  updateRSVP as apiUpdateRSVP,
-  getGuestStats,
-  Guest,
-  GuestStats
-} from '@/api/guest';
+  Guest} from '@/api/guest';
 
 interface AddGuestModalProps {
   isOpen: boolean;
@@ -282,23 +278,7 @@ interface GuestCardProps {
 }
 
 function GuestCard({ guest, onEdit, onDelete }: GuestCardProps) {
-  const getRSVPStatusColor = (status: string) => {
-    switch (status) {
-      case 'attending': return 'bg-green-100 text-green-800';
-      case 'declined': return 'bg-red-100 text-red-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'no-response': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
 
-  const getRSVPStatusIcon = (status: string) => {
-    switch (status) {
-      case 'attending': return <Check className="h-4 w-4" />;
-      case 'declined': return <X className="h-4 w-4" />;
-      default: return null;
-    }
-  };
 
   const getCategoryLabel = (category: string) => {
     switch (category) {
@@ -402,7 +382,7 @@ function GuestCard({ guest, onEdit, onDelete }: GuestCardProps) {
 }
 
 export default function GuestsPage() {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -444,8 +424,7 @@ export default function GuestsPage() {
             // Initialize with empty list if no data exists
             setGuests([]);
           }
-        } catch (error) {
-          console.error('Error loading guest list:', error);
+        } catch {
           showToast('Lỗi khi tải danh sách khách mời', 'error');
         } finally {
           setLoading(false);
@@ -462,8 +441,8 @@ export default function GuestsPage() {
       const timeoutId = setTimeout(async () => {
         try {
           await saveGuestList(guests);
-        } catch (error) {
-          console.error('Tự động lưu thất bại:', error);
+        } catch {
+          // Silent failure for auto-save
         }
       }, 1000); // Debounce auto-save by 1 second
 
@@ -528,7 +507,7 @@ export default function GuestsPage() {
           showToast(response.message || 'Không thể thêm khách mời', 'error');
         }
       }
-    } catch (error) {
+    } catch {
       showToast('Lỗi khi lưu khách mời', 'error');
     }
   };
@@ -544,7 +523,7 @@ export default function GuestsPage() {
         } else {
           showToast(response.message || 'Không thể xóa khách mời', 'error');
         }
-      } catch (error) {
+      } catch {
         showToast('Lỗi khi xóa khách mời', 'error');
       }
     }
