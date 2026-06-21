@@ -48,7 +48,7 @@ export default function VendorCategory({ title, vendors }: VendorCategoryProps) 
                     <span className="ml-1 font-medium">{vendor.rating}</span>
                   </div>
                   <span className="ml-auto bg-gradient-to-r from-pink-600 to-purple-600 text-white px-4 py-2 rounded-lg font-medium group-hover:from-pink-700 group-hover:to-purple-700 transition-all">
-                    View Details
+                    Chi tiết
                   </span>
                 </div>
               </div>

@@ -106,7 +106,7 @@ function VenueCard({ venue, onToggleFavorite, onViewDetails, viewMode }: VenueCa
                 onClick={() => onViewDetails(venue)}
                 className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
               >
-                View Details
+                Chi tiết
               </button>
             </div>
           </div>
@@ -182,7 +182,7 @@ function VenueCard({ venue, onToggleFavorite, onViewDetails, viewMode }: VenueCa
           onClick={() => onViewDetails(venue)}
           className="w-full px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
         >
-          View Details
+          Chi tiết
         </button>
       </div>
     </div>
