@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import styles from '@/styles/article.module.css';
 import { Star } from 'lucide-react';
 import { MDXComponents } from '@/components/mdx/MDXComponents';
+import remarkGfm from 'remark-gfm';
 
 interface PageProps {
   params: Promise<{
@@ -51,9 +52,16 @@ export default async function VendorPage({ params }: PageProps) {
       </div>
       
       <div className={`${styles.content} prose prose-lg`}>
-        <MDXRemote 
-          source={vendor.content} 
+        <MDXRemote
+          source={vendor.content}
           components={MDXComponents}
+          options={{
+            parseFrontmatter: true,
+            mdxOptions: {
+              remarkPlugins: [remarkGfm],
+              rehypePlugins: [],
+            },
+          }}
         />
       </div>
     </article>

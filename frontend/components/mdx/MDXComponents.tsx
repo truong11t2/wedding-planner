@@ -1,6 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ComponentPropsWithoutRef } from 'react';
+import Tabs from './Tabs';
+import Accordion, { AccordionItem } from './Accordion';
+import Iframe from './Iframe';
+import Slideshow from './Slideshow';
 
 export const MDXComponents = {
   h1: (props: ComponentPropsWithoutRef<'h1'>) => <h1 className="text-4xl font-bold text-gray-900 mb-6" {...props} />,
@@ -23,12 +27,13 @@ export const MDXComponents = {
     />
   ),
   img: (props: ComponentPropsWithoutRef<'img'>) => (
-    <span className="block relative w-full h-[400px] my-8 rounded-lg overflow-hidden">
+    <span className="block w-full my-8 rounded-lg overflow-hidden">
       <Image
         src={props.src as string || ''}
         alt={props.alt || ''}
-        fill
-        className="object-cover"
+        width={1200}
+        height={800}
+        className="w-full h-auto object-cover"
       />
     </span>
   ),
@@ -46,4 +51,9 @@ export const MDXComponents = {
   td: (props: ComponentPropsWithoutRef<'td'>) => (
     <td className="px-4 py-3 text-sm text-gray-700 border-r border-gray-300 last:border-r-0" {...props} />
   ),
+  Iframe,
+  Slideshow,
+  Tabs,
+  Accordion, AccordionItem,
+  Image,
 };
