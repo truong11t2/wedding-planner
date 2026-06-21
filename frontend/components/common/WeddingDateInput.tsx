@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import { Calendar, Heart, Sparkles, TriangleAlert } from 'lucide-react';
 
 interface WeddingDateInputProps {
-  onSubmit: (date: string) => void;
+  onSubmit: (date: string, location: string) => void;
   error?: string;
   initialDate?: string;
+  initialLocation?: string;
   title?: string;
   description?: string;
   className?: string;
@@ -16,16 +17,18 @@ export default function WeddingDateInput({
   onSubmit,
   error,
   initialDate = '',
+  initialLocation = '',
   title = 'Bắt đầu hành trình cưới của bạn',
   description = 'Nhập ngày cưới của bạn và chúng tôi sẽ tạo một lịch trình cá nhân hóa chỉ dành cho bạn.',
   className = '',
 }: WeddingDateInputProps) {
   const [weddingDate, setWeddingDate] = useState(initialDate);
+  const [location, setLocation] = useState(initialLocation);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (weddingDate) {
-      onSubmit(weddingDate);
+    if (weddingDate && location) {
+      onSubmit(weddingDate, location);
     }
   };
 
@@ -68,6 +71,36 @@ export default function WeddingDateInput({
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="relative">
+                <label
+                  htmlFor="location"
+                  className="block text-sm font-medium text-gray-700 mb-3"
+                >
+                  Địa Điểm*
+                </label>
+                
+                <div className="relative">
+                  <select
+                    id="location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    required
+                    className="
+                      w-full px-6 py-4 
+                      border-2 border-gray-200 rounded-xl
+                      focus:border-pink-400 focus:ring-4 focus:ring-pink-100
+                      outline-none transition-all duration-300
+                      text-gray-900 text-lg
+                      hover:border-pink-300
+                    "
+                  >
+                    <option value="">Chọn địa điểm</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="relative">
                 <label
                   htmlFor="wedding-date"
