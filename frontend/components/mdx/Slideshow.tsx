@@ -13,26 +13,12 @@ type Props = {
 
 export default function Slideshow({
   images,
-  height = 500,
-  width,
   autoPlay = true,
   interval = 4000,
   className = "",
 }: Props) {
   const [index, setIndex] = useState(0);
   const timerRef = useRef<number | null>(null);
-
-  const computedHeight = height
-    ? typeof height === "number"
-      ? `${height}px`
-      : height
-    : undefined;
-  const computedWidth = width
-    ? typeof width === "number"
-      ? `${width}px`
-      : width
-    : undefined;
-  const wrapperStyle = computedHeight || computedWidth ? { height: computedHeight, width: computedWidth } : undefined;
 
   function restartTimer() {
     if (timerRef.current) {
@@ -67,8 +53,8 @@ export default function Slideshow({
 
   return (
     <div className={`relative ${className}`}>
-        <div className="rounded-md overflow-hidden bg-gray-100 mx-auto" style={wrapperStyle}>
-          <img src={images[index]} alt={`slide-${index}`} className="w-full h-full object-cover object-center" />
+        <div className="rounded-md overflow-hidden mx-auto flex justify-center items-center max-h-[720px]">
+          <img src={images[index]} alt={`slide-${index}`} className="h-full max-h-[720px] w-auto object-center" />
         </div>
 
       {images.length > 1 && (
