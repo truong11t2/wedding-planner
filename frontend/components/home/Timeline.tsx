@@ -152,7 +152,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
     return (
       <div className="p-6">
         <WeddingDateInput
-          onSubmit={(date) => setWeddingDate(date)}
+          onSubmit={(date, location) => setWeddingDate(date, location)}
           initialDate={tempWeddingDate}
           title="Tạo Lịch Trình Đám Cưới"
           description="Nhập ngày vui của bạn để chúng tôi lên kế hoạch cá nhân hóa cho riêng bạn."
