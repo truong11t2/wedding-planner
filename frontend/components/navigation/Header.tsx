@@ -31,7 +31,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
     router.push('/');
   };
   return (
-    <header className="bg-gradient-to-r from-pink-50 via-purple-50 to-pink-50 shadow-md border-b-2 border-pink-200 sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-pink-50 via-purple-50 to-pink-50 shadow-md border-b-2 border-pink-200 fixed top-0 z-50 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
                     {/* Sidebar toggle button - only show when user is authenticated and on mobile */}
