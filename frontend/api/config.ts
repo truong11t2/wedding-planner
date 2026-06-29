@@ -41,7 +41,8 @@ export const ENDPOINTS = {
   TIMELINE: {
     BASE: '/timeline',
     STATUS: '/timeline/status',
-    WEDDING_DATE: '/timeline/wedding-date'
+    WEDDING_DATE: '/timeline/wedding-date',
+    SELECT_VENDOR: '/timeline/select-vendor'
   },
   CONTACT: '/contact',
   HEALTH: '/health',

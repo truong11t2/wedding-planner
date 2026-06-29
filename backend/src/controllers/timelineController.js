@@ -68,10 +68,27 @@ const saveTimeline = async (req, res) => {
       });
     }
 
-    // Prepare timeline data
+    // Prepare minimal saved timeline state
+    const savedTimelineItems = timelineItems.map((item) => {
+      const savedItem = {
+        id: item.id,
+        completed: Boolean(item.completed),
+      };
+
+      if (item.selectedOption) {
+        savedItem.selectedOption = item.selectedOption;
+      }
+
+      if (item.selectedOptions && Object.keys(item.selectedOptions).length > 0) {
+        savedItem.selectedOptions = item.selectedOptions;
+      }
+
+      return savedItem;
+    });
+
     const timelineData = {
       weddingDate: weddingDate,
-      timelineItems: timelineItems,
+      timelineItems: savedTimelineItems,
       savedAt: new Date().toISOString(),
     };
 
@@ -141,6 +158,47 @@ const loadTimeline = async (req, res) => {
       message: 'Internal server error while loading timeline',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
+  }
+};
+
+// Add a selected vendor to an existing timeline item by setting selectedOption
+const addSelectedVendor = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { vendorId, timelineId } = req.body;
+
+    if (!vendorId || !timelineId) {
+      return res.status(400).json({ success: false, message: 'Vendor ID and timeline ID are required' });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const timelineData = user.timelineData || {};
+    const items = Array.isArray(timelineData.timelineItems) ? timelineData.timelineItems : [];
+
+    const itemIndex = items.findIndex((item) => item.id === timelineId);
+    if (itemIndex === -1) {
+      return res.status(404).json({ success: false, message: 'Timeline item not found' });
+    }
+
+    items[itemIndex] = {
+      ...items[itemIndex],
+      selectedOption: vendorId,
+    };
+
+    timelineData.timelineItems = items;
+
+    user.changed('timelineData', true); // Mark timelineData as changed to ensure Sequelize updates it
+    
+    await user.update({ timelineData: timelineData });
+
+    return res.status(200).json({ success: true, message: 'Đã thêm nhà cung cấp' });
+  } catch (error) {
+    console.error('Lỗi khi thêm nhà cung cấp:', error);
+    res.status(500).json({ success: false, message: 'Có lỗi xảy ra khi thêm nhà cung cấp' });
   }
 };
 
@@ -225,6 +283,7 @@ module.exports = {
   saveWeddingDate,
   saveTimeline,
   loadTimeline,
+  addSelectedVendor,
   deleteTimeline,
   getTimelineStatus,
 };

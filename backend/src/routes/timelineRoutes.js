@@ -4,6 +4,7 @@ const {
   saveWeddingDate,
   saveTimeline,
   loadTimeline,
+  addSelectedVendor,
   deleteTimeline,
   getTimelineStatus,
 } = require('../controllers/timelineController');
@@ -14,6 +15,9 @@ router.post('/wedding-date', protect, saveWeddingDate);
 
 // POST /api/timeline/save - Save timeline to user profile
 router.post('/', protect, saveTimeline);
+
+// POST /api/timeline/select-vendor - Add a vendor to user's timeline
+router.post('/select-vendor', protect, addSelectedVendor);
 
 // GET /api/timeline/get - Get timeline from user profile
 router.get('/', protect, loadTimeline);

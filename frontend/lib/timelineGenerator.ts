@@ -25,6 +25,34 @@ export interface TimelineItem {
   selectedOption?: string; // For single select options
 }
 
+export interface SavedTimelineItem {
+  id: string;
+  completed: boolean;
+  selectedOption?: string;
+  selectedOptions?: { [key: string]: string };
+}
+
+export const mergeSavedTimelineItems = (
+  items: TimelineItem[],
+  savedItems: SavedTimelineItem[]
+): TimelineItem[] => {
+  const savedMap = new Map(savedItems.map(item => [item.id, item]));
+
+  return items.map(item => {
+    const saved = savedMap.get(item.id);
+    if (!saved) {
+      return item;
+    }
+
+    return {
+      ...item,
+      completed: saved.completed,
+      selectedOption: saved.selectedOption,
+      selectedOptions: saved.selectedOptions,
+    };
+  });
+};
+
 interface TimelineConfigItem {
   id: string;
   title: string;

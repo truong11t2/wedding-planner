@@ -53,6 +53,7 @@ export async function getVendors(): Promise<Vendor[]> {
         rating: data.rating,
         location: data.location,
         id: data.id,
+        timelineId: data.timelineId,
         services: data.services,
         pricing: data.pricing,
         contact: data.contact,
@@ -90,6 +91,8 @@ export async function getVendor(slug: string) {
     return {
       slug,
       content,
+      id: data.id,
+      timelineId: data.timelineId,
       name: data.name,
       category: data.category,
       image: data.image,

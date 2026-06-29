@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { TimelineItem, generateTimeline } from '@/lib/timelineGenerator';
+import { TimelineItem, SavedTimelineItem, generateTimeline, mergeSavedTimelineItems } from '@/lib/timelineGenerator';
 import { saveTimeline, loadTimeline, SavedTimelineData } from '@/api/timeline';
 import { useAuth } from './AuthContext';
 import Toast from '@/components/common/Toast';
@@ -104,10 +104,17 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
 
     try {
+      const timelineItemsToSave: SavedTimelineItem[] = timelineItems.map(item => ({
+        id: item.id,
+        completed: item.completed,
+        selectedOption: item.selectedOption,
+        selectedOptions: item.selectedOptions,
+      }));
+
       const timelineData: SavedTimelineData = {
         userId: user.id,
         weddingDate,
-        timelineItems,
+        timelineItems: timelineItemsToSave,
       };
 
       await saveTimeline(timelineData);
@@ -136,10 +143,9 @@ export function TimelineProvider({ children }: { children: React.ReactNode }) {
       
       if (savedTimeline) {
         setWeddingDateState(savedTimeline.weddingDate);
-        setTimelineItems(savedTimeline.timelineItems.map(item => ({
-          ...item,
-          dueDate: new Date(item.dueDate), // Convert date strings back to Date objects
-        })));
+        const baseTimeline = generateTimeline(savedTimeline.weddingDate, location);
+        const hydratedTimeline = mergeSavedTimelineItems(baseTimeline, savedTimeline.timelineItems || []);
+        setTimelineItems(hydratedTimeline);
         setLastSaved(savedTimeline.updatedAt ? new Date(savedTimeline.updatedAt) : null);
       }
     } catch (err) {

@@ -1,11 +1,11 @@
 import { API_BASE_URL, ENDPOINTS } from './config';
 
-import { TimelineItem } from '@/lib/timelineGenerator';
+import { SavedTimelineItem } from '@/lib/timelineGenerator';
 
 export interface SavedTimelineData {
   userId: string;
   weddingDate: string;
-  timelineItems: TimelineItem[];
+  timelineItems: SavedTimelineItem[];
   savedAt?: string;
   updatedAt?: string;
 }

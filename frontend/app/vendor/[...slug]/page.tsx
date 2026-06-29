@@ -6,6 +6,7 @@ import styles from '@/styles/article.module.css';
 import { Star } from 'lucide-react';
 import { MDXComponents } from '@/components/mdx/MDXComponents';
 import remarkGfm from 'remark-gfm';
+import SelectVendorButton from '@/components/vendor/SelectVendorButton';
 
 interface PageProps {
   params: Promise<{
@@ -14,7 +15,6 @@ interface PageProps {
 }
 
 export default async function VendorPage({ params }: PageProps) {
-  // Await the params before using them
   const resolvedParams = await params;
   const slug = resolvedParams.slug.join('/');
   const vendor = await getVendor(slug);
@@ -25,12 +25,16 @@ export default async function VendorPage({ params }: PageProps) {
 
   return (
     <article className={styles.article}>
+      <SelectVendorButton
+        vendorId={vendor.id}
+        timelineId={vendor.timelineId}
+      />
       <div className={styles.header}>
         <div className="flex justify-between items-center mb-4">
           <h1 className={styles.title}>{vendor.name}</h1>
           <span className="text-2xl font-bold text-gray-700">{vendor.price}</span>
         </div>
-        
+
         <div className="flex items-center gap-4 mb-6">
           <div className="flex items-center">
             <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />
@@ -50,7 +54,7 @@ export default async function VendorPage({ params }: PageProps) {
           />
         </div>
       </div>
-      
+
       <div className={`${styles.content} prose prose-lg`}>
         <MDXRemote
           source={vendor.content}
