@@ -211,7 +211,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                 {item.completed ? (
                   <div className='flex items-start space-x-4'>
                     <CheckCircle className="h-6 w-6 text-green-500" />
-                    <h3 className={`text-lg font-semibold line-through text-gray-500`}>
+                    <h3 className={`text-lg font-semibold`}>
                       {item.title}
                     </h3>
                   </div>

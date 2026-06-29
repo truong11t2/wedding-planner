@@ -30,12 +30,12 @@ interface SidebarProps {
 
 const navigationItems: NavItem[] = [
   { name: 'Bảng Tổng Hợp', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Dòng Thời Gian', href: '/timeline', icon: Clock },
-  { name: 'Nhiệm Vụ', href: '/checklist', icon: CircleCheckBig },
-  { name: 'Khách Mời', href: '/guests', icon: Users },
-  { name: 'Địa Điểm', href: '/venues', icon: MapPinned },
-  { name: 'Hình Cưới', href: '/photos', icon: Camera },
   { name: 'Ngân Sách', href: '/budget', icon: PiggyBank },
+  { name: 'Dòng Thời Gian', href: '/timeline', icon: Clock },
+  { name: 'Việc cần làm', href: '/checklist', icon: CircleCheckBig },
+  { name: 'Khách Mời', href: '/guests', icon: Users },
+  // { name: 'Địa Điểm', href: '/venues', icon: MapPinned },
+  { name: 'Hình Cưới', href: '/photos', icon: Camera },
 ];
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {

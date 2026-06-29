@@ -36,7 +36,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
           </h3>
           <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
           <span className="flex items-center gap-2 text-pink-600 font-semibold group-hover:text-pink-700">
-            Read More 
+            Xem thêm 
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </span>
         </div>
