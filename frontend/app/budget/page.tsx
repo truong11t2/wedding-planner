@@ -301,7 +301,7 @@ function BudgetModal({ isOpen, onClose, onSave, editCategory }: BudgetModalProps
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
-                placeholder="ví dụ: Địa điểm, Ăn uống, Chụp hình"
+                placeholder="ví dụ: Nhà hàng, Váy cưới, Chụp hình"
               />
             </div>
 
@@ -470,7 +470,7 @@ function BudgetCategoryCard({ category, onEdit, onDelete }: BudgetCategoryCardPr
 
       <div className="space-y-3">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Progress</span>
+          <span className="text-gray-600">Sử dụng</span>
           <span className={`font-medium ${isOverBudget ? 'text-red-600' : 'text-gray-900'}`}>
             {category.spent.toLocaleString('vi-VN')}₫ / {category.budgeted.toLocaleString('vi-VN')}₫
           </span>
@@ -646,7 +646,7 @@ export default function BudgetPage() {
               const sampleCategories: BudgetCategory[] = [
                 {
                   id: '1',
-                  name: 'Venue',
+                  name: 'Địa điểm',
                   budgeted: 8000,
                   spent: 7500,
                   color: 'bg-blue-500',
@@ -655,7 +655,7 @@ export default function BudgetPage() {
                 },
                 {
                   id: '2',
-                  name: 'Catering',
+                  name: 'Nhà hàng',
                   budgeted: 6000,
                   spent: 5800,
                   color: 'bg-green-500',
@@ -664,7 +664,7 @@ export default function BudgetPage() {
                 },
                 {
                   id: '3',
-                  name: 'Photography',
+                  name: 'Chụp hình',
                   budgeted: 3000,
                   spent: 3200,
                   color: 'bg-purple-500',
@@ -969,7 +969,7 @@ export default function BudgetPage() {
         {/* Budget Categories */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Danh Mục Ngân Sách</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">Danh Mục</h2>
             <button
               onClick={handleAddCategory}
               className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
