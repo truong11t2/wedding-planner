@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTimeline } from '@/context/TimelineContext';
-import { CheckCircle, Clock, Database, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle, Clock, Database, Check, X, ChevronDown, ChevronUp, Phone, MapPin, DollarSign } from 'lucide-react';
+import Link from 'next/link';
 import WeddingDateInput from '@/components/common/WeddingDateInput';
 import Image from 'next/image';
 
@@ -333,7 +334,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                                   </div>
                                 )}
                                 
-                                {option.image && (
+{/*                                 {option.image && (
                                   <Image 
                                     src={option.image} 
                                     alt={option.label}
@@ -341,16 +342,42 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
                                     width={128}
                                     height={128}
                                   />
-                                )}
-                                <h5 className="font-medium text-gray-900">{option.label}</h5>
-                                {option.description && (
+                                )} */}
+                                <h5 className="text-lg font-bold text-gray-900">{option.label}</h5>
+                                {/* {option.description && (
                                   <p className="text-sm text-gray-600 mt-1">{option.description}</p>
-                                )}
+                                )} */}
                                 {option.price && (
-                                  <p className="text-sm font-medium text-pink-600 mt-1">{option.price}</p>
+                                  <div className="flex items-center gap-2 mt-2 text-sm text-pink-600">
+                                  <DollarSign className="h-4 w-4 text-gray-500" />
+                                  <p className="text-sm">{option.price}</p>
+                                </div>
                                 )}
                                 {option.location && (
-                                  <p className="text-xs text-gray-500 mt-1">{option.location}</p>
+                                  <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                                    <MapPin className="h-4 w-4 text-gray-500" />
+                                    <span className="text-sm">{option.location}</span>
+                                  </div>
+                                )}
+                                {option.phone && (
+                                  <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                                    <Phone className="h-4 w-4 text-gray-500" />
+                                    <span className="text-sm">{option.phone}</span>
+                                  </div>
+                                )}
+                                {/* View more button for vendor posts */}
+                                {option.link && (
+                                  <div className="mt-3">
+                                    <Link
+                                      href={`/vendor/${option.link}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(event) => event.stopPropagation()}
+                                      className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-pink-600 border border-pink-200 rounded-lg hover:bg-pink-50 transition-colors"
+                                    >
+                                      Xem thêm
+                                    </Link>
+                                  </div>
                                 )}
                                 {option.specialties && (
                                   <div className="flex flex-wrap gap-1 mt-2">
