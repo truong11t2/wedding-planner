@@ -108,7 +108,7 @@ export default function SelectVendorButton({ vendorId, timelineId }: Props) {
         ) : (
           <span className="flex items-center gap-2">
             <Database className="h-5 w-5" />
-            <span className="hidden sm:inline">Chọn nhà cung cấp này!</span>
+            <span className="hidden sm:inline">Chọn</span>
           </span>
         )}
       </button>

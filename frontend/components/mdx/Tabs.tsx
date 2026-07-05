@@ -15,13 +15,19 @@ type TabsProps = {
   children: React.ReactNode;
 };
 
+interface TabsComponent extends React.FC<TabsProps> {
+  Tab: typeof Tab;
+}
+
 let instanceCounter = 0;
 
-export default function Tabs({ defaultIndex = 0, id, children }: TabsProps) {
-  const tabs = Children.toArray(children).filter(isValidElement).map((child: any) => ({
-    title: child.props.title,
-    content: child.props.children,
-  }));
+const Tabs: TabsComponent = ({ defaultIndex = 0, id, children }: TabsProps) => {
+  const tabs = Children.toArray(children)
+    .filter(isValidElement)
+    .map((child: React.ReactElement<unknown>) => ({
+      title: (child.props as { title: string }).title,
+      content: (child.props as { children?: React.ReactNode }).children,
+    }));
 
   if (!tabs.length) return null;
 
@@ -73,7 +79,7 @@ export default function Tabs({ defaultIndex = 0, id, children }: TabsProps) {
         );
       })}
 
-      <div className={`mt-4 ${instanceId}-panels`} role="tablist" aria-label="Tabs">
+      <div className={`mt-0 ${instanceId}-panels`} role="tablist" aria-label="Tabs">
         {tabs.map((t, i) => {
           const panelId = `${instanceId}-panel-${i}`;
           const tabId = `${instanceId}-tab-${i}`;
@@ -92,8 +98,10 @@ export default function Tabs({ defaultIndex = 0, id, children }: TabsProps) {
       </div>
     </div>
   );
-}
+};
 
-// attach Tab as subcomponent for MDX usage: <Tabs><Tabs.Tab title="...">...</Tabs.Tab></Tabs>
-(Tabs as any).Tab = Tab;
+// Attach Tab as subcomponent for MDX usage: <Tabs><Tabs.Tab title="...">...</Tabs.Tab></Tabs>
+Tabs.Tab = Tab;
+
+export default Tabs;
 export { Tab };

@@ -10,6 +10,8 @@ export interface TimelineItem {
   category: string;
   isWeddingDay?: boolean;
   options?: {
+    phone?: string;
+    link?: string;
     image?: string;
     location?: string;
     specialties?: string[];

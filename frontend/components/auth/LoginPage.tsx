@@ -194,7 +194,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <SocialLoginButtons onSuccess={() => router.push('/')} />
+          <SocialLoginButtons />
         </div>
       </div>
     </main>

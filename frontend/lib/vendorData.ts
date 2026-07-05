@@ -1,6 +1,9 @@
 import photographersData from '@/data/vendors/photographers.json';
 import venuesData from '@/data/vendors/venues.json';
-import caterersData from '@/data/vendors/caterers.json';
+import dressesData from '@/data/vendors/dresses.json';
+import altarCeremoniesData from '@/data/vendors/altarCeremonies.json';
+import invitationsData from '@/data/vendors/invitations.json';
+// import caterersData from '@/data/vendors/caterers.json';
 import djsData from '@/data/vendors/djs.json';
 
 export interface VendorOption {
@@ -21,7 +24,10 @@ export interface VendorOption {
 const vendorData: { [key: string]: VendorOption[] } = {
   photographer: photographersData,
   venue: venuesData,
-  caterer: caterersData,
+  dress: dressesData,
+  altarCeremony: altarCeremoniesData,
+  invitation: invitationsData,
+  // caterer: caterersData,
   dj: djsData
 };
 
@@ -30,7 +36,9 @@ export const getVendorOptions = (category: string, location?: string): VendorOpt
   
   // Filter by location if provided
   if (location) {
-    return vendors.filter(vendor => vendor.location === location);
+    return vendors.filter(vendor =>
+      vendor.location?.toLowerCase().includes(location.toLowerCase())
+    );
   }
   
   return vendors;

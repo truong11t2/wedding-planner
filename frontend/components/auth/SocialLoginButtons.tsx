@@ -45,7 +45,7 @@ export default function SocialLoginButtons() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3">
+      <div className="mt-6 grid grid-cols-1 gap-0">
         <button
           onClick={() => handleSocialLogin('Gmail')}
           disabled={isButtonDisabled('Gmail')}
@@ -80,7 +80,7 @@ export default function SocialLoginButtons() {
           Outlook (Soon)
         </button> */}
 
-        <button
+        {/* <button
           onClick={() => handleSocialLogin('Facebook')}
           disabled={isButtonDisabled('Facebook')}
           className={`flex items-center justify-center px-4 py-3 border-2 text-gray-600 border-gray-300 rounded-lg transition-all font-medium ${
@@ -97,7 +97,7 @@ export default function SocialLoginButtons() {
             </svg>
           )}
           {getButtonText('Facebook')}
-        </button>
+        </button> */}
 
         {/* <button
           onClick={() => handleSocialLogin('Twitter')}
