@@ -386,9 +386,9 @@ class ImageProcessor {
           'image/jpeg',
           {
             userId: userId,
-            category: category,
+            category: encodeURIComponent(category),
             sizeName: sizeName,
-            originalFilename: originalFilename,
+            originalFilename: encodeURIComponent(originalFilename),
             fileId: fileId,
             width: config.width.toString(),
             height: config.height.toString(),
