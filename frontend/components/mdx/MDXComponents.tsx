@@ -5,6 +5,7 @@ import Tabs from './Tabs';
 import Accordion, { AccordionItem } from './Accordion';
 import Iframe from './Iframe';
 import Slideshow from './Slideshow';
+import PhotoGallery from './PhotoGallery';
 
 export const MDXComponents = {
   h1: (props: ComponentPropsWithoutRef<'h1'>) => <h1 className="text-4xl font-bold text-gray-900 mb-6" {...props} />,
@@ -56,4 +57,5 @@ export const MDXComponents = {
   Tabs,
   Accordion, AccordionItem,
   Image,
+  PhotoGallery,
 };
