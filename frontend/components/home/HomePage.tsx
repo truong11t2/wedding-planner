@@ -1,14 +1,13 @@
 'use client';
 
 import React from 'react';
-import StickyNav from './StickyNav';
 import HeroSection from './HeroSection';
 import StatsSection from './StatsSection';
 import ServicesSection from './ServicesSection';
 import FeatureSplit from './FeatureSplit';
 import GallerySection from './GallerySection';
 import TestimonialsSection from './TestimonialsSection';
-import PricingSection from './PricingSection';
+//import PricingSection from './PricingSection';
 import CTASection from './CTASection';
 
 export default function HomePage() {

@@ -41,12 +41,12 @@ export default function WeddingDateInput({
       {/* Decorative Elements */}
       <div className="relative">
         {/* Floating hearts animation */}
-        <div className="absolute -top-8 -left-8 opacity-20 animate-bounce">
+        {/* <div className="absolute -top-8 -left-8 opacity-20 animate-bounce">
           <Heart className="w-12 h-12 text-pink-400" fill="currentColor" />
         </div>
         <div className="absolute -top-12 -right-12 opacity-20 animate-pulse">
           <Sparkles className="w-16 h-16 text-amber-400" />
-        </div>
+        </div> */}
 
         {/* Main Card */}
         <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
@@ -166,17 +166,16 @@ export default function WeddingDateInput({
             </form>
 
             {/* Footer Note */}
-            <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+            {/* <div className="mt-8 pt-6 border-t border-gray-100 text-center">
               <p className="text-sm text-gray-500 flex items-center justify-center">
-                <Heart className="w-4 h-4 mr-2 text-pink-400" fill="currentColor" />
                 Chúng tôi rất vui được đồng hành cùng bạn trên hành trình này!
               </p>
-            </div>
+            </div> */}
           </div>
 
           {/* Decorative Corner Accents */}
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-50 to-transparent opacity-50 rounded-tl-full" />
-          <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-50 to-transparent opacity-50 rounded-br-full" />
+          {/* <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-50 to-transparent opacity-50 rounded-tl-full" />
+          <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-purple-50 to-transparent opacity-50 rounded-br-full" /> */}
         </div>
       </div>
     </div>

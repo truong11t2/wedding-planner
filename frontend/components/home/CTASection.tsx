@@ -72,14 +72,14 @@ export default function CTASection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative py-28 md:py-36 bg-gradient-to-b from-gray-50 to-white overflow-hidden"
+      className="relative py-20 md:py-28 bg-white"
     >
       {/* Decorative Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
+      {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
         <div className="font-serif text-[20rem] md:text-[30rem] text-gray-900 select-none">
           &amp;
         </div>
-      </div>
+      </div> */}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -119,6 +119,10 @@ export default function CTASection() {
               </p>
               
               <div className="space-y-4 mb-8">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Tổng hợp ngân sách chi tiêu, nhiệm vụ cần làm</span>
+                </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Tạo lịch trình chi tiết cho ngày cưới</span>

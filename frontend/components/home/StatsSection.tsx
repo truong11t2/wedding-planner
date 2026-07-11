@@ -8,10 +8,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: '100+', label: 'Đám Cưới Đã Lên Kế Hoạch' },
+  { value: '100+', label: 'Đám Cưới' },
   { value: '3+', label: 'Năm Kinh Nghiệm' },
-  { value: '98%', label: 'Cặp Đôi Hài Lòng' },
-  { value: '50+', label: 'Nhà Cung Cấp Uy Tín' },
+  { value: '98%', label: 'Hài Lòng' },
+  { value: '50+', label: 'Nhà Cung Cấp' },
 ];
 
 export default function StatsSection() {
@@ -41,7 +41,7 @@ export default function StatsSection() {
     <section 
       id="stats-section"
       ref={sectionRef}
-      className="bg-gradient-to-b from-pink-600 to-purple-600 py-16 md:py-20"
+      className="bg-gradient-to-b from-pink-600 to-purple-600 py-8 md:py-10"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">

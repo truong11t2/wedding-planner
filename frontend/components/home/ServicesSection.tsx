@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Calendar, DollarSign, Users, CheckSquare, Camera, MapPin } from 'lucide-react';
+import { Calendar, DollarSign, Users, CheckSquare, Camera, NotebookTabs } from 'lucide-react';
 
 interface Service {
   icon: React.ElementType;
@@ -10,7 +10,19 @@ interface Service {
   badge?: string;
 }
 
+interface TimelineTab {
+  id: string;
+  title: string;
+  activities: string[];
+}
+
 const services: Service[] = [
+  {
+    icon: NotebookTabs,
+    title: 'Danh Bạ Nhà Cung Cấp',
+    description: 'Duyệt và so sánh các nhà cung cấp địa phương, đọc đánh giá và đặt đội ngũ hoàn hảo cho ngày đặc biệt của bạn.',
+    badge: 'MIỄN PHÍ',
+  },
   {
     icon: Calendar,
     title: 'Tạo Lịch Trình Cưới',
@@ -41,16 +53,65 @@ const services: Service[] = [
     description: 'Tạo album cưới đẹp mắt, chia sẻ ảnh với khách mời và lưu giữ những kỷ niệm quý giá của bạn mãi mãi.',
     badge: 'MIỄN PHÍ',
   },
+];
+
+const timelineTabs: TimelineTab[] = [
   {
-    icon: MapPin,
-    title: 'Danh Bạ Nhà Cung Cấp',
-    description: 'Duyệt và so sánh các nhà cung cấp địa phương, đọc đánh giá và đặt đội ngũ hoàn hảo cho ngày đặc biệt của bạn.',
-    badge: 'MIỄN PHÍ',
+    id: '1-year',
+    title: '1 năm',
+    activities: [
+      'Xác định ngày cưới và ngân sách tổng quát. Chuẩn bị tài chính.',
+      'Lên ý tưởng tổng quan cho đám cưới (chủ đề, màu sắc, phong cách).',
+      'Tìm hiểu các nhà cung cấp dịch vụ (nhà hàng, trang phục, chụp hình...).',
+      'Lên danh sách khách mời dự kiến.',
+    ],
+  },
+  {
+    id: '3-6-months',
+    title: '3-6 tháng',
+    activities: [
+      'Xác nhận và ký hợp đồng với các nhà cung cấp chính.',
+      'Chọn và đặt mua/thuê váy cưới và vest.',
+      'Lên kế hoạch chi tiết cho tiệc cưới (menu, trang trí, âm nhạc).',
+      'Đặt dịch vụ trang điểm và làm tóc.',
+    ],
+  },
+  {
+    id: '4-6-weeks',
+    title: '4-6 tuần',
+    activities: [
+      'Xác nhận số lượng khách tham dự cuối cùng.',
+      'Hoàn thiện kịch bản buổi lễ và tiệc cưới.',
+      'Thử váy cưới và vest lần cuối.',
+      'Xác nhận lịch trình với tất cả nhà cung cấp.',
+      'Chuẩn bị bài phát biểu và lời cảm ơn.',
+    ],
+  },
+  {
+    id: '7-15-days',
+    title: '7-15 ngày',
+    activities: [
+      'Làm việc với tất cả nhà cung cấp lần cuối.',
+      'Chuẩn bị hành lý cho tuần trăng mật (nếu có).',
+      'Tập dượt buổi lễ với người dẫn chương trình.',
+      'Gửi thiệp cưới',
+      'Nghỉ ngơi và thư giãn để có sức khỏe tốt nhất.',
+    ],
+  },
+  {
+    id: 'day-before',
+    title: 'Ngày mai',
+    activities:[ 
+      'Giao nhẫn cưới cho phù dâu/phù rể.',
+      'Đi ngủ sớm và có giấc ngủ đủ.',
+      'Tin tưởng vào kế hoạch đã chuẩn bị!',
+    ],
   },
 ];
 
 export default function ServicesSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState('1-year');
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -125,16 +186,65 @@ export default function ServicesSection() {
           })}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-500 text-sm mb-6">
-            Tham gia cùng hàng ngàn cặp đôi đang lên kế hoạch cho ngày hoàn hảo của họ
-          </p>
-          <a
-            href="/login"
-            className="inline-block bg-gradient-to-r from-pink-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 font-medium tracking-wide"
-          >
-            Bắt đầu miễn phí
-          </a>
+        {/* Wedding Timeline Tabs */}
+        <div className="mt-20">
+          <div className="text-center mb-12">
+            <h2 className="font-serif text-4xl md:text-5xl mb-4 text-gray-900">
+              Lịch Trình Chuẩn Bị Đám Cưới
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Hướng dẫn chi tiết theo từng giai đoạn để bạn chuẩn bị hoàn hảo cho ngày trọng đại
+            </p>
+          </div>
+
+          {/* Tabs Navigation */}
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            {timelineTabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {tab.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-200">
+            {timelineTabs.map((tab) => (
+              <div
+                key={tab.id}
+                className={`transition-all duration-500 ${
+                  activeTab === tab.id
+                    ? 'opacity-100 block'
+                    : 'opacity-0 hidden'
+                }`}
+              >
+                <h3 className="font-serif text-3xl mb-8 text-gray-900 flex items-center justify-center">
+                  <Calendar className="w-8 h-8 text-pink-600 mr-3" />
+                  Cần làm trước {tab.title}
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {tab.activities.map((activity, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        {index + 1}
+                      </div>
+                      <p className="text-gray-700 leading-relaxed pt-1">{activity}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

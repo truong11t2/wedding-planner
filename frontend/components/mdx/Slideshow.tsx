@@ -53,8 +53,8 @@ export default function Slideshow({
 
   return (
     <div className={`relative ${className}`}>
-        <div className="rounded-md overflow-hidden mx-auto flex justify-center items-center max-h-[500px]">
-          <img src={images[index]} alt={`slide-${index}`} className="h-full max-h-[500px] w-auto object-center" />
+        <div className="rounded-md overflow-hidden mx-auto flex justify-center items-center max-h-[720px]">
+          <img src={images[index]} alt={`slide-${index}`} className="h-full max-h-[720px] w-auto object-center" />
         </div>
 
       {images.length > 1 && (

@@ -58,7 +58,7 @@ export default function FeatureSplit() {
               <div 
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  backgroundImage: "url('https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&h=600&fit=crop&q=80')",
+                  backgroundImage: "url('/images/homepage/ket_noi_studio.jpg')",
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -68,9 +68,7 @@ export default function FeatureSplit() {
               Kết Nối Nhiếp Ảnh Gia
             </h3>
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-              Chúng tôi kết nối bạn với những nhiếp ảnh gia tài năng để ghi lại những khoảnh khắc 
-              chân thực nhất—ánh mắt trao nhau, nước mắt hạnh phúc và tiếng cười rộn ràng làm nên 
-              ngày trọng đại của bạn.
+              Chúng tôi kết nối bạn với studio ảnh cưới, giúp bạn ghi lại những khoảnh khắc chân thực nhất — ánh mắt trao nhau, nước mắt hạnh phúc và tiếng cười rộn ràng trong ngày trọng đại của bạn.
             </p>
             
             <ul className="space-y-3">
@@ -98,7 +96,7 @@ export default function FeatureSplit() {
               <div 
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  backgroundImage: "url('https://images.unsplash.com/photo-1513434165166-9c52b22db15c?w=800&h=600&fit=crop&q=80')",
+                  backgroundImage: "url('/images/homepage/ket_noi_nha_hang.jpg')",
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -109,8 +107,7 @@ export default function FeatureSplit() {
             </h3>
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
               Khám phá và đặt những nhà hàng tổ chức tiệc cưới tốt nhất. 
-              Từ thực đơn đa dạng, không gian sang trọng đến dịch vụ chuyên nghiệp—
-              chúng tôi giúp bạn tìm địa điểm hoàn hảo cho tiệc cưới.
+              Từ thực đơn đa dạng, không gian sang trọng đến dịch vụ chuyên nghiệp —   chúng tôi giúp bạn tìm ra địa điểm hoàn hảo cho tiệc cưới.
             </p>
             
             <ul className="space-y-3">
@@ -125,6 +122,17 @@ export default function FeatureSplit() {
               ))}
             </ul>
           </div>
+        </div>
+                <div className="text-center mt-12">
+          <h3 className="text-gray-900 md:text-4xl mb-6">
+            Tham gia cùng hàng ngàn cặp đôi
+          </h3>
+          <a
+            href="/login"
+            className="inline-block bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold px-8 py-4 rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 tracking-wide"
+          >
+            Đăng ký miễn phí
+          </a>
         </div>
       </div>
     </section>

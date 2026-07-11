@@ -13,25 +13,25 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    quote: "Từ buổi gặp đầu tiên, chúng tôi đã biết mình đang được chăm sóc bởi những người tuyệt vời. Mọi chi tiết đều được cân nhắc kỹ lưỡng, và ngày cưới vượt xa những giấc mơ hoang dã nhất của chúng tôi. Những bức ảnh thật sự ngoạn mục.",
+    quote: "Ứng dụng giúp chúng mình từ bước đầu lên kế hoạch đến ngày cưới một cách rõ ràng: tạo lịch trình chi tiết, phân chia công việc trong checklist, theo dõi tiến độ và nhắc việc đúng hạn. Quản lý ngân sách cho phép mình theo dõi chi tiêu, so sánh thực tế với dự toán, còn danh bạ nhà cung cấp giúp lọc và liên hệ nhanh — tất cả gói gọn trong một nơi.",
     author: "Minh & Hương",
     role: "Cô Dâu & Chú Rể",
     avatar: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=200&h=200&fit=crop&q=80",
-    wedding: "Trung Tâm Hội Nghị, Hà Nội",
+    wedding: "Thủ Đức, TP.HCM",
   },
   {
-    quote: "Sự chu đáo, chuyên nghiệp và sáng tạo là không thể so sánh. Họ đã biến tầm nhìn của chúng tôi thành hiện thực và ghi lại những khoảnh khắc mà chúng tôi sẽ trân trọng mãi mãi. Chúng tôi không thể yêu cầu thêm gì nữa.",
+    quote: "Chúng mình đặc biệt ấn tượng với tính năng lựa chọn nhà cung cấp: so sánh giá, lưu shortlist và nhắn tin trực tiếp để đặt câu hỏi. Việc này giúp tiết kiệm thời gian tìm kiếm, so sánh hợp đồng và đưa ra quyết định tự tin, đồng thời giữ mọi thông tin liên quan đến nhà cung cấp ngay trong kế hoạch cưới.",
     author: "Lan & Tuấn",
     role: "Cô Dâu & Chú Rể",
     avatar: "https://images.unsplash.com/photo-1537511446984-935f663eb1f4?w=200&h=200&fit=crop&q=80",
-    wedding: "Resort Biển, Đà Nẵng",
+    wedding: "Tân Bình, HCM",
   },
   {
-    quote: "Làm việc với đội ngũ này là quyết định tốt nhất mà chúng tôi đã làm cho đám cưới của mình. Sự chú ý đến từng chi tiết, sự hiện diện bình tĩnh và con mắt nghệ thuật của họ đã làm cho toàn bộ trải nghiệm trở nên hoàn hảo và kỳ diệu.",
+    quote: "Checklist và timeline là cứu cánh của chúng tôi: phân công nhiệm vụ, đặt deadline và theo dõi trạng thái từng việc. Khi đến gần ngày cưới, lịch trình chi tiết trên app giúp đội ngũ và gia đình đồng bộ, giảm nhầm lẫn và đảm bảo mọi thứ diễn ra đúng kế hoạch.",
     author: "Phương & Nam",
     role: "Cô Dâu & Chú Rể",
     avatar: "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=200&h=200&fit=crop&q=80",
-    wedding: "Vườn Sinh Thái, Vũng Tàu",
+    wedding: "Hà Nội",
   },
 ];
 
@@ -66,7 +66,7 @@ export default function TestimonialsSection() {
             Chia Sẻ Từ Các Cặp Đôi
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Không gì có ý nghĩa hơn đối với chúng tôi ngoài việc được lắng nghe chia sẻ từ các cặp đôi
+            Không gì có ý nghĩa hơn đối với chúng tôi ngoài việc được lắng nghe chia sẻ chân thành từ các cặp đôi đã đến với "Về Một Nhà".
           </p>
         </div>
 
@@ -88,10 +88,10 @@ export default function TestimonialsSection() {
               </p>
               
               <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
-                <div 
+                {/* <div 
                   className="w-14 h-14 rounded-full bg-cover bg-center flex-shrink-0"
                   style={{ backgroundImage: `url('${testimonial.avatar}')` }}
-                />
+                /> */}
                 <div>
                   <div className="font-semibold text-gray-900">
                     {testimonial.author}
