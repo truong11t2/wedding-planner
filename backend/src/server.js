@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const passport = require('./config/passport');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -11,7 +12,6 @@ const sequelize = require('./config/database');
 const User = require('./models/User');
 const Comment = require('./models/Comment');
 const Album = require('./models/Album');
-const Contact = require('./models/Contact');
 
 // Set up model associations if they exist
 if (Album.associate) {
@@ -30,12 +30,19 @@ const contactRoutes = require('./routes/contactRoutes');
 
 const app = express();
 
+const sessionStore = new pgSession({
+  conString: process.env.DATABASE_URL || `postgres://${encodeURIComponent(process.env.DB_USER)}:${encodeURIComponent(process.env.DB_PASSWORD)}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+  tableName: 'session',
+  createTableIfMissing: true
+});
+
 // Session configuration (required for OAuth)
 app.use(session({
+  store: sessionStore,
   secret: process.env.SESSION_SECRET || 'your-session-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     secure: process.env.NODE_ENV === 'production', // HTTPS in production
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
@@ -86,7 +93,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack);
   res.status(500).json({ 
     message: 'Something went wrong!', 
