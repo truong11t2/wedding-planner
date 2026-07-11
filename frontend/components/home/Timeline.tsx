@@ -62,6 +62,19 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
   };
 
   const handleOptionSelect = (itemId: string, optionId: string) => {
+    const item = timelineItems.find(t => t.id === itemId);
+    if (!item) return;
+
+    if (item.selectedOption === optionId) {
+      updateTimelineItem(itemId, { selectedOption: undefined });
+      setExpandedItems(prev => {
+        const newSet = new Set(prev);
+        newSet.add(itemId);
+        return newSet;
+      });
+      return;
+    }
+
     updateTimelineItem(itemId, { selectedOption: optionId });
     // Collapse the options after selection
     setExpandedItems(prev => {
