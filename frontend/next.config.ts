@@ -18,7 +18,7 @@ const developmentCSP = [
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: https: https://lh3.googleusercontent.com https://graph.facebook.com",
   "connect-src 'self' http://localhost:5000 https://apis.google.com https://accounts.google.com https://play.google.com https://connect.facebook.net",
-  "frame-src 'self' https://accounts.google.com https://www.facebook.com www.google.com",
+  "frame-src 'self' https://accounts.google.com https://www.facebook.com www.google.com https://www.youtube.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'"
@@ -32,7 +32,7 @@ const productionCSP = [
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: https: https://lh3.googleusercontent.com https://graph.facebook.com",
   "connect-src * https://vemotnha.ddns.net http://155.94.144.195:5001 https://apis.google.com https://accounts.google.com https://connect.facebook.net",
-  "frame-src 'self' https://accounts.google.com https://www.facebook.com www.google.com",
+  "frame-src 'self' https://accounts.google.com https://www.facebook.com www.google.com https://www.youtube.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'"
