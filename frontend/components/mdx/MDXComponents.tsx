@@ -20,13 +20,32 @@ export const MDXComponents = {
   ),
   strong: (props: ComponentPropsWithoutRef<'strong'>) => <strong className="font-bold text-gray-900" {...props} />,
   em: (props: ComponentPropsWithoutRef<'em'>) => <em className="italic text-gray-800" {...props} />,
-  a: (props: ComponentPropsWithoutRef<'a'>) => (
-    <Link 
-      {...props} 
-      className="text-pink-600 hover:text-pink-700 underline"
-      href={props.href || '#'}
-    />
-  ),
+  a: (props: ComponentPropsWithoutRef<'a'>) => {
+    const href = (props.href as string) || '#';
+    const className = ['text-pink-600 hover:text-pink-700 underline', (props.className as string) || '']
+      .filter(Boolean)
+      .join(' ');
+    const isExternal = typeof href === 'string' && (
+      href.startsWith('http') || href.startsWith('//') || href.startsWith('mailto:') || href.startsWith('tel:')
+    );
+
+    if (isExternal) {
+      const { href: _href, className: _cn, ...rest } = props;
+      return (
+        <a
+          {...rest}
+          href={href}
+          className={className}
+          target="_blank"
+          rel="noopener noreferrer"
+        />
+      );
+    }
+
+    return (
+      <Link href={href} className={className} {...props} />
+    );
+  },
   img: (props: ComponentPropsWithoutRef<'img'>) => (
     <span className="block w-full my-8 rounded-lg overflow-hidden">
       <Image
