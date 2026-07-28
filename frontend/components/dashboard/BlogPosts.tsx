@@ -3,6 +3,7 @@
 import React from 'react';
 import { ExternalLink, Clock, User, Heart } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface BlogPost {
   id: string;
@@ -20,48 +21,37 @@ export default function BlogPosts() {
   const blogPosts: BlogPost[] = [
     {
       id: '1',
-      title: 'How to Plan Your Wedding Timeline: A Complete Guide',
-      excerpt: 'Learn the essential steps to create a stress-free wedding planning timeline that keeps you organized and on track.',
-      author: 'Sarah Johnson',
-      readTime: '8 min read',
-      category: 'Planning',
-      image: '/api/placeholder/300/200',
-      link: '#',
-      publishedAt: '2024-01-15'
+      title: 'Lịch Trình Chi Tiết: Chìa Khóa Cho Đám Cưới Hoàn Hảo',
+      excerpt: '85% đám cưới gặp vấn đề về quản lý thời gian? Từ việc đặt dịch vụ quá muộn, quên deadline quan trọng, đến việc vội vàng trong những ngày cuối cùng.',
+      author: 'Về Một Nhà',
+      readTime: '4 phút',
+      category: 'Kế Hoạch',
+      image: '/images/blog/lich-trinh-dam-cuoi-chi-tiet.jpg',
+      link: '/blog/lich-trinh-chi-tiet-dam-cuoi',
+      publishedAt: '2026-07-25'
     },
     {
       id: '2',
-      title: 'Budget-Friendly Wedding Ideas That Look Expensive',
-      excerpt: 'Discover creative ways to have a beautiful wedding without breaking the bank. These tips will help you save thousands.',
-      author: 'Mike Chen',
-      readTime: '6 min read',
-      category: 'Budget',
-      image: '/api/placeholder/300/200',
-      link: '#',
-      publishedAt: '2024-01-12'
+      title: 'Phong Cách Chụp Ảnh Cưới: Bạn Thuộc Về Style Nào?',
+      excerpt: 'Giữa hàng trăm sự chuẩn bị, việc chọn một phong cách chụp ảnh cưới phù hợp không chỉ giúp bạn lưu giữ kỷ niệm mà còn thể hiện cá tính riêng của hai bạn.',
+      author: 'Về Một Nhà',
+      readTime: '3 phút',
+      category: 'Chụp Hình',
+      image: '/images/blog/phong-cach-anh-cuoi/cover.jpg',
+      link: '/blog/cac-phong-cach-chup-anh-cuoi',
+      publishedAt: '2026-07-22'
     },
     {
       id: '3',
-      title: 'Choosing the Perfect Wedding Venue: What to Consider',
-      excerpt: 'From location to capacity, learn what factors matter most when selecting your dream wedding venue.',
-      author: 'Emily Davis',
-      readTime: '10 min read',
-      category: 'Venues',
-      image: '/api/placeholder/300/200',
-      link: '#',
-      publishedAt: '2024-01-10'
+      title: 'Hướng Dẫn Chi Tiết: Lập Kế Hoạch Đám Cưới',
+      excerpt: 'Bạn vừa nhận lời cầu hôn và đang trong cơn "mây mưa" hạnh phúc? Tuyệt vời! Nhưng sau đó, bạn nhận ra rằng việc lập kế hoạch đám cưới không hề đơn giản như bạn tưởng.',
+      author: 'Về Một Nhà',
+      readTime: '5 phút',
+      category: 'Kế Hoạch',
+      image: '/images/blog/plan-wedding.jpg',
+      link: '/blog/huong-dan-lap-ke-hoach-dam-cuoi',
+      publishedAt: '2026-07-12'
     },
-    {
-      id: '4',
-      title: 'Wedding Photography Styles Explained',
-      excerpt: 'Understanding different photography styles will help you choose the perfect photographer for your special day.',
-      author: 'David Kim',
-      readTime: '7 min read',
-      category: 'Photography',
-      image: '/api/placeholder/300/200',
-      link: '#',
-      publishedAt: '2024-01-08'
-    }
   ];
 
   const getCategoryColor = (category: string) => {
@@ -80,16 +70,16 @@ export default function BlogPosts() {
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <Heart className="h-6 w-6 text-pink-500 mr-2" />
+          {/* <Heart className="h-6 w-6 text-pink-500 mr-2" /> */}
           <h2 className="text-xl font-semibold text-gray-900">Bài Viết Hữu Ích</h2>
         </div>
-        <a
-          href="#"
+        <Link
+          href="/blog"
           className="text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center"
         >
-          View All
+          Xem tất cả
           <ExternalLink className="h-4 w-4 ml-1" />
-        </a>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

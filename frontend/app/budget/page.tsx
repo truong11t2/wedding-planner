@@ -29,6 +29,7 @@ import {
   deleteBudgetCategory as apiDeleteCategory
 } from '@/api/budget';
 import Image from 'next/image';
+import Link from 'next/link';
 
 
 interface BudgetModalProps {
@@ -515,43 +516,23 @@ function BudgetBlogPosts() {
   const blogPosts: BlogPost[] = [
     {
       id: '1',
-      title: 'How to Create a Realistic Wedding Budget',
-      excerpt: 'Learn the essential steps to plan a wedding budget that works for your financial situation and dream wedding.',
-      author: 'Financial Expert Sarah',
-      readTime: '8 min read',
-      image: '/api/placeholder/400/250',
-      link: '#',
-      publishedAt: '2024-01-20'
+      title: 'Tiết Kiệm Tiền Đám Cưới Cho Cặp Đôi',
+      excerpt: 'Tiết kiệm đám cưới không có nghĩa là cắt hết cho rẻ, mà là chi đúng chỗ: giảm khoản ít giá trị, giữ lại trải nghiệm quan trọng cho hai bạn và khách mời.',
+      author: 'Đội Ngũ Về Một Nhà',
+      readTime: '3 min read',
+      image: '/images/blog/tiet-kiem-tien-dam-cuoi.jpg',
+      link: '/blog/tiet-kiem-tien-dam-cuoi-cho-cap-doi',
+      publishedAt: '2026-07-26'
     },
     {
       id: '2',
-      title: '50 Ways to Save Money on Your Wedding',
-      excerpt: 'Discover practical tips and creative solutions to reduce wedding costs without sacrificing your vision.',
-      author: 'Budget Planner Mike',
-      readTime: '12 min read',
-      image: '/api/placeholder/400/250',
-      link: '#',
-      publishedAt: '2024-01-18'
-    },
-    {
-      id: '3',
-      title: 'Wedding Budget Breakdown: Where to Splurge vs Save',
-      excerpt: 'Find out which wedding expenses are worth the investment and where you can safely cut costs.',
-      author: 'Wedding Planner Lisa',
-      readTime: '10 min read',
-      image: '/api/placeholder/400/250',
-      link: '#',
-      publishedAt: '2024-01-15'
-    },
-    {
-      id: '4',
-      title: 'Managing Wedding Finances as a Couple',
-      excerpt: 'Navigate wedding budget discussions and financial planning with your partner for a stress-free experience.',
-      author: 'Relationship Coach Tom',
-      readTime: '7 min read',
-      image: '/api/placeholder/400/250',
-      link: '#',
-      publishedAt: '2024-01-12'
+      title: 'Kinh Nghiệm Phân Bổ Ngân Sách Đám Cưới',
+      excerpt: 'Một kế hoạch ngân sách rõ ràng giúp bạn tránh phát sinh, ưu tiên đúng hạng mục và tổ chức đám cưới trọn vẹn mà không áp lực tài chính.',
+      author: 'Đội Ngũ Về Một Nhà',
+      readTime: '5 min read',
+      image: '/images/blog/ngan-sach-dam-cuoi.jpg',
+      link: '/blog/kinh-nghiem-phan-bo-ngan-sach-dam-cuoi',
+      publishedAt: '2026-07-18'
     }
   ];
 
@@ -559,13 +540,16 @@ function BudgetBlogPosts() {
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <BookOpen className="h-6 w-6 text-green-500 mr-2" />
+          {/* <BookOpen className="h-6 w-6 text-green-500 mr-2" /> */}
           <h2 className="text-xl font-semibold text-gray-900">Kinh Nghiệm Quản Lý Ngân Sách</h2>
         </div>
-        <button className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center">
-          Xem Tất Cả
+        <Link
+          href="/blog"
+          className="text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center"
+        >
+          Xem tất cả
           <ExternalLink className="h-4 w-4 ml-1" />
-        </button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -585,7 +569,7 @@ function BudgetBlogPosts() {
             </div>
             
             <div className="p-4">
-              <h3 className="font-semibold text-gray-900 group-hover:text-green-600 transition-colors mb-2 line-clamp-2">
+              <h3 className="font-semibold text-gray-900 group-hover:text-pink-600 transition-colors mb-2 line-clamp-2">
                 <a href={post.link}>{post.title}</a>
               </h3>
               

@@ -105,7 +105,7 @@ export default function CTASection() {
               <div className="flex justify-center mb-6">
                 <div className="relative">
                   <Heart className="w-16 h-16 text-rose-500 fill-rose-500 animate-pulse" />
-                  <div className="absolute inset-0 w-16 h-16 bg-rose-400/20 rounded-full blur-xl animate-pulse" />
+                  {/* <div className="absolute inset-0 w-16 h-16 bg-rose-400/20 rounded-full blur-xl animate-pulse" /> */}
                 </div>
               </div>
               
@@ -144,11 +144,10 @@ export default function CTASection() {
               <div className="mt-auto">
                 <button
                   onClick={scrollToHero}
-                  className="w-full group relative inline-flex items-center justify-center gap-3 bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 text-white px-8 py-4 rounded-lg text-lg font-medium overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                  className="w-full group relative inline-flex items-center justify-center gap-3 bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 text-white px-8 py-4 rounded-lg text-lg font-semibold overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105"
                 >
                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                  <span className="relative z-10">Bắt Đầu Lập Kế Hoạch</span>
-                  <Heart className="relative z-10 w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span className="relative z-10">Lên Kế Hoạch</span>
                 </button>
                 
                 <p className="text-center text-sm text-gray-500 mt-4">
@@ -166,8 +165,8 @@ export default function CTASection() {
               {/* Icon */}
               <div className="flex justify-center mb-6">
                 <div className="relative">
-                  <Send className="w-16 h-16 text-purple-600" />
-                  <div className="absolute inset-0 w-16 h-16 bg-purple-400/20 rounded-full blur-xl" />
+                  <Send className="w-16 h-16 text-purple-600 animate-pulse" />
+                  {/* <div className="absolute inset-0 w-16 h-16 bg-purple-400/20 rounded-full blur-xl" /> */}
                 </div>
               </div>
               
@@ -236,7 +235,7 @@ export default function CTASection() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -245,8 +244,7 @@ export default function CTASection() {
                       </>
                     ) : (
                       <>
-                        <Send className="w-5 h-5" />
-                        <span>Gửi Thông Tin Liên Hệ</span>
+                        <span>Gửi Thông Tin</span>
                       </>
                     )}
                   </button>

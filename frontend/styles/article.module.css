@@ -40,7 +40,8 @@
 
 .coverImage {
   position: relative;
-  height: 400px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   border-radius: 1rem;
   overflow: hidden;
   margin-bottom: 2rem;
