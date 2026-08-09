@@ -13,7 +13,7 @@ const protect = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({ 
       success: false,
-      message: 'Not authorized, no token' 
+      message: 'Chưa đăng nhập' 
     });
   }
 
@@ -29,7 +29,7 @@ const protect = async (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ 
         success: false,
-        message: 'Not authorized, user not found' 
+        message: 'Không tìm thấy người dùng' 
       });
     }
 
@@ -38,7 +38,7 @@ const protect = async (req, res, next) => {
     console.error('Auth middleware error:', error);
     return res.status(401).json({ 
       success: false,
-      message: 'Not authorized, token failed' 
+      message: 'Có lỗi xảy ra' 
     });
   }
 };

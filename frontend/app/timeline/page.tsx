@@ -10,8 +10,8 @@ export default function TimelinePage() {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
-          <p className="text-gray-600">You need to be logged in to view your wedding timeline.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui lòng đăng nhập</h1>
+          <p className="text-gray-600">Bạn cần đăng nhập để xem timeline đám cưới của mình.</p>
         </div>
       </div>
     );
