@@ -14,6 +14,7 @@ import {
   MapPinned,
   Camera,
   PiggyBank,
+  Mail,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -36,6 +37,7 @@ const navigationItems: NavItem[] = [
   { name: 'Khách Mời', href: '/guests', icon: Users },
   // { name: 'Địa Điểm', href: '/venues', icon: MapPinned },
   { name: 'Hình Cưới', href: '/photos', icon: Camera },
+  { name: 'Thiệp Cưới', href: '/invitation', icon: Mail },
 ];
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {

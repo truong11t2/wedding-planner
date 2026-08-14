@@ -1,4 +1,5 @@
-export const API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000'}/api`;
+export const BACKEND_ORIGIN = process.env.NEXT_PUBLIC_BACKEND_ADDRESS || 'http://localhost:5000';
+export const API_BASE_URL = `${BACKEND_ORIGIN}/api`;
 
 export const ENDPOINTS = {
   ALBUM: {
@@ -45,6 +46,12 @@ export const ENDPOINTS = {
     SELECT_VENDOR: '/timeline/select-vendor'
   },
   CONTACT: '/contact',
+  INVITATION: {
+    RENDER: '/invitations/render',
+    GENERATE: '/invitations/generate',
+    MINE: '/invitations/mine',
+    BASE: '/invitations',
+  },
   HEALTH: '/health',
 };
 

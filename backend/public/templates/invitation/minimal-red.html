@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Thiệp Cưới — Điền Thông Tin Của Bạn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --wine-dark:   #3E0A12;
+    --wine:        #6E1423;
+    --wine-mid:    #8A1C2E;
+    --gold:        #C9A24B;
+    --gold-light:  #E8CD82;
+    --gold-pale:   #F3E4B8;
+    --ivory:       #FBF3E7;
+    --ivory-soft:  #F6EADA;
+    --ink:         #2B1810;
+    --ink-soft:    #5A4436;
+
+    --font-display: 'Playfair Display', serif;
+    --font-script:  'Cormorant Garamond', serif;
+    --font-body:    'Be Vietnam Pro', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--wine-dark);
+    -webkit-font-smoothing: antialiased;
+  }
+  img{ max-width:100%; display:block; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  ::selection{ background: var(--gold-light); color:var(--wine-dark); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  }
+
+  /* ============ DESKTOP FRAME ============ */
+  /* On wide screens the invitation sits inside a "card" against a silk backdrop —
+     on phones it fills the viewport edge to edge, like receiving the real thing. */
+  .stage{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    background:
+      radial-gradient(ellipse at 50% -10%, #7a1c2c 0%, transparent 60%),
+      repeating-linear-gradient(135deg, rgba(201,162,75,0.05) 0px, rgba(201,162,75,0.05) 1px, transparent 1px, transparent 26px),
+      var(--wine-dark);
+  }
+  .card{
+    width:100%;
+    max-width:480px;
+    background:var(--ivory);
+    position:relative;
+    overflow-x:hidden;
+    box-shadow: 0 0 0 1px rgba(201,162,75,0.25);
+  }
+  @media (min-width:640px){
+    .stage{ padding:48px 24px; }
+    .card{ max-width:560px; box-shadow: 0 30px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(201,162,75,0.3); border-radius:6px; }
+  }
+  @media (min-width:1024px){
+    .stage{ padding:64px 24px; }
+    .card{ max-width:660px; }
+  }
+
+  /* ============ SHARED DECOR ============ */
+  .hy-pattern{
+    position:absolute; inset:0; pointer-events:none; overflow:hidden;
+    opacity:0.14;
+    background-image: repeating-linear-gradient( 0deg, transparent, transparent 78px, rgba(232,205,130,0.5) 79px, transparent 80px);
+  }
+  .hy-pattern span{
+    position:absolute; font-family:var(--font-display); font-size:34px; color:var(--gold-light);
+  }
+
+  .gold-rule{
+    width:64px; height:1px; margin:18px auto;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .eyebrow{
+    font-family:var(--font-body); font-size:11px; letter-spacing:.32em; font-weight:600;
+    text-transform:uppercase; color:var(--gold);
+  }
+  .section-title{
+    font-family:var(--font-display); font-weight:600; font-size:22px;
+    text-align:center; color:var(--wine); margin-top:8px;
+  }
+  .fade-in{ opacity:0; transform:translateY(18px); transition:opacity .8s ease, transform .8s ease; }
+  .fade-in.in-view{ opacity:1; transform:translateY(0); }
+
+  /* corner flourish (signature element) */
+  .flourish{ width:120px; height:auto; }
+  .flourish path{
+    fill:none; stroke:var(--gold); stroke-width:1.4; stroke-linecap:round;
+    stroke-dasharray: 400; stroke-dashoffset:400;
+    animation: draw 2.6s ease forwards 0.4s;
+  }
+  .flourish circle{ fill:var(--gold-light); opacity:0; animation: bloom .6s ease forwards 2.4s; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  @keyframes bloom{ to{ opacity:1; } }
+
+  /* ============ COVER (ENVELOPE) ============ */
+  #cover{
+    position:fixed; inset:0; z-index:50;
+    display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse at 50% 20%, var(--wine-mid) 0%, var(--wine-dark) 70%);
+    color:var(--gold-pale);
+    text-align:center;
+    transition: transform 1s cubic-bezier(.65,0,.35,1), opacity .9s ease;
+  }
+  #cover.opened{ transform:translateY(-100%); opacity:0; pointer-events:none; }
+  .cover-inner{ position:relative; max-width:340px; padding:32px; }
+  @media (min-width:900px){ .cover-inner{ max-width:420px; } .cover-names{ font-size:48px; } }
+  .cover-monogram{
+    width:96px; height:96px; margin:0 auto 22px; border:1px solid var(--gold);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-script); font-size:34px; color:var(--gold-light);
+    position:relative;
+  }
+  .cover-monogram::before, .cover-monogram::after{
+    content:''; position:absolute; inset:-8px; border:1px solid rgba(201,162,75,0.35); border-radius:50%;
+  }
+  .cover-monogram::after{ inset:-16px; border-color:rgba(201,162,75,0.18); }
+  .cover-eyebrow{ font-size:11px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  .cover-names{
+    font-family:var(--font-script); font-style:italic; font-weight:500;
+    font-size:40px; line-height:1.15; color:var(--gold-pale);
+  }
+  .cover-amp{ display:block; font-size:20px; color:var(--gold); margin:2px 0; }
+  .cover-date{ margin-top:18px; font-size:14px; letter-spacing:.08em; color:var(--gold-light); }
+  .open-btn{
+    margin-top:34px; padding:13px 40px; border:1px solid var(--gold);
+    color:var(--gold-pale); font-size:12px; letter-spacing:.28em; text-transform:uppercase;
+    border-radius:2px; position:relative; transition:background .3s ease, color .3s ease;
+  }
+  .open-btn:hover{ background:var(--gold); color:var(--wine-dark); }
+  .open-btn:focus-visible{ outline:2px solid var(--gold-light); outline-offset:3px; }
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative; padding:64px 24px 48px; text-align:center;
+    background:linear-gradient(180deg, var(--wine) 0%, var(--wine-mid) 55%, var(--ivory) 100%);
+    color:var(--gold-pale);
+  }
+  .hero .eyebrow{ color:var(--gold-light); }
+  .hero-flourish{ margin:0 auto 6px; }
+  .hero-names{
+    font-family:var(--font-script); font-style:italic; font-weight:500;
+    font-size:46px; line-height:1.1; color:#fff; margin-top:10px;
+  }
+  .hero-names small{ display:block; font-size:22px; color:var(--gold-light); margin:4px 0; font-style:normal; letter-spacing:.15em; }
+  .hero-date{
+    margin-top:20px; font-family:var(--font-body); font-size:13px; letter-spacing:.15em;
+    color:var(--gold-pale); text-transform:uppercase;
+  }
+
+  /* ============ FAMILY / INFO ============ */
+  .info{ padding:40px 26px 8px; text-align:center; }
+  .parents{
+    display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:start;
+    margin-top:26px; font-size:13.5px; color:var(--ink-soft); line-height:1.65;
+  }
+  .parents .side b{ display:block; color:var(--ink); font-weight:600; font-family:var(--font-body); }
+  .parents .divider{ width:1px; background:var(--gold); opacity:.4; align-self:stretch; }
+  .parents .label{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; display:block; }
+
+  .couple-block{ margin-top:34px; }
+  .couple-name{ font-family:var(--font-display); font-size:20px; color:var(--wine); font-weight:600; }
+  .couple-role{ font-size:12px; color:var(--ink-soft); margin-top:2px; letter-spacing:.05em; }
+  .couple-amp{ font-family:var(--font-script); font-style:italic; font-size:24px; color:var(--gold); margin:12px 0; }
+
+  .ceremony-box{
+    margin-top:30px; padding:22px 18px; background:var(--ivory-soft);
+    border:1px solid rgba(201,162,75,.4); border-radius:6px;
+  }
+  .ceremony-box .place{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
+  .ceremony-box .time{ font-family:var(--font-display); font-size:30px; color:var(--wine); margin:8px 0 4px; font-weight:600; }
+  .ceremony-box .datebadge{
+    display:inline-flex; align-items:baseline; gap:6px; font-size:13px; color:var(--ink); margin-top:6px;
+  }
+  .ceremony-box .datebadge b{ font-family:var(--font-display); font-size:17px; color:var(--wine); }
+  .ceremony-box .lunar{ margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-style:italic; }
+
+  /* ============ GALLERY ============ */
+  .gallery{ padding:44px 20px; text-align:center; background:var(--ivory); }
+  .gallery-grid{
+    margin-top:22px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px;
+  }
+  .gallery-grid img{
+    width:100%; height:120px; object-fit:cover; border-radius:3px; cursor:pointer;
+    transition:transform .35s ease, filter .35s ease; filter:saturate(.92);
+  }
+  .gallery-grid img:hover{ transform:scale(1.03); filter:saturate(1.05); }
+  .gallery-grid .tall{ grid-row: span 2; height:100%; }
+  @media (min-width:640px){ .gallery-grid img{ height:160px; } }
+
+  /* lightbox */
+  #lightbox{
+    position:fixed; inset:0; background:rgba(20,4,7,0.94); z-index:80;
+    display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px;
+  }
+  #lightbox.open{ display:flex; }
+  #lightbox img{ max-height:70vh; max-width:100%; border-radius:4px; }
+  #lightbox .lb-counter{ color:var(--gold-pale); font-size:12px; letter-spacing:.1em; margin-top:14px; }
+  #lightbox .lb-nav{ position:absolute; top:50%; transform:translateY(-50%); color:var(--gold-pale); font-size:28px; padding:10px 16px; }
+  #lightbox .lb-prev{ left:6px; } #lightbox .lb-next{ right:6px; }
+  #lightbox .lb-close{ position:absolute; top:18px; right:20px; color:var(--gold-pale); font-size:22px; }
+
+  /* ============ COUNTDOWN ============ */
+  .countdown-sec{
+    padding:46px 22px; text-align:center;
+    background:linear-gradient(180deg, var(--ivory) 0%, var(--wine) 120%);
+    color:#fff;
+  }
+  .countdown-sec .section-title{ color:#fff; }
+  .countdown-grid{ display:flex; justify-content:center; gap:12px; margin-top:26px; }
+  .countdown-grid div{
+    width:64px; padding:12px 0; border:1px solid rgba(232,205,130,.5); border-radius:6px;
+    background:rgba(255,255,255,0.04);
+  }
+  .countdown-grid .num{ font-family:var(--font-display); font-size:24px; color:var(--gold-light); font-weight:600; }
+  .countdown-grid .lbl{ font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-pale); margin-top:4px; }
+
+  .party-info{ margin-top:30px; font-size:13px; color:var(--gold-pale); line-height:1.8; }
+  .party-info b{ display:block; font-family:var(--font-display); font-size:17px; color:#fff; margin-bottom:6px; }
+
+  .cta-row{ margin-top:26px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .btn{
+    padding:12px 22px; font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    border-radius:3px; border:1px solid var(--gold); color:var(--gold-pale); transition:.25s;
+  }
+  .btn.solid{ background:var(--gold); color:var(--wine-dark); }
+  .btn:hover{ opacity:.85; }
+
+  .map-wrap{ margin-top:24px; border-radius:6px; overflow:hidden; border:1px solid rgba(232,205,130,.4); }
+  .map-wrap iframe{ width:100%; height:190px; border:0; display:block; }
+
+  /* ============ DRESS CODE ============ */
+  .dresscode{ padding:44px 22px; text-align:center; background:var(--ivory); }
+  .swatches{ display:flex; justify-content:center; gap:12px; margin-top:20px; }
+  .swatch{ width:34px; height:34px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,0.08); }
+  .dresscode p{ margin-top:16px; font-size:13px; color:var(--ink-soft); max-width:320px; margin-left:auto; margin-right:auto; }
+
+  /* ============ SCHEDULE ============ */
+  .schedule{ padding:46px 26px; background:var(--ivory-soft); }
+  .schedule ol{ list-style:none; margin-top:28px; position:relative; }
+  .schedule ol::before{ content:''; position:absolute; left:29px; top:6px; bottom:6px; width:1px; background:rgba(201,162,75,.5); }
+  .schedule li{ position:relative; padding-left:60px; margin-bottom:24px; }
+  .schedule li:last-child{ margin-bottom:0; }
+  .schedule .dot{
+    position:absolute; left:22px; top:2px; width:15px; height:15px; border-radius:50%;
+    background:var(--ivory-soft); border:2px solid var(--gold); box-shadow:0 0 0 3px var(--ivory-soft);
+  }
+  .schedule .time{ font-family:var(--font-display); font-size:14px; color:var(--wine); font-weight:600; }
+  .schedule .label{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ============ GUESTBOOK ============ */
+  .guestbook{ padding:46px 22px; text-align:center; background:var(--ivory); }
+  .gb-form{ margin-top:22px; display:flex; flex-direction:column; gap:10px; max-width:340px; margin-left:auto; margin-right:auto; }
+  .gb-form input, .gb-form textarea{
+    padding:11px 13px; border:1px solid rgba(110,20,35,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
+  }
+  .gb-form textarea{ resize:none; height:70px; }
+  .gb-form button{
+    margin-top:4px; padding:12px; background:var(--wine); color:#fff; border-radius:4px;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+  }
+  .gb-list{ margin-top:28px; display:flex; flex-direction:column; gap:14px; max-width:340px; margin-left:auto; margin-right:auto; text-align:left; }
+  .gb-item{ background:var(--ivory-soft); border-radius:6px; padding:12px 14px; border-left:3px solid var(--gold); }
+  .gb-item b{ font-size:13px; color:var(--wine); }
+  .gb-item p{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.5; }
+  .gb-empty{ font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-top:22px; }
+
+  /* ============ GIFT / QR ============ */
+  .gift{ padding:46px 22px; text-align:center; background:linear-gradient(180deg, var(--ivory) 0%, var(--wine-dark) 140%); }
+  .gift-cards{ margin-top:24px; display:flex; gap:12px; max-width:400px; margin-left:auto; margin-right:auto; }
+  .gift-card{
+    flex:1; padding:22px 10px; border:1px solid rgba(201,162,75,.5); border-radius:8px;
+    background:rgba(255,255,255,0.03); cursor:pointer; transition:.25s;
+  }
+  .gift-card:hover{ background:rgba(201,162,75,.08); }
+  .gift-card .role{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); }
+  .gift-card .nm{ font-family:var(--font-display); font-size:15px; color:#fff; margin-top:6px; }
+  .gift-card .tap{ font-size:10.5px; color:var(--gold-pale); margin-top:10px; opacity:.75; }
+
+  #qr-modal{
+    position:fixed; inset:0; background:rgba(20,4,7,.85); z-index:90;
+    display:none; align-items:center; justify-content:center; padding:24px;
+  }
+  #qr-modal.open{ display:flex; }
+  .qr-box{ background:var(--ivory); border-radius:10px; padding:28px 24px; max-width:300px; width:100%; text-align:center; position:relative; }
+  .qr-box img{ margin:16px auto; border-radius:6px; border:1px solid rgba(0,0,0,.08); }
+  .qr-box .bank{ font-family:var(--font-display); font-size:16px; color:var(--wine); }
+  .qr-box .acc{ font-size:15px; letter-spacing:.06em; margin-top:6px; font-weight:600; }
+  .qr-box .accname{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .qr-box .close-x{ position:absolute; top:10px; right:14px; font-size:20px; color:var(--ink-soft); }
+  .qr-box .save-btn{ margin-top:14px; display:inline-block; padding:9px 18px; border:1px solid var(--wine); border-radius:4px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--wine); }
+
+  /* ============ FOOTER ============ */
+  footer{ padding:40px 24px 44px; text-align:center; background:var(--wine-dark); color:var(--gold-pale); }
+  footer .msg{ font-family:var(--font-script); font-style:italic; font-size:19px; max-width:320px; margin:0 auto; line-height:1.5; color:#fff; }
+  footer .credit{ margin-top:18px; font-size:10.5px; letter-spacing:.14em; color:var(--gold); text-transform:uppercase; }
+
+  .music-fab{
+    position:fixed; bottom:18px; left:18px; z-index:55;
+    width:44px; height:44px; border-radius:50%;
+    background:var(--gold); color:var(--wine-dark);
+    box-shadow:0 6px 20px rgba(0,0,0,.35);
+    display:none; align-items:center; justify-content:center; font-size:16px;
+  }
+  .music-fab.show{ display:flex; }
+  .music-fab .bar{ display:inline-flex; align-items:flex-end; gap:2px; height:14px; }
+  .music-fab .bar span{ width:2.5px; background:var(--wine-dark); border-radius:1px; animation: eq 0.9s ease-in-out infinite; }
+  .music-fab .bar span:nth-child(1){ height:6px; animation-delay:0s; }
+  .music-fab .bar span:nth-child(2){ height:14px; animation-delay:.15s; }
+  .music-fab .bar span:nth-child(3){ height:9px; animation-delay:.3s; }
+  .music-fab.paused .bar span{ animation-play-state:paused; height:4px; }
+  @keyframes eq{ 0%,100%{ transform:scaleY(0.4);} 50%{ transform:scaleY(1);} }
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LIVE INVITATION — tự động điền từ dữ liệu người dùng đã nhập
+============================================================= -->
+<div id="cover">
+  <div class="hy-pattern" id="hyPattern"></div>
+  <div class="cover-inner">
+    <div class="cover-monogram" id="monogram">GB</div>
+    <div class="cover-eyebrow">Trân trọng kính mời</div>
+    <div class="cover-names" id="coverNames">Gia Bảo <span class="cover-amp">&amp;</span> Minh Anh</div>
+    <div class="cover-date" id="coverDate">20 . 12 . 2026</div>
+    <button class="open-btn" id="openBtn">Mở Thiệp</button>
+  </div>
+</div>
+
+<audio id="bgMusic" loop preload="none"></audio>
+<button class="music-fab" id="musicToggle" title="Bật / tắt nhạc nền">
+  <span class="bar"><span></span><span></span><span></span></span>
+</button>
+
+<div class="stage">
+  <div class="card" id="card">
+
+    <section class="hero">
+      <div class="eyebrow">Lễ Thành Hôn</div>
+      <svg class="flourish hero-flourish" viewBox="0 0 120 60" fill="none">
+        <path d="M60 50 C 40 40, 30 20, 60 10 C 90 20, 80 40, 60 50 Z"/>
+        <path d="M60 10 C 55 25, 55 35, 60 50"/>
+        <circle cx="60" cy="12" r="2.4"/>
+      </svg>
+      <div class="hero-names">
+        <small id="heroGroom">Nguyễn Gia Bảo</small>
+        &amp;
+        <small id="heroBride">Trần Minh Anh</small>
+      </div>
+      <div class="hero-date" id="heroDate">Chủ Nhật · 20 tháng 12 · 2026</div>
+    </section>
+
+    <section class="info fade-in">
+      <span class="eyebrow">Thông Tin Lễ Cưới</span>
+      <div class="gold-rule"></div>
+
+      <div class="parents">
+        <div class="side">
+          <span class="label">Nhà Trai</span>
+          <b id="groomFather">Ông Nguyễn Văn Long</b>
+          <span id="groomMother">Bà Lê Thị Hồng</span>
+          <div id="groomAddress" style="margin-top:6px;">12 Trần Phú, Hải Châu, Đà Nẵng</div>
+        </div>
+        <div class="divider"></div>
+        <div class="side">
+          <span class="label">Nhà Gái</span>
+          <b id="brideFather">Ông Trần Văn Nam</b>
+          <span id="brideMother">Bà Phạm Thị Lan</span>
+          <div id="brideAddress" style="margin-top:6px;">45 Lê Duẩn, Quận 1, TP.HCM</div>
+        </div>
+      </div>
+
+      <div class="couple-block">
+        <div class="couple-name" id="groomFull">Nguyễn Gia Bảo</div>
+        <div class="couple-role" id="groomRoleTxt">Trưởng Nam</div>
+        <div class="couple-amp">&amp;</div>
+        <div class="couple-name" id="brideFull">Trần Minh Anh</div>
+        <div class="couple-role" id="brideRoleTxt">Út Nữ</div>
+      </div>
+
+      <div class="ceremony-box">
+        <div class="place">Lễ Vu Quy được cử hành tại tư gia, vào lúc</div>
+        <div class="time" id="ceremonyTime">09:00</div>
+        <div class="datebadge">Chủ Nhật <b id="ceremonyDate">20 · 12</b> 2026</div>
+        <div class="lunar" id="ceremonyLunar">(Nhằm ngày 11 tháng 11 năm Bính Ngọ)</div>
+      </div>
+    </section>
+
+    <section class="gallery fade-in">
+      <span class="eyebrow">Album Ảnh</span>
+      <div class="section-title">Khoảnh Khắc Của Chúng Tôi</div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </section>
+
+    <div id="lightbox">
+      <button class="lb-close" id="lbClose">✕</button>
+      <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+      <img id="lbImg" src="" alt="">
+      <button class="lb-nav lb-next" id="lbNext">›</button>
+      <div class="lb-counter" id="lbCounter">1 / 6</div>
+    </div>
+
+    <section class="countdown-sec fade-in">
+      <span class="eyebrow" style="color:var(--gold-light)">Thông Tin Tiệc Cưới</span>
+      <div class="section-title">Cùng Đếm Ngược</div>
+      <div class="countdown-grid" id="countdown">
+        <div><div class="num" id="cd-d">--</div><div class="lbl">Ngày</div></div>
+        <div><div class="num" id="cd-h">--</div><div class="lbl">Giờ</div></div>
+        <div><div class="num" id="cd-m">--</div><div class="lbl">Phút</div></div>
+        <div><div class="num" id="cd-s">--</div><div class="lbl">Giây</div></div>
+      </div>
+
+      <div class="party-info">
+        <b id="partyTimeTitle">Tiệc cưới sẽ diễn ra vào lúc 18:00</b>
+        Đón khách: <span id="welcomeTime">17:30</span><br>
+        Khai tiệc: <span id="receptionTime">18:00</span>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn solid" id="addCalendar" href="#" target="_blank" rel="noopener">+ Thêm vào lịch</a>
+        <a class="btn" href="#rsvp">Xác nhận tham dự</a>
+      </div>
+
+      <div class="map-wrap">
+        <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
+      </div>
+      <div style="margin-top:12px; font-size:12.5px; color:var(--gold-pale);" id="venueName">
+        Địa điểm tiệc cưới
+      </div>
+    </section>
+
+    <section class="dresscode fade-in">
+      <span class="eyebrow">Dress Code</span>
+      <div class="section-title">Trang Phục Dự Tiệc</div>
+      <div class="swatches">
+        <span class="swatch" style="background:#6E1423"></span>
+        <span class="swatch" style="background:#C9A24B"></span>
+        <span class="swatch" style="background:#F3E4B8"></span>
+        <span class="swatch" style="background:#2B1810"></span>
+      </div>
+      <p>Thân mời quý khách dùng trang phục tông đỏ – vàng đồng – kem, để cùng hoà vào không khí ấm cúng của buổi tiệc.</p>
+    </section>
+
+    <section class="schedule fade-in">
+      <span class="eyebrow">Lịch Trình</span>
+      <div class="section-title">Lịch Trình Ngày Cưới</div>
+      <ol id="scheduleList"></ol>
+    </section>
+
+    <section class="guestbook fade-in" id="rsvp">
+      <span class="eyebrow">Sổ Lưu Bút</span>
+      <div class="section-title">Gửi Lời Chúc</div>
+      <form class="gb-form" id="gbForm">
+        <input type="text" id="gbName" placeholder="Tên của bạn" required />
+        <textarea id="gbMsg" placeholder="Lời chúc gửi đến cô dâu chú rể..." required></textarea>
+        <button type="submit">Gửi Lời Chúc</button>
+      </form>
+      <div class="gb-list" id="gbList"></div>
+      <p class="gb-empty" id="gbEmpty">Chưa có lời chúc nào. Hãy là người đầu tiên!</p>
+    </section>
+
+    <section class="gift fade-in">
+      <span class="eyebrow" style="color:var(--gold-light)">Hộp Quà Mừng</span>
+      <div class="section-title" style="color:#fff">Mừng Cưới Online</div>
+      <div class="gift-cards">
+        <div class="gift-card" data-who="groom">
+          <div class="role">Chú Rể</div>
+          <div class="nm" id="giftGroomName">Gia Bảo</div>
+          <div class="tap">Chạm để xem QR</div>
+        </div>
+        <div class="gift-card" data-who="bride">
+          <div class="role">Cô Dâu</div>
+          <div class="nm" id="giftBrideName">Minh Anh</div>
+          <div class="tap">Chạm để xem QR</div>
+        </div>
+      </div>
+    </section>
+
+    <div id="qr-modal">
+      <div class="qr-box">
+        <button class="close-x" id="qrClose">✕</button>
+        <div class="bank" id="qrBank">Vietcombank</div>
+        <img id="qrImg" src="" alt="QR chuyển khoản" width="180" height="180">
+        <div class="qr-empty" id="qrEmpty" style="display:none; padding:24px 0; font-size:12.5px; color:var(--ink-soft); font-style:italic;">Chưa có mã QR chuyển khoản</div>
+        <div class="acc" id="qrAcc">0123 4567 89</div>
+        <div class="accname" id="qrName">NGUYEN GIA BAO</div>
+        <div class="save-btn" id="qrSave">Lưu QR</div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="msg">"Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi"</div>
+      <div class="credit" id="footerCredit">Gia Bảo &amp; Minh Anh · 20.12.2026</div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   $ helper + STORAGE
+===================================================================== */
+function $(id){ return document.getElementById(id); }
+const STORAGE_KEY = 'weddingInviteConfig_v1';
+/* Server-injected config (written directly into this file at generation
+   time). This is the primary source of truth — it does NOT depend on
+   localStorage being available/persisted, so the invitation (incl.
+   uploaded photo URLs) always renders correctly even in private
+   browsing, in-app browsers, or after the browser clears storage. */
+window.__INVITATION_CONFIG__ = null;
+
+/* =====================================================================
+   DEFAULT / EXAMPLE DATA — dùng để gợi ý sẵn trong form lúc mới mở,
+   người dùng có thể sửa lại toàn bộ trước khi tạo thiệp.
+===================================================================== */
+const DEFAULT_CONFIG = {
+  groomShort: "Gia Bảo",
+  brideShort: "Minh Anh",
+  groomFull: "Nguyễn Gia Bảo",
+  brideFull: "Trần Minh Anh",
+  groomRole: "Trưởng Nam",
+  brideRole: "Út Nữ",
+  monogram: "GB",
+  weddingDateISO: "2026-12-20T18:00:00",
+  groomParents: { father: "Ông Nguyễn Văn Long", mother: "Bà Lê Thị Hồng", address: "12 Trần Phú, Hải Châu, Đà Nẵng" },
+  brideParents: { father: "Ông Trần Văn Nam", mother: "Bà Phạm Thị Lan", address: "45 Lê Duẩn, Quận 1, TP.HCM" },
+  ceremony: { time: "09:00", dateLabel: "20 · 12", lunar: "(Nhằm ngày 11 tháng 11 năm Bính Ngọ)" },
+  reception: {
+    welcomeTime: "17:30",
+    startTime: "18:00",
+    venueName: "The Adora Center, 431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
+    mapQuery: "The Adora Center 431 Hoang Van Thu Tan Binh"
+  },
+  schedule: [
+    { time: "17:30", label: "Đón khách" },
+    { time: "18:00", label: "Khai tiệc" },
+    { time: "18:20", label: "Nghi thức rót rượu, cắt bánh" },
+    { time: "19:00", label: "Phục vụ tiệc chính" },
+    { time: "21:00", label: "Kết thúc tiệc" }
+  ],
+  gallery: [
+  ],
+  gifts: {
+    groom: { bank: "Vietcombank", account: "0123 4567 89", name: "NGUYEN GIA BAO", qrImage: "" },
+    bride: { bank: "BIDV",        account: "9876 5432 10", name: "TRAN MINH ANH", qrImage: "" }
+  },
+  musicUrl: ""
+};
+
+let CONFIG = DEFAULT_CONFIG;
+let weddingDateObj = new Date(DEFAULT_CONFIG.weddingDateISO);
+let countdownInterval = null;
+
+/* =====================================================================
+   RENDER INVITATION — điền dữ liệu từ cfg vào toàn bộ trang thiệp
+===================================================================== */
+function renderInvitation(cfg){
+  CONFIG = cfg;
+
+  $('monogram').textContent = cfg.monogram;
+  $('coverNames').innerHTML = `${cfg.groomShort} <span class="cover-amp">&amp;</span> ${cfg.brideShort}`;
+  $('heroGroom').textContent = cfg.groomFull;
+  $('heroBride').textContent = cfg.brideFull;
+  $('groomFather').textContent = cfg.groomParents.father;
+  $('groomMother').textContent = cfg.groomParents.mother;
+  $('groomAddress').textContent = cfg.groomParents.address;
+  $('brideFather').textContent = cfg.brideParents.father;
+  $('brideMother').textContent = cfg.brideParents.mother;
+  $('brideAddress').textContent = cfg.brideParents.address;
+  $('groomFull').textContent = cfg.groomFull;
+  $('brideFull').textContent = cfg.brideFull;
+  $('groomRoleTxt').textContent = cfg.groomRole;
+  $('brideRoleTxt').textContent = cfg.brideRole;
+  $('ceremonyTime').textContent = cfg.ceremony.time;
+  $('ceremonyDate').textContent = cfg.ceremony.dateLabel;
+  $('ceremonyLunar').textContent = cfg.ceremony.lunar;
+  $('welcomeTime').textContent = cfg.reception.welcomeTime;
+  $('receptionTime').textContent = cfg.reception.startTime;
+  $('partyTimeTitle').textContent = `Tiệc cưới sẽ diễn ra vào lúc ${cfg.reception.startTime}`;
+  $('venueName').textContent = cfg.reception.venueName;
+  $('mapFrame').src = `https://www.google.com/maps?q=${encodeURIComponent(cfg.reception.mapQuery)}&output=embed`;
+  $('giftGroomName').textContent = cfg.groomShort;
+  $('giftBrideName').textContent = cfg.brideShort;
+  $('footerCredit').innerHTML = `${cfg.groomShort} &amp; ${cfg.brideShort}`;
+
+  const musicBtn = $('musicToggle');
+  const musicEl = $('bgMusic');
+  if (cfg.musicUrl){
+    musicEl.src = cfg.musicUrl;
+    musicBtn.classList.add('show');
+    musicBtn.classList.remove('paused');
+  } else {
+    musicEl.removeAttribute('src');
+    musicBtn.classList.remove('show');
+  }
+
+  weddingDateObj = new Date(cfg.weddingDateISO);
+  const dateFmt = weddingDateObj.toLocaleDateString('vi-VN', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric' });
+  $('coverDate').textContent = weddingDateObj.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }).replaceAll('/', ' . ');
+  $('heroDate').textContent = dateFmt.charAt(0).toUpperCase() + dateFmt.slice(1);
+  $('footerCredit').innerHTML += ' · ' + weddingDateObj.toLocaleDateString('vi-VN');
+
+  // google calendar link
+  const startStr = weddingDateObj.toISOString().replace(/[-:]|\.\d{3}/g,'');
+  const endStr = new Date(weddingDateObj.getTime()+2*60*60*1000).toISOString().replace(/[-:]|\.\d{3}/g,'');
+  const text = encodeURIComponent(`Đám cưới ${cfg.groomFull} & ${cfg.brideFull}`);
+  const details = encodeURIComponent(`Tiệc cưới tại ${cfg.reception.venueName}`);
+  const loc = encodeURIComponent(cfg.reception.venueName);
+  $('addCalendar').href = `https://www.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${startStr}/${endStr}&details=${details}&location=${loc}`;
+
+  // schedule
+  $('scheduleList').innerHTML = cfg.schedule.map(s => `
+    <li><span class="dot"></span><div class="time">${s.time}</div><div class="label">${s.label}</div></li>
+  `).join('');
+
+  // gallery
+  $('galleryGrid').innerHTML = cfg.gallery.map((src, i) => `
+    <img src="${src}" alt="Ảnh cưới ${i+1}" data-idx="${i}" class="${i===0 ? 'tall' : ''}">
+  `).join('');
+  document.querySelectorAll('#galleryGrid img').forEach(img => {
+    img.addEventListener('click', () => openLB(parseInt(img.dataset.idx)));
+  });
+
+  // countdown
+  if (countdownInterval) clearInterval(countdownInterval);
+  tickCountdown();
+  countdownInterval = setInterval(tickCountdown, 1000);
+
+  // reveal-on-scroll needs to (re)observe in case sections were already in view
+  document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+}
+
+/* =====================================================================
+   COUNTDOWN
+===================================================================== */
+function tickCountdown(){
+  const diff = weddingDateObj.getTime() - new Date().getTime();
+  if (diff <= 0){
+    $('cd-d').textContent = '0'; $('cd-h').textContent='0'; $('cd-m').textContent='0'; $('cd-s').textContent='0';
+    return;
+  }
+  const day = Math.floor(diff / 86400000);
+  const hr  = Math.floor((diff % 86400000) / 3600000);
+  const min = Math.floor((diff % 3600000) / 60000);
+  const sec = Math.floor((diff % 60000) / 1000);
+  $('cd-d').textContent = day;
+  $('cd-h').textContent = String(hr).padStart(2,'0');
+  $('cd-m').textContent = String(min).padStart(2,'0');
+  $('cd-s').textContent = String(sec).padStart(2,'0');
+}
+
+/* =====================================================================
+   COVER 囍 PATTERN + OPEN BUTTON
+===================================================================== */
+(function(){
+  const wrap = $('hyPattern');
+  const positions = [[8,10],[70,6],[18,32],[80,30],[40,18],[5,60],[85,58],[30,78],[60,70],[15,90],[75,88]];
+  wrap.innerHTML = positions.map(([x,y]) => `<span style="left:${x}%; top:${y}%;">囍</span>`).join('');
+})();
+$('openBtn').addEventListener('click', () => {
+  $('cover').classList.add('opened');
+  document.body.style.overflow = 'auto';
+  playMusicIfAvailable();
+});
+
+/* =====================================================================
+   BACKGROUND MUSIC
+   Autoplay is blocked by browsers until the visitor interacts with the
+   page — "Mở Thiệp" (and re-entering the invite after editing) counts
+   as that interaction, so we start playback right there.
+===================================================================== */
+const musicEl = $('bgMusic');
+const musicBtn = $('musicToggle');
+function playMusicIfAvailable(){
+  if (!musicEl.src) return;
+  musicEl.play().then(() => {
+    musicBtn.classList.remove('paused');
+  }).catch(() => {
+    // Some browsers still block it — leave the button showing "paused"
+    // so the user can just tap it once to start the music themselves.
+    musicBtn.classList.add('paused');
+  });
+}
+musicBtn.addEventListener('click', () => {
+  if (musicEl.paused){
+    musicEl.play().then(() => musicBtn.classList.remove('paused')).catch(() => {});
+  } else {
+    musicEl.pause();
+    musicBtn.classList.add('paused');
+  }
+});
+
+/* =====================================================================
+   LIGHTBOX
+===================================================================== */
+const lb = $('lightbox'), lbImg = $('lbImg'), lbCounter = $('lbCounter');
+let currentIdx = 0;
+function openLB(i){
+  currentIdx = i;
+  lbImg.src = CONFIG.gallery[i];
+  lbCounter.textContent = `${i+1} / ${CONFIG.gallery.length}`;
+  lb.classList.add('open');
+}
+$('lbClose').addEventListener('click', () => lb.classList.remove('open'));
+$('lbPrev').addEventListener('click', () => openLB((currentIdx - 1 + CONFIG.gallery.length) % CONFIG.gallery.length));
+$('lbNext').addEventListener('click', () => openLB((currentIdx + 1) % CONFIG.gallery.length));
+lb.addEventListener('click', (e) => { if (e.target === lb) lb.classList.remove('open'); });
+
+/* =====================================================================
+   GIFT / QR MODAL
+   Demo dùng QR text đơn giản qua api.qrserver.com — khi triển khai
+   thật nên thay bằng mã VietQR chuẩn NAPAS 247 để app ngân hàng quét
+   tự điền đúng số tài khoản.
+===================================================================== */
+const qrModal = $('qr-modal');
+document.querySelectorAll('.gift-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const g = CONFIG.gifts[card.dataset.who];
+    $('qrBank').textContent = g.bank;
+    $('qrAcc').textContent = g.account;
+    $('qrName').textContent = g.name;
+    const qrImgEl = $('qrImg');
+    const qrSaveBtn = $('qrSave');
+    const qrEmptyEl = $('qrEmpty');
+    if (g.qrImage) {
+      // Use the QR code photo uploaded by the couple.
+      qrImgEl.src = g.qrImage;
+      qrImgEl.style.display = '';
+      qrSaveBtn.style.display = '';
+      qrEmptyEl.style.display = 'none';
+    } else {
+      // No photo uploaded — don't auto-generate a QR, just show a placeholder note.
+      qrImgEl.removeAttribute('src');
+      qrImgEl.style.display = 'none';
+      qrSaveBtn.style.display = 'none';
+      qrEmptyEl.style.display = '';
+    }
+    qrModal.classList.add('open');
+  });
+});
+$('qrClose').addEventListener('click', () => qrModal.classList.remove('open'));
+qrModal.addEventListener('click', (e) => { if (e.target === qrModal) qrModal.classList.remove('open'); });
+$('qrSave').addEventListener('click', () => {
+  const src = $('qrImg').src;
+  if (!src) return;
+  const a = document.createElement('a');
+  a.href = src; a.download = 'QR-mung-cuoi.png'; a.target = '_blank';
+  a.click();
+});
+
+/* =====================================================================
+   GUESTBOOK (demo — chỉ lưu trong phiên xem hiện tại, chưa nối backend)
+===================================================================== */
+const wishes = [ { name: "Bạn thân", msg: "Chúc hai bạn trăm năm hạnh phúc, sớm sinh quý tử!" } ];
+function renderWishes(){
+  $('gbList').innerHTML = wishes.map(w => `<div class="gb-item"><b>${w.name}</b><p>${w.msg}</p></div>`).join('');
+  $('gbEmpty').style.display = wishes.length ? 'none' : 'block';
+}
+renderWishes();
+$('gbForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('gbName').value.trim();
+  const msg = $('gbMsg').value.trim();
+  if (!name || !msg) return;
+  wishes.unshift({ name, msg });
+  renderWishes();
+  $('gbForm').reset();
+});
+
+/* =====================================================================
+   SCROLL REVEAL
+===================================================================== */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('in-view'); });
+}, { threshold: 0.15 });
+
+/* =====================================================================
+   INITIAL LOAD
+   The couple's info is generated server-side from the Next.js setup
+   form and injected below as a localStorage.setItem(...) call before
+   this script runs — so we simply read it and render straight away.
+   There is no in-page "edit" mode anymore; editing happens on the
+   /invitation page of the main site.
+===================================================================== */
+(function init(){
+  let cfg = null;
+
+  // 1) Primary source: config written directly into this file server-side.
+  if (window.__INVITATION_CONFIG__){
+    cfg = window.__INVITATION_CONFIG__;
+  } else {
+    // 2) Fallback: previously-saved config in localStorage (legacy files
+    //    generated before this variable existed, or same-browser re-visits).
+    const saved = localStorage.getItem(STORAGE_KEY);
+    cfg = DEFAULT_CONFIG;
+    if (saved){
+      try{
+        cfg = JSON.parse(saved);
+      }catch(e){ /* fall back to default config */ }
+    }
+  }
+
+  renderInvitation(cfg);
+  document.body.classList.add('mode-invite');
+  document.body.style.overflow = 'hidden';
+})();
+</script>
+</body>
+</html>

@@ -12,10 +12,14 @@ const sequelize = require('./config/database');
 const User = require('./models/User');
 const Comment = require('./models/Comment');
 const Album = require('./models/Album');
+const Invitation = require('./models/Invitation');
 
 // Set up model associations if they exist
 if (Album.associate) {
   Album.associate({ User, Comment, Album });
+}
+if (Invitation.associate) {
+  Invitation.associate({ User });
 }
 
 const authRoutes = require('./routes/authRoutes');
@@ -27,6 +31,7 @@ const photosRoutes = require('./routes/photoRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 const albumRoutes = require('./routes/albumRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const invitationRoutes = require('./routes/invitationRoutes');
 
 const app = express();
 
@@ -83,9 +88,21 @@ app.use('/api/photos', photosRoutes);
 app.use('/api/budget', budgetRoutes);
 app.use('/api/albums', albumRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/invitations', invitationRoutes);
 
 // Serve static album files
 app.use('/albums', express.static('public/albums'));
+
+// Serve generated invitation files without caching so edits are always reflected
+app.use('/invitations', (req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+});
+
+// Serve static invitation files
+app.use('/invitations', express.static('public/invitations'));
 
 // Health check
 app.get('/api/health', (req, res) => {
