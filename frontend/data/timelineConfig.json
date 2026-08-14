@@ -10,13 +10,13 @@
         {
           "id": "budget",
           "label": "Tiết Kiệm",
-          "description": "Dịch vụ thiết yếu với các lựa chọn tiết kiệm chi phí",
+          "description": "Dịch vụ thiết yếu với các lựa chọn tiết kiệm",
           "price": " VND 100tr - 200tr"
         },
         {
           "id": "medium",
           "label": "Trung Bình",
-          "description": "Cân bằng giữa chất lượng và chi phí với một số dịch vụ cao cấp",
+          "description": "Cân bằng giữa dịch vụ và chi phí",
           "price": " VND 200tr - 500tr"
         },
         {
@@ -28,10 +28,98 @@
       ]
     },
     {
+      "id": "book-venue",
+      "title": "Chọn Nhà Hàng",
+      "description": "Đảm bảo địa điểm cho lễ cưới và tiệc cưới của bạn",
+      "monthsBeforeWedding": 9,
+      "category": "Nhà cung cấp",
+      "vendorType": "venue"
+    },
+    {
+      "id": "order-dress",
+      "title": "Chọn Váy Cưới",
+      "description": "Bắt đầu mua sắm và đặt váy cưới của bạn",
+      "monthsBeforeWedding": 6,
+      "category": "Trang Phục",
+      "vendorType": "dress"
+    },
+    {
+      "id": "book-photographer",
+      "title": "Chụp Hình Cưới",
+      "description": "Nghiên cứu và chọn nhiếp ảnh gia cho đám cưới của bạn",
+      "monthsBeforeWedding": 6,
+      "category": "Nhà cung cấp",
+      "vendorType": "photographer"
+    },
+    {
+      "id": "family-altar-ceremony",
+      "title": "Lễ Gia Tiên",
+      "description": "Chuẩn bị và tổ chức lễ gia tiên, bao gồm mâm quả, trang trí gia tiên, cổng hoa, xe hoa, bê quả, khung rạp và nghi thức thờ cúng.",
+      "monthsBeforeWedding": 5,
+      "category": "Lễ kỷ niệm",
+      "vendorType": "altarCeremony"
+    },
+    {
+      "id": "book-caterer",
+      "title": "Lựa Chọn Thực Đơn",
+      "description": "Liên hệ với địa điểm tổ chức tiệc cưới để chọn thực đơn phù hợp với phong cách và ngân sách đám cưới của bạn. Có thể yêu cầu thực đơn mẫu, tư vấn thực đơn theo ngân sách và yêu thử món trước khi quyết định.",
+      "monthsBeforeWedding": 4,
+      "category": "Nhà cung cấp",
+      "options": [
+        {
+          "id": "menu",
+          "label": "Thực đơn",
+          "description": "Tên các món đãi khách",
+          "isTextInput": true
+        },
+        {
+          "id": "menu-price",
+          "label": "Giá mỗi bàn",
+          "description": "Số bàn - Giá cho mỗi bàn tiệc. Tổng chi phí.",
+          "isTextInput": true
+        }
+      ]
+    },
+    {
+      "id": "book-invitations",
+      "title": "Đặt Thiệp Mời",
+      "description": "Lựa chọn nhà cung cấp và đặt thiệp cưới của bạn. Xem xét các tùy chọn in ấn, thiết kế và số lượng thiệp cần thiết. Sẽ có những lựa chọn về thiệp giấy truyền thống, thiệp kỹ thuật số và thiệp cao cấp.",
+      "monthsBeforeWedding": 3,
+      "category": "Cặp đôi",
+      "vendorType": "invitation"
+    },
+    {
+      "id": "order-rings",
+      "title": "Đặt Nhẫn Cưới",
+      "description": "Chọn và đặt nhẫn cưới của bạn",
+      "monthsBeforeWedding": 3,
+      "category": "Trang phục",
+      "options": [
+        {
+          "id": "gold-classic",
+          "label": "Nhẫn Vàng Cổ Điển",
+          "description": "Nhẫn vàng truyền thống màu vàng hoặc trắng",
+          "price": ""
+        },
+        {
+          "id": "platinum",
+          "label": "Nhẫn Bạch Kim",
+          "description": "Lựa chọn cao cấp bền và không gây dị ứng",
+          "price": ""
+        },
+        {
+          "id": "custom",
+          "label": "Cá Nhân Hóa",
+          "description": "Nhẫn cá nhân hóa với khắc hoặc thiết kế độc đáo",
+          "price": ""
+        }
+      ]
+    },
+        {
       "id": "choose-party",
       "title": "Chọn Phù Dâu & Phù Rể",
       "description": "Chọn phù dâu, phù rể và các vai trò quan trọng khác",
-      "monthsBeforeWedding": 10,
+      "monthsBeforeWedding": 2,
       "category": "Cặp đôi",
       "options": [
         {
@@ -55,120 +143,9 @@
       ]
     },
     {
-      "id": "book-venue",
-      "title": "Đặt Nhà Hàng",
-      "description": "Đảm bảo địa điểm cho lễ cưới và tiệc cưới của bạn",
-      "monthsBeforeWedding": 9,
-      "category": "Nhà cung cấp",
-      "vendorType": "venue"
-    },
-    {
-      "id": "book-photographer",
-      "title": "Chụp Hình Cưới",
-      "description": "Nghiên cứu và chọn nhiếp ảnh gia cho đám cưới của bạn",
-      "monthsBeforeWedding": 8,
-      "category": "Nhà cung cấp",
-      "vendorType": "photographer"
-    },
-    {
-      "id": "order-dress",
-      "title": "Đặt Váy Cưới",
-      "description": "Bắt đầu mua sắm và đặt váy cưới của bạn",
-      "monthsBeforeWedding": 6,
-      "category": "Trang Phục",
-      "options": [
-        {
-          "id": "ballgown",
-          "label": "Váy Công Chúa",
-          "description": "Phong cách công chúa cổ điển với váy xòe rộng",
-          "price": "VND 800 - VND 3,000"
-        },
-        {
-          "id": "a-line",
-          "label": "A-Line",
-          "description": "Phom dáng tôn dáng phù hợp với hầu hết các loại cơ thể",
-          "price": "VND 600 - VND 2,500"
-        },
-        {
-          "id": "mermaid",
-          "label": "Đuôi Cá",
-          "description": "Ôm sát qua hông, loe ra ở đầu gối",
-          "price": "VND 700 - VND 2,800"
-        },
-        {
-          "id": "sheath",
-          "label": "Ôm Dáng",
-          "description": "Phom dáng đơn giản, thẳng",
-          "price": "VND 400 - VND 1,800"
-        }
-      ]
-    },
-    {
-      "id": "book-caterer",
-      "title": "Lựa Chọn Thực Đơn",
-      "description": "Chọn thực đơn phù hợp với phong cách và ngân sách đám cưới của bạn",
-      "monthsBeforeWedding": 6,
-      "category": "Nhà cung cấp",
-      "vendorType": "caterer"
-    },
-    {
-      "id": "send-invitations",
-      "title": "Gửi Thiệp Mời",
-      "description": "Gửi thiệp mời đám cưới đến danh sách khách mời của bạn",
-      "monthsBeforeWedding": 3,
-      "category": "Cặp đôi",
-      "options": [
-        {
-          "id": "traditional",
-          "label": "Thiệp Giấy Truyền Thống",
-          "description": "Thiệp in cổ điển",
-          "price": "VND 200 - VND 800"
-        },
-        {
-          "id": "digital",
-          "label": "Thiệp Mời Kỹ Thuật Số",
-          "description": "Lựa chọn thân thiện với môi trường và tiết kiệm chi phí",
-          "price": "VND 50 - VND 200"
-        },
-        {
-          "id": "luxury",
-          "label": "Thiệp Mời Cao Cấp",
-          "description": "Vật liệu cao cấp với thiết kế tùy chỉnh",
-          "price": "VND 500 - VND 1,500"
-        }
-      ]
-    },
-    {
-      "id": "order-rings",
-      "title": "Đặt Nhẫn Cưới",
-      "description": "Chọn và đặt nhẫn cưới của bạn",
-      "monthsBeforeWedding": 3,
-      "category": "Trang phục",
-      "options": [
-        {
-          "id": "gold-classic",
-          "label": "Nhẫn Vàng Cổ Điển",
-          "description": "Nhẫn vàng truyền thống màu vàng hoặc trắng",
-          "price": "VND 300 - VND 1,200"
-        },
-        {
-          "id": "platinum",
-          "label": "Nhẫn Bạch Kim",
-          "description": "Lựa chọn cao cấp bền và không gây dị ứng",
-          "price": "VND 800 - VND 2,500"
-        },
-        {
-          "id": "custom",
-          "label": "Cá Nhân Hóa",
-          "description": "Nhẫn cá nhân hóa với khắc hoặc thiết kế độc đáo",
-          "price": "VND 600 - VND 3,000"
-        }
-      ]
-    },
-    {
       "id": "book-music",
-      "title": "Đặt Nhạc/Ca Sĩ",
-      "description": "Đảm bảo giải trí cho lễ và tiệc cưới",
+      "title": "Chọn Nhạc/Ca Sĩ",
+      "description": "Đảm bảo giải trí cho lễ và tiệc cưới. Có thể liên hệ nhà hàng để được tư vấn.",
       "monthsBeforeWedding": 2,
       "category": "Nhà cung cấp",
       "vendorType": "dj"
@@ -176,16 +153,9 @@
     {
       "id": "final-dress-fitting",
       "title": "Lấy Váy Cưới",
-      "description": "Lên lịch chỉnh sửa và thử váy cưới cuối cùng",
+      "description": "Lên lịch chỉnh sửa và thử váy cưới cuối cùng cho ngày cưới của bạn",
       "monthsBeforeWedding": 1,
       "category": "Trang phục"
-    },
-    {
-      "id": "create-timeline",
-      "title": "Tạo Lịch Trình Ngày Cưới",
-      "description": "Hoàn thiện lịch trình ngày cưới với các nhà cung cấp",
-      "monthsBeforeWedding": 1,
-      "category": "Kế hoạch"
     },
     {
       "id": "final-vendor-confirmations",
@@ -219,19 +189,19 @@
           "id": "hair-makeup-trial",
           "label": "Thử Tóc & Trang Điểm",
           "description": "Thử nghiệm phong cách làm đẹp cho ngày cưới của bạn",
-          "price": "VND 150 - VND 400"
+          "price": ""
         },
         {
           "id": "facial-treatment",
           "label": "Chăm Sóc Da Mặt",
           "description": "Chăm sóc da chuyên nghiệp để có làn da rạng rỡ",
-          "price": "VND 80 - VND 200"
+          "price": ""
         },
         {
           "id": "manicure-pedicure",
           "label": "Làm Móng",
           "description": "Móng tay và móng chân hoàn hảo cho ngày đặc biệt của bạn",
-          "price": "VND 50 - VND 120"
+          "price": ""
         }
       ]
     },
@@ -248,27 +218,6 @@
       "description": "Đảm bảo giấy phép kết hôn đã sẵn sàng và hợp lệ",
       "monthsBeforeWedding": 0.25,
       "category": "Pháp lý"
-    },
-    {
-      "id": "ceremony-items",
-      "title": "Chuẩn Bị Vật Dụng Lễ Cưới",
-      "description": "Chuẩn bị nhẫn, lời thề và các vật dụng cần thiết cho lễ cưới",
-      "monthsBeforeWedding": 0.25,
-      "category": "Kế hoạch",
-      "options": [
-        {
-          "id": "vows",
-          "label": "Lời Thề Cưới",
-          "description": "Viết lời thề cưới cá nhân của bạn",
-          "isTextInput": true
-        },
-        {
-          "id": "ceremony-music",
-          "label": "Âm Nhạc Lễ Cưới",
-          "description": "Chọn nhạc tiến và nhạc rút cho lễ cưới",
-          "isTextInput": true
-        }
-      ]
     },
     {
       "id": "enjoy-wedding-day",

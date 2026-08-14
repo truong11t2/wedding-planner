@@ -1,79 +1,28 @@
 [
   {
-    "id": "garden-paradise-hcm",
-    "label": "Garden Paradise Estate",
-    "description": "Elegant outdoor venue with lush gardens",
-    "price": "$3,500 - $6,000",
-    "image": "/images/vendor/venue-1.jpg",
-    "rating": 4.8,
-    "location": "Hồ Chí Minh",
-    "capacity": "150-300",
-    "type": "Outdoor"
+    "id": "nha-hang-diamond-place",
+    "link": "nha-hang-diamond-place",
+    "label": "Diamond Place",
+    "description": "Diamond Place: Trung Tâm Tiệc Cưới Sang Trọng Tại Phú Nhuận",
+    "price": "4.750.000đ - 12.950.000đ",
+    "image": "/images/vendor/diamond-place/dp1-cover.jpg",
+    "rating": 4.3,
+    "location": "Phú Nhuận, Hồ Chí Minh",
+    "phone": "0979 80 80 80",
+    "capacity": "200-1100",
+    "type": "restaurant"
   },
   {
-    "id": "grand-ballroom-hcm",
-    "label": "Grand Ballroom Hotel",
-    "description": "Luxurious indoor venue with crystal chandeliers",
-    "price": "$5,000 - $8,500",
-    "image": "/images/vendor/venue-2.jpg",
-    "rating": 4.9,
-    "location": "Hồ Chí Minh",
-    "capacity": "200-500",
-    "type": "Indoor"
-  },
-  {
-    "id": "oceanview-terrace-hcm",
-    "label": "Oceanview Terrace",
-    "description": "Stunning seaside venue with panoramic views",
-    "price": "$4,500 - $7,500",
-    "image": "/images/vendor/venue-4.jpg",
-    "rating": 4.9,
-    "location": "Hồ Chí Minh",
-    "capacity": "120-250",
-    "type": "Waterfront"
-  },
-  {
-    "id": "modern-loft-hcm",
-    "label": "Modern Loft Space",
-    "description": "Contemporary urban venue with industrial chic",
-    "price": "$2,800 - $4,800",
-    "image": "/images/vendor/venue-6.jpg",
-    "rating": 4.5,
-    "location": "Hồ Chí Minh",
-    "capacity": "100-200",
-    "type": "Modern"
-  },
-  {
-    "id": "rustic-barn-hanoi",
-    "label": "Rustic Barn Venue",
-    "description": "Charming countryside setting with vintage appeal",
-    "price": "$2,200 - $4,200",
-    "image": "/images/vendor/venue-3.jpg",
-    "rating": 4.6,
-    "location": "Hà Nội",
-    "capacity": "100-200",
-    "type": "Rustic"
-  },
-  {
-    "id": "historic-mansion-hanoi",
-    "label": "Historic Mansion",
-    "description": "Classic elegance in a restored heritage building",
-    "price": "$3,800 - $6,500",
-    "image": "/images/vendor/venue-5.jpg",
-    "rating": 4.7,
-    "location": "Hà Nội",
-    "capacity": "80-180",
-    "type": "Historic"
-  },
-  {
-    "id": "vineyard-estate-hanoi",
-    "label": "Vineyard Estate",
-    "description": "Romantic winery setting among rolling hills",
-    "price": "$4,200 - $7,200",
-    "image": "/images/vendor/venue-7.jpg",
-    "rating": 4.8,
-    "location": "Hà Nội",
-    "capacity": "150-300",
-    "type": "Vineyard"
+    "id": "nha-hang-white-palace-hoang-van-thu",
+    "link": "nha-hang-white-palace-hoang-van-thu",
+    "label": "White Palace Hoàng Văn Thụ",
+    "description": "White Palace Hoàng Văn Thụ: Trung tâm sự kiện & tiệc cưới hàng đầu, hơn 17 năm kinh nghiệm",
+    "price": "Liên hệ",
+    "image": "https://whitepalace.com.vn/wp-content/uploads/2024/01/banner-2.webp",
+    "rating": 4.3,
+    "location": "Phú Nhuận, Hồ Chí Minh",
+    "phone": "1900 088 850",
+    "capacity": "300-3000",
+    "type": "restaurant"
   }
 ]
