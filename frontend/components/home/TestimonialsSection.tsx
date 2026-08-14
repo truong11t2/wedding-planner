@@ -16,21 +16,21 @@ const testimonials: Testimonial[] = [
     quote: "Ứng dụng giúp chúng mình từ bước đầu lên kế hoạch đến ngày cưới một cách rõ ràng: tạo lịch trình chi tiết, phân chia công việc trong checklist, theo dõi tiến độ và nhắc việc đúng hạn. Quản lý ngân sách cho phép mình theo dõi chi tiêu, so sánh thực tế với dự toán, còn danh bạ nhà cung cấp giúp lọc và liên hệ nhanh — tất cả gói gọn trong một nơi.",
     author: "Minh & Hương",
     role: "Cô Dâu & Chú Rể",
-    avatar: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=200&h=200&fit=crop&q=80",
+    avatar: "/images/testimonials/minh-huong.jpg",
     wedding: "Thủ Đức, TP.HCM",
   },
   {
     quote: "Chúng mình đặc biệt ấn tượng với tính năng lựa chọn nhà cung cấp: so sánh giá, lưu shortlist và nhắn tin trực tiếp để đặt câu hỏi. Việc này giúp tiết kiệm thời gian tìm kiếm, so sánh hợp đồng và đưa ra quyết định tự tin, đồng thời giữ mọi thông tin liên quan đến nhà cung cấp ngay trong kế hoạch cưới.",
     author: "Lan & Tuấn",
     role: "Cô Dâu & Chú Rể",
-    avatar: "https://images.unsplash.com/photo-1537511446984-935f663eb1f4?w=200&h=200&fit=crop&q=80",
+    avatar: "/images/testimonials/lan-tuan.jpg",
     wedding: "Tân Bình, HCM",
   },
   {
     quote: "Checklist và timeline là cứu cánh của chúng tôi: phân công nhiệm vụ, đặt deadline và theo dõi trạng thái từng việc. Khi đến gần ngày cưới, lịch trình chi tiết trên app giúp đội ngũ và gia đình đồng bộ, giảm nhầm lẫn và đảm bảo mọi thứ diễn ra đúng kế hoạch.",
     author: "Phương & Nam",
     role: "Cô Dâu & Chú Rể",
-    avatar: "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=200&h=200&fit=crop&q=80",
+    avatar: "/images/testimonials/phuong-nam.jpg",
     wedding: "Hà Nội",
   },
 ];
@@ -81,17 +81,17 @@ export default function TestimonialsSection() {
               }`}
               style={{ transitionDelay: `${index * 200}ms` }}
             >
-              <Quote className="w-10 h-10 text-amber-900/20 mb-6" />
+              {/* <Quote className="w-10 h-10 text-amber-900/20 mb-6" /> */}
               
               <p className="text-gray-700 italic leading-relaxed mb-8">
                 "{testimonial.quote}"
               </p>
               
               <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
-                {/* <div 
+                <div 
                   className="w-14 h-14 rounded-full bg-cover bg-center flex-shrink-0"
                   style={{ backgroundImage: `url('${testimonial.avatar}')` }}
-                /> */}
+                />
                 <div>
                   <div className="font-semibold text-gray-900">
                     {testimonial.author}

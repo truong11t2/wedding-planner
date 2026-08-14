@@ -17,8 +17,8 @@ class ImageProcessor {
     
     // Output sizes
     this.SIZES = {
-      thumbnail: { width: 300, height: 200, quality: 80 },
-      full: { width: 2400, height: 1600, quality: 90 }
+      thumbnail: { width: 300, height: 200, quality: 99 },
+      full: { width: 2400, height: 1600, quality: 95 }
     };
 
     // Initialize S3 client

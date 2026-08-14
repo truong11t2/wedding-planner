@@ -13,6 +13,7 @@ interface Service {
 interface TimelineTab {
   id: string;
   title: string;
+  subtitle: string;
   activities: string[];
 }
 
@@ -37,7 +38,7 @@ const services: Service[] = [
   },
   {
     icon: Users,
-    title: 'Quản Lý Danh Sách Khách Mời',
+    title: 'Quản Lý Khách Mời',
     description: 'Tổ chức lời mời, quản lý sắp xếp chỗ ngồi và giao tiếp với khách một cách dễ dàng.',
     badge: 'MIỄN PHÍ',
   },
@@ -59,7 +60,9 @@ const timelineTabs: TimelineTab[] = [
   {
     id: '1-year',
     title: '1 năm',
+    subtitle: 'Chuẩn bị sơ bộ',
     activities: [
+      'Hai bên gia đình gặp mặt (lễ dạm ngõ hoặc bữa cơm chung).',
       'Xác định ngày cưới và ngân sách tổng quát. Chuẩn bị tài chính.',
       'Lên ý tưởng tổng quan cho đám cưới (chủ đề, màu sắc, phong cách).',
       'Tìm hiểu các nhà cung cấp dịch vụ (nhà hàng, trang phục, chụp hình...).',
@@ -67,40 +70,55 @@ const timelineTabs: TimelineTab[] = [
     ],
   },
   {
-    id: '3-6-months',
-    title: '3-6 tháng',
+    id: '9-6-months',
+    title: '9-6 tháng',
+    subtitle: 'Liên hệ đặt dịch vụ chính',
     activities: [
-      'Xác nhận và ký hợp đồng với các nhà cung cấp chính.',
+      'Đặt nhà hàng tiệc cưới.',
       'Chọn và đặt mua/thuê váy cưới và vest.',
-      'Lên kế hoạch chi tiết cho tiệc cưới (menu, trang trí, âm nhạc).',
-      'Đặt dịch vụ trang điểm và làm tóc.',
+      'Đặt dịch vụ chụp hình và quay phim.',
+      'Đăng ký kết hôn ở UBND xã hoặc phường',
     ],
   },
   {
-    id: '4-6-weeks',
-    title: '4-6 tuần',
+    id: '6-3-months',
+    title: '6-3 tháng',
+    subtitle: 'Lên kế hoạch chi tiết',
+    activities: [
+      'Xác nhận và ký hợp đồng với các nhà cung cấp chính.',
+      'Lên kế hoạch chi tiết cho tiệc cưới (menu, trang trí, âm nhạc).',
+      'Chốt danh sách khách chính thức và thiết kế thiệp cưới.',
+      'Chụp ảnh pre-wedding',
+    ],
+  },
+  {
+    id: '6-3-weeks',
+    title: '6-3 tuần',
+    subtitle: 'Chuẩn bị chi tiết',
     activities: [
       'Xác nhận số lượng khách tham dự cuối cùng.',
       'Hoàn thiện kịch bản buổi lễ và tiệc cưới.',
       'Thử váy cưới và vest lần cuối.',
       'Xác nhận lịch trình với tất cả nhà cung cấp.',
+      'Gửi thiệp cưới',
       'Chuẩn bị bài phát biểu và lời cảm ơn.',
     ],
   },
   {
-    id: '7-15-days',
-    title: '7-15 ngày',
+    id: '15-7-days',
+    title: '15-7 ngày',
+    subtitle: 'Chuẩn bị cuối cùng',
     activities: [
       'Làm việc với tất cả nhà cung cấp lần cuối.',
       'Chuẩn bị hành lý cho tuần trăng mật (nếu có).',
       'Tập dượt buổi lễ với người dẫn chương trình.',
-      'Gửi thiệp cưới',
       'Nghỉ ngơi và thư giãn để có sức khỏe tốt nhất.',
     ],
   },
   {
     id: 'day-before',
     title: 'Ngày mai',
+    subtitle: 'Thư giản',
     activities:[ 
       'Giao nhẫn cưới cho phù dâu/phù rể.',
       'Đi ngủ sớm và có giấc ngủ đủ.',
@@ -137,7 +155,7 @@ export default function ServicesSection() {
     <section ref={sectionRef} className="py-20 md:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-block bg-amber-100 text-pink-600 px-4 py-2 rounded-full text-sm font-semibold mb-4 tracking-wide">
+          <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4 tracking-wide">
             100% MIỄN PHÍ
           </div>
           <h2 className="font-serif text-4xl md:text-5xl mb-4 text-gray-900">
@@ -168,7 +186,7 @@ export default function ServicesSection() {
                       {service.badge}
                     </div>
                   )}
-                  <div className="mb-6">
+                  <div className="mb-2">
                     <Icon className="w-12 h-12 text-pink-600" />
                   </div>
                   <h3 className="font-serif text-2xl mb-4 text-gray-900">
@@ -193,7 +211,7 @@ export default function ServicesSection() {
               Lịch Trình Chuẩn Bị Đám Cưới
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Hướng dẫn chi tiết theo từng giai đoạn để bạn chuẩn bị hoàn hảo cho ngày trọng đại
+              Hướng dẫn chi tiết theo từng giai đoạn để bạn chuẩn bị hoàn hảo cho ngày cưới
             </p>
           </div>
 
@@ -226,8 +244,8 @@ export default function ServicesSection() {
                 }`}
               >
                 <h3 className="font-serif text-3xl mb-8 text-gray-900 flex items-center justify-center">
-                  <Calendar className="w-8 h-8 text-pink-600 mr-3" />
-                  Cần làm trước {tab.title}
+                  {/* <Calendar className="w-8 h-8 text-pink-600 mr-3" /> */}
+                  {tab.subtitle}
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
                   {tab.activities.map((activity, index) => (

@@ -9,6 +9,7 @@ import GallerySection from './GallerySection';
 import TestimonialsSection from './TestimonialsSection';
 //import PricingSection from './PricingSection';
 import CTASection from './CTASection';
+import ConnectSection from './ConnectSection';
 
 export default function HomePage() {
   return (
@@ -27,12 +28,15 @@ export default function HomePage() {
         </div>
 
         {/* Feature Split Section */}
-        <FeatureSplit />
+        {/* <FeatureSplit /> */}
 
         {/* Gallery Section */}
         <div id="gallery">
-          <GallerySection />
+          {/* <GallerySection /> */}
         </div>
+
+        {/* Connect Section */}
+        <ConnectSection />
 
         {/* Testimonials Section */}
         <div id="testimonials">

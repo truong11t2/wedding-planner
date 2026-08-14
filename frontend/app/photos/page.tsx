@@ -991,9 +991,9 @@ export default function PhotosPage() {
                     <Image
                       src={photo.thumbnailUrl}
                       alt={photo.name}
-                      width={800}
-                      height={600}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                      fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-200"
                     />
                     
                     {/* Overlay */}

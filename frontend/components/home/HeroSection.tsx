@@ -157,7 +157,7 @@ export default function HeroSection() {
                 onClick={handleBeginJourney}
                 className="bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 text-white px-10 py-4 rounded-full hover:scale-105 transition-all duration-300 font-semibold tracking-wide shadow-2xl text-lg mb-12 md:mb-0"
               >
-                Bắt đầu ngay bây giờ ⚡
+                Bắt đầu ngay bây giờ
               </button>
             </div>
           </>

@@ -72,7 +72,7 @@ export default function CTASection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative py-20 md:py-28 bg-white"
+      className="relative py-24 overflow-hidden bg-linear-to-br from-rose-900 via-purple-900 to-indigo-900"
     >
       {/* Decorative Watermark */}
       {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
@@ -86,10 +86,10 @@ export default function CTASection() {
         <div className={`text-center mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <h2 className="font-serif text-4xl md:text-6xl mb-6 text-gray-900">
+          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-5">
             Bắt Đầu Hành Trình Của Bạn
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-white/70 text-lg max-w-2xl mx-auto leading-relaxed">
             Dành cho các cặp đôi muốn lập kế hoạch đám cưới hoàn hảo và các nhà cung cấp dịch vụ muốn hợp tác với chúng tôi.
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function CTASection() {
           <div className={`transition-all duration-1000 delay-300 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
-            <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10 h-full border border-rose-100 flex flex-col">
+            <div className="bg-white/10 hover:bg-white/20 rounded-2xl shadow-xl p-8 lg:p-10 h-full border border-rose-100 flex flex-col">
               {/* Icon */}
               <div className="flex justify-center mb-6">
                 <div className="relative">
@@ -109,48 +109,48 @@ export default function CTASection() {
                 </div>
               </div>
               
-              <h3 className="font-serif text-3xl md:text-4xl text-gray-900 mb-4 text-center">
+              <h3 className="font-serif text-3xl md:text-4xl text-white mb-4 text-center">
                 Dành Cho Các Cặp Đôi
               </h3>
               
-              <p className="text-gray-600 text-lg mb-8 text-center leading-relaxed">
+              <p className="text-white text-lg mb-8 text-center leading-relaxed">
                 Bắt đầu lập kế hoạch đám cưới hoàn hảo của bạn ngay hôm nay. 
                 Hoàn toàn miễn phí và dễ dàng sử dụng.
               </p>
               
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Tổng hợp ngân sách chi tiêu, nhiệm vụ cần làm</span>
+                  <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                  <span className="text-white">Tổng hợp ngân sách chi tiêu, nhiệm vụ cần làm</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Tạo lịch trình chi tiết cho ngày cưới</span>
+                  <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                  <span className="text-white">Tạo lịch trình chi tiết cho ngày cưới</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Quản lý ngân sách và danh sách khách mời</span>
+                  <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                  <span className="text-white">Quản lý ngân sách và danh sách khách mời</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Kết nối với nhà cung cấp dịch vụ uy tín</span>
+                  <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                  <span className="text-white">Kết nối với nhà cung cấp dịch vụ uy tín</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Tạo album ảnh và chia sẻ dễ dàng</span>
+                  <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                  <span className="text-white">Tạo album ảnh và chia sẻ dễ dàng</span>
                 </div>
               </div>
               
               <div className="mt-auto">
                 <button
                   onClick={scrollToHero}
-                  className="w-full group relative inline-flex items-center justify-center gap-3 bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 text-white px-8 py-4 rounded-lg text-lg font-semibold overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                  className="w-full group relative inline-flex items-center justify-center gap-3 bg-linear-to-r from-rose-500 to-purple-500 text-white px-8 py-4 rounded-lg text-lg font-semibold overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105"
                 >
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                  {/* <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-linear-to-r from-transparent via-white/30 to-transparent" /> */}
                   <span className="relative z-10">Lên Kế Hoạch</span>
                 </button>
                 
-                <p className="text-center text-sm text-gray-500 mt-4">
+                <p className="text-center text-sm text-white/80 mt-4">
                   ✨ 100% miễn phí • Không cần thẻ tín dụng
                 </p>
               </div>
@@ -161,58 +161,58 @@ export default function CTASection() {
           <div className={`transition-all duration-1000 delay-500 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
-            <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-10 h-full border border-purple-100 flex flex-col">
+            <div className="bg-white/10 hover:bg-white/20 rounded-2xl shadow-xl p-8 lg:p-10 h-full border border-purple-100 flex flex-col">
               {/* Icon */}
               <div className="flex justify-center mb-6">
                 <div className="relative">
-                  <Send className="w-16 h-16 text-purple-600 animate-pulse" />
+                  <Send className="w-16 h-16 text-amber-300 animate-pulse" />
                   {/* <div className="absolute inset-0 w-16 h-16 bg-purple-400/20 rounded-full blur-xl" /> */}
                 </div>
               </div>
               
-              <h3 className="font-serif text-3xl md:text-4xl text-gray-900 mb-4 text-center">
+              <h3 className="font-serif text-3xl md:text-4xl text-white mb-4 text-center">
                 Dành Cho Nhà Cung Cấp
               </h3>
               
-              <p className="text-gray-600 text-lg mb-8 text-center leading-relaxed">
+              <p className="text-white text-lg mb-8 text-center leading-relaxed">
                 Hợp tác cùng chúng tôi để kết nối với hàng ngàn cặp đôi đang tìm kiếm dịch vụ của bạn.
               </p>
               
               <div className="flex-1 flex flex-col">
               <form onSubmit={handleVendorSubmit} className="space-y-5 flex-1 flex flex-col">
                 <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
                   <input
                     type="text"
                     value={vendorName}
                     onChange={(e) => setVendorName(e.target.value)}
                     placeholder="Họ và tên"
-                    className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                    className="text-white w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
                     required
                     disabled={isSubmitting}
                   />
                 </div>
 
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white" />
                   <input
                     type="email"
                     value={vendorEmail}
                     onChange={(e) => setVendorEmail(e.target.value)}
                     placeholder="Email của bạn"
-                    className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                    className="text-white w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
                     required
                     disabled={isSubmitting}
                   />
                 </div>
                 
                 <div className="relative">
-                  <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
+                  <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-white" />
                   <textarea
                     value={vendorMessage}
                     onChange={(e) => setVendorMessage(e.target.value)}
                     placeholder="Giới thiệu về dịch vụ của bạn (loại hình kinh doanh, dịch vụ cung cấp, số điện thoại...)" rows={5}
-                    className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all resize-none"
+                    className="text-white w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 outline-none transition-all resize-none"
                     required
                     disabled={isSubmitting}
                   />
@@ -235,7 +235,7 @@ export default function CTASection() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full group relative inline-flex items-center justify-center gap-3 bg-linear-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-lg text-lg font-semibold overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105"
                   >
                     {isSubmitting ? (
                       <>
@@ -244,12 +244,12 @@ export default function CTASection() {
                       </>
                     ) : (
                       <>
-                        <span>Gửi Thông Tin</span>
+                        <span className="relative z-10">Gửi Thông Tin</span>
                       </>
                     )}
                   </button>
                   
-                  <p className="text-center text-sm text-gray-500">
+                  <p className="text-center text-sm text-white/80">
                     📧 Chúng tôi sẽ phản hồi trong vòng 24 giờ
                   </p>
                 </div>
