@@ -13,6 +13,7 @@ export interface InvitationCeremony {
 }
 
 export interface InvitationReception {
+  date: string;
   welcomeTime: string;
   startTime: string;
   venueName: string;

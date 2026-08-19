@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Thiệp Cưới — Điền Thông Tin Của Bạn</title>
+<title>Thiệp Cưới - Về Một Nhà</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,11 +16,13 @@
     --wine-mid:    #8A1C2E;
     --gold:        #C9A24B;
     --gold-light:  #E8CD82;
-    --gold-pale:   #F3E4B8;
-    --ivory:       #FBF3E7;
-    --ivory-soft:  #F6EADA;
-    --ink:         #2B1810;
-    --ink-soft:    #5A4436;
+    --gold-pale:   #F7EDCD;
+    /* darker gold reserved for TEXT on light backgrounds (AA contrast) */
+    --gold-deep:   #8A6410;
+    --ivory:       #FDF7EE;
+    --ivory-soft:  #F5E9D8;
+    --ink:         #1E0F09;
+    --ink-soft:    #4A3225;
 
     --font-display: 'Playfair Display', serif;
     --font-script:  'Cormorant Garamond', serif;
@@ -120,19 +122,16 @@
     transition: transform 1s cubic-bezier(.65,0,.35,1), opacity .9s ease;
   }
   #cover.opened{ transform:translateY(-100%); opacity:0; pointer-events:none; }
-  .cover-inner{ position:relative; max-width:340px; padding:32px; }
-  @media (min-width:900px){ .cover-inner{ max-width:420px; } .cover-names{ font-size:48px; } }
-  .cover-monogram{
-    width:96px; height:96px; margin:0 auto 22px; border:1px solid var(--gold);
-    border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-family:var(--font-script); font-size:34px; color:var(--gold-light);
-    position:relative;
+  .cover-inner{
+    position:relative; max-width:340px; padding:40px 28px;
+    border:1px solid var(--gold);
+    box-shadow: inset 0 0 0 4px rgba(201,162,75,0.15);
   }
-  .cover-monogram::before, .cover-monogram::after{
-    content:''; position:absolute; inset:-8px; border:1px solid rgba(201,162,75,0.35); border-radius:50%;
+  .cover-inner::before{
+    content:''; position:absolute; inset:8px; border:1px solid rgba(201,162,75,0.5); pointer-events:none;
   }
-  .cover-monogram::after{ inset:-16px; border-color:rgba(201,162,75,0.18); }
-  .cover-eyebrow{ font-size:11px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  @media (min-width:900px){ .cover-inner{ max-width:420px; padding:48px 40px; } .cover-names{ font-size:48px; } }
+  .cover-eyebrow{ font-size:12px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-top:28px; margin-bottom:14px; }
   .cover-names{
     font-family:var(--font-script); font-style:italic; font-weight:500;
     font-size:40px; line-height:1.15; color:var(--gold-pale);
@@ -149,8 +148,10 @@
 
   /* ============ HERO ============ */
   .hero{
-    position:relative; padding:64px 24px 48px; text-align:center;
-    background:linear-gradient(180deg, var(--wine) 0%, var(--wine-mid) 55%, var(--ivory) 100%);
+    position:relative; overflow:hidden; padding:64px 24px 48px; text-align:center;
+    background:
+      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
+      var(--wine);
     color:var(--gold-pale);
   }
   .hero .eyebrow{ color:var(--gold-light); }
@@ -217,34 +218,138 @@
   #lightbox .lb-prev{ left:6px; } #lightbox .lb-next{ right:6px; }
   #lightbox .lb-close{ position:absolute; top:18px; right:20px; color:var(--gold-pale); font-size:22px; }
 
-  /* ============ COUNTDOWN ============ */
+  /* ============ TIỆC CƯỚI / COUNTDOWN (Song Hỷ Đỏ) ============ */
   .countdown-sec{
-    padding:46px 22px; text-align:center;
-    background:linear-gradient(180deg, var(--ivory) 0%, var(--wine) 120%);
+    position:relative; overflow:hidden;
+    padding:58px 22px 62px; text-align:center;
+    background:
+      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
+      var(--wine);
     color:#fff;
   }
-  .countdown-sec .section-title{ color:#fff; }
-  .countdown-grid{ display:flex; justify-content:center; gap:12px; margin-top:26px; }
-  .countdown-grid div{
-    width:64px; padding:12px 0; border:1px solid rgba(232,205,130,.5); border-radius:6px;
-    background:rgba(255,255,255,0.04);
+  /* subtle 囍 lattice, same language as the cover — shared by the
+     three "silk red" sections so they read as one continuous fabric */
+  .countdown-sec::before, .hero::before, .gift::before, footer::before{
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.10;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(232,205,130,.55) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(-45deg, rgba(232,205,130,.55) 0 1px, transparent 1px 22px);
   }
-  .countdown-grid .num{ font-family:var(--font-display); font-size:24px; color:var(--gold-light); font-weight:600; }
-  .countdown-grid .lbl{ font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-pale); margin-top:4px; }
+  .countdown-sec > *, .hero > *, .gift > *, footer > *{ position:relative; z-index:1; }
+  .countdown-sec .section-title{ color:#fff; font-size:24px; }
+  .countdown-sec .gold-rule{ background:linear-gradient(90deg, transparent, var(--gold-light), transparent); }
 
-  .party-info{ margin-top:30px; font-size:13px; color:var(--gold-pale); line-height:1.8; }
-  .party-info b{ display:block; font-family:var(--font-display); font-size:17px; color:#fff; margin-bottom:6px; }
+  .hy-seal{
+    width:56px; height:56px; margin:14px auto 14px; border-radius:50%;
+    border:1px solid var(--gold); display:flex; align-items:center; justify-content:center;
+    font-size:24px; color:var(--gold-light); position:relative;
+  }
+  .hy-seal::after{
+    content:''; position:absolute; inset:-7px; border:1px solid rgba(201,162,75,.3); border-radius:50%;
+  }
+
+  /* countdown — gold-framed plaques with a hairline separator between them */
+  .countdown-grid{
+    display:flex; justify-content:center; align-items:stretch; gap:0;
+    margin:30px auto 0; max-width:340px;
+    border:1px solid rgba(232,205,130,.45); border-radius:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+    box-shadow:inset 0 0 0 1px rgba(232,205,130,.12), 0 10px 26px rgba(0,0,0,.25);
+    overflow:hidden;
+  }
+  .countdown-grid div{
+    flex:1; padding:16px 0 14px; border:0; border-radius:0;
+    background:none; position:relative;
+  }
+  .countdown-grid div + div::before{
+    content:''; position:absolute; left:0; top:22%; bottom:22%; width:1px;
+    background:linear-gradient(180deg, transparent, rgba(232,205,130,.5), transparent);
+  }
+  .countdown-grid .num{
+    font-family:var(--font-display); font-size:28px; line-height:1;
+    color:var(--gold-light); font-weight:600; font-variant-numeric:tabular-nums;
+  }
+  .countdown-grid .lbl{ font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-pale); margin-top:7px; opacity:.85; }
+
+  /* mini calendar — tháng cưới, highlight đúng ngày */
+  .cal{
+    margin:26px auto 0; max-width:340px; padding:18px 16px 16px;
+    border:1px solid rgba(232,205,130,.4); border-radius:10px;
+    background:rgba(255,255,255,.05);
+    box-shadow:0 10px 26px rgba(0,0,0,.22);
+  }
+  .cal-head{
+    font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--gold-light);
+    letter-spacing:.12em; text-transform:uppercase; margin-bottom:12px;
+  }
+  .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+  .cal-grid .dow{
+    font-size:9.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--gold); padding-bottom:6px; font-weight:600;
+  }
+  .cal-grid .day{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-size:12.5px; color:var(--gold-pale); border-radius:50%;
+    font-variant-numeric:tabular-nums;
+  }
+  .cal-grid .day.empty{ visibility:hidden; }
+  .cal-grid .day.today{ color:#fff; box-shadow:inset 0 0 0 1px rgba(232,205,130,.35); }
+  .cal-grid .day.wed{
+    position:relative; color:var(--wine-dark); font-weight:700;
+    background:radial-gradient(circle at 50% 40%, var(--gold-light), var(--gold));
+    animation: calPulse 2.4s ease-in-out infinite;
+  }
+  .cal-grid .day.wed::after{
+    content:'♥'; position:absolute; top:-6px; right:-2px; font-size:9px; color:var(--gold-light);
+  }
+  @keyframes calPulse{
+    0%,100%{ box-shadow:0 0 0 3px rgba(232,205,130,.20), 0 4px 12px rgba(0,0,0,.3); }
+    50%{ box-shadow:0 0 0 7px rgba(232,205,130,.10), 0 4px 12px rgba(0,0,0,.3); }
+  }
+  .cal-note{
+    margin-top:12px; padding-top:11px; border-top:1px solid rgba(232,205,130,.25);
+    font-family:var(--font-script); font-style:italic; font-size:14px; color:var(--gold-pale);
+  }
+
+  /* event card: giờ đón khách / khai tiệc + địa điểm */
+  .party-info{
+    margin:32px auto 0; max-width:340px; padding:24px 20px 22px;
+    border:1px solid rgba(232,205,130,.4); border-radius:10px;
+    background:rgba(255,255,255,.05);
+    font-size:13px; color:var(--gold-pale); line-height:1.7;
+  }
+  .party-info b{
+    display:block; font-family:var(--font-script); font-style:italic; font-weight:600;
+    font-size:21px; color:#fff; margin-bottom:14px;
+  }
+  .party-times{ display:flex; justify-content:center; gap:0; margin-top:2px; }
+  .party-times .t{ flex:1; position:relative; }
+  .party-times .t + .t::before{
+    content:''; position:absolute; left:0; top:10%; bottom:10%; width:1px; background:rgba(232,205,130,.35);
+  }
+  .party-times .t span{ display:block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); }
+  .party-times .t strong{ display:block; font-family:var(--font-display); font-size:22px; color:#fff; font-weight:600; margin-top:5px; }
+
+  .venue-line{
+    margin-top:18px; padding-top:16px; border-top:1px solid rgba(232,205,130,.28);
+    font-size:13px; color:#fff; line-height:1.6;
+  }
+  .venue-line .lbl{ display:block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
 
   .cta-row{ margin-top:26px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
   .btn{
-    padding:12px 22px; font-size:12px; letter-spacing:.14em; text-transform:uppercase;
-    border-radius:3px; border:1px solid var(--gold); color:var(--gold-pale); transition:.25s;
+    padding:12px 24px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
+    border-radius:2px; border:1px solid var(--gold); color:var(--gold-pale); transition:.25s;
   }
   .btn.solid{ background:var(--gold); color:var(--wine-dark); }
-  .btn:hover{ opacity:.85; }
+  .btn:hover{ background:var(--gold); color:var(--wine-dark); }
+  .btn.solid:hover{ opacity:.88; }
 
-  .map-wrap{ margin-top:24px; border-radius:6px; overflow:hidden; border:1px solid rgba(232,205,130,.4); }
-  .map-wrap iframe{ width:100%; height:190px; border:0; display:block; }
+  .map-wrap{
+    margin:26px auto 0; max-width:100%; border-radius:8px; overflow:hidden;
+    border:1px solid rgba(232,205,130,.4); box-shadow:0 10px 26px rgba(0,0,0,.28);
+  }
+  .map-wrap iframe{ width:100%; height:350px; border:0; display:block; filter:saturate(.9); }
 
   /* ============ DRESS CODE ============ */
   .dresscode{ padding:44px 22px; text-align:center; background:var(--ivory); }
@@ -253,7 +358,7 @@
   .dresscode p{ margin-top:16px; font-size:13px; color:var(--ink-soft); max-width:320px; margin-left:auto; margin-right:auto; }
 
   /* ============ SCHEDULE ============ */
-  .schedule{ padding:46px 26px; background:var(--ivory-soft); }
+  .schedule{ padding:46px 26px; text-align:center; background:var(--ivory-soft); }
   .schedule ol{ list-style:none; margin-top:28px; position:relative; }
   .schedule ol::before{ content:''; position:absolute; left:29px; top:6px; bottom:6px; width:1px; background:rgba(201,162,75,.5); }
   .schedule li{ position:relative; padding-left:60px; margin-bottom:24px; }
@@ -266,24 +371,29 @@
   .schedule .label{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
 
   /* ============ GUESTBOOK ============ */
-  .guestbook{ padding:46px 22px; text-align:center; background:var(--ivory); }
-  .gb-form{ margin-top:22px; display:flex; flex-direction:column; gap:10px; max-width:340px; margin-left:auto; margin-right:auto; }
+  .guestbook{ padding:46px 22px; text-align:center; background:var(--ivory-soft); }
+  .gb-form{ margin-top:22px; display:flex; flex-direction:column; gap:10px; max-width:500px; margin-left:auto; margin-right:auto; }
   .gb-form input, .gb-form textarea{
     padding:11px 13px; border:1px solid rgba(110,20,35,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
   }
   .gb-form textarea{ resize:none; height:70px; }
   .gb-form button{
-    margin-top:4px; padding:12px; background:var(--wine); color:#fff; border-radius:4px;
+    margin-top:4px; padding:12px; background:var(--wine-mid); color:#fff; border-radius:4px;
     font-size:12px; letter-spacing:.14em; text-transform:uppercase;
   }
-  .gb-list{ margin-top:28px; display:flex; flex-direction:column; gap:14px; max-width:340px; margin-left:auto; margin-right:auto; text-align:left; }
+  .gb-list{ margin-top:28px; display:flex; flex-direction:column; gap:14px; max-width:500px; margin-left:auto; margin-right:auto; text-align:left; }
   .gb-item{ background:var(--ivory-soft); border-radius:6px; padding:12px 14px; border-left:3px solid var(--gold); }
   .gb-item b{ font-size:13px; color:var(--wine); }
   .gb-item p{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.5; }
   .gb-empty{ font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-top:22px; }
 
   /* ============ GIFT / QR ============ */
-  .gift{ padding:46px 22px; text-align:center; background:linear-gradient(180deg, var(--ivory) 0%, var(--wine-dark) 140%); }
+  .gift{
+    position:relative; overflow:hidden; padding:46px 22px; text-align:center;
+    background:
+      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
+      var(--wine);
+  }
   .gift-cards{ margin-top:24px; display:flex; gap:12px; max-width:400px; margin-left:auto; margin-right:auto; }
   .gift-card{
     flex:1; padding:22px 10px; border:1px solid rgba(201,162,75,.5); border-radius:8px;
@@ -307,10 +417,14 @@
   .qr-box .close-x{ position:absolute; top:10px; right:14px; font-size:20px; color:var(--ink-soft); }
   .qr-box .save-btn{ margin-top:14px; display:inline-block; padding:9px 18px; border:1px solid var(--wine); border-radius:4px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--wine); }
 
-  /* ============ FOOTER ============ */
-  footer{ padding:40px 24px 44px; text-align:center; background:var(--wine-dark); color:var(--gold-pale); }
-  footer .msg{ font-family:var(--font-script); font-style:italic; font-size:19px; max-width:320px; margin:0 auto; line-height:1.5; color:#fff; }
-  footer .credit{ margin-top:18px; font-size:10.5px; letter-spacing:.14em; color:var(--gold); text-transform:uppercase; }
+  /* gift section footer message (moved in from the old footer) */
+  .gift .msg{ font-family:var(--font-script); font-style:italic; font-size:19px; max-width:320px; margin:28px auto 0; line-height:1.5; color:#fff; }
+  .gift .credit{ margin-top:14px; font-size:10.5px; letter-spacing:.14em; color:var(--gold); text-transform:uppercase; }
+  .home-link{
+    display:inline-block; margin-top:25px; font-size:10px; letter-spacing:.12em;
+    color:var(--gold-pale); text-decoration:none; opacity:.65; transition:opacity .2s ease;
+  }
+  .home-link:hover{ opacity:1; text-decoration:underline; }
 
   .music-fab{
     position:fixed; bottom:18px; left:18px; z-index:55;
@@ -338,9 +452,8 @@
 <div id="cover">
   <div class="hy-pattern" id="hyPattern"></div>
   <div class="cover-inner">
-    <div class="cover-monogram" id="monogram">GB</div>
-    <div class="cover-eyebrow">Trân trọng kính mời</div>
     <div class="cover-names" id="coverNames">Gia Bảo <span class="cover-amp">&amp;</span> Minh Anh</div>
+    <div class="cover-eyebrow">Trân trọng kính mời</div>
     <div class="cover-date" id="coverDate">20 . 12 . 2026</div>
     <button class="open-btn" id="openBtn">Mở Thiệp</button>
   </div>
@@ -356,11 +469,7 @@
 
     <section class="hero">
       <div class="eyebrow">Lễ Thành Hôn</div>
-      <svg class="flourish hero-flourish" viewBox="0 0 120 60" fill="none">
-        <path d="M60 50 C 40 40, 30 20, 60 10 C 90 20, 80 40, 60 50 Z"/>
-        <path d="M60 10 C 55 25, 55 35, 60 50"/>
-        <circle cx="60" cy="12" r="2.4"/>
-      </svg>
+      <div class="hy-seal">囍</div>
       <div class="hero-names">
         <small id="heroGroom">Nguyễn Gia Bảo</small>
         &amp;
@@ -398,16 +507,16 @@
       </div>
 
       <div class="ceremony-box">
-        <div class="place">Lễ Vu Quy được cử hành tại tư gia, vào lúc</div>
+        <div class="place">Lễ Thành Hôn được cử hành tại tư gia vào lúc</div>
         <div class="time" id="ceremonyTime">09:00</div>
-        <div class="datebadge">Chủ Nhật <b id="ceremonyDate">20 · 12</b> 2026</div>
+        <div class="datebadge">Chủ Nhật <b id="ceremonyDate">20 · 12 · 2026</b></div>
         <div class="lunar" id="ceremonyLunar">(Nhằm ngày 11 tháng 11 năm Bính Ngọ)</div>
       </div>
     </section>
 
     <section class="gallery fade-in">
       <span class="eyebrow">Album Ảnh</span>
-      <div class="section-title">Khoảnh Khắc Của Chúng Tôi</div>
+      <!-- <div class="section-title">Khoảnh Khắc Của Chúng Tôi</div> -->
       <div class="gallery-grid" id="galleryGrid"></div>
     </section>
 
@@ -421,18 +530,32 @@
 
     <section class="countdown-sec fade-in">
       <span class="eyebrow" style="color:var(--gold-light)">Thông Tin Tiệc Cưới</span>
+      <div class="party-info">
+        <b id="partyTimeTitle"></b>
+        <div class="venue-line"></div>
+
+        <div class="party-times">
+          <div class="t"><span>Đón khách</span><strong id="welcomeTime">17:30</strong></div>
+          <div class="t"><span>Khai tiệc</span><strong id="receptionTime">18:00</strong></div>
+        </div>
+        <div class="venue-line">
+          <span class="lbl">Địa điểm</span>
+          <span id="venueName">Địa điểm tiệc cưới</span>
+        </div>
+      </div>
+      <!-- <div class="cal">
+        <div class="cal-head" id="calHead">Tháng 12 · 2026</div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-note" id="calNote"></div>
+      </div> -->
+
+      <div class="gold-rule"></div>
       <div class="section-title">Cùng Đếm Ngược</div>
       <div class="countdown-grid" id="countdown">
         <div><div class="num" id="cd-d">--</div><div class="lbl">Ngày</div></div>
         <div><div class="num" id="cd-h">--</div><div class="lbl">Giờ</div></div>
         <div><div class="num" id="cd-m">--</div><div class="lbl">Phút</div></div>
         <div><div class="num" id="cd-s">--</div><div class="lbl">Giây</div></div>
-      </div>
-
-      <div class="party-info">
-        <b id="partyTimeTitle">Tiệc cưới sẽ diễn ra vào lúc 18:00</b>
-        Đón khách: <span id="welcomeTime">17:30</span><br>
-        Khai tiệc: <span id="receptionTime">18:00</span>
       </div>
 
       <div class="cta-row">
@@ -443,25 +566,9 @@
       <div class="map-wrap">
         <iframe id="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
       </div>
-      <div style="margin-top:12px; font-size:12.5px; color:var(--gold-pale);" id="venueName">
-        Địa điểm tiệc cưới
-      </div>
-    </section>
-
-    <section class="dresscode fade-in">
-      <span class="eyebrow">Dress Code</span>
-      <div class="section-title">Trang Phục Dự Tiệc</div>
-      <div class="swatches">
-        <span class="swatch" style="background:#6E1423"></span>
-        <span class="swatch" style="background:#C9A24B"></span>
-        <span class="swatch" style="background:#F3E4B8"></span>
-        <span class="swatch" style="background:#2B1810"></span>
-      </div>
-      <p>Thân mời quý khách dùng trang phục tông đỏ – vàng đồng – kem, để cùng hoà vào không khí ấm cúng của buổi tiệc.</p>
     </section>
 
     <section class="schedule fade-in">
-      <span class="eyebrow">Lịch Trình</span>
       <div class="section-title">Lịch Trình Ngày Cưới</div>
       <ol id="scheduleList"></ol>
     </section>
@@ -485,7 +592,7 @@
         <div class="gift-card" data-who="groom">
           <div class="role">Chú Rể</div>
           <div class="nm" id="giftGroomName">Gia Bảo</div>
-          <div class="tap">Chạm để xem QR</div>
+          <div class="tap">Ấn để xem QR</div>
         </div>
         <div class="gift-card" data-who="bride">
           <div class="role">Cô Dâu</div>
@@ -493,6 +600,10 @@
           <div class="tap">Chạm để xem QR</div>
         </div>
       </div>
+
+      <div class="msg">"Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi"</div>
+      <div class="credit" id="footerCredit">Gia Bảo &amp; Minh Anh · 20.12.2026</div>
+      <a class="home-link" href="https://vemotnha.com" target="_blank" rel="noopener">vemotnha.com</a>
     </section>
 
     <div id="qr-modal">
@@ -506,12 +617,6 @@
         <div class="save-btn" id="qrSave">Lưu QR</div>
       </div>
     </div>
-
-    <footer>
-      <div class="msg">"Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi"</div>
-      <div class="credit" id="footerCredit">Gia Bảo &amp; Minh Anh · 20.12.2026</div>
-    </footer>
-
   </div>
 </div>
 
@@ -543,8 +648,9 @@ const DEFAULT_CONFIG = {
   weddingDateISO: "2026-12-20T18:00:00",
   groomParents: { father: "Ông Nguyễn Văn Long", mother: "Bà Lê Thị Hồng", address: "12 Trần Phú, Hải Châu, Đà Nẵng" },
   brideParents: { father: "Ông Trần Văn Nam", mother: "Bà Phạm Thị Lan", address: "45 Lê Duẩn, Quận 1, TP.HCM" },
-  ceremony: { time: "09:00", dateLabel: "20 · 12", lunar: "(Nhằm ngày 11 tháng 11 năm Bính Ngọ)" },
+  ceremony: { time: "09:00", dateLabel: "20 · 12 · 2026", lunar: "(Nhằm ngày 11 tháng 11 năm Bính Ngọ)" },
   reception: {
+    date: "2026-12-20",
     welcomeTime: "17:30",
     startTime: "18:00",
     venueName: "The Adora Center, 431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
@@ -568,6 +674,8 @@ const DEFAULT_CONFIG = {
 
 let CONFIG = DEFAULT_CONFIG;
 let weddingDateObj = new Date(DEFAULT_CONFIG.weddingDateISO);
+/* Mốc đếm ngược: ngày + giờ khai tiệc (reception) */
+let countdownTargetObj = new Date(`${DEFAULT_CONFIG.reception.date}T${DEFAULT_CONFIG.reception.startTime}:00`);
 let countdownInterval = null;
 
 /* =====================================================================
@@ -576,7 +684,6 @@ let countdownInterval = null;
 function renderInvitation(cfg){
   CONFIG = cfg;
 
-  $('monogram').textContent = cfg.monogram;
   $('coverNames').innerHTML = `${cfg.groomShort} <span class="cover-amp">&amp;</span> ${cfg.brideShort}`;
   $('heroGroom').textContent = cfg.groomFull;
   $('heroBride').textContent = cfg.brideFull;
@@ -595,7 +702,18 @@ function renderInvitation(cfg){
   $('ceremonyLunar').textContent = cfg.ceremony.lunar;
   $('welcomeTime').textContent = cfg.reception.welcomeTime;
   $('receptionTime').textContent = cfg.reception.startTime;
-  $('partyTimeTitle').textContent = `Tiệc cưới sẽ diễn ra vào lúc ${cfg.reception.startTime}`;
+  const receptionDateRaw = cfg.reception.date || (cfg.weddingDateISO || '').split('T')[0];
+  const receptionDateObj = receptionDateRaw ? new Date(`${receptionDateRaw}T00:00:00`) : null;
+  const receptionDateText = receptionDateObj && !isNaN(receptionDateObj)
+    ? receptionDateObj.toLocaleDateString('vi-VN', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric' })
+    : '';
+  $('partyTimeTitle').innerHTML = `Tiệc cưới sẽ diễn ra vào ngày${receptionDateText ? '<br>' + receptionDateText : ''}`;
+  const receptionStartObj = receptionDateRaw
+    ? new Date(`${receptionDateRaw}T${cfg.reception.startTime || '00:00'}:00`)
+    : null;
+  countdownTargetObj = receptionStartObj && !isNaN(receptionStartObj)
+    ? receptionStartObj
+    : new Date(cfg.weddingDateISO);
   $('venueName').textContent = cfg.reception.venueName;
   $('mapFrame').src = `https://www.google.com/maps?q=${encodeURIComponent(cfg.reception.mapQuery)}&output=embed`;
   $('giftGroomName').textContent = cfg.groomShort;
@@ -645,6 +763,9 @@ function renderInvitation(cfg){
   tickCountdown();
   countdownInterval = setInterval(tickCountdown, 1000);
 
+  // mini calendar — tháng cưới
+  renderCalendar(countdownTargetObj);
+
   // reveal-on-scroll needs to (re)observe in case sections were already in view
   document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
 }
@@ -653,7 +774,7 @@ function renderInvitation(cfg){
    COUNTDOWN
 ===================================================================== */
 function tickCountdown(){
-  const diff = weddingDateObj.getTime() - new Date().getTime();
+  const diff = countdownTargetObj.getTime() - new Date().getTime();
   if (diff <= 0){
     $('cd-d').textContent = '0'; $('cd-h').textContent='0'; $('cd-m').textContent='0'; $('cd-s').textContent='0';
     return;
@@ -666,6 +787,46 @@ function tickCountdown(){
   $('cd-h').textContent = String(hr).padStart(2,'0');
   $('cd-m').textContent = String(min).padStart(2,'0');
   $('cd-s').textContent = String(sec).padStart(2,'0');
+}
+
+/* =====================================================================
+   MINI CALENDAR — hiển thị tháng diễn ra đám cưới, tô nổi bật đúng
+   ngày cưới (và viền nhẹ cho ngày hôm nay nếu cùng tháng).
+   Tuần bắt đầu từ Thứ Hai theo thói quen Việt Nam.
+===================================================================== */
+function renderCalendar(date){
+  const grid = $('calGrid');
+  if (!grid || isNaN(date.getTime())) return;
+
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const weddingDay = date.getDate();
+
+  $('calHead').textContent = `Tháng ${month + 1} · ${year}`;
+
+  const dows = ['T2','T3','T4','T5','T6','T7','CN'];
+  let html = dows.map(d => `<div class="dow">${d}</div>`).join('');
+
+  // getDay(): 0 = Chủ Nhật → dịch để cột đầu tiên là Thứ Hai
+  const firstOffset = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  for (let i = 0; i < firstOffset; i++) html += '<div class="day empty"></div>';
+
+  const now = new Date();
+  const sameMonthAsToday = now.getFullYear() === year && now.getMonth() === month;
+
+  for (let d = 1; d <= daysInMonth; d++){
+    let cls = 'day';
+    if (d === weddingDay) cls += ' wed';
+    else if (sameMonthAsToday && d === now.getDate()) cls += ' today';
+    html += `<div class="${cls}">${d}</div>`;
+  }
+
+  grid.innerHTML = html;
+
+  const label = date.toLocaleDateString('vi-VN', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric' });
+  $('calNote').textContent = label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 /* =====================================================================

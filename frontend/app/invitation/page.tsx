@@ -55,10 +55,11 @@ function buildDefaultConfig(): InvitationConfig {
 		},
 		ceremony: {
 			time: '09:00',
-			dateLabel: '20 · 12',
+			dateLabel: '20 · 12 · 2026',
 			lunar: '(Nhằm ngày 11 tháng 11 năm Bính Ngọ)'
 		},
 		reception: {
+			date: '2026-12-20',
 			welcomeTime: '17:30',
 			startTime: '18:00',
 			venueName: 'The Adora Center, 431 Hoàng Văn Thụ, Tân Bình, TP.HCM',
@@ -83,8 +84,8 @@ function buildDefaultConfig(): InvitationConfig {
 
 function formatDateLabel(dateStr: string): string {
 	if (!dateStr) return '';
-	const [, month, day] = dateStr.split('-');
-	return `${day} · ${month}`;
+	const [year, month, day] = dateStr.split('-');
+	return `${day} · ${month} · ${year}`;
 }
 
 export default function InvitationPage() {
@@ -133,9 +134,14 @@ export default function InvitationPage() {
 				if (!cancelled && response.success && response.invitation) {
 					const { invitation } = response;
 					if (invitation.config) {
-						setConfig(invitation.config);
-						if (invitation.config.weddingDateISO) {
-							setWeddingDate(invitation.config.weddingDateISO.split('T')[0]);
+						const loaded = invitation.config;
+						const isoDate = loaded.weddingDateISO ? loaded.weddingDateISO.split('T')[0] : '';
+						setConfig({
+							...loaded,
+							reception: { ...loaded.reception, date: loaded.reception?.date || isoDate }
+						});
+						if (isoDate) {
+							setWeddingDate(isoDate);
 						}
 					}
 					if (invitation.templateId) {
@@ -308,6 +314,7 @@ export default function InvitationPage() {
 		const startTime = config.reception.startTime || '18:00';
 		return {
 			...config,
+			reception: { ...config.reception, date: config.reception.date || weddingDate },
 			weddingDateISO: weddingDate ? `${weddingDate}T${startTime}:00` : config.weddingDateISO,
 			schedule: config.schedule.filter((item) => item.time.trim() || item.label.trim()),
 			gallery: config.gallery.map((url) => url.trim()).filter(Boolean)
@@ -625,14 +632,14 @@ export default function InvitationPage() {
 						<Field label="Vai vế cô dâu (VD: Út Nữ)">
 							<input value={config.brideRole} onChange={(e) => updateField('brideRole', e.target.value)} className="input" />
 						</Field>
-						<Field label="Chữ lồng viết tắt (2-3 ký tự, hiện ở bìa)" full>
+						{/* <Field label="Chữ lồng viết tắt (2-3 ký tự, hiện ở bìa)" full>
 							<input
 								maxLength={3}
 								value={config.monogram}
 								onChange={(e) => updateField('monogram', e.target.value.toUpperCase())}
 								className="input"
 							/>
-						</Field>
+						</Field> */}
 					</div>
 				</section>
 
@@ -704,6 +711,18 @@ export default function InvitationPage() {
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Tiệc Cưới</h2>
 					<div className="mt-4 grid gap-3 sm:grid-cols-3">
+						<Field label="Ngày tổ chức tiệc">
+							<input
+								required
+								type="date"
+								value={config.reception.date}
+								onChange={(e) => {
+									updateReception('date', e.target.value);
+									e.target.blur();
+								}}
+								className="input"
+							/>
+						</Field>
 						<Field label="Giờ đón khách">
 							<input
 								type="time"
