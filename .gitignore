@@ -3,3 +3,6 @@
 **/build
 **/.env*
 **/.next
+**/albums/*
+**/public/images/*
+**/public/invitations/*

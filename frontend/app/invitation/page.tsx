@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
@@ -117,6 +117,112 @@ export default function InvitationPage() {
 	const [qrUploadError, setQrUploadError] = useState<string | null>(null);
 
 	const [isLoadingExisting, setIsLoadingExisting] = useState(true);
+	const [availableSongs, setAvailableSongs] = useState<Array<{ name: string; singer?: string; lang?: string; url: string }>>([]);
+	const [isLoadingSongs, setIsLoadingSongs] = useState(true);
+	const [playingSongUrl, setPlayingSongUrl] = useState<string | null>(null);
+	const [expandedMusicSections, setExpandedMusicSections] = useState<Record<'english' | 'vietnamese', boolean>>({
+		english: false,
+		vietnamese: false
+	});
+	const audioRef = useRef<HTMLAudioElement | null>(null);
+
+	const musicSections = useMemo(() => {
+		const english: Array<{ name: string; singer?: string; lang?: string; url: string }> = [];
+		const vietnamese: Array<{ name: string; singer?: string; lang?: string; url: string }> = [];
+
+		availableSongs.forEach((song) => {
+			const songLang = (song.lang ?? '').trim().toLowerCase();
+			if (songLang === 'vietnamese') {
+				vietnamese.push(song);
+			} else {
+				english.push(song);
+			}
+		});
+
+		return { english, vietnamese };
+	}, [availableSongs]);
+
+	const toggleMusicSection = (section: 'english' | 'vietnamese') => {
+		setExpandedMusicSections((prev) => ({ ...prev, [section]: !prev[section] }));
+	};
+
+	// If user pastes Google Maps iframe embed HTML, extract the `src` attribute.
+	const [mapEmbedWarning, setMapEmbedWarning] = useState<string | null>(null);
+
+	function extractSrcFromEmbed(html: string): string | null {
+		if (!html) return null;
+		// Try to find src="..." first, then src='...'
+		const dq = html.match(/src\s*=\s*"([^"]+)"/i);
+		if (dq && dq[1]) return dq[1];
+		const sq = html.match(/src\s*=\s*'([^']+)'/i);
+		if (sq && sq[1]) return sq[1];
+		return null;
+	}
+
+	useEffect(() => {
+		let cancelled = false;
+
+		const loadMusicList = async () => {
+			try {
+				const response = await fetch('/api/music');
+				const data = await response.json();
+				if (!cancelled) {
+					setAvailableSongs(data.songs ?? []);
+				}
+			} catch {
+				if (!cancelled) {
+					setAvailableSongs([]);
+				}
+			} finally {
+				if (!cancelled) {
+					setIsLoadingSongs(false);
+				}
+			}
+		};
+
+		loadMusicList();
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
+	useEffect(() => {
+		return () => {
+			if (audioRef.current) {
+				audioRef.current.pause();
+				audioRef.current = null;
+			}
+		};
+	}, []);
+
+	const handleSelectMusic = (songUrl: string) => {
+		updateField('musicUrl', songUrl);
+	};
+
+	const handlePlayMusic = (songUrl: string) => {
+		if (!audioRef.current) {
+			audioRef.current = new Audio(songUrl);
+		}
+
+		const audio = audioRef.current;
+		const nextUrl = new URL(songUrl, window.location.origin).toString();
+		const currentUrl = audio.src ? new URL(audio.src).toString() : '';
+
+		if (playingSongUrl === songUrl && !audio.paused) {
+			audio.pause();
+			setPlayingSongUrl(null);
+			return;
+		}
+
+		if (currentUrl !== nextUrl) {
+			audio.src = nextUrl;
+		}
+
+		audio.play().catch(() => {
+			setPlayingSongUrl(null);
+		});
+		setPlayingSongUrl(songUrl);
+	};
 
 	// Load the user's previously saved invitation (if any) from the database
 	// so the form is pre-filled instead of always starting from the defaults.
@@ -401,7 +507,7 @@ export default function InvitationPage() {
 		return (
 			<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
 				<div className="text-center">
-					<Loader2 className="mx-auto h-8 w-8 animate-spin text-rose-500" />
+					<Loader2 className="mx-auto h-8 w-8 animate-spin text-pink-500" />
 					<p className="mt-3 text-sm text-slate-500">Đang tải thông tin thiệp cưới của bạn...</p>
 				</div>
 			</div>
@@ -426,7 +532,7 @@ export default function InvitationPage() {
 					onClick={() => setActiveTab('template')}
 					className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
 						activeTab === 'template'
-							? 'border-rose-500 text-rose-600'
+							? 'border-pink-500 text-pink-600'
 							: 'border-transparent text-slate-500 hover:text-slate-700'
 					}`}
 				>
@@ -437,7 +543,7 @@ export default function InvitationPage() {
 					onClick={() => setActiveTab('info')}
 					className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
 						activeTab === 'info'
-							? 'border-rose-500 text-rose-600'
+							? 'border-pink-500 text-pink-600'
 							: 'border-transparent text-slate-500 hover:text-slate-700'
 					}`}
 				>
@@ -454,7 +560,7 @@ export default function InvitationPage() {
 						value={searchTerm}
 						onChange={(event) => setSearchTerm(event.target.value)}
 						placeholder="Tìm mẫu theo tên hoặc phong cách..."
-						className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-rose-300 focus:ring-2 focus:ring-rose-100"
+						className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-pink-300 focus:ring-2 focus:ring-pink-100"
 					/>
 				</div>
 
@@ -467,7 +573,7 @@ export default function InvitationPage() {
 						<select
 							value={selectedCategory}
 							onChange={(event) => setSelectedCategory(event.target.value as TemplateCategory | 'Tất cả')}
-							className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-rose-300 focus:ring-2 focus:ring-rose-100"
+							className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-pink-300 focus:ring-2 focus:ring-pink-100"
 						>
 							{categories.map((category) => (
 								<option key={category} value={category}>
@@ -485,7 +591,7 @@ export default function InvitationPage() {
 						<select
 							value={selectedTone}
 							onChange={(event) => setSelectedTone(event.target.value as TemplateTone | 'Tất cả')}
-							className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-rose-300 focus:ring-2 focus:ring-rose-100"
+							className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none transition focus:border-pink-300 focus:ring-2 focus:ring-pink-100"
 						>
 							{tones.map((tone) => (
 								<option key={tone} value={tone}>
@@ -505,7 +611,7 @@ export default function InvitationPage() {
 						<div
 							key={template.id}
 							className={`group rounded-2xl border bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg ${
-								isSelected ? 'border-rose-400 ring-2 ring-rose-200' : 'border-slate-200'
+								isSelected ? 'border-pink-400 ring-2 ring-pink-200' : 'border-slate-200'
 							}`}
 						>
 							<button
@@ -543,8 +649,8 @@ export default function InvitationPage() {
 									onClick={() => setSelectedTemplateId(template.id)}
 									className={`mt-2 w-full rounded-lg border px-2 py-1.5 text-xs font-medium transition ${
 										isSelected
-											? 'border-rose-300 bg-rose-50 text-rose-700'
-											: 'border-slate-200 text-slate-600 hover:border-rose-200 hover:text-rose-600'
+											? 'border-pink-300 bg-pink-50 text-pink-700'
+											: 'border-slate-200 text-slate-600 hover:border-pink-200 hover:text-pink-600'
 									}`}
 								>
 									{isSelected ? 'Đang chọn mẫu này' : 'Chọn mẫu này'}
@@ -565,7 +671,7 @@ export default function InvitationPage() {
 				<button
 					type="button"
 					onClick={() => setActiveTab('info')}
-					className="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-700"
+					className="inline-flex items-center gap-2 rounded-xl bg-pink-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-pink-700"
 				>
 					Tiếp tục: Nhập thông tin đám cưới
 				</button>
@@ -573,7 +679,7 @@ export default function InvitationPage() {
 		</section>
 
 		<section className={`mx-auto max-w-3xl px-4 pb-16 sm:px-6 lg:px-8 ${activeTab === 'info' ? '' : 'hidden'}`}>
-			<div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-4 text-sm text-rose-800">
+			<div className="rounded-2xl border border-pink-100 bg-pink-50/70 p-4 text-sm text-pink-800">
 				<div className="flex items-center justify-between gap-3">
 					<p className="inline-flex items-center gap-1 font-semibold">
 						Đang dùng mẫu: {selectedTemplate.name}
@@ -581,7 +687,7 @@ export default function InvitationPage() {
 					<button
 						type="button"
 						onClick={() => setActiveTab('template')}
-						className="shrink-0 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-medium text-rose-700 transition hover:bg-rose-50"
+						className="shrink-0 rounded-lg border border-pink-300 bg-white px-3 py-1.5 text-xs font-medium text-pink-700 transition hover:bg-pink-50"
 					>
 						Đổi mẫu
 					</button>
@@ -746,7 +852,8 @@ export default function InvitationPage() {
 								className="input"
 							/>
 						</Field>
-						<div />
+					</div>
+					<div className="mt-4">
 						<Field label="Tên &amp; địa chỉ nhà hàng / trung tâm tiệc cưới" full>
 							<input
 								required
@@ -755,14 +862,39 @@ export default function InvitationPage() {
 								className="input"
 							/>
 						</Field>
-						<Field label="Từ khoá tìm trên Google Maps (tuỳ chọn)" full>
-							<input
-								placeholder="VD: The Adora Center 431 Hoàng Văn Thụ"
-								value={config.reception.mapQuery}
-								onChange={(e) => updateReception('mapQuery', e.target.value)}
-								className="input"
-							/>
+					</div>
+					<div className="mt-4">
+						<Field label="Nhúng bản đồ Google (tuỳ chọn)" full>
+							<div>
+								<input
+									placeholder={`<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d313...`}
+									value={config.reception.mapQuery}
+									onChange={(e) => {
+										const v = e.target.value;
+										if (v.includes('<iframe')) {
+											const src = extractSrcFromEmbed(v);
+											if (src) {
+												updateReception('mapQuery', src);
+												setMapEmbedWarning(null);
+											} else {
+												setMapEmbedWarning('Không tìm thấy thuộc tính src trong HTML embed. Vui lòng dán đúng iframe từ Google Maps.');
+												updateReception('mapQuery', '');
+											}
+										} else {
+											updateReception('mapQuery', v);
+											setMapEmbedWarning(null);
+										}
+									}}
+									className="input"
+								/>
+								<div className="mt-2 flex">
+									<a href="/blog/nhung-ban-do-vao-thiep-cuoi" target="_blank" rel="noreferrer" className="text-sm font-medium text-pink-600 hover:underline">
+										Xem hướng dẫn
+									</a>
+								</div>
+							</div>
 						</Field>
+						{mapEmbedWarning ? <p className="mt-2 text-xs text-red-600">{mapEmbedWarning}</p> : null}
 					</div>
 				</section>
 
@@ -777,13 +909,13 @@ export default function InvitationPage() {
 									placeholder="Giờ"
 									value={item.time}
 									onChange={(e) => updateScheduleItem(index, 'time', e.target.value)}
-									className="input w-24"
+									className="input max-w-24"
 								/>
 								<input
 									placeholder="Nội dung (VD: Đón khách)"
 									value={item.label}
 									onChange={(e) => updateScheduleItem(index, 'label', e.target.value)}
-									className="input flex-1"
+									className="input"
 								/>
 								<button
 									type="button"
@@ -798,7 +930,7 @@ export default function InvitationPage() {
 					<button
 						type="button"
 						onClick={addScheduleRow}
-						className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-50"
+						className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-pink-300 px-3 py-1.5 text-xs font-medium text-pink-600 transition hover:bg-pink-50"
 					>
 						<Plus className="h-3.5 w-3.5" />
 						Thêm mốc thời gian
@@ -847,7 +979,7 @@ export default function InvitationPage() {
 										) : null}
 									</div>
 								) : (
-									<label className="flex aspect-3/4 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 text-slate-400 transition hover:border-rose-300 hover:text-rose-500">
+									<label className="flex aspect-3/4 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 text-slate-400 transition hover:border-pink-300 hover:text-pink-500">
 										{uploadingGalleryIndex === index ? (
 											<Loader2 className="h-6 w-6 animate-spin" />
 										) : (
@@ -882,7 +1014,7 @@ export default function InvitationPage() {
 					<button
 						type="button"
 						onClick={addGalleryRow}
-						className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-rose-300 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-50"
+						className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-pink-300 px-3 py-1.5 text-xs font-medium text-pink-600 transition hover:bg-pink-50"
 					>
 						<Plus className="h-3.5 w-3.5" />
 						Thêm ảnh
@@ -893,16 +1025,172 @@ export default function InvitationPage() {
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Nhạc Nền</h2>
 					<p className="mt-1 text-xs text-slate-500">
-						Dán link file nhạc (mp3), tuỳ chọn — nhạc sẽ tự phát khi khách bấm &ldquo;Mở Thiệp&rdquo;
+						Chọn nhạc trong danh sách bên dưới — nhạc sẽ tự phát khi khách bấm &ldquo;Mở Thiệp&rdquo;. Liên hệ khi bạn muốn bài hát khác.
 					</p>
-					<div className="mt-4">
-						<input
-							type="url"
-							placeholder="https://... (file .mp3)"
-							value={config.musicUrl}
-							onChange={(e) => updateField('musicUrl', e.target.value)}
-							className="input"
-						/>
+
+					{/* Music Sections */}
+					<div className="mt-6 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white shadow-sm">
+						{/* English Songs */}
+						<div>
+							<button
+								type="button"
+								onClick={() => toggleMusicSection('english')}
+								className="flex w-full items-center justify-between rounded-t-xl px-4 py-3 text-left text-sm font-semibold transition hover:bg-slate-50"
+							>
+								<span className="flex items-center gap-2">
+									{/* <MusicNote className="h-5 w-5 text-pink-600" /> */}
+									<span className="text-slate-900">Nhạc tiếng Anh</span>
+								</span>
+								{expandedMusicSections.english ? (
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-4 w-4 text-slate-500"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fillRule="evenodd"
+											d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+											clipRule="evenodd"
+										/>
+									</svg>
+								) : (
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-4 w-4 text-slate-500"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fillRule="evenodd"
+											d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+											clipRule="evenodd"
+										/>
+									</svg>
+								)}
+							</button>
+							<div className={`${expandedMusicSections.english ? '' : 'hidden'}`}>
+								{musicSections.english.length === 0 ? (
+									<div className="p-4 text-center text-sm text-slate-500">
+										Không có bài hát tiếng Anh nào trong danh sách.
+									</div>
+								) : (
+									musicSections.english.map((song) => {
+										const isSelected = config.musicUrl === song.url;
+										const isPlaying = playingSongUrl === song.url;
+										return (
+											<div key={song.url} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5">
+												<div className="min-w-0 flex-1">
+													<span className="truncate text-sm font-medium text-slate-700">{song.name}</span>
+													{song.singer ? <span className="block text-xs text-slate-500 truncate">{song.singer}</span> : null}
+												</div>
+												<div className="flex shrink-0 gap-2">
+													<button
+														type="button"
+														onClick={() => handlePlayMusic(song.url)}
+														className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-pink-300 hover:text-pink-600"
+													>
+														{isPlaying ? 'Dừng' : 'Play'}
+													</button>
+													<button
+														type="button"
+														onClick={() => handleSelectMusic(song.url)}
+														className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
+															isSelected
+																? 'bg-pink-600 text-white'
+																: 'border border-slate-200 bg-white text-slate-700 hover:border-pink-300 hover:text-pink-600'
+														}`}
+													>
+														{isSelected ? 'Đã chọn' : 'Chọn'}
+													</button>
+												</div>
+											</div>
+										);
+									})
+								)}
+							</div>
+						</div>
+
+						{/* Vietnamese Songs */}
+						<div>
+							<button
+								type="button"
+								onClick={() => toggleMusicSection('vietnamese')}
+								className="flex w-full items-center justify-between rounded-t-xl px-4 py-3 text-left text-sm font-semibold transition hover:bg-slate-50"
+							>
+								<span className="flex items-center gap-2">
+									{/* <MusicNote className="h-5 w-5 text-pink-600" /> */}
+									<span className="text-slate-900">Nhạc tiếng Việt</span>
+								</span>
+								{expandedMusicSections.vietnamese ? (
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-4 w-4 text-slate-500"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fillRule="evenodd"
+											d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+											clipRule="evenodd"
+										/>
+									</svg>
+								) : (
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-4 w-4 text-slate-500"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fillRule="evenodd"
+											d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+											clipRule="evenodd"
+										/>
+									</svg>
+								)}
+							</button>
+							<div className={`${expandedMusicSections.vietnamese ? '' : 'hidden'}`}>
+								{musicSections.vietnamese.length === 0 ? (
+									<div className="p-4 text-center text-sm text-slate-500">
+										Không có bài hát tiếng Việt nào trong danh sách.
+									</div>
+								) : (
+									musicSections.vietnamese.map((song) => {
+										const isSelected = config.musicUrl === song.url;
+										const isPlaying = playingSongUrl === song.url;
+										return (
+											<div key={song.url} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-2.5">
+												<div className="min-w-0 flex-1">
+													<span className="truncate text-sm font-medium text-slate-700">{song.name}</span>
+													{song.singer ? <span className="block text-xs text-slate-500 truncate">{song.singer}</span> : null}
+												</div>
+												<div className="flex shrink-0 gap-2">
+													<button
+														type="button"
+														onClick={() => handlePlayMusic(song.url)}
+														className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-pink-300 hover:text-pink-600"
+													>
+														{isPlaying ? 'Dừng' : 'Play'}
+													</button>
+													<button
+														type="button"
+														onClick={() => handleSelectMusic(song.url)}
+														className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
+															isSelected
+																? 'bg-pink-600 text-white'
+																: 'border border-slate-200 bg-white text-slate-700 hover:border-pink-300 hover:text-pink-600'
+														}`}
+													>
+														{isSelected ? 'Đã chọn' : 'Chọn'}
+													</button>
+												</div>
+											</div>
+										);
+									})
+								)}
+							</div>
+						</div>
 					</div>
 				</section>
 
@@ -948,7 +1236,7 @@ export default function InvitationPage() {
 									) : null}
 								</div>
 							) : (
-								<label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 text-slate-400 transition hover:border-rose-300 hover:text-rose-500">
+								<label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 text-slate-400 transition hover:border-pink-300 hover:text-pink-500">
 									{uploadingQrFor === 'groom' ? (
 										<Loader2 className="h-5 w-5 animate-spin" />
 									) : (
@@ -1012,7 +1300,7 @@ export default function InvitationPage() {
 									) : null}
 								</div>
 							) : (
-								<label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 text-slate-400 transition hover:border-rose-300 hover:text-rose-500">
+								<label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 text-slate-400 transition hover:border-pink-300 hover:text-pink-500">
 									{uploadingQrFor === 'bride' ? (
 										<Loader2 className="h-5 w-5 animate-spin" />
 									) : (
@@ -1044,12 +1332,12 @@ export default function InvitationPage() {
 				</section>
 
 				{/* Actions */}
-				<section className="rounded-2xl border border-rose-200 bg-white p-6 shadow-sm">
+				<section className="rounded-2xl border border-pink-200 bg-white p-6 shadow-sm">
 					<button
 						type="button"
 						onClick={handlePreview}
 						disabled={!canPreview || isRendering}
-						className="flex w-full items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
+						className="flex w-full items-center justify-center gap-2 rounded-xl bg-pink-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
 					>
 						{isRendering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />}
 						Xem thiệp
@@ -1064,7 +1352,7 @@ export default function InvitationPage() {
 					{/* {previewUrl ? (
 						<div className="mt-4 rounded-xl bg-slate-50 p-3 text-center text-xs text-slate-600">
 							Thiệp demo đã mở ở tab mới.{' '}
-							<a href={previewUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-rose-600 underline">
+							<a href={previewUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-pink-600 underline">
 								Mở lại nếu bị đóng
 							</a>
 						</div>
@@ -1075,7 +1363,7 @@ export default function InvitationPage() {
 							type="button"
 							onClick={handleGenerateLink}
 							disabled={!previewFileName || isSaving}
-							className="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-300 bg-white px-4 py-3 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
+							className="flex w-full items-center justify-center gap-2 rounded-xl border border-pink-300 bg-white px-4 py-3 text-sm font-semibold text-pink-700 transition hover:bg-pink-50 disabled:cursor-not-allowed disabled:opacity-60"
 						>
 							{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <LinkIcon className="h-4 w-4" />}
 							Tạo link gửi cho khách
@@ -1098,7 +1386,7 @@ export default function InvitationPage() {
 								<button
 									type="button"
 									onClick={handleCopyLink}
-									className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-rose-300 hover:text-rose-600"
+									className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-pink-300 hover:text-pink-600"
 								>
 									<Copy className="h-4 w-4" />
 									{copied ? 'Đã sao chép!' : 'Sao chép'}

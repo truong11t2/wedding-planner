@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Beautiful In White",
+    "singer": "Shane Filan",
+    "lang": "English",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/English/Beautiful-In-White_Shane-Filan.mp3"
+  },
+  {
+    "name": "Endless Love",
+    "singer": "Lionel Richie ft. Shania Twain",
+    "lang": "English",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/English/Endless-Love_Lionel_Richie_ft_Shania-Twain.mp3"
+  },
+  {
+    "name": "Every Day I Love You",
+    "singer": "Boyzone",
+    "lang": "English",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/English/Every-Day-I-Love-You_Boyzone.mp3"
+  },
+  {
+    "name": "I Do",
+    "singer": "911",
+    "lang": "English",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/English/I-Do_911.mp3"
+  },
+  {
+    "name": "I Wanna Grow Old With You",
+    "singer": "Westlife",
+    "lang": "English",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/English/I-Wanna-Grow-Old-With-You_Westlife.mp3"
+  },
+  {
+    "name": "Ánh Nắng Của Anh",
+    "singer": "Đức Phúc",
+    "lang": "Vietnamese",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/Vietnamese/Anh-Nang-Cua-Anh_Duc-Phuc.mp3"
+  },
+  {
+    "name": "Là Anh",
+    "singer": "Phạm Lịch",
+    "lang": "Vietnamese",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/Vietnamese/La-Anh_Pham-Lich.mp3"
+  },
+  {
+    "name": "Hơn Cả Yêu",
+    "singer": "Đức Phúc",
+    "lang": "Vietnamese",
+    "url": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/Vietnamese/Hon-Ca-Yeu_Duc-Phuc.mp3"
+  }
+]

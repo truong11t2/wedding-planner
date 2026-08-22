@@ -21,7 +21,8 @@ const developmentCSP = [
   "frame-src 'self' https://accounts.google.com https://www.facebook.com www.google.com https://www.youtube.com",
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self'"
+  "form-action 'self'",
+  "media-src 'self' https://vemotnha.s3.ap-southeast-1.amazonaws.com"
 ].join('; ');
 
 // Production CSP (more restrictive)
@@ -35,7 +36,8 @@ const productionCSP = [
   "frame-src 'self' https://accounts.google.com https://www.facebook.com www.google.com https://www.youtube.com",
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self'"
+  "form-action 'self'",
+  "media-src 'self' https://vemotnha.s3.ap-southeast-1.amazonaws.com"
 ].join('; ');
 
 const nextConfig: NextConfig = {

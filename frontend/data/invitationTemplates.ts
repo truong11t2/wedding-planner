@@ -25,9 +25,9 @@ export const invitationTemplates: InvitationTemplate[] = [
     soft: '#FFF1F1'
   },
   {
-    id: 'song-hy-green',
-    name: 'Song Hỷ - Xanh',
-    category: 'Truyền thống',
+    id: 'minimal-green',
+    name: 'Minimalism - Xanh',
+    category: 'Tối giản',
     tone: 'Xanh lá',
     badge: 'Hot',
     accent: '#17683C',

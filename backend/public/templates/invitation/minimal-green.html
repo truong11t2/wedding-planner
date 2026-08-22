@@ -11,17 +11,17 @@
 <style>
   /* ============ DESIGN TOKENS ============ */
   :root{
-    --wine-dark:   #3E0A12;
-    --wine:        #6E1423;
-    --wine-mid:    #8A1C2E;
+    --pine-dark:   #0E3320;
+    --pine:        #17683C;
+    --pine-mid:    #1F7A47;
     --gold:        #C9A24B;
     --gold-light:  #E8CD82;
     --gold-pale:   #F7EDCD;
     --gold-deep:   #8A6410;
-    --ivory:       #FDF7EE;
-    --ivory-soft:  #F5E9D8;
-    --ink:         #1E0F09;
-    --ink-soft:    #4A3225;
+    --ivory:       #F8FFF9;
+    --ivory-soft:  #EEFCF3;
+    --ink:         #10241A;
+    --ink-soft:    #3D5548;
 
     --font-display: 'Playfair Display', serif;
     --font-script:  'Cormorant Garamond', serif;
@@ -33,13 +33,13 @@
   body{
     font-family: var(--font-body);
     color: var(--ink);
-    background: var(--wine-dark);
+    background: var(--pine-dark);
     -webkit-font-smoothing: antialiased;
   }
   img{ max-width:100%; display:block; }
   button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 
-  ::selection{ background: var(--gold-light); color:var(--wine-dark); }
+  ::selection{ background: var(--gold-light); color:var(--pine-dark); }
 
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
@@ -53,9 +53,9 @@
     display:flex;
     justify-content:center;
     background:
-      radial-gradient(ellipse at 50% -10%, #7a1c2c 0%, transparent 60%),
+      radial-gradient(ellipse at 50% -10%, #1c7a45 0%, transparent 60%),
       repeating-linear-gradient(135deg, rgba(201,162,75,0.05) 0px, rgba(201,162,75,0.05) 1px, transparent 1px, transparent 26px),
-      var(--wine-dark);
+      var(--pine-dark);
   }
   .card{
     width:100%;
@@ -91,16 +91,15 @@
   }
   .eyebrow{
     font-family:var(--font-body); font-size:11px; letter-spacing:.32em; font-weight:600;
-    text-transform:uppercase; color:var(--gold);
+    text-transform:uppercase; color:var(--gold-deep);
   }
   .section-title{
     font-family:var(--font-display); font-weight:600; font-size:22px;
-    text-align:center; color:var(--wine); margin-top:8px;
+    text-align:center; color:var(--pine); margin-top:8px;
   }
   .fade-in{ opacity:0; transform:translateY(18px); transition:opacity .8s ease, transform .8s ease; }
   .fade-in.in-view{ opacity:1; transform:translateY(0); }
 
-  /* corner flourish (signature element) */
   .flourish{ width:120px; height:auto; }
   .flourish path{
     fill:none; stroke:var(--gold); stroke-width:1.4; stroke-linecap:round;
@@ -116,7 +115,7 @@
     position:fixed; inset:0; z-index:50;
     display:flex; align-items:center; justify-content:center;
     background:
-      radial-gradient(ellipse at 50% 20%, var(--wine-mid) 0%, var(--wine-dark) 70%);
+      radial-gradient(ellipse at 50% 20%, var(--pine-mid) 0%, var(--pine-dark) 70%);
     color:var(--gold-pale);
     text-align:center;
     transition: transform 1s cubic-bezier(.65,0,.35,1), opacity .9s ease;
@@ -143,15 +142,15 @@
     color:var(--gold-pale); font-size:12px; letter-spacing:.28em; text-transform:uppercase;
     border-radius:2px; position:relative; transition:background .3s ease, color .3s ease;
   }
-  .open-btn:hover{ background:var(--gold); color:var(--wine-dark); }
+  .open-btn:hover{ background:var(--gold); color:var(--pine-dark); }
   .open-btn:focus-visible{ outline:2px solid var(--gold-light); outline-offset:3px; }
 
   /* ============ HERO ============ */
   .hero{
     position:relative; overflow:hidden; padding:64px 24px 48px; text-align:center;
     background:
-      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
-      var(--wine);
+      radial-gradient(ellipse at 50% 0%, var(--pine-mid) 0%, transparent 65%),
+      var(--pine);
     color:var(--gold-pale);
   }
   .hero .eyebrow{ color:var(--gold-light); }
@@ -174,23 +173,23 @@
   }
   .parents .side b{ display:block; color:var(--ink); font-weight:600; font-family:var(--font-body); }
   .parents .divider{ width:1px; background:var(--gold); opacity:.4; align-self:stretch; }
-  .parents .label{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; display:block; }
+  .parents .label{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold-deep); margin-bottom:6px; display:block; }
 
   .couple-block{ margin-top:34px; }
-  .couple-name{ font-family:var(--font-display); font-size:20px; color:var(--wine); font-weight:600; }
+  .couple-name{ font-family:var(--font-display); font-size:20px; color:var(--pine); font-weight:600; }
   .couple-role{ font-size:12px; color:var(--ink-soft); margin-top:2px; letter-spacing:.05em; }
-  .couple-amp{ font-family:var(--font-script); font-style:italic; font-size:24px; color:var(--gold); margin:12px 0; }
+  .couple-amp{ font-family:var(--font-script); font-style:italic; font-size:24px; color:var(--gold-deep); margin:12px 0; }
 
   .ceremony-box{
     margin-top:30px; padding:22px 18px; background:var(--ivory-soft);
     border:1px solid rgba(201,162,75,.4); border-radius:6px;
   }
   .ceremony-box .place{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
-  .ceremony-box .time{ font-family:var(--font-display); font-size:30px; color:var(--wine); margin:8px 0 4px; font-weight:600; }
+  .ceremony-box .time{ font-family:var(--font-display); font-size:30px; color:var(--pine); margin:8px 0 4px; font-weight:600; }
   .ceremony-box .datebadge{
     display:inline-flex; align-items:baseline; gap:6px; font-size:13px; color:var(--ink); margin-top:6px;
   }
-  .ceremony-box .datebadge b{ font-family:var(--font-display); font-size:17px; color:var(--wine); }
+  .ceremony-box .datebadge b{ font-family:var(--font-display); font-size:17px; color:var(--pine); }
   .ceremony-box .lunar{ margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-style:italic; }
 
   /* ============ GALLERY ============ */
@@ -200,15 +199,15 @@
   }
   .gallery-grid img{
     width:100%; height:120px; object-fit:cover; border-radius:3px; cursor:pointer;
-    transition:transform .35s ease, filter .35s ease; filter:saturate(.92);
+    transition:transform .35s ease, filter .35s ease; filter:saturate(.95);
   }
-  .gallery-grid img:hover{ transform:scale(1.03); filter:saturate(1.05); }
+  .gallery-grid img:hover{ transform:scale(1.03); filter:saturate(1.08); }
   .gallery-grid .tall{ grid-row: span 2; height:100%; }
   @media (min-width:640px){ .gallery-grid img{ height:160px; } }
 
   /* lightbox */
   #lightbox{
-    position:fixed; inset:0; background:rgba(20,4,7,0.94); z-index:80;
+    position:fixed; inset:0; background:rgba(4,20,12,0.94); z-index:80;
     display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px;
   }
   #lightbox.open{ display:flex; }
@@ -218,17 +217,17 @@
   #lightbox .lb-prev{ left:6px; } #lightbox .lb-next{ right:6px; }
   #lightbox .lb-close{ position:absolute; top:18px; right:20px; color:var(--gold-pale); font-size:22px; }
 
-  /* ============ TIỆC CƯỚI / COUNTDOWN (Song Hỷ Đỏ) ============ */
+  /* ============ TIỆC CƯỚI / COUNTDOWN (Song Hỷ Xanh) ============ */
   .countdown-sec{
     position:relative; overflow:hidden;
     padding:58px 22px 62px; text-align:center;
     background:
-      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
-      var(--wine);
+      radial-gradient(ellipse at 50% 0%, var(--pine-mid) 0%, transparent 65%),
+      var(--pine);
     color:#fff;
   }
-  /* subtle 囍 lattice, same language as the cover — shared by the
-     three "silk red" sections so they read as one continuous fabric */
+  /* subtle leafy lattice, shared "silk garden" language across the
+     three deep-green sections so they read as one continuous fabric */
   .countdown-sec::before, .hero::before, .gift::before, footer::before{
     content:''; position:absolute; inset:0; pointer-events:none; opacity:.10;
     background-image:
@@ -295,7 +294,7 @@
   .cal-grid .day.empty{ visibility:hidden; }
   .cal-grid .day.today{ color:#fff; box-shadow:inset 0 0 0 1px rgba(232,205,130,.35); }
   .cal-grid .day.wed{
-    position:relative; color:var(--wine-dark); font-weight:700;
+    position:relative; color:var(--pine-dark); font-weight:700;
     background:radial-gradient(circle at 50% 40%, var(--gold-light), var(--gold));
     animation: calPulse 2.4s ease-in-out infinite;
   }
@@ -341,8 +340,8 @@
     padding:12px 24px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
     border-radius:2px; border:1px solid var(--gold); color:var(--gold-pale); transition:.25s;
   }
-  .btn.solid{ background:var(--gold); color:var(--wine-dark); }
-  .btn:hover{ background:var(--gold); color:var(--wine-dark); }
+  .btn.solid{ background:var(--gold); color:var(--pine-dark); }
+  .btn:hover{ background:var(--gold); color:var(--pine-dark); }
   .btn.solid:hover{ opacity:.88; }
 
   .map-wrap{
@@ -367,23 +366,23 @@
     position:absolute; left:22px; top:2px; width:15px; height:15px; border-radius:50%;
     background:var(--ivory-soft); border:2px solid var(--gold); box-shadow:0 0 0 3px var(--ivory-soft);
   }
-  .schedule .time{ font-family:var(--font-display); font-size:14px; color:var(--wine); font-weight:600; }
+  .schedule .time{ font-family:var(--font-display); font-size:14px; color:var(--pine); font-weight:600; }
   .schedule .label{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
 
   /* ============ GUESTBOOK ============ */
   .guestbook{ padding:46px 22px; text-align:center; background:var(--ivory-soft); }
   .gb-form{ margin-top:22px; display:flex; flex-direction:column; gap:10px; max-width:500px; margin-left:auto; margin-right:auto; }
   .gb-form input, .gb-form textarea{
-    padding:11px 13px; border:1px solid rgba(110,20,35,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
+    padding:11px 13px; border:1px solid rgba(23,104,60,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
   }
   .gb-form textarea{ resize:none; height:70px; }
   .gb-form button{
-    margin-top:4px; padding:12px; background:var(--wine-mid); color:#fff; border-radius:4px;
+    margin-top:4px; padding:12px; background:var(--pine-mid); color:#fff; border-radius:4px;
     font-size:12px; letter-spacing:.14em; text-transform:uppercase;
   }
   .gb-list{ margin-top:28px; display:flex; flex-direction:column; gap:14px; max-width:500px; margin-left:auto; margin-right:auto; text-align:left; }
   .gb-item{ background:var(--ivory-soft); border-radius:6px; padding:12px 14px; border-left:3px solid var(--gold); }
-  .gb-item b{ font-size:13px; color:var(--wine); }
+  .gb-item b{ font-size:13px; color:var(--pine); }
   .gb-item p{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.5; }
   .gb-empty{ font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-top:22px; }
 
@@ -391,8 +390,8 @@
   .gift{
     position:relative; overflow:hidden; padding:46px 22px; text-align:center;
     background:
-      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
-      var(--wine);
+      radial-gradient(ellipse at 50% 0%, var(--pine-mid) 0%, transparent 65%),
+      var(--pine);
   }
   .gift-cards{ margin-top:24px; display:flex; gap:12px; max-width:400px; margin-left:auto; margin-right:auto; }
   .gift-card{
@@ -405,17 +404,17 @@
   .gift-card .tap{ font-size:10.5px; color:var(--gold-pale); margin-top:10px; opacity:.75; }
 
   #qr-modal{
-    position:fixed; inset:0; background:rgba(20,4,7,.85); z-index:90;
+    position:fixed; inset:0; background:rgba(4,20,12,.85); z-index:90;
     display:none; align-items:center; justify-content:center; padding:24px;
   }
   #qr-modal.open{ display:flex; }
   .qr-box{ background:var(--ivory); border-radius:10px; padding:28px 24px; max-width:300px; width:100%; text-align:center; position:relative; }
   .qr-box img{ margin:16px auto; border-radius:6px; border:1px solid rgba(0,0,0,.08); }
-  .qr-box .bank{ font-family:var(--font-display); font-size:16px; color:var(--wine); }
+  .qr-box .bank{ font-family:var(--font-display); font-size:16px; color:var(--pine); }
   .qr-box .acc{ font-size:15px; letter-spacing:.06em; margin-top:6px; font-weight:600; }
   .qr-box .accname{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
   .qr-box .close-x{ position:absolute; top:10px; right:14px; font-size:20px; color:var(--ink-soft); }
-  .qr-box .save-btn{ margin-top:14px; display:inline-block; padding:9px 18px; border:1px solid var(--wine); border-radius:4px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--wine); }
+  .qr-box .save-btn{ margin-top:14px; display:inline-block; padding:9px 18px; border:1px solid var(--pine); border-radius:4px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--pine); }
 
   /* gift section footer message (moved in from the old footer) */
   .gift .msg{ font-family:var(--font-script); font-style:italic; font-size:19px; max-width:320px; margin:28px auto 0; line-height:1.5; color:#fff; }
@@ -429,13 +428,13 @@
   .music-fab{
     position:fixed; bottom:18px; left:18px; z-index:55;
     width:44px; height:44px; border-radius:50%;
-    background:var(--gold); color:var(--wine-dark);
+    background:var(--gold); color:var(--pine-dark);
     box-shadow:0 6px 20px rgba(0,0,0,.35);
     display:none; align-items:center; justify-content:center; font-size:16px;
   }
   .music-fab.show{ display:flex; }
   .music-fab .bar{ display:inline-flex; align-items:flex-end; gap:2px; height:14px; }
-  .music-fab .bar span{ width:2.5px; background:var(--wine-dark); border-radius:1px; animation: eq 0.9s ease-in-out infinite; }
+  .music-fab .bar span{ width:2.5px; background:var(--pine-dark); border-radius:1px; animation: eq 0.9s ease-in-out infinite; }
   .music-fab .bar span:nth-child(1){ height:6px; animation-delay:0s; }
   .music-fab .bar span:nth-child(2){ height:14px; animation-delay:.15s; }
   .music-fab .bar span:nth-child(3){ height:9px; animation-delay:.3s; }
@@ -809,7 +808,6 @@ function renderCalendar(date){
   const dows = ['T2','T3','T4','T5','T6','T7','CN'];
   let html = dows.map(d => `<div class="dow">${d}</div>`).join('');
 
-  // getDay(): 0 = Chủ Nhật → dịch để cột đầu tiên là Thứ Hai
   const firstOffset = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 

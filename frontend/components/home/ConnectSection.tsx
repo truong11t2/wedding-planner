@@ -2,6 +2,7 @@
 
 import { MessageSquareMore, ShoppingBag, Star, Store } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 const coupleFeatures = [
   {
@@ -207,18 +208,18 @@ export default function ConnectSection() {
             Từ chụp ảnh cưới, trang điểm cô dâu, nhà hàng tiệc cưới đến âm nhạc, trang trí — tất cả đều được xác minh chất lượng và sẵn sàng phục vụ đám cưới của bạn.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a
+            <Link
               href="/vendor"
               className="bg-linear-to-r from-rose-500 to-purple-500 text-white font-semibold px-8 py-3 rounded-full hover:scale-105 transition-all duration-300 shadow-lg"
             >
-              Khám Phá Nhà Cung Cấp
-            </a>
-            <a
+              Tìm Nhà Cung Cấp
+            </Link>
+            <Link
               href="/login"
               className="bg-linear-to-r from-purple-500 to-indigo-500 text-white font-semibold px-8 py-3 rounded-full hover:scale-105 transition-all duration-300 shadow-lg"
             >
-              Đăng Ký Làm Thành Viên
-            </a>
+              Đăng Ký Thành Viên
+            </Link>
           </div>
         </div>
       </div>
