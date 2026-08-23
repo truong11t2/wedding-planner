@@ -28,6 +28,7 @@ import {
 } from '@/api/invitation';
 import { uploadPhotos as apiUploadPhotos } from '@/api/photo';
 import { BACKEND_ORIGIN } from '@/api/config';
+import songs from '@/public/music/songs.json';
 
 
 
@@ -117,8 +118,7 @@ export default function InvitationPage() {
 	const [qrUploadError, setQrUploadError] = useState<string | null>(null);
 
 	const [isLoadingExisting, setIsLoadingExisting] = useState(true);
-	const [availableSongs, setAvailableSongs] = useState<Array<{ name: string; singer?: string; lang?: string; url: string }>>([]);
-	const [isLoadingSongs, setIsLoadingSongs] = useState(true);
+	const availableSongs: Array<{ name: string; singer?: string; lang?: string; url: string }> = songs;
 	const [playingSongUrl, setPlayingSongUrl] = useState<string | null>(null);
 	const [expandedMusicSections, setExpandedMusicSections] = useState<Record<'english' | 'vietnamese', boolean>>({
 		english: false,
@@ -158,33 +158,6 @@ export default function InvitationPage() {
 		if (sq && sq[1]) return sq[1];
 		return null;
 	}
-
-	useEffect(() => {
-		let cancelled = false;
-
-		const loadMusicList = async () => {
-			try {
-				const response = await fetch('/api/music');
-				const data = await response.json();
-				if (!cancelled) {
-					setAvailableSongs(data.songs ?? []);
-				}
-			} catch {
-				if (!cancelled) {
-					setAvailableSongs([]);
-				}
-			} finally {
-				if (!cancelled) {
-					setIsLoadingSongs(false);
-				}
-			}
-		};
-
-		loadMusicList();
-		return () => {
-			cancelled = true;
-		};
-	}, []);
 
 	useEffect(() => {
 		return () => {
@@ -678,8 +651,8 @@ export default function InvitationPage() {
 			</div>
 		</section>
 
-		<section className={`mx-auto max-w-3xl px-4 pb-16 sm:px-6 lg:px-8 ${activeTab === 'info' ? '' : 'hidden'}`}>
-			<div className="rounded-2xl border border-pink-100 bg-pink-50/70 p-4 text-sm text-pink-800">
+		<section className={`mx-auto max-w-3xl px-4 pt-8 pb-16 sm:px-6 lg:px-8 ${activeTab === 'info' ? '' : 'hidden'}`}>
+			<div className="rounded-2xl border border-pink-100 bg-pink-50/70 p-4 text-sm text-pink-600">
 				<div className="flex items-center justify-between gap-3">
 					<p className="inline-flex items-center gap-1 font-semibold">
 						Đang dùng mẫu: {selectedTemplate.name}

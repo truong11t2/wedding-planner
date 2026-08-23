@@ -79,12 +79,12 @@ function FeatureCard({
         transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms, background 0.3s, scale 0.3s`,
       }}
     >
-      <div className="mb-2">
-        <Icon className="w-12 h-12 text-amber-300" />
+      <div className="mb-2 flex items-center gap-4">
+        <Icon className="w-12 h-12 shrink-0 text-amber-300" />
+        <h3 className="font-serif text-3xl text-white">
+          {title}
+        </h3>
       </div>
-      <h3 className="font-serif text-3xl mb-4 text-white">
-        {title}
-      </h3>
       <p className="text-white/80 leading-relaxed">
         {desc}
       </p>
@@ -130,7 +130,7 @@ export default function ConnectSection() {
         >
           {/* <p className="text-rose-300 font-semibold tracking-widest uppercase text-sm mb-3">Nền Tảng Kết Nối</p> */}
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-5">
-            <div className="text-amber-300 pb-5">Chúng Tôi — KẾT NỐI</div> <br className="hidden md:block" />
+            <div className="text-amber-300 pb-5">KẾT NỐI</div> <br className="hidden md:block" />
             Cặp Đôi & Nhà Cung Cấp
           </h2>
           <p className="text-white/70 text-lg max-w-2xl mx-auto leading-relaxed">

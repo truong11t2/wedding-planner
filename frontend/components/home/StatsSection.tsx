@@ -44,7 +44,7 @@ export default function StatsSection() {
       className="bg-gradient-to-b from-pink-600 to-purple-600 py-8 md:py-10"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {stats.map((stat, index) => (
             <div
               key={index}

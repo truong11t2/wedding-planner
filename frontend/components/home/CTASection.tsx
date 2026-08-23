@@ -87,7 +87,7 @@ export default function CTASection() {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-5">
-            Bắt Đầu Hành Trình Của Bạn
+            Bắt Đầu Hành Trình
           </h2>
           <p className="text-white/70 text-lg max-w-2xl mx-auto leading-relaxed">
             Dành cho các cặp đôi muốn lập kế hoạch đám cưới hoàn hảo và các nhà cung cấp dịch vụ muốn hợp tác với chúng tôi.
