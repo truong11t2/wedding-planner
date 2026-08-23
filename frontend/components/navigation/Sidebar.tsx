@@ -11,7 +11,6 @@ import {
   Clock,
   CircleCheckBig,
   Users,
-  MapPinned,
   Camera,
   PiggyBank,
   Mail,

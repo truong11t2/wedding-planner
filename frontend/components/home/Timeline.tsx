@@ -5,7 +5,6 @@ import { useTimeline } from '@/context/TimelineContext';
 import { CheckCircle, Clock, Database, Check, X, ChevronDown, ChevronUp, Phone, MapPin, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import WeddingDateInput from '@/components/common/WeddingDateInput';
-import Image from 'next/image';
 
 interface TimelineProps {
   initialWeddingDate?: string;

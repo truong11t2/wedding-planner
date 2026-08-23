@@ -25,10 +25,6 @@ export default function PhotoGallery({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  const getGridColsClass = () => {
-    return `grid-cols-1 md:grid-cols-${columnsMedium} lg:grid-cols-${columnsLarge}`;
-  };
-
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.25, 3));
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.25, 0.5));
   const resetZoom = () => {

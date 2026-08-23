@@ -1,10 +1,5 @@
 import React, { Children, isValidElement } from "react";
 
-type TabProps = {
-  title: string;
-  children?: React.ReactNode;
-};
-
 function Tab({ children }: { children?: React.ReactNode }) {
   return <>{children}</>;
 }

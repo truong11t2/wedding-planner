@@ -157,7 +157,7 @@ exports.renderInvitation = async (req, res) => {
     await ensureInvitationsDir();
 
     const htmlContent = await buildInvitationHtml(templateId, config);
-    const htmlFileName = `invitation-${userId}.html`;
+    const htmlFileName = `${userId}.html`;
     const outputPath = path.join(INVITATIONS_DIR, htmlFileName);
     await fs.writeFile(outputPath, htmlContent, 'utf-8');
     try {
@@ -213,7 +213,7 @@ exports.generateInvitation = async (req, res) => {
     // Every user has exactly one generated HTML file, named deterministically
     // after their userId. This guarantees no duplicate files ever accumulate,
     // whether the file was first created via /render (preview) or here.
-    const htmlFileName = `invitation-${userId}.html`;
+    const htmlFileName = `${userId}.html`;
     const publicUrl = `/invitations/${htmlFileName}`;
 
     // Always (re)generate the final HTML file so it reflects the latest content

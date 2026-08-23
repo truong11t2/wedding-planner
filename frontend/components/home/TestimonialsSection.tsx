@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Quote } from 'lucide-react';
+//import { Quote } from 'lucide-react';
 
 interface Testimonial {
   quote: string;

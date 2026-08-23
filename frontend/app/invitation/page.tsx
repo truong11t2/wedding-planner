@@ -889,12 +889,12 @@ export default function InvitationPage() {
 								/>
 								<div className="mt-2 flex">
 									<a href="/blog/nhung-ban-do-vao-thiep-cuoi" target="_blank" rel="noreferrer" className="text-sm font-medium text-pink-600 hover:underline">
-										Xem hướng dẫn
+										Xem hướng dẫn cách nhúng bản đồ
 									</a>
 								</div>
 							</div>
 						</Field>
-						{mapEmbedWarning ? <p className="mt-2 text-xs text-red-600">{mapEmbedWarning}</p> : null}
+						{mapEmbedWarning ? <p className="mt-2 text-xs text-pink-600">{mapEmbedWarning}</p> : null}
 					</div>
 				</section>
 
@@ -920,7 +920,7 @@ export default function InvitationPage() {
 								<button
 									type="button"
 									onClick={() => removeScheduleRow(index)}
-									className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-red-300 hover:text-red-600"
+									className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-pink-300 hover:text-pink-600"
 								>
 									<Trash2 className="h-4 w-4" />
 								</button>
@@ -967,7 +967,7 @@ export default function InvitationPage() {
 											<button
 												type="button"
 												onClick={() => removeGalleryRow(index)}
-												className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-red-600"
+												className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
 											>
 												<Trash2 className="h-4 w-4" />
 											</button>
@@ -1001,7 +1001,7 @@ export default function InvitationPage() {
 									<button
 										type="button"
 										onClick={() => removeGalleryRow(index)}
-										className="mt-1.5 inline-flex w-full items-center justify-center gap-1 rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-500 transition hover:border-red-300 hover:text-red-600 sm:hidden"
+										className="mt-1.5 inline-flex w-full items-center justify-center gap-1 rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-500 transition hover:border-pink-300 hover:text-pink-600 sm:hidden"
 									>
 										<Trash2 className="h-3.5 w-3.5" />
 										Xoá
@@ -1010,7 +1010,7 @@ export default function InvitationPage() {
 							</div>
 						))}
 					</div>
-					{galleryUploadError ? <p className="mt-3 text-xs text-red-600">{galleryUploadError}</p> : null}
+					{galleryUploadError ? <p className="mt-3 text-xs text-pink-600">{galleryUploadError}</p> : null}
 					<button
 						type="button"
 						onClick={addGalleryRow}
@@ -1224,7 +1224,7 @@ export default function InvitationPage() {
 										<button
 											type="button"
 											onClick={() => removeQrImage('groom')}
-											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-red-600"
+											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
 										>
 											<Trash2 className="h-4 w-4" />
 										</button>
@@ -1288,7 +1288,7 @@ export default function InvitationPage() {
 										<button
 											type="button"
 											onClick={() => removeQrImage('bride')}
-											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-red-600"
+											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
 										>
 											<Trash2 className="h-4 w-4" />
 										</button>
@@ -1328,7 +1328,7 @@ export default function InvitationPage() {
 							</div>
 						</div>
 					</div>
-					{qrUploadError ? <p className="mt-3 text-xs text-red-600">{qrUploadError}</p> : null}
+					{qrUploadError ? <p className="mt-3 text-xs text-pink-600">{qrUploadError}</p> : null}
 				</section>
 
 				{/* Actions */}
@@ -1347,7 +1347,7 @@ export default function InvitationPage() {
 							Vui lòng điền đủ tên cô dâu/chú rể, ngày cưới, giờ khai tiệc và tên nhà hàng để xem demo.
 						</p>
 					) : null}
-					{renderError ? <p className="mt-2 text-center text-sm text-red-600">{renderError}</p> : null}
+					{renderError ? <p className="mt-2 text-center text-sm text-pink-600">{renderError}</p> : null}
 
 					{/* {previewUrl ? (
 						<div className="mt-4 rounded-xl bg-slate-50 p-3 text-center text-xs text-slate-600">
@@ -1373,7 +1373,7 @@ export default function InvitationPage() {
 								Xem thiệp demo trước khi tạo link gửi cho khách.
 							</p>
 						) : null}
-						{saveError ? <p className="mt-2 text-center text-sm text-red-600">{saveError}</p> : null}
+						{saveError ? <p className="mt-2 text-center text-sm text-pink-600">{saveError}</p> : null}
 
 						{shareUrl ? (
 							<div className="mt-4 flex flex-col gap-2 rounded-xl bg-slate-50 p-3 sm:flex-row sm:items-center">

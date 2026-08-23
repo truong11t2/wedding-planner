@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ExternalLink, Clock, User, Heart } from 'lucide-react';
+import { ExternalLink, Clock, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 

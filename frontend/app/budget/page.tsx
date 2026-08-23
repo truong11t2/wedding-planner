@@ -14,7 +14,6 @@ import {
   AlertTriangle,
   Target,
   Calculator,
-  BookOpen,
   ExternalLink,
   CheckCircle,
   XCircle

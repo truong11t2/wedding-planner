@@ -11,7 +11,7 @@ const stats: Stat[] = [
   { value: '100+', label: 'Đám Cưới' },
   { value: '3+ năm', label: 'Kinh Nghiệm' },
   { value: '98%', label: 'Hài Lòng' },
-  // { value: '50+', label: 'Nhà Cung Cấp' },
+  { value: '50+', label: 'Nhà Cung Cấp' },
 ];
 
 export default function StatsSection() {
