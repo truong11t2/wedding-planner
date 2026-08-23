@@ -29,6 +29,7 @@ const INVITATIONS_DIR = path.join(__dirname, '../../public/invitations');
 const DEFAULT_TEMPLATE_ID = 'minimal-red';
 const STORAGE_KEY_MARKER = "const STORAGE_KEY = 'weddingInviteConfig_v1';";
 const SERVER_CONFIG_MARKER = 'window.__INVITATION_CONFIG__ = null;';
+const SERVER_INVITATION_MARKER = 'window.__INVITATION_ID__ = null;';
 
 async function ensureInvitationsDir() {
   try {
@@ -115,7 +116,7 @@ async function resolveTemplatePath(templateId) {
  *     localStorage (private browsing, in-app browsers, cleared storage, etc).
  *  2) Via `localStorage.setItem(...)` — kept as a legacy fallback only.
  */
-async function buildInvitationHtml(templateId, config) {
+async function buildInvitationHtml(templateId, config, invitationId) {
   const templatePath = await resolveTemplatePath(templateId);
   let templateContent = await fs.readFile(templatePath, 'utf-8');
 
@@ -126,6 +127,13 @@ async function buildInvitationHtml(templateId, config) {
     templateContent = templateContent.replace(
       SERVER_CONFIG_MARKER,
       `window.__INVITATION_CONFIG__ = ${configJson};`
+    );
+  }
+
+  if (templateContent.includes(SERVER_INVITATION_MARKER)) {
+    templateContent = templateContent.replace(
+      SERVER_INVITATION_MARKER,
+      `window.__INVITATION_ID__ = ${JSON.stringify(invitationId)};`
     );
   }
 
@@ -156,8 +164,20 @@ exports.renderInvitation = async (req, res) => {
 
     await ensureInvitationsDir();
 
-    const htmlContent = await buildInvitationHtml(templateId, config);
     const htmlFileName = `${userId}.html`;
+    const publicUrl = `/invitations/${htmlFileName}`;
+
+    // Persist the invitation (including uploaded photo URLs inside config)
+    // to the database as soon as the user previews it, not only when they
+    // explicitly generate a shareable link.
+    const invitation = await upsertInvitationRecord(userId, {
+      templateId,
+      htmlFileName,
+      publicUrl,
+      config
+    });
+
+    const htmlContent = await buildInvitationHtml(templateId, config, invitation.id);
     const outputPath = path.join(INVITATIONS_DIR, htmlFileName);
     await fs.writeFile(outputPath, htmlContent, 'utf-8');
     try {
@@ -165,18 +185,6 @@ exports.renderInvitation = async (req, res) => {
     } catch (error) {
       console.log('Could not set file permissions:', error.message);
     }
-
-    const publicUrl = `/invitations/${htmlFileName}`;
-
-    // Persist the invitation (including uploaded photo URLs inside config)
-    // to the database as soon as the user previews it, not only when they
-    // explicitly generate a shareable link.
-    await upsertInvitationRecord(userId, {
-      templateId,
-      htmlFileName,
-      publicUrl,
-      config
-    });
 
     res.status(200).json({
       success: true,
@@ -216,16 +224,6 @@ exports.generateInvitation = async (req, res) => {
     const htmlFileName = `${userId}.html`;
     const publicUrl = `/invitations/${htmlFileName}`;
 
-    // Always (re)generate the final HTML file so it reflects the latest content
-    const htmlContent = await buildInvitationHtml(templateId, config);
-    const outputPath = path.join(INVITATIONS_DIR, htmlFileName);
-    await fs.writeFile(outputPath, htmlContent, 'utf-8');
-    try {
-      await fs.chmod(outputPath, 0o644);
-    } catch (error) {
-      console.log('Could not set file permissions:', error.message);
-    }
-
     const invitation = await upsertInvitationRecord(userId, {
       templateId,
       htmlFileName,
@@ -235,6 +233,16 @@ exports.generateInvitation = async (req, res) => {
       eventDate,
       config
     });
+
+    // Always (re)generate the final HTML file so it reflects the latest content
+    const htmlContent = await buildInvitationHtml(templateId, config, invitation.id);
+    const outputPath = path.join(INVITATIONS_DIR, htmlFileName);
+    await fs.writeFile(outputPath, htmlContent, 'utf-8');
+    try {
+      await fs.chmod(outputPath, 0o644);
+    } catch (error) {
+      console.log('Could not set file permissions:', error.message);
+    }
 
     res.status(200).json({
       success: true,

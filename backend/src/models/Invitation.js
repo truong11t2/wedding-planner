@@ -59,6 +59,11 @@ Invitation.associate = function (models) {
     foreignKey: 'userId',
     as: 'user'
   });
+  Invitation.hasMany(models.InvitationWish, {
+    foreignKey: 'invitationId',
+    as: 'wishes',
+    onDelete: 'CASCADE'
+  });
 };
 
 module.exports = Invitation;

@@ -13,13 +13,17 @@ const User = require('./models/User');
 const Comment = require('./models/Comment');
 const Album = require('./models/Album');
 const Invitation = require('./models/Invitation');
+const InvitationWish = require('./models/InvitationWish');
 
 // Set up model associations if they exist
 if (Album.associate) {
   Album.associate({ User, Comment, Album });
 }
 if (Invitation.associate) {
-  Invitation.associate({ User });
+  Invitation.associate({ User, InvitationWish });
+}
+if (InvitationWish.associate) {
+  InvitationWish.associate({ Invitation });
 }
 
 const authRoutes = require('./routes/authRoutes');
@@ -32,6 +36,7 @@ const budgetRoutes = require('./routes/budgetRoutes');
 const albumRoutes = require('./routes/albumRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const invitationRoutes = require('./routes/invitationRoutes');
+const invitationWishRoutes = require('./routes/invitationWishRoutes');
 
 const app = express();
 
@@ -89,6 +94,7 @@ app.use('/api/budget', budgetRoutes);
 app.use('/api/albums', albumRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/invitations', invitationRoutes);
+app.use('/api/invitations', invitationWishRoutes);
 
 // Serve static album files
 app.use('/albums', express.static('public/albums'));

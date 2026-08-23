@@ -632,6 +632,7 @@ const STORAGE_KEY = 'weddingInviteConfig_v1';
    uploaded photo URLs) always renders correctly even in private
    browsing, in-app browsers, or after the browser clears storage. */
 window.__INVITATION_CONFIG__ = null;
+window.__INVITATION_ID__ = null;
 
 /* =====================================================================
    DEFAULT / EXAMPLE DATA — dùng để gợi ý sẵn trong form lúc mới mở,
@@ -933,20 +934,51 @@ $('qrSave').addEventListener('click', () => {
 /* =====================================================================
    GUESTBOOK (demo — chỉ lưu trong phiên xem hiện tại, chưa nối backend)
 ===================================================================== */
-const wishes = [ { name: "Bạn thân", msg: "Chúc hai bạn trăm năm hạnh phúc, sớm sinh quý tử!" } ];
+const wishes = [];
+function escapeWishText(value){
+  const div = document.createElement('div');
+  div.textContent = value;
+  return div.innerHTML;
+}
 function renderWishes(){
-  $('gbList').innerHTML = wishes.map(w => `<div class="gb-item"><b>${w.name}</b><p>${w.msg}</p></div>`).join('');
+  $('gbList').innerHTML = wishes.map(w => `<div class="gb-item"><b>${escapeWishText(w.name)}</b><p>${escapeWishText(w.message || w.msg)}</p></div>`).join('');
   $('gbEmpty').style.display = wishes.length ? 'none' : 'block';
 }
+async function loadWishes(){
+  if (!window.__INVITATION_ID__) return;
+  try{
+    const response = await fetch(`/api/invitations/${encodeURIComponent(window.__INVITATION_ID__)}/wishes`);
+    if (!response.ok) throw new Error('Unable to load wishes');
+    const data = await response.json();
+    wishes.splice(0, wishes.length, ...(data.wishes || []));
+    renderWishes();
+  }catch(error){
+    console.error('Unable to load invitation wishes:', error);
+  }
+}
 renderWishes();
+loadWishes();
 $('gbForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const name = $('gbName').value.trim();
   const msg = $('gbMsg').value.trim();
   if (!name || !msg) return;
-  wishes.unshift({ name, msg });
-  renderWishes();
-  $('gbForm').reset();
+  const submitButton = $('gbForm').querySelector('button');
+  submitButton.disabled = true;
+  fetch(`/api/invitations/${encodeURIComponent(window.__INVITATION_ID__)}/wishes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, message: msg })
+  }).then(async response => {
+    if (!response.ok) throw new Error('Unable to save wish');
+    const data = await response.json();
+    wishes.unshift(data.wish);
+    renderWishes();
+    $('gbForm').reset();
+  }).catch(error => {
+    console.error('Unable to save invitation wish:', error);
+    alert('Không thể gửi lời chúc lúc này. Vui lòng thử lại.');
+  }).finally(() => { submitButton.disabled = false; });
 });
 
 /* =====================================================================
