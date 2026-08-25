@@ -712,7 +712,7 @@ export default function GuestsPage() {
           <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Xác nhận tham dự</h3>
-              <p className="text-sm text-gray-500">Phản hồi được gửi từ thiệp cưới công khai.</p>
+              <p className="text-sm text-gray-500">Phản hồi được gửi từ thiệp cưới online.</p>
             </div>
             <div className="text-sm text-gray-600">
               Tham dự: {rsvps.filter(rsvp => rsvp.attendanceStatus === 'attending').length}
