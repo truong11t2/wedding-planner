@@ -88,6 +88,8 @@ export interface InvitationSummary {
   templateId: string;
   publicUrl: string;
   sharePath: string;
+  isPaid?: boolean;
+  expiresAt?: string | null;
 }
 
 export interface GenerateInvitationResponse {
@@ -129,11 +131,43 @@ export interface MyInvitation {
   eventDate: string;
   config: InvitationConfig;
   isPublished: boolean;
+  isPaid?: boolean;
+  expiresAt?: string | null;
 }
 
 export interface GetMyInvitationResponse {
   success: boolean;
   invitation: MyInvitation;
+}
+
+export interface InvitationRsvp {
+  id: string;
+  name: string;
+  phone?: string;
+  attendanceStatus: 'attending' | 'declined';
+  guestCount: number;
+  mealPreference?: string;
+  message?: string;
+  createdAt: string;
+}
+
+export async function getInvitationRsvps(): Promise<{
+  success: boolean;
+  rsvps?: InvitationRsvp[];
+  message?: string;
+}> {
+  const response = await fetch(`${API_BASE_URL}${ENDPOINTS.INVITATION.BASE}/mine/rsvps`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch RSVPs');
+  }
+
+  return data;
 }
 
 export async function getMyInvitation(): Promise<GetMyInvitationResponse> {

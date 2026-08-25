@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const Invitation = require('../models/Invitation');
+const User = require('../models/User');
 
 function generateRandomId(size = 8) {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -30,6 +31,9 @@ const DEFAULT_TEMPLATE_ID = 'minimal-red';
 const STORAGE_KEY_MARKER = "const STORAGE_KEY = 'weddingInviteConfig_v1';";
 const SERVER_CONFIG_MARKER = 'window.__INVITATION_CONFIG__ = null;';
 const SERVER_INVITATION_MARKER = 'window.__INVITATION_ID__ = null;';
+const PREVIEW_TTL_MS = 2 * 24 * 60 * 60 * 1000; // 2 days clean up
+//const PREVIEW_TTL_MS = 5 * 60 * 1000; // 5 minutes for testing
+const PAID_TTL_MS = 365 * 24 * 60 * 60 * 1000;
 
 async function ensureInvitationsDir() {
   try {
@@ -52,12 +56,13 @@ function deriveEventDate(config) {
  * as soon as the user previews the invitation, not only when they
  * explicitly generate a shareable link.
  */
-async function upsertInvitationRecord(userId, { templateId, htmlFileName, publicUrl, brideName, groomName, eventDate, config }) {
+async function upsertInvitationRecord(userId, { templateId, htmlFileName, publicUrl, brideName, groomName, eventDate, config, isPaid }) {
   let invitation = await Invitation.findOne({ where: { userId } });
 
   const resolvedBrideName = brideName || config.brideFull;
   const resolvedGroomName = groomName || config.groomFull;
   const resolvedEventDate = eventDate || deriveEventDate(config);
+  const expiresAt = new Date(Date.now() + (isPaid ? PAID_TTL_MS : PREVIEW_TTL_MS));
 
   if (invitation) {
     invitation.templateId = templateId;
@@ -67,6 +72,8 @@ async function upsertInvitationRecord(userId, { templateId, htmlFileName, public
     invitation.groomName = resolvedGroomName;
     invitation.eventDate = resolvedEventDate;
     invitation.config = config;
+    invitation.isPaid = isPaid;
+    invitation.expiresAt = expiresAt;
     await invitation.save();
   } else {
     const baseSlug = slugify(`${resolvedGroomName}-${resolvedBrideName}`) || 'thiep-cuoi';
@@ -86,7 +93,9 @@ async function upsertInvitationRecord(userId, { templateId, htmlFileName, public
       brideName: resolvedBrideName,
       groomName: resolvedGroomName,
       eventDate: resolvedEventDate,
-      config
+      config,
+      isPaid,
+      expiresAt
     });
   }
 
@@ -153,6 +162,7 @@ async function buildInvitationHtml(templateId, config, invitationId) {
 exports.renderInvitation = async (req, res) => {
   try {
     const userId = req.user.id;
+    const isPaid = Boolean(req.user.isPaid);
     const { templateId, config } = req.body;
 
     if (!templateId || !config || !config.groomFull || !config.brideFull) {
@@ -174,7 +184,8 @@ exports.renderInvitation = async (req, res) => {
       templateId,
       htmlFileName,
       publicUrl,
-      config
+      config,
+      isPaid
     });
 
     const htmlContent = await buildInvitationHtml(templateId, config, invitation.id);
@@ -207,7 +218,15 @@ exports.renderInvitation = async (req, res) => {
 exports.generateInvitation = async (req, res) => {
   try {
     const userId = req.user.id;
+    const isPaid = Boolean(req.user.isPaid);
     const { templateId, config, brideName, groomName, eventDate } = req.body;
+
+    if (!isPaid) {
+      return res.status(403).json({
+        success: false,
+        message: 'Tính năng tạo link gửi cho khách chỉ dành cho người dùng đã thanh toán.'
+      });
+    }
 
     if (!templateId || !config || !config.groomFull || !config.brideFull) {
       return res.status(400).json({
@@ -231,7 +250,8 @@ exports.generateInvitation = async (req, res) => {
       brideName,
       groomName,
       eventDate,
-      config
+      config,
+      isPaid
     });
 
     // Always (re)generate the final HTML file so it reflects the latest content
@@ -252,7 +272,7 @@ exports.generateInvitation = async (req, res) => {
         slug: invitation.slug,
         templateId: invitation.templateId,
         publicUrl: invitation.publicUrl,
-        sharePath: `/invitation/view/${invitation.slug}`
+        sharePath: `/i/${invitation.slug}`
       }
     });
   } catch (error) {
@@ -285,12 +305,14 @@ exports.getMyInvitation = async (req, res) => {
         slug: invitation.slug,
         templateId: invitation.templateId,
         publicUrl: invitation.publicUrl,
-        sharePath: `/invitation/view/${invitation.slug}`,
+        sharePath: `/i/${invitation.slug}`,
         brideName: invitation.brideName,
         groomName: invitation.groomName,
         eventDate: invitation.eventDate,
         config: invitation.config,
-        isPublished: invitation.isPublished
+        isPublished: invitation.isPublished,
+        isPaid: invitation.isPaid,
+        expiresAt: invitation.expiresAt
       }
     });
   } catch (error) {
@@ -309,21 +331,14 @@ exports.getInvitationBySlug = async (req, res) => {
     const { slug } = req.params;
     const invitation = await Invitation.findOne({ where: { slug, isPublished: true } });
 
-    if (!invitation) {
+    if (!invitation || (invitation.expiresAt && invitation.expiresAt <= new Date())) {
       return res.status(404).json({
         success: false,
-        message: 'Invitation not found'
+        message: 'Invitation not found or expired'
       });
     }
 
-    res.status(200).json({
-      success: true,
-      invitation: {
-        slug: invitation.slug,
-        templateId: invitation.templateId,
-        publicUrl: invitation.publicUrl
-      }
-    });
+    res.redirect(302, invitation.publicUrl);
   } catch (error) {
     console.error('Error fetching invitation:', error);
     res.status(500).json({
@@ -333,6 +348,40 @@ exports.getInvitationBySlug = async (req, res) => {
     });
   }
 };
+
+async function cleanupExpiredInvitations() {
+  const now = new Date();
+  const invitations = await Invitation.findAll();
+  const expiredInvitations = [];
+
+  for (const invitation of invitations) {
+    const expiresAt = invitation.expiresAt || new Date(new Date(invitation.updatedAt).getTime() + PREVIEW_TTL_MS);
+    if (!invitation.expiresAt) {
+      invitation.expiresAt = expiresAt;
+      await invitation.save();
+    }
+    if (expiresAt <= now) {
+      expiredInvitations.push(invitation);
+    }
+  }
+
+  for (const invitation of expiredInvitations) {
+    try {
+      await fs.unlink(path.join(INVITATIONS_DIR, invitation.htmlFileName));
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        console.error(`Could not delete expired invitation file ${invitation.htmlFileName}:`, error.message);
+      }
+    }
+    await invitation.destroy();
+  }
+
+  if (expiredInvitations.length > 0) {
+    console.log(`✓ Cleaned up ${expiredInvitations.length} expired invitation(s)`);
+  }
+}
+
+exports.cleanupExpiredInvitations = cleanupExpiredInvitations;
 
 exports.deleteInvitation = async (req, res) => {
   try {

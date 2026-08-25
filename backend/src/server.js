@@ -14,6 +14,7 @@ const Comment = require('./models/Comment');
 const Album = require('./models/Album');
 const Invitation = require('./models/Invitation');
 const InvitationWish = require('./models/InvitationWish');
+const InvitationRsvp = require('./models/InvitationRsvp');
 
 // Set up model associations if they exist
 if (Album.associate) {
@@ -24,6 +25,9 @@ if (Invitation.associate) {
 }
 if (InvitationWish.associate) {
   InvitationWish.associate({ Invitation });
+}
+if (InvitationRsvp.associate) {
+  InvitationRsvp.associate({ Invitation });
 }
 
 const authRoutes = require('./routes/authRoutes');
@@ -36,6 +40,8 @@ const budgetRoutes = require('./routes/budgetRoutes');
 const albumRoutes = require('./routes/albumRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const invitationRoutes = require('./routes/invitationRoutes');
+const invitationController = require('./controllers/invitationController');
+const { cleanupExpiredInvitations } = invitationController;
 const invitationWishRoutes = require('./routes/invitationWishRoutes');
 
 const app = express();
@@ -95,6 +101,7 @@ app.use('/api/albums', albumRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/invitations', invitationRoutes);
 app.use('/api/invitations', invitationWishRoutes);
+app.get('/i/:slug', invitationController.getInvitationBySlug);
 
 // Serve static album files
 app.use('/albums', express.static('public/albums'));
@@ -116,7 +123,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Error handler
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ 
     message: 'Something went wrong!', 
@@ -136,6 +143,13 @@ const startServer = async () => {
     // Sync database (create tables)
     await sequelize.sync({ alter: true });
     console.log('✓ Database synchronized');
+
+    await cleanupExpiredInvitations();
+    setInterval(() => {
+      cleanupExpiredInvitations().catch((error) => {
+        console.error('Invitation cleanup failed:', error);
+      });
+    }, 24 * 60 * 60 * 1000); //Every 24 hours clean up
 
     // Start server
     app.listen(PORT, () => {

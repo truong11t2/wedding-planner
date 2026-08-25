@@ -8,6 +8,7 @@ export interface User {
   email: string;
   weddingDate?: string;
   hasGeneratedTimeline?: boolean;
+  isPaid?: boolean;
   createdAt: string;
   updatedAt: string;
 }

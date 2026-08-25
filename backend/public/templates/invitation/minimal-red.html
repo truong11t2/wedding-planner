@@ -377,6 +377,23 @@
     padding:11px 13px; border:1px solid rgba(110,20,35,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
   }
   .gb-form textarea{ resize:none; height:70px; }
+  .rsvp-form{ margin-top:22px; display:flex; flex-direction:column; gap:10px; max-width:500px; margin-left:auto; margin-right:auto; text-align:left; }
+  .rsvp-form input, .rsvp-form select, .rsvp-form textarea{
+    padding:11px 13px; border:1px solid rgba(110,20,35,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
+  }
+  .rsvp-form textarea{ resize:none; height:70px; }
+  .rsvp-form button{ padding:12px; background:var(--wine-mid); color:#fff; border-radius:4px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+  .rsvp-form fieldset{ border:0; display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--ink-soft); }
+  .rsvp-form legend{ font-size:12px; font-weight:600; color:var(--ink); margin-bottom:7px; }
+  .rsvp-form label{ display:flex; align-items:center; gap:6px; }
+  .rsvp-status{ min-height:18px; font-size:12px; color:var(--wine); text-align:center; }
+  #rsvp-modal{
+    position:fixed; inset:0; z-index:1000; display:none; align-items:center; justify-content:center;
+    padding:20px; background:rgba(20,4,7,.72); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+  }
+  #rsvp-modal.open{ display:flex; }
+  .rsvp-box{ position:relative; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; padding:28px 22px; background:var(--ivory); border-radius:8px; box-shadow:0 18px 50px rgba(0,0,0,.35); }
+  .rsvp-box .close-x{ position:absolute; top:10px; right:14px; font-size:20px; color:var(--ink-soft); }
   .gb-form button{
     margin-top:4px; padding:12px; background:var(--wine-mid); color:#fff; border-radius:4px;
     font-size:12px; letter-spacing:.14em; text-transform:uppercase;
@@ -560,7 +577,7 @@
 
       <div class="cta-row">
         <a class="btn" id="addCalendar" href="#" target="_blank" rel="noopener">+ Thêm vào lịch</a>
-        <a class="btn" href="#rsvp">Xác nhận tham dự</a>
+        <a class="btn" id="openRsvp" href="#rsvp-modal">Xác nhận tham dự</a>
       </div>
 
       <div class="map-wrap">
@@ -620,6 +637,32 @@
   </div>
 </div>
 
+<div id="rsvp-modal" aria-hidden="true">
+  <div class="rsvp-box" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
+    <button type="button" class="close-x" id="rsvpClose" aria-label="Đóng">✕</button>
+    <div class="section-title" id="rsvpTitle">Xác Nhận Tham Dự</div>
+    <form class="rsvp-form" id="rsvpForm">
+      <input type="text" id="rsvpName" placeholder="Tên của bạn" maxlength="120" required />
+      <input type="tel" id="rsvpPhone" placeholder="Số điện thoại (không bắt buộc)" maxlength="40" />
+      <fieldset>
+        <legend>Bạn sẽ tham dự chứ?</legend>
+        <label><input type="radio" name="attendanceStatus" value="attending" checked /> Có, tôi sẽ tham dự</label>
+        <label><input type="radio" name="attendanceStatus" value="declined" /> Rất tiếc, tôi không thể tham dự</label>
+      </fieldset>
+      <input type="number" id="rsvpGuestCount" min="1" max="10" value="1" aria-label="Số người tham dự" placeholder="Số người tham dự" required />
+      <select id="rsvpMealPreference" aria-label="Lựa chọn món ăn">
+        <option value="">Lựa chọn món ăn (không bắt buộc)</option>
+        <option value="normal">Thực đơn thường</option>
+        <option value="vegetarian">Chay</option>
+        <option value="other">Khác</option>
+      </select>
+      <textarea id="rsvpMessage" maxlength="1000" placeholder="Ghi chú cho cô dâu chú rể (không bắt buộc)"></textarea>
+      <button type="submit">Gửi xác nhận</button>
+      <div class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
 <script>
 /* =====================================================================
    $ helper + STORAGE
@@ -655,7 +698,7 @@ const DEFAULT_CONFIG = {
     welcomeTime: "17:30",
     startTime: "18:00",
     venueName: "The Adora Center, 431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
-    mapQuery: "The Adora Center 431 Hoang Van Thu Tan Binh"
+    mapQuery: ""
   },
   schedule: [
     { time: "17:30", label: "Đón khách" },
@@ -718,7 +761,17 @@ function renderInvitation(cfg){
     ? receptionStartObj
     : new Date(cfg.weddingDateISO);
   $('venueName').textContent = cfg.reception.venueName;
-  $('mapFrame').src = cfg.reception.mapQuery;
+
+  const mapWrap = document.querySelector('.map-wrap');
+  const hasMapQuery = !!(cfg.reception && cfg.reception.mapQuery && String(cfg.reception.mapQuery).trim());
+  if (hasMapQuery) {
+    $('mapFrame').src = cfg.reception.mapQuery;
+    if (mapWrap) mapWrap.style.display = '';
+  } else {
+    $('mapFrame').removeAttribute('src');
+    if (mapWrap) mapWrap.style.display = 'none';
+  }
+
   $('giftGroomName').textContent = cfg.groomShort;
   $('giftBrideName').textContent = cfg.brideShort;
   $('footerCredit').innerHTML = `${cfg.groomShort} &amp; ${cfg.brideShort}`;
@@ -935,6 +988,7 @@ $('qrSave').addEventListener('click', () => {
    GUESTBOOK (demo — chỉ lưu trong phiên xem hiện tại, chưa nối backend)
 ===================================================================== */
 const wishes = [];
+let rsvpSubmitting = false;
 function escapeWishText(value){
   const div = document.createElement('div');
   div.textContent = value;
@@ -980,6 +1034,63 @@ $('gbForm').addEventListener('submit', (e) => {
     alert('Không thể gửi lời chúc lúc này. Vui lòng thử lại.');
   }).finally(() => { submitButton.disabled = false; });
 });
+
+$('rsvpForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!window.__INVITATION_ID__ || rsvpSubmitting) return;
+
+  const submitButton = $('rsvpForm').querySelector('button');
+  const statusEl = $('rsvpStatus');
+  rsvpSubmitting = true;
+  submitButton.disabled = true;
+  statusEl.textContent = '';
+
+  try {
+    const response = await fetch(`/api/invitations/${encodeURIComponent(window.__INVITATION_ID__)}/rsvp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: $('rsvpName').value.trim(),
+        phone: $('rsvpPhone').value.trim(),
+        attendanceStatus: document.querySelector('input[name="attendanceStatus"]:checked').value,
+        guestCount: Number($('rsvpGuestCount').value),
+        mealPreference: $('rsvpMealPreference').value,
+        message: $('rsvpMessage').value.trim()
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Unable to submit RSVP');
+    $('rsvpForm').reset();
+    $('rsvpGuestCount').value = '1';
+    statusEl.textContent = 'Cảm ơn bạn đã xác nhận tham dự.';
+    closeRsvpModal();
+  } catch (error) {
+    console.error('Unable to submit RSVP:', error);
+    statusEl.textContent = 'Không thể gửi xác nhận lúc này. Vui lòng thử lại.';
+  } finally {
+    rsvpSubmitting = false;
+    submitButton.disabled = false;
+  }
+});
+
+const rsvpModal = $('rsvp-modal');
+function closeRsvpModal(){
+  rsvpModal.classList.remove('open');
+  rsvpModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = 'auto';
+}
+function openRsvpModal(){
+  rsvpModal.classList.add('open');
+  rsvpModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  $('rsvpName').focus();
+}
+$('openRsvp').addEventListener('click', (e) => {
+  e.preventDefault();
+  openRsvpModal();
+});
+$('rsvpClose').addEventListener('click', closeRsvpModal);
+rsvpModal.addEventListener('click', (e) => { if (e.target === rsvpModal) closeRsvpModal(); });
 
 /* =====================================================================
    SCROLL REVEAL

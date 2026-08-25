@@ -48,6 +48,15 @@ const Invitation = sequelize.define('Invitation', {
   isPublished: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+  isPaid: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false
+  },
+  expiresAt: {
+    type: DataTypes.DATE,
+    allowNull: true
   }
 }, {
   timestamps: true,

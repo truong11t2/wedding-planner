@@ -69,6 +69,11 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
+  isPaid: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false
+  },
   checklistData: {
     type: DataTypes.JSON,
     allowNull: true,

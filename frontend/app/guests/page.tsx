@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Toast from '@/components/common/Toast';
 import { Users, Plus, Edit2, Trash2, Mail, Phone, MapPin, Gift, X } from 'lucide-react';
+import { getInvitationRsvps, InvitationRsvp } from '@/api/invitation';
 import { 
   getGuestList, 
   saveGuestList, 
@@ -391,6 +392,7 @@ export default function GuestsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState<'all' | 'family' | 'friend' | 'coworker' | 'other'>('all');
   const [filterSide, setFilterSide] = useState<'all' | 'bride' | 'groom'>('all');
+  const [rsvps, setRsvps] = useState<InvitationRsvp[]>([]);
   
   // Toast state
   const [toast, setToast] = useState<{
@@ -433,6 +435,14 @@ export default function GuestsPage() {
     };
 
     loadGuestData();
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    getInvitationRsvps()
+      .then(response => setRsvps(response.rsvps || []))
+      .catch(() => setRsvps([]));
   }, [isLoggedIn]);
 
   // Auto-save guest list whenever guests change (debounced)
@@ -696,6 +706,51 @@ export default function GuestsPage() {
               <div className="text-sm text-gray-600">Khác</div>
             </div>
           </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+          <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Xác nhận tham dự</h3>
+              <p className="text-sm text-gray-500">Phản hồi được gửi từ thiệp cưới công khai.</p>
+            </div>
+            <div className="text-sm text-gray-600">
+              Tham dự: {rsvps.filter(rsvp => rsvp.attendanceStatus === 'attending').length}
+              {' | '}Không tham dự: {rsvps.filter(rsvp => rsvp.attendanceStatus === 'declined').length}
+            </div>
+          </div>
+          {rsvps.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="border-b border-gray-200 text-gray-500">
+                  <tr>
+                    <th className="px-3 py-2 font-medium">Tên</th>
+                    <th className="px-3 py-2 font-medium">Trạng thái</th>
+                    <th className="px-3 py-2 font-medium">Số người</th>
+                    <th className="px-3 py-2 font-medium">Món ăn</th>
+                    <th className="px-3 py-2 font-medium">Ghi chú</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rsvps.map(rsvp => (
+                    <tr key={rsvp.id} className="border-b border-gray-100 last:border-0">
+                      <td className="px-3 py-3 font-medium text-gray-900">{rsvp.name}</td>
+                      <td className="px-3 py-3">
+                        <span className={rsvp.attendanceStatus === 'attending' ? 'text-green-600' : 'text-red-600'}>
+                          {rsvp.attendanceStatus === 'attending' ? 'Sẽ tham dự' : 'Không tham dự'}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 text-gray-600">{rsvp.guestCount}</td>
+                      <td className="px-3 py-3 text-gray-600">{rsvp.mealPreference || '-'}</td>
+                      <td className="px-3 py-3 text-gray-600">{rsvp.message || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="py-4 text-sm text-gray-500">Chưa có phản hồi RSVP nào.</p>
+          )}
         </div>
 
         {/* Guest Lists */}

@@ -163,7 +163,8 @@ exports.register = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        provider: user.provider
+        provider: user.provider,
+        isPaid: user.isPaid
       }
     });
   } catch (error) {
@@ -239,7 +240,8 @@ exports.login = async (req, res) => {
         lastName: user.lastName,
         email: user.email,
         provider: user.provider,
-        avatar: user.avatar
+        avatar: user.avatar,
+        isPaid: user.isPaid
       }
     });
   } catch (error) {
@@ -276,6 +278,7 @@ exports.getProfile = async (req, res) => {
         email: user.email,
         weddingDate: user.weddingDate,
         hasGeneratedTimeline: user.hasGeneratedTimeline,
+        isPaid: user.isPaid,
         provider: user.provider,
         avatar: user.avatar,
         isEmailVerified: user.isEmailVerified,

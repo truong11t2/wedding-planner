@@ -64,7 +64,7 @@ function buildDefaultConfig(): InvitationConfig {
 			welcomeTime: '17:30',
 			startTime: '18:00',
 			venueName: 'The Adora Center, 431 Hoàng Văn Thụ, Tân Bình, TP.HCM',
-			mapQuery: 'The Adora Center 431 Hoang Van Thu Tan Binh'
+			mapQuery: ''
 		},
 		schedule: [
 			{ time: '17:30', label: 'Đón khách' },
@@ -91,7 +91,7 @@ function formatDateLabel(dateStr: string): string {
 
 export default function InvitationPage() {
 	const router = useRouter();
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn, user } = useAuth();
 	const [activeTab, setActiveTab] = useState<'template' | 'info'>('template');
 	const [selectedCategory, setSelectedCategory] = useState<TemplateCategory | 'Tất cả'>('Tất cả');
 	const [selectedTone, setSelectedTone] = useState<TemplateTone | 'Tất cả'>('Tất cả');
@@ -448,6 +448,11 @@ export default function InvitationPage() {
 			return;
 		}
 
+		if (!user?.isPaid) {
+			setSaveError('Tính năng tạo link gửi cho khách chỉ dành cho người dùng đã thanh toán.');
+			return;
+		}
+
 		setIsSaving(true);
 		try {
 			const finalConfig = buildFinalConfig();
@@ -456,7 +461,7 @@ export default function InvitationPage() {
 				brideName: finalConfig.brideFull,
 				eventDate: weddingDate
 			});
-			const fullUrl = `${BACKEND_ORIGIN}${response.invitation.publicUrl}`;
+			const fullUrl = `${BACKEND_ORIGIN}${response.invitation.sharePath}`;
 			setShareUrl(fullUrl);
 		} catch (error) {
 			setSaveError(error instanceof Error ? error.message : 'Không thể tạo link chia sẻ. Vui lòng thử lại.');
@@ -1335,13 +1340,17 @@ export default function InvitationPage() {
 						<button
 							type="button"
 							onClick={handleGenerateLink}
-							disabled={!previewFileName || isSaving}
+							disabled={!previewFileName || !user?.isPaid || isSaving}
 							className="flex w-full items-center justify-center gap-2 rounded-xl border border-pink-300 bg-white px-4 py-3 text-sm font-semibold text-pink-700 transition hover:bg-pink-50 disabled:cursor-not-allowed disabled:opacity-60"
 						>
 							{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <LinkIcon className="h-4 w-4" />}
 							Tạo link gửi cho khách
 						</button>
-						{!previewFileName ? (
+						{!user?.isPaid ? (
+							<p className="mt-2 text-center text-xs text-slate-500">
+								Tính năng tạo link gửi cho khách dành cho người dùng đã thanh toán.
+							</p>
+						) : !previewFileName ? (
 							<p className="mt-2 text-center text-xs text-slate-500">
 								Xem thiệp demo trước khi tạo link gửi cho khách.
 							</p>
