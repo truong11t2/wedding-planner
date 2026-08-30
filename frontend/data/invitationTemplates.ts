@@ -35,9 +35,9 @@ export const invitationTemplates: InvitationTemplate[] = [
     soft: '#EEFCF3'
   },
   {
-    id: 'dragon-gold',
-    name: 'Long Phụng - Vàng',
-    category: 'Cổ điển',
+    id: 'minimal-gold',
+    name: 'Minimalism - Vàng',
+    category: 'Tối giản',
     tone: 'Vàng',
     badge: 'Mới',
     accent: '#A4741A',
@@ -71,6 +71,16 @@ export const invitationTemplates: InvitationTemplate[] = [
     accent: '#7B4B2B',
     background: 'linear-gradient(160deg, #F9F5F1 0%, #EFE4DA 100%)',
     soft: '#F7F1EA'
+  },
+  {
+    id: 'thiep-cuoi-song-long',
+    name: 'Thiệp Cưới Song Long',
+    category: 'Truyền thống',
+    tone: 'Xanh dương',
+    badge: 'Hot',
+    accent: '#A61B1B',
+    background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
+    soft: '#FFF1F1'
   }
 ];
 
