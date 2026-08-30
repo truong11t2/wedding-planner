@@ -92,7 +92,7 @@ function formatDateLabel(dateStr: string): string {
 export default function InvitationPage() {
 	const router = useRouter();
 	const { isLoggedIn, user } = useAuth();
-	const [activeTab, setActiveTab] = useState<'template' | 'info'>('template');
+	const [activeTab, setActiveTab] = useState<'template' | 'info' | 'invitation' | 'share'>('template');
 	const [selectedCategory, setSelectedCategory] = useState<TemplateCategory | 'Tất cả'>('Tất cả');
 	const [selectedTone, setSelectedTone] = useState<TemplateTone | 'Tất cả'>('Tất cả');
 	const [searchTerm, setSearchTerm] = useState('');
@@ -110,6 +110,9 @@ export default function InvitationPage() {
 	const [shareUrl, setShareUrl] = useState<string | null>(null);
 	const [saveError, setSaveError] = useState<string | null>(null);
 	const [copied, setCopied] = useState(false);
+	const [invitationTabUrl, setInvitationTabUrl] = useState<string | null>(null);
+	const [invitationTabLoading, setInvitationTabLoading] = useState(false);
+	const [invitationTabError, setInvitationTabError] = useState<string | null>(null);
 
 	const [uploadingGalleryIndex, setUploadingGalleryIndex] = useState<number | null>(null);
 	const [galleryUploadError, setGalleryUploadError] = useState<string | null>(null);
@@ -225,6 +228,12 @@ export default function InvitationPage() {
 					}
 					if (invitation.templateId) {
 						setSelectedTemplateId(invitation.templateId);
+					}
+					if (invitation.publicUrl) {
+						const loadedUrl = `${BACKEND_ORIGIN}${invitation.publicUrl}?t=${Date.now()}`;
+						setPreviewUrl(loadedUrl);
+						setPreviewFileName(invitation.publicUrl.split('/').pop() ?? null);
+						setInvitationTabUrl(loadedUrl);
 					}
 				}
 			} catch {
@@ -400,6 +409,37 @@ export default function InvitationPage() {
 		};
 	};
 
+	const loadInvitationTabPreview = async () => {
+		setInvitationTabError(null);
+		setInvitationTabLoading(true);
+
+		if (!isLoggedIn) {
+			setInvitationTabError('Vui lòng đăng nhập để xem thiệp đã tạo.');
+			setInvitationTabLoading(false);
+			router.push('/login');
+			return;
+		}
+
+		if (!canPreview) {
+			setInvitationTabError('Vui lòng điền đủ thông tin để xem thiệp.');
+			setInvitationTabLoading(false);
+			return;
+		}
+
+		try {
+			const finalConfig = buildFinalConfig();
+			const response = await renderInvitationPreview(selectedTemplate.id, finalConfig);
+			const fullUrl = `${BACKEND_ORIGIN}${response.publicUrl}?t=${Date.now()}`;
+			setPreviewUrl(fullUrl);
+			setPreviewFileName(response.htmlFileName);
+			setInvitationTabUrl(fullUrl);
+		} catch (error) {
+			setInvitationTabError(error instanceof Error ? error.message : 'Không thể tải thiệp cưới. Vui lòng thử lại.');
+		} finally {
+			setInvitationTabLoading(false);
+		}
+	};
+
 	const handlePreview = async () => {
 		setRenderError(null);
 		setIsRendering(true);
@@ -424,6 +464,7 @@ export default function InvitationPage() {
 			const fullUrl = `${BACKEND_ORIGIN}${response.publicUrl}?t=${Date.now()}`;
 			setPreviewUrl(fullUrl);
 			setPreviewFileName(response.htmlFileName);
+			setInvitationTabUrl(fullUrl);
 
 			if (newTab && !newTab.closed) {
 				newTab.location.href = fullUrl;
@@ -438,6 +479,11 @@ export default function InvitationPage() {
 		}
 	};
 
+	useEffect(() => {
+		if (activeTab !== 'invitation') return;
+		void loadInvitationTabPreview();
+	}, [activeTab, isLoggedIn, selectedTemplate.id, canPreview]);
+
 	const handleGenerateLink = async () => {
 		setSaveError(null);
 		setCopied(false);
@@ -448,10 +494,11 @@ export default function InvitationPage() {
 			return;
 		}
 
-		if (!user?.isPaid) {
-			setSaveError('Tính năng tạo link gửi cho khách chỉ dành cho người dùng đã thanh toán.');
-			return;
-		}
+		//TODO: remove comment in future
+		// if (!user?.isPaid) {
+		// 	setSaveError('Tính năng tạo link gửi cho khách chỉ dành cho người dùng đã thanh toán.');
+		// 	return;
+		// }
 
 		setIsSaving(true);
 		try {
@@ -503,34 +550,57 @@ export default function InvitationPage() {
         </div>
 
 		{/* Tabs */}
-		<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-			<div className="flex gap-2 border-b border-slate-200">
-				<button
-					type="button"
-					onClick={() => setActiveTab('template')}
-					className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-						activeTab === 'template'
-							? 'border-pink-500 text-pink-600'
-							: 'border-transparent text-slate-500 hover:text-slate-700'
-					}`}
-				>
-					1. Chọn mẫu thiệp
-				</button>
-				<button
-					type="button"
-					onClick={() => setActiveTab('info')}
-					className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-						activeTab === 'info'
-							? 'border-pink-500 text-pink-600'
-							: 'border-transparent text-slate-500 hover:text-slate-700'
-					}`}
-				>
-					2. Thông tin đám cưới
-				</button>
-			</div>
+		<div className="sticky top-[72px] z-30 border-b border-slate-200 bg-white/90 shadow-sm backdrop-blur-sm">
+
+				<div className="flex gap-2 border-b border-slate-200">
+					<button
+						type="button"
+						onClick={() => setActiveTab('template')}
+						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
+							activeTab === 'template'
+								? 'border-pink-500 text-pink-600'
+								: 'border-transparent text-slate-500 hover:text-slate-700'
+						}`}
+					>
+						1. Chọn mẫu
+					</button>
+					<button
+						type="button"
+						onClick={() => setActiveTab('info')}
+						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
+							activeTab === 'info'
+								? 'border-pink-500 text-pink-600'
+								: 'border-transparent text-slate-500 hover:text-slate-700'
+						}`}
+					>
+						2. Nhập thông tin
+					</button>
+					<button
+						type="button"
+						onClick={() => setActiveTab('invitation')}
+						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
+							activeTab === 'invitation'
+								? 'border-pink-500 text-pink-600'
+								: 'border-transparent text-slate-500 hover:text-slate-700'
+						}`}
+					>
+						3. Xem thiệp
+					</button>
+					<button
+						type="button"
+						onClick={() => {setActiveTab('share'); handleGenerateLink()}}
+						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
+							activeTab === 'share'
+								? 'border-pink-500 text-pink-600'
+								: 'border-transparent text-slate-500 hover:text-slate-700'
+						}`}
+					>
+						4. Chia sẻ
+					</button>
+				</div>
 		</div>
 
-		<section className={`mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8 ${activeTab === 'template' ? '' : 'hidden'}`}>
+		<section className={`mx-auto max-w-7xl ${activeTab === 'template' ? '' : 'hidden'}`}>
 			{/* <div className="rounded-2xl bg-white p-5 shadow-md ring-1 ring-slate-100">
 				<div className="relative">
 					<Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -656,8 +726,8 @@ export default function InvitationPage() {
 			</div>
 		</section>
 
-		<section className={`mx-auto max-w-3xl px-4 pt-8 pb-16 sm:px-6 lg:px-8 ${activeTab === 'info' ? '' : 'hidden'}`}>
-			<div className="rounded-2xl border border-pink-100 bg-pink-50/70 p-4 text-sm text-pink-600">
+		<section className={`mx-auto max-w-7xl ${activeTab === 'info' ? '' : 'hidden'}`}>
+			<div className="rounded-2xl border border-pink-100 bg-pink-50/70 mt-6 p-4 text-sm text-pink-600">
 				<div className="flex items-center justify-between gap-3">
 					<p className="inline-flex items-center gap-1 font-semibold">
 						Đang dùng mẫu: {selectedTemplate.name}
@@ -1308,76 +1378,69 @@ export default function InvitationPage() {
 					</div>
 					{qrUploadError ? <p className="mt-3 text-xs text-pink-600">{qrUploadError}</p> : null}
 				</section>
+			</form>
+		</section>
 
-				{/* Actions */}
-				<section className="rounded-2xl border border-pink-200 bg-white p-6 shadow-sm">
-					<button
-						type="button"
-						onClick={handlePreview}
-						disabled={!canPreview || isRendering}
-						className="flex w-full items-center justify-center gap-2 rounded-xl bg-pink-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
-					>
-						{isRendering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Eye className="h-4 w-4" />}
-						Xem thiệp
-					</button>
-					{!canPreview ? (
-						<p className="mt-2 text-center text-xs text-slate-500">
-							Vui lòng điền đủ tên cô dâu/chú rể, ngày cưới, giờ khai tiệc và tên nhà hàng để xem demo.
-						</p>
-					) : null}
-					{renderError ? <p className="mt-2 text-center text-sm text-pink-600">{renderError}</p> : null}
+		<section className={`mx-auto max-w-7xl ${activeTab === 'invitation' ? '' : 'hidden'}`}>
+			<div className="mt-6 rounded-2xl border border-slate-200">
+				{invitationTabLoading ? (
+					<div className="flex min-h-[60vh] items-center justify-center text-slate-500">
+						<Loader2 className="mr-2 h-5 w-5 animate-spin text-pink-500" />
+						Đang tải thiệp cưới...
+					</div>
+				) : invitationTabError ? (
+					<div className="flex min-h-[60vh] items-center justify-center text-center text-sm text-pink-600">
+						{invitationTabError}
+					</div>
+				) : invitationTabUrl ? (
+					<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+						<iframe
+							src={invitationTabUrl}
+							title="Wedding invitation preview"
+							className="h-[80vh] w-full border-0 bg-white"
+						/> 
+					</div>
+				) : (
+					<div className="flex min-h-[60vh] items-center justify-center text-center text-sm text-slate-500">
+						Chưa có thiệp để hiển thị. Hãy điền thông tin và bấm &ldquo;Xem thiệp&rdquo;.
+					</div>
+				)}
+			</div>
+		</section>
 
-					{/* {previewUrl ? (
-						<div className="mt-4 rounded-xl bg-slate-50 p-3 text-center text-xs text-slate-600">
-							Thiệp demo đã mở ở tab mới.{' '}
-							<a href={previewUrl} target="_blank" rel="noopener noreferrer" className="font-medium text-pink-600 underline">
-								Mở lại nếu bị đóng
-							</a>
-						</div>
-					) : null} */}
+		<section className={`mx-auto max-w-7xl ${activeTab === 'share' ? '' : 'hidden'}`}>
+			<div className="mt-6 border-t border-slate-100 pt-6">
+				{!user?.isPaid ? (
+					//TODO: change text in future
+					<p className="mt-2 text-center">
+						Link đã được tạo. Bạn có thể chia sẻ thiệp cưới với mọi người.
+					</p>
+				) : !previewFileName ? (
+					<p className="mt-2 text-center">
+						Xem thiệp demo trước khi tạo link gửi cho khách.
+					</p>
+				) : null}
+				{saveError ? <p className="mt-2 text-center text-sm text-pink-600">{saveError}</p> : null}
 
-					<div className="mt-6 border-t border-slate-100 pt-6">
+				{shareUrl ? (
+					<div className="mt-4 flex flex-col gap-2 rounded-xl bg-slate-50 p-3 sm:flex-row sm:items-center">
+						<input
+							readOnly
+							value={shareUrl}
+							onFocus={(e) => e.target.select()}
+							className="flex-1 truncate rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+						/>
 						<button
 							type="button"
-							onClick={handleGenerateLink}
-							disabled={!previewFileName || !user?.isPaid || isSaving}
-							className="flex w-full items-center justify-center gap-2 rounded-xl border border-pink-300 bg-white px-4 py-3 text-sm font-semibold text-pink-700 transition hover:bg-pink-50 disabled:cursor-not-allowed disabled:opacity-60"
+							onClick={handleCopyLink}
+							className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-pink-300 hover:text-pink-600"
 						>
-							{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <LinkIcon className="h-4 w-4" />}
-							Tạo link gửi cho khách
+							<Copy className="h-4 w-4" />
+							{copied ? 'Đã sao chép!' : 'Sao chép'}
 						</button>
-						{!user?.isPaid ? (
-							<p className="mt-2 text-center text-xs text-slate-500">
-								Tính năng tạo link gửi cho khách dành cho người dùng đã thanh toán.
-							</p>
-						) : !previewFileName ? (
-							<p className="mt-2 text-center text-xs text-slate-500">
-								Xem thiệp demo trước khi tạo link gửi cho khách.
-							</p>
-						) : null}
-						{saveError ? <p className="mt-2 text-center text-sm text-pink-600">{saveError}</p> : null}
-
-						{shareUrl ? (
-							<div className="mt-4 flex flex-col gap-2 rounded-xl bg-slate-50 p-3 sm:flex-row sm:items-center">
-								<input
-									readOnly
-									value={shareUrl}
-									onFocus={(e) => e.target.select()}
-									className="flex-1 truncate rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
-								/>
-								<button
-									type="button"
-									onClick={handleCopyLink}
-									className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-pink-300 hover:text-pink-600"
-								>
-									<Copy className="h-4 w-4" />
-									{copied ? 'Đã sao chép!' : 'Sao chép'}
-								</button>
-							</div>
-						) : null}
 					</div>
-				</section>
-			</form>
+				) : null}
+			</div>
 		</section>
 
 		<style jsx global>{`

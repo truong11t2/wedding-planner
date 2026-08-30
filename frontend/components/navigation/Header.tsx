@@ -55,10 +55,10 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
           </Link>
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-4 lg:gap-8 whitespace-nowrap">
             <Link
               href="/"
-              className={`text-lg font-semibold transition-colors ${
+              className={`text-base lg:text-lg font-semibold transition-colors whitespace-nowrap ${
                 pathname === '/' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
@@ -66,7 +66,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             </Link>
             <Link
               href="/blog"
-              className={`text-lg font-semibold transition-colors ${
+              className={`text-base lg:text-lg font-semibold transition-colors whitespace-nowrap ${
                 pathname === '/blog' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
               }`}
             >
@@ -75,7 +75,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             {
               <Link
                 href="/vendor"
-                className={`text-lg font-semibold transition-colors ${
+                className={`text-base lg:text-lg font-semibold transition-colors whitespace-nowrap ${
                   pathname === '/vendor' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
                 }`}
               >
@@ -85,7 +85,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             {
               <Link
                 href="/contact"
-                className={`text-lg font-semibold transition-colors ${
+                className={`text-base lg:text-lg font-semibold transition-colors whitespace-nowrap ${
                   pathname === '/contact' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
                 }`}
               >
@@ -95,7 +95,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             {isLoggedIn && (
               <Link
                 href="/profile"
-                className={`text-lg font-semibold transition-colors ${
+                className={`text-base lg:text-lg font-semibold transition-colors whitespace-nowrap ${
                   pathname === '/profile' ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600'
                 }`}
               >
@@ -105,7 +105,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
             {!isLoggedIn ? (
               <button
                 onClick={handleLogin}
-                className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
+                className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md whitespace-nowrap"
               >
                 Đăng Nhập
               </button>
@@ -115,7 +115,7 @@ export default function Header({ onSidebarToggle }: HeaderProps) {
                   setMobileMenuOpen(false);
                   handleLogout();
                 }}
-                className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md"
+                className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-5 py-2 rounded-full font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-md whitespace-nowrap"
               >
                 Đăng Xuất
               </button>

@@ -221,12 +221,13 @@ exports.generateInvitation = async (req, res) => {
     const isPaid = Boolean(req.user.isPaid);
     const { templateId, config, brideName, groomName, eventDate } = req.body;
 
-    if (!isPaid) {
-      return res.status(403).json({
-        success: false,
-        message: 'Tính năng tạo link gửi cho khách chỉ dành cho người dùng đã thanh toán.'
-      });
-    }
+    //TODO: remove comment in future
+    // if (!isPaid) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: 'Tính năng tạo link gửi cho khách chỉ dành cho người dùng đã thanh toán.'
+    //   });
+    // }
 
     if (!templateId || !config || !config.groomFull || !config.brideFull) {
       return res.status(400).json({
