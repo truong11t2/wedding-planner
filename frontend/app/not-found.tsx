@@ -19,13 +19,13 @@ export default function NotFound() {
         {/* Error Message */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Oops! Page Not Found
+            Rất tiếc! Không tìm thấy trang
           </h1>
           <p className="text-gray-600 mb-2">
-            Looks like this page got lost on the way to the altar!
+            Có vẻ như trang này đã bị lạc trên đường đến lễ đường!
           </p>
           <p className="text-gray-500 text-sm">
-            The page you're looking for doesn't exist or has been moved.
+            Trang bạn đang tìm không tồn tại hoặc đã được chuyển đi.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export default function NotFound() {
             className="inline-flex items-center justify-center w-full px-6 py-3 bg-pink-600 text-white font-medium rounded-lg hover:bg-pink-700 transition-colors duration-200 shadow-md hover:shadow-lg"
           >
             <Home className="h-5 w-5 mr-2" />
-            Back to Home
+            Về trang chủ
           </Link>
 
           <div className="flex space-x-3">
@@ -45,7 +45,7 @@ export default function NotFound() {
               className="flex-1 inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Go Back
+              Quay lại
             </button>
 
             <Link
@@ -53,7 +53,7 @@ export default function NotFound() {
               className="flex-1 inline-flex items-center justify-center px-4 py-2 border border-pink-300 text-pink-700 font-medium rounded-lg hover:bg-pink-50 transition-colors duration-200"
             >
               <Search className="h-4 w-4 mr-2" />
-              Timeline
+              Lịch trình
             </Link>
           </div>
         </div>
@@ -61,26 +61,26 @@ export default function NotFound() {
         {/* Additional Links */}
         <div className="mt-8 pt-8 border-t border-gray-200">
           <p className="text-sm text-gray-500 mb-4">
-            Looking for something specific?
+            Bạn đang tìm một nội dung cụ thể?
           </p>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <Link
               href="/dashboard"
               className="text-pink-600 hover:text-pink-700 hover:underline"
             >
-              Dashboard
+              Bảng điều khiển
             </Link>
             <Link
               href="/guests"
               className="text-pink-600 hover:text-pink-700 hover:underline"
             >
-              Guest List
+              Danh sách khách mời
             </Link>
             <Link
               href="/vendor"
               className="text-pink-600 hover:text-pink-700 hover:underline"
             >
-              Vendors
+              Nhà cung cấp
             </Link>
             <Link
               href="/blog"
