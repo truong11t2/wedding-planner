@@ -141,6 +141,17 @@ async function resolveTemplatePath(templateId) {
   }
 }
 
+// Public template endpoint used by the frontend template gallery.
+exports.getInvitationTemplate = async (req, res) => {
+  try {
+    const templatePath = await resolveTemplatePath(req.params.templateId);
+    res.sendFile(templatePath);
+  } catch (error) {
+    console.error('Failed to serve invitation template:', error);
+    res.status(404).send('Invitation template not found');
+  }
+};
+
 /**
  * Reads the invitation template and writes the couple's config directly
  * into the generated HTML so the template's own client-side script

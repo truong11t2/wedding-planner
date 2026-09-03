@@ -47,6 +47,32 @@ html {
   scroll-behavior: smooth;
 }
 
+@keyframes template-preview-scroll {
+  0%, 12% {
+    transform: translateY(0);
+  }
+  88%, 100% {
+    transform: translateY(calc(-100% + 480px));
+  }
+}
+
+.template-preview__content {
+  min-height: 272px;
+}
+
+.group:hover .template-preview__content,
+.group:focus-within .template-preview__content {
+  animation: template-preview-scroll 5s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .template-preview__content,
+  .group:focus-within .template-preview__content {
+    animation: none;
+    transform: translateY(calc(-100% + 320px));
+  }
+}
+
 /* Ken Burns animation for hero */
 @keyframes ken-burns {
   0% {

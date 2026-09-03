@@ -103,6 +103,9 @@ app.use('/api/invitations', invitationRoutes);
 app.use('/api/invitations', invitationWishRoutes);
 app.get('/i/:slug', invitationController.getInvitationBySlug);
 
+// Serve source invitation templates for the frontend template gallery.
+app.get('/templates/invitation/:templateId.html', invitationController.getInvitationTemplate);
+
 // Serve static album files
 app.use('/albums', express.static('public/albums'));
 
