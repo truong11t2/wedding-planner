@@ -50,6 +50,7 @@ export const ENDPOINTS = {
     RENDER: '/invitations/render',
     GENERATE: '/invitations/generate',
     MINE: '/invitations/mine',
+    GUEST_LINKS: '/invitations/mine/links',
     BASE: '/invitations',
   },
   HEALTH: '/health',

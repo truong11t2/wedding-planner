@@ -45,6 +45,11 @@ const Invitation = sequelize.define('Invitation', {
     allowNull: false,
     defaultValue: {}
   },
+  guestLinks: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: []
+  },
   isPublished: {
     type: DataTypes.BOOLEAN,
     defaultValue: true

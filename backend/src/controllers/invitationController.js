@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
+const crypto = require('crypto');
 const Invitation = require('../models/Invitation');
-const User = require('../models/User');
 
 function generateRandomId(size = 8) {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -48,6 +48,26 @@ function deriveEventDate(config) {
   return config.weddingDateISO.split('T')[0];
 }
 
+function buildInvitationRedirectTarget(publicUrl, requestUrl) {
+  if (!publicUrl) return publicUrl;
+
+  try {
+    const parsedPublicUrl = new URL(publicUrl, 'http://localhost');
+    const requestUrlObj = new URL(requestUrl, 'http://localhost');
+    const guestName = requestUrlObj.searchParams.get('guest');
+
+    if (guestName && guestName.trim()) {
+      parsedPublicUrl.searchParams.set('guest', guestName.trim());
+    }
+
+    return `${parsedPublicUrl.pathname}${parsedPublicUrl.search}`;
+  } catch {
+    return publicUrl;
+  }
+}
+
+exports.buildInvitationRedirectTarget = buildInvitationRedirectTarget;
+
 /**
  * Finds the current user's invitation row and creates it if missing,
  * otherwise updates it in place. Used by both the preview (render) and
@@ -56,12 +76,11 @@ function deriveEventDate(config) {
  * as soon as the user previews the invitation, not only when they
  * explicitly generate a shareable link.
  */
-async function upsertInvitationRecord(userId, { templateId, htmlFileName, publicUrl, brideName, groomName, eventDate, config, isPaid }) {
+async function upsertInvitationRecord(userId, { templateId, htmlFileName, publicUrl, config, isPaid }) {
   let invitation = await Invitation.findOne({ where: { userId } });
-
-  const resolvedBrideName = brideName || config.brideFull;
-  const resolvedGroomName = groomName || config.groomFull;
-  const resolvedEventDate = eventDate || deriveEventDate(config);
+  const resolvedBrideName = config.brideShort;
+  const resolvedGroomName = config.groomShort;
+  const resolvedEventDate = deriveEventDate(config);
   const expiresAt = new Date(Date.now() + (isPaid ? PAID_TTL_MS : PREVIEW_TTL_MS));
 
   if (invitation) {
@@ -100,6 +119,16 @@ async function upsertInvitationRecord(userId, { templateId, htmlFileName, public
   }
 
   return invitation;
+}
+
+function buildGuestLink(slug, guestName) {
+  const url = new URL(`/i/${slug}`, 'http://localhost');
+  url.searchParams.set('guest', guestName);
+  return {
+    id: crypto.randomUUID(),
+    guestName,
+    url: `${url.pathname}${url.search}`
+  };
 }
 
 async function resolveTemplatePath(templateId) {
@@ -219,7 +248,7 @@ exports.generateInvitation = async (req, res) => {
   try {
     const userId = req.user.id;
     const isPaid = Boolean(req.user.isPaid);
-    const { templateId, config, brideName, groomName, eventDate } = req.body;
+    const { templateId, config, guestName } = req.body;
 
     //TODO: remove comment in future
     // if (!isPaid) {
@@ -236,6 +265,14 @@ exports.generateInvitation = async (req, res) => {
       });
     }
 
+    const trimmedGuestName = typeof guestName === 'string' ? guestName.trim() : '';
+    if (!trimmedGuestName) {
+      return res.status(400).json({
+        success: false,
+        message: 'guestName is required'
+      });
+    }
+
     await ensureInvitationsDir();
 
     // Every user has exactly one generated HTML file, named deterministically
@@ -248,12 +285,13 @@ exports.generateInvitation = async (req, res) => {
       templateId,
       htmlFileName,
       publicUrl,
-      brideName,
-      groomName,
-      eventDate,
       config,
       isPaid
     });
+
+    const guestLink = buildGuestLink(invitation.slug, trimmedGuestName);
+    invitation.guestLinks = [guestLink, ...(invitation.guestLinks || [])];
+    await invitation.save();
 
     // Always (re)generate the final HTML file so it reflects the latest content
     const htmlContent = await buildInvitationHtml(templateId, config, invitation.id);
@@ -273,7 +311,8 @@ exports.generateInvitation = async (req, res) => {
         slug: invitation.slug,
         templateId: invitation.templateId,
         publicUrl: invitation.publicUrl,
-        sharePath: `/i/${invitation.slug}`
+        sharePath: `/i/${invitation.slug}`,
+        guestLink
       }
     });
   } catch (error) {
@@ -313,7 +352,8 @@ exports.getMyInvitation = async (req, res) => {
         config: invitation.config,
         isPublished: invitation.isPublished,
         isPaid: invitation.isPaid,
-        expiresAt: invitation.expiresAt
+        expiresAt: invitation.expiresAt,
+        guestLinks: invitation.guestLinks || []
       }
     });
   } catch (error) {
@@ -321,6 +361,32 @@ exports.getMyInvitation = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error fetching invitation',
+      error: error.message
+    });
+  }
+};
+
+exports.deleteGuestLink = async (req, res) => {
+  try {
+    const invitation = await Invitation.findOne({ where: { userId: req.user.id } });
+    if (!invitation) {
+      return res.status(404).json({ success: false, message: 'Invitation not found' });
+    }
+
+    const existingLinks = invitation.guestLinks || [];
+    const nextLinks = existingLinks.filter((link) => link.id !== req.params.linkId);
+    if (nextLinks.length === existingLinks.length) {
+      return res.status(404).json({ success: false, message: 'Guest link not found' });
+    }
+
+    invitation.guestLinks = nextLinks;
+    await invitation.save();
+    return res.status(200).json({ success: true, message: 'Guest link deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting guest link:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Error deleting guest link',
       error: error.message
     });
   }
@@ -339,7 +405,8 @@ exports.getInvitationBySlug = async (req, res) => {
       });
     }
 
-    res.redirect(302, invitation.publicUrl);
+    const redirectTarget = buildInvitationRedirectTarget(invitation.publicUrl, req.originalUrl);
+    res.redirect(302, redirectTarget);
   } catch (error) {
     console.error('Error fetching invitation:', error);
     res.status(500).json({

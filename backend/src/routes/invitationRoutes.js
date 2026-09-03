@@ -13,6 +13,9 @@ router.post('/generate', protect, invitationController.generateInvitation);
 // Get the current user's invitation (for editing)
 router.get('/mine', protect, invitationController.getMyInvitation);
 
+// Delete one guest-specific share link owned by the current user
+router.delete('/mine/links/:linkId', protect, invitationController.deleteGuestLink);
+
 // Delete the current user's invitation
 router.delete('/', protect, invitationController.deleteInvitation);
 

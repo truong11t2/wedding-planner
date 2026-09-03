@@ -32,6 +32,17 @@ export interface InvitationGift {
   qrImage?: string;
 }
 
+export interface InvitationStoryItem {
+  date: string;
+  text: string;
+}
+
+export interface InvitationPhotos {
+  coverPhoto: string;
+  groomPhoto: string;
+  bridePhoto: string;
+}
+
 export interface InvitationConfig {
   groomShort: string;
   brideShort: string;
@@ -52,6 +63,9 @@ export interface InvitationConfig {
     bride: InvitationGift;
   };
   musicUrl: string;
+  /** Extra fields used by templates that support them. */
+  story?: InvitationStoryItem[];
+  photos?: InvitationPhotos;
 }
 
 export interface RenderInvitationResponse {
@@ -90,6 +104,13 @@ export interface InvitationSummary {
   sharePath: string;
   isPaid?: boolean;
   expiresAt?: string | null;
+  guestLink?: InvitationGuestLink;
+}
+
+export interface InvitationGuestLink {
+  id: string;
+  guestName: string;
+  url: string;
 }
 
 export interface GenerateInvitationResponse {
@@ -101,7 +122,7 @@ export interface GenerateInvitationResponse {
 export async function generateInvitation(
   templateId: string,
   config: InvitationConfig,
-  meta: { brideName: string; groomName: string; eventDate: string }
+  meta: { brideName: string; groomName: string; eventDate: string; guestName: string }
 ): Promise<GenerateInvitationResponse> {
   const response = await fetch(`${API_BASE_URL}${ENDPOINTS.INVITATION.GENERATE}`, {
     method: 'POST',
@@ -133,6 +154,22 @@ export interface MyInvitation {
   isPublished: boolean;
   isPaid?: boolean;
   expiresAt?: string | null;
+  guestLinks: InvitationGuestLink[];
+}
+
+export async function deleteGuestLink(linkId: string): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE_URL}${ENDPOINTS.INVITATION.GUEST_LINKS}/${encodeURIComponent(linkId)}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to delete guest link');
+  }
+
+  return data;
 }
 
 export interface GetMyInvitationResponse {

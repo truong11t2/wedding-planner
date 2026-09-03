@@ -81,7 +81,17 @@ export const invitationTemplates: InvitationTemplate[] = [
     accent: '#A61B1B',
     background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
     soft: '#FFF1F1'
-  }
+  },
+  {
+    id: 'dual-dragon-green',
+    name: 'Song Long - Xanh',
+    category: 'Truyền thống',
+    tone: 'Xanh lá',
+    badge: 'Mới',
+    accent: '#17683C',
+    background: 'linear-gradient(160deg, #FFF8E8 0%, #FCE9BD 100%)',
+    soft: '#FFF7E4'
+  },
 ];
 
 export const defaultInvitationTemplate = invitationTemplates[0];
