@@ -10,8 +10,8 @@ class ImageProcessor {
     this.imagesDir = path.join(this.uploadsDir, 'images');
     
     // Minimum requirements
-    this.MIN_WIDTH = 1200;
-    this.MIN_HEIGHT = 800;
+    this.MIN_WIDTH = 800;
+    this.MIN_HEIGHT = 600;
     this.MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
     this.ALLOWED_FORMATS = ['jpeg', 'jpg', 'png', 'webp', 'tiff'];
     
