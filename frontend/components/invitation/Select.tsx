@@ -5,9 +5,9 @@ import { X } from 'lucide-react';
 import { invitationTemplates } from '@/data/invitationTemplates';
 import { BACKEND_ORIGIN } from '@/api/config';
 
-type InvitationTab = 'template' | 'info' | 'invitation' | 'share';
+type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 
-interface TemplateSelectProps {
+interface SelectProps {
 	activeTab: InvitationTab;
 	setActiveTab: (tab: InvitationTab) => void;
 	selectedTemplateId: string;
@@ -22,12 +22,12 @@ interface TemplateSelectProps {
  * default config, resetting previews) is orchestrated by the parent via
  * `handleSelectTemplate`.
  */
-export default function TemplateSelect({
+export default function Select({
 	activeTab,
 	setActiveTab,
 	selectedTemplateId,
 	handleSelectTemplate
-}: TemplateSelectProps) {
+}: SelectProps) {
 	const [descriptionTemplateId, setDescriptionTemplateId] = useState<string | null>(null);
 	const descriptionTemplate = invitationTemplates.find((template) => template.id === descriptionTemplateId);
 
@@ -43,7 +43,7 @@ export default function TemplateSelect({
 	}, [descriptionTemplate]);
 
 	return (
-		<section className={`mx-auto max-w-7xl ${activeTab === 'template' ? '' : 'hidden'}`}>
+		<section className={`mx-auto max-w-7xl ${activeTab === 'select' ? '' : 'hidden'}`}>
 			<div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
 				{invitationTemplates.map((template) => {
 					const isSelected = template.id === selectedTemplateId;
@@ -58,10 +58,10 @@ export default function TemplateSelect({
 							<div className="template-preview relative h-120 overflow-hidden rounded-xl border border-white/60 bg-white">
 								<div className="template-preview__content">
 									<iframe
-										src={`${BACKEND_ORIGIN}/templates/invitation/${template.id}.html`}
+										src={`${BACKEND_ORIGIN}/templates/invitation/${template.id}-preview.html`}
 										title={`${template.name} invitation template`}
 										loading="lazy"
-										className="block h-160 w-full border-0"
+										className="block h-120 w-full border-0"
 									/>
 								</div>
 							</div>
@@ -109,7 +109,7 @@ export default function TemplateSelect({
 			<div className="mt-8 flex justify-end">
 				<button
 					type="button"
-					onClick={() => setActiveTab('info')}
+					onClick={() => setActiveTab('input')}
 					className="inline-flex items-center gap-2 rounded-xl bg-pink-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-pink-700"
 				>
 					Tiếp tục: Nhập thông tin đám cưới

@@ -20,8 +20,8 @@ import {
 	type InvitationStoryItem
 } from '@/api/invitation';
 import { BACKEND_ORIGIN } from '@/api/config';
-import InfoForm from '@/components/invitation/InfoForm';
-import TemplateSelect from '@/components/invitation/TemplateSelect';
+import Input from '@/components/invitation/Input';
+import Select from '@/components/invitation/Select';
 import Preview from '@/components/invitation/Preview';
 import Share from '@/components/invitation/Share';
 
@@ -50,7 +50,7 @@ function formatDateLabel(dateStr: string): string {
 export default function InvitationPage() {
 	const router = useRouter();
 	const { isLoggedIn, user } = useAuth();
-	const [activeTab, setActiveTab] = useState<'template' | 'info' | 'invitation' | 'share'>('template');
+	const [activeTab, setActiveTab] = useState<'select' | 'input' | 'preview' | 'share'>('select');
 	const [selectedTemplateId, setSelectedTemplateId] = useState(defaultTemplate.id);
 
 	const [config, setConfig] = useState<InvitationConfig>(defaultConfig);
@@ -183,7 +183,8 @@ export default function InvitationPage() {
 				date: currentConfig.reception?.date || templateDefaults.reception.date,
 				welcomeTime: currentConfig.reception?.welcomeTime || templateDefaults.reception.welcomeTime,
 				startTime: currentConfig.reception?.startTime || templateDefaults.reception.startTime,
-				venueName: currentConfig.reception?.venueName || templateDefaults.reception.venueName,
+					venueName: currentConfig.reception?.venueName || templateDefaults.reception.venueName,
+					address: currentConfig.reception?.address || templateDefaults.reception.address,
 				mapQuery: currentConfig.reception?.mapQuery || templateDefaults.reception.mapQuery
 			},
 			schedule: currentConfig.schedule?.length ? currentConfig.schedule : templateDefaults.schedule,
@@ -272,7 +273,8 @@ export default function InvitationPage() {
 				config.brideShort.trim() &&
 				weddingDate &&
 				config.reception.startTime &&
-				config.reception.venueName.trim()
+				config.reception.venueName.trim() &&
+				config.reception.address.trim()
 		);
 	}, [config, weddingDate]);
 
@@ -407,7 +409,7 @@ export default function InvitationPage() {
 
 
 	useEffect(() => {
-		if (activeTab !== 'invitation') return;
+		if (activeTab !== 'preview') return;
 		void loadInvitationTabPreview();
 	}, [activeTab, isLoggedIn, selectedTemplate.id, canPreview]);
 
@@ -513,9 +515,9 @@ export default function InvitationPage() {
 				<div className="flex gap-2 border-b border-slate-200">
 					<button
 						type="button"
-						onClick={() => setActiveTab('template')}
+						onClick={() => setActiveTab('select')}
 						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
-							activeTab === 'template'
+							activeTab === 'select'
 								? 'border-pink-500 text-pink-600'
 								: 'border-transparent text-slate-500 hover:text-slate-700'
 						}`}
@@ -524,9 +526,9 @@ export default function InvitationPage() {
 					</button>
 					<button
 						type="button"
-						onClick={() => setActiveTab('info')}
+						onClick={() => setActiveTab('input')}
 						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
-							activeTab === 'info'
+							activeTab === 'input'
 								? 'border-pink-500 text-pink-600'
 								: 'border-transparent text-slate-500 hover:text-slate-700'
 						}`}
@@ -535,9 +537,9 @@ export default function InvitationPage() {
 					</button>
 					<button
 						type="button"
-						onClick={() => setActiveTab('invitation')}
+						onClick={() => setActiveTab('preview')}
 						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
-							activeTab === 'invitation'
+							activeTab === 'preview'
 								? 'border-pink-500 text-pink-600'
 								: 'border-transparent text-slate-500 hover:text-slate-700'
 						}`}
@@ -558,14 +560,14 @@ export default function InvitationPage() {
 				</div>
 		</div>
 
-		<TemplateSelect
+		<Select
 			activeTab={activeTab}
 			setActiveTab={setActiveTab}
 			selectedTemplateId={selectedTemplateId}
 			handleSelectTemplate={handleSelectTemplate}
 		/>
 
-		<InfoForm
+		<Input
 			activeTab={activeTab}
 			setActiveTab={setActiveTab}
 			selectedTemplate={selectedTemplate}

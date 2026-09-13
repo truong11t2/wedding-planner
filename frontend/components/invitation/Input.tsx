@@ -10,10 +10,10 @@ import type { InvitationConfig, InvitationPhotos, InvitationScheduleItem, Invita
 import type { InvitationTemplate } from '@/data/invitationTemplates';
 import songs from '@/public/music/songs.json';
 
-type InvitationTab = 'template' | 'info' | 'invitation' | 'share';
+type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 type Song = { name: string; singer?: string; lang?: string; url: string };
 
-interface InfoFormProps {
+interface InputProps {
 	activeTab: InvitationTab;
 	setActiveTab: (tab: InvitationTab) => void;
 	selectedTemplate: InvitationTemplate;
@@ -46,7 +46,7 @@ interface InfoFormProps {
  * the form uses (music player, Google Maps embed warning, gallery/QR uploads)
  * and receives the shared `config` plus update handlers as props.
  */
-export default function InfoForm({
+export default function Input({
 	activeTab,
 	setActiveTab,
 	selectedTemplate,
@@ -69,7 +69,7 @@ export default function InfoForm({
 	removeStoryRow,
 	updatePhoto,
 	handleWeddingDateChange
-}: InfoFormProps) {
+}: InputProps) {
 	const router = useRouter();
 	const { isLoggedIn } = useAuth();
 
@@ -241,7 +241,7 @@ export default function InfoForm({
 	};
 
 	return (
-		<section className={`mx-auto max-w-7xl ${activeTab === 'info' ? '' : 'hidden'}`}>
+		<section className={`mx-auto max-w-7xl ${activeTab === 'input' ? '' : 'hidden'}`}>
 			<div className="rounded-2xl border border-pink-100 bg-pink-50/70 mt-6 p-4 text-sm text-pink-600">
 				<div className="flex items-center justify-between gap-3">
 					<p className="inline-flex items-center gap-1 font-semibold">
@@ -249,7 +249,7 @@ export default function InfoForm({
 					</p>
 					<button
 						type="button"
-						onClick={() => setActiveTab('template')}
+						onClick={() => setActiveTab('select')}
 						className="shrink-0 rounded-lg border border-pink-300 bg-white px-3 py-1.5 text-xs font-medium text-pink-700 transition hover:bg-pink-50"
 					>
 						Đổi mẫu
@@ -301,18 +301,18 @@ export default function InfoForm({
 						<Field label="Vai vế cô dâu (VD: Út Nữ)">
 							<input value={config.brideRole} onChange={(e) => updateField('brideRole', e.target.value)} className="input" />
 						</Field>
-						<Field label="Chữ lồng viết tắt (2-3 ký tự, hiện ở bìa)" full>
+						{/* <Field label="Chữ lồng viết tắt (2-3 ký tự, hiện ở bìa)" full>
 							<input
 								maxLength={3}
 								value={config.monogram}
 								onChange={(e) => updateField('monogram', e.target.value.toUpperCase())}
 								className="input"
 							/>
-						</Field>
+						</Field> */}
 					</div>
 
 					{/* Chuyện tình (chỉ với mẫu hỗ trợ, VD: Thiệp cưới song long) */}
-					{config.story ? (
+					{/* {config.story ? (
 						<div className="mt-6 border-t border-slate-100 pt-6">
 							<h3 className="text-sm font-semibold text-slate-900">Chuyện Tình</h3>
 							<p className="mt-1 text-xs text-slate-500">Thêm từng cột mốc trong chuyện tình của hai bạn</p>
@@ -350,13 +350,13 @@ export default function InfoForm({
 								Thêm cột mốc
 							</button>
 						</div>
-					) : null}
+					) : null} */}
 
 					{/* Ảnh trên thiệp (chỉ với mẫu hỗ trợ, VD: Thiệp cưới song long) */}
 					{config.photos ? (
 						<div className="mt-6 border-t border-slate-100 pt-6">
 							<h3 className="text-sm font-semibold text-slate-900">Ảnh Trên Thiệp</h3>
-							<p className="mt-1 text-xs text-slate-500">Tải ảnh lên để hiển thị trong thiệp</p>
+							<p className="mt-1 text-xs text-slate-500">Tải ảnh lên để hiển thị trong thiệp. Lưu ý: Không hiển thị cho mẫu thiệp tối giản</p>
 							<div className="mt-4 grid gap-3 sm:grid-cols-3">
 								<PhotoUploadField
 									label="Ảnh bìa"
@@ -496,11 +496,19 @@ export default function InfoForm({
 						) : null}
 					</div>
 					<div className="mt-4">
-						<Field label="Tên &amp; địa chỉ nhà hàng / trung tâm tiệc cưới" full>
+						<Field label="Tên nhà hàng / trung tâm tiệc cưới">
 							<input
 								required
 								value={config.reception.venueName}
 								onChange={(e) => updateReception('venueName', e.target.value)}
+								className="input"
+							/>
+						</Field>
+						<Field label="Địa chỉ">
+							<input
+								required
+								value={config.reception.address}
+								onChange={(e) => updateReception('address', e.target.value)}
 								className="input"
 							/>
 						</Field>
@@ -908,6 +916,9 @@ export default function InfoForm({
 								<Field label="Ngân hàng (chú rể)">
 									<input value={config.gifts.groom.bank} onChange={(e) => updateGift('groom', 'bank', e.target.value)} className="input" />
 								</Field>
+								<Field label="Số tài khoản (chú rể)">
+									<input value={config.gifts.groom.account} onChange={(e) => updateGift('groom', 'account', e.target.value)} className="input" />
+								</Field>
 								<Field label="Tên chủ tài khoản (chú rể)">
 									<input value={config.gifts.groom.name} onChange={(e) => updateGift('groom', 'name', e.target.value)} className="input" />
 								</Field>
@@ -975,6 +986,9 @@ export default function InfoForm({
 							<div className="mt-3 grid gap-2">
 								<Field label="Ngân hàng (cô dâu)">
 									<input value={config.gifts.bride.bank} onChange={(e) => updateGift('bride', 'bank', e.target.value)} className="input" />
+								</Field>
+								<Field label="Số tài khoản (cô dâu)">
+									<input value={config.gifts.bride.account} onChange={(e) => updateGift('bride', 'account', e.target.value)} className="input" />
 								</Field>
 								<Field label="Tên chủ tài khoản (cô dâu)">
 									<input value={config.gifts.bride.name} onChange={(e) => updateGift('bride', 'name', e.target.value)} className="input" />

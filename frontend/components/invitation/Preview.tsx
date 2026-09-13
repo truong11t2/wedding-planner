@@ -2,7 +2,7 @@
 
 import { Loader2 } from 'lucide-react';
 
-type InvitationTab = 'template' | 'info' | 'invitation' | 'share';
+type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 
 interface PreviewProps {
 	activeTab: InvitationTab;
@@ -24,7 +24,7 @@ export default function Preview({
 	invitationTabUrl
 }: PreviewProps) {
 	return (
-		<section className={`mx-auto max-w-7xl ${activeTab === 'invitation' ? '' : 'hidden'}`}>
+		<section className={`mx-auto max-w-7xl ${activeTab === 'preview' ? '' : 'hidden'}`}>
 			<div className="mt-6 rounded-2xl border border-slate-200">
 				{invitationTabLoading ? (
 					<div className="flex min-h-[60vh] items-center justify-center text-slate-500">

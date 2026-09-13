@@ -2,7 +2,7 @@
 
 import { Copy, Trash2 } from 'lucide-react';
 
-type InvitationTab = 'template' | 'info' | 'invitation' | 'share';
+type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 
 interface ShareProps {
 	activeTab: InvitationTab;
@@ -48,7 +48,7 @@ export default function Share({
 				{!isPaid ? (
 					//TODO: change text in future
 					<p className="mt-2 text-center">
-						Link đã được tạo. Bạn có thể chia sẻ thiệp cưới với mọi người.
+						Tạo link để chia sẻ thiệp cưới với mọi người.
 					</p>
 				) : !previewFileName ? (
 					<p className="mt-2 text-center">
@@ -72,7 +72,7 @@ export default function Share({
 						<button
 							type="button"
 							onClick={handleGenerateLink}
-							className="inline-flex items-center justify-center rounded-lg bg-pink-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-pink-600"
+							className="inline-flex items-center justify-center rounded-lg bg-pink-600 hover:bg-pink-700 px-4 py-2 text-sm font-semibold text-white transition"
 						>
 							Tạo Link
 						</button>
@@ -106,7 +106,11 @@ export default function Share({
 									</button>
 									<button
 										type="button"
-										onClick={() => handleDeleteLink(link.id)}
+										onClick={() => {
+											if (window.confirm(`Bạn có chắc muốn xóa link của ${link.guestName}?`)) {
+												handleDeleteLink(link.id);
+											}
+										}}
 										aria-label={`Xóa link của ${link.guestName}`}
 										className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
 									>
