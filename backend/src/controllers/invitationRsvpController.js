@@ -30,8 +30,8 @@ exports.createRsvp = async (req, res) => {
     if (name.length > 120 || phone.length > 40 || mealPreference.length > 40 || message.length > 1000) {
       return res.status(400).json({ success: false, message: 'RSVP data is too long' });
     }
-    if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > 10) {
-      return res.status(400).json({ success: false, message: 'Guest count must be between 1 and 10' });
+    if (!Number.isInteger(guestCount) || guestCount < 1 || guestCount > 100) {
+      return res.status(400).json({ success: false, message: 'Guest count must be between 1 and 100' });
     }
 
     const rsvp = await InvitationRsvp.create({
