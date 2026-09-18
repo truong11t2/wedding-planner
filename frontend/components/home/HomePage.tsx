@@ -10,6 +10,7 @@ import TestimonialsSection from './TestimonialsSection';
 //import PricingSection from './PricingSection';
 import CTASection from './CTASection';
 import ConnectSection from './ConnectSection';
+import TimelineSection from './TimelineSection';
 
 export default function HomePage() {
   return (
@@ -25,6 +26,11 @@ export default function HomePage() {
         {/* Services Section */}
         <div id="services">
           <ServicesSection />
+        </div>
+
+        {/* Wedding Timeline Section */}
+        <div id="timeline">
+          <TimelineSection />
         </div>
 
         {/* Feature Split Section */}

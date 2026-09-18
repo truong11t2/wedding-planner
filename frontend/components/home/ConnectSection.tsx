@@ -1,29 +1,34 @@
 'use client';
 
 import { MessageSquareMore, ShoppingBag, Star, Store } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import FeatureCard from '../common/FeatureCard';
 
 const coupleFeatures = [
   {
     icon: Store,
     title: 'Nhà Cung Cấp Uy Tín',
     desc: 'Tất cả nhà cung cấp đều được kiểm duyệt kỹ lưỡng về chất lượng và độ uy tín trước khi xuất hiện trên nền tảng.',
+    link: '/vendor',
   },
   {
     icon: MessageSquareMore,
     title: 'Thỏa Thuận Trực Tiếp',
     desc: 'Liên hệ và đàm phán giá cả trực tiếp với nhà cung cấp, không qua trung gian, tiết kiệm tối đa chi phí.',
+    link: '/vendor'
   },
   {
     icon: Star,
     title: 'Đánh Giá Thực Tế',
     desc: 'Hàng nghìn đánh giá thật từ các cặp đôi đã sử dụng dịch vụ giúp bạn đưa ra quyết định tốt nhất.',
+    link: '/vendor'
   },
   {
     icon: ShoppingBag,
     title: 'Đa Dạng Lựa Chọn',
     desc: 'Từ nhiếp ảnh, trang điểm, nhà hàng đến nhạc sống — tất cả trong một nơi duy nhất, dễ dàng so sánh.',
+    link: '/vendor'
   },
 ];
 
@@ -49,48 +54,6 @@ const vendorFeatures = [
     desc: 'Thu thập đánh giá từ khách hàng thực để nâng cao uy tín và tạo sự khác biệt trên thị trường.',
   },
 ];
-
-function useInView(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [threshold]);
-  return { ref, inView };
-}
-
-function FeatureCard({
-  icon, title, desc, delay,
-}: { icon: React.ElementType; title: string; desc: string; delay: number }) {
-  const { ref, inView } = useInView();
-  const Icon = icon;
-  return (
-    <div
-      ref={ref}
-      className="group flex flex-col gap-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 hover:bg-white/20 hover:scale-102 transition-all duration-500 cursor-default"
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(30px)',
-        transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms, background 0.3s, scale 0.3s`,
-      }}
-    >
-      <div className="mb-2 flex items-center gap-4">
-        <Icon className="w-12 h-12 shrink-0 text-amber-300" />
-        <h3 className="font-serif text-3xl text-white">
-          {title}
-        </h3>
-      </div>
-      <p className="text-white/80 leading-relaxed">
-        {desc}
-      </p>
-    </div>
-  );
-}
 
 export default function ConnectSection() {
   const headingRef = useRef<HTMLDivElement>(null);
@@ -129,7 +92,7 @@ export default function ConnectSection() {
           }}
         >
           {/* <p className="text-rose-300 font-semibold tracking-widest uppercase text-sm mb-3">Nền Tảng Kết Nối</p> */}
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-5">
+          <h2 className="font-serif text-4xl md:text-5xl text-white mb-5">
             <div className="text-amber-300 pb-5">KẾT NỐI</div> <br className="hidden md:block" />
             Cặp Đôi & Nhà Cung Cấp
           </h2>
