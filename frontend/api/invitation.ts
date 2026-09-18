@@ -17,6 +17,7 @@ export interface InvitationReception {
   welcomeTime: string;
   startTime: string;
   venueName: string;
+  address: string;
   mapQuery: string;
 }
 

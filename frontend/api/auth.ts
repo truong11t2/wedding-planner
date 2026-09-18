@@ -119,6 +119,7 @@ export const registerUser = async (
   try {
     const response = await fetch(`${API_BASE_URL}${ENDPOINTS.AUTH.REGISTER}`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -131,7 +132,7 @@ export const registerUser = async (
     });
 
     const data = await response.json();
-    
+
     return data;
   } catch {
     return {

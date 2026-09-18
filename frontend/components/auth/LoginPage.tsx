@@ -23,6 +23,10 @@ export default function LoginPage() {
     setToast({ show: true, message, type });
   };
 
+  const destination = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('returnTo') || '/'
+    : '/';
+
   const handleSubmit = async () => {
     if (isLogin) {
       if (!email || !password) {
@@ -36,7 +40,7 @@ export default function LoginPage() {
         showToast('Đăng nhập thành công!', 'success');
         // Short delay before redirect to show the success toast
         setTimeout(() => {
-          router.push('/');
+          router.push(destination.startsWith('/') ? destination : '/');
         }, 1500);
       } else {
         showToast(result.message || 'Đăng nhập thất bại', 'error');
@@ -53,11 +57,12 @@ export default function LoginPage() {
       }
 
       const result = await registerUser(firstName, lastName, email, password);
-      if (result.success) {
+      if (result.success && result.user) {
+        login(result.user);
         showToast('Đăng ký thành công!', 'success');
         // Short delay before redirect to show the success toast
         setTimeout(() => {
-          router.push('/');
+          router.push(destination.startsWith('/') ? destination : '/');
         }, 1500);
       } else {
         showToast(result.message || 'Đăng ký thất bại', 'error');

@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { uploadPhotos as apiUploadPhotos } from '@/api/photo';
@@ -70,7 +70,6 @@ export default function Input({
 	updatePhoto,
 	handleWeddingDateChange
 }: InputProps) {
-	const router = useRouter();
 	const { isLoggedIn } = useAuth();
 
 	const [uploadingGalleryIndex, setUploadingGalleryIndex] = useState<number | null>(null);
@@ -165,8 +164,7 @@ export default function Input({
 		if (!file) return;
 
 		if (!isLoggedIn) {
-			setQrUploadError('Vui lòng đăng nhập để tải ảnh QR lên.');
-			router.push('/login');
+			setQrUploadError('Vui lòng đăng nhập hoặc đăng ký để tải ảnh QR lên.');
 			return;
 		}
 
@@ -194,8 +192,7 @@ export default function Input({
 		if (!file) return;
 
 		if (!isLoggedIn) {
-			setGalleryUploadError('Vui lòng đăng nhập để tải ảnh lên.');
-			router.push('/login');
+			setGalleryUploadError('Vui lòng đăng nhập hoặc đăng ký để tải ảnh lên.');
 			return;
 		}
 
@@ -219,8 +216,7 @@ export default function Input({
 		if (!file) return;
 
 		if (!isLoggedIn) {
-			setPhotoUploadError('Vui lòng đăng nhập để tải ảnh lên.');
-			router.push('/login');
+			setPhotoUploadError('Vui lòng đăng nhập hoặc đăng ký để tải ảnh lên.');
 			return;
 		}
 
@@ -380,7 +376,16 @@ export default function Input({
 									onRemove={() => updatePhoto('bridePhoto', '')}
 								/>
 							</div>
-							{photoUploadError ? <p className="mt-3 text-xs text-pink-600">{photoUploadError}</p> : null}
+{photoUploadError ? (
+									<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
+										<p>{photoUploadError}</p>
+										<div className="mt-2 flex gap-2">
+											<Link href="/login" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+											<span className="text-pink-700">/</span>
+											<Link href="/login" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+										</div>
+									</div>
+								) : null}
 						</div>
 					) : null}
 				</section>
@@ -996,7 +1001,16 @@ export default function Input({
 							</div>
 						</div>
 					</div>
-					{qrUploadError ? <p className="mt-3 text-xs text-pink-600">{qrUploadError}</p> : null}
+					{qrUploadError ? (
+						<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
+							<p>{qrUploadError}</p>
+							<div className="mt-2 flex gap-2">
+								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+								<span className="text-pink-700">/</span>
+								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+							</div>
+						</div>
+					) : null}
 				</section>
 			</form>
 		</section>

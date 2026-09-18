@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import {
 	invitationTemplates,
@@ -28,6 +27,13 @@ import Share from '@/components/invitation/Share';
 
 
 const defaultTemplate = defaultInvitationTemplate;
+const INVITATION_DRAFT_STORAGE_KEY = 'invitation-builder-draft-v1';
+
+type InvitationDraft = {
+	selectedTemplateId: string;
+	config: InvitationConfig;
+	weddingDate: string;
+};
 
 /**
  * Returns a fresh deep-cloned default config for the given template.
@@ -36,6 +42,28 @@ const defaultTemplate = defaultInvitationTemplate;
  */
 function buildDefaultConfig(templateId: string = defaultTemplate.id): InvitationConfig {
 	return getInvitationConfig(templateId);
+}
+
+function loadInvitationDraft(): InvitationDraft | null {
+	if (typeof window === 'undefined') {
+		return null;
+	}
+
+	try {
+		const rawDraft = window.localStorage.getItem(INVITATION_DRAFT_STORAGE_KEY);
+		if (!rawDraft) {
+			return null;
+		}
+
+		const parsed = JSON.parse(rawDraft) as InvitationDraft;
+		if (!parsed || !parsed.config || !parsed.weddingDate) {
+			return null;
+		}
+
+		return parsed;
+	} catch {
+		return null;
+	}
 }
 
 /** Default config of the initial template — used to seed the form on first load. */
@@ -48,7 +76,6 @@ function formatDateLabel(dateStr: string): string {
 }
 
 export default function InvitationPage() {
-	const router = useRouter();
 	const { isLoggedIn, user } = useAuth();
 	const [activeTab, setActiveTab] = useState<'select' | 'input' | 'preview' | 'share'>('select');
 	const [selectedTemplateId, setSelectedTemplateId] = useState(defaultTemplate.id);
@@ -73,13 +100,44 @@ export default function InvitationPage() {
 	const [invitationTabError, setInvitationTabError] = useState<string | null>(null);
 
 	const [isLoadingExisting, setIsLoadingExisting] = useState(true);
+	// Bumped only when the user edits a field in `Input.tsx`, so the draft is
+	// never persisted by programmatic updates (restoring the draft, loading the
+	// saved invitation, switching template).
+	const [draftRevision, setDraftRevision] = useState(0);
+	const draftRef = useRef<InvitationDraft>({ selectedTemplateId, config, weddingDate });
 
-	// Load the user's previously saved invitation (if any) from the database
-	// so the form is pre-filled instead of always starting from the defaults.
+	// Keep the latest values available to the persistence effect below without
+	// re-triggering it on every state change.
+	useEffect(() => {
+		draftRef.current = { selectedTemplateId, config, weddingDate };
+	}, [selectedTemplateId, config, weddingDate]);
+
+	// Persist the draft only after a user edit inside the input form.
+	useEffect(() => {
+		if (draftRevision === 0 || typeof window === 'undefined') {
+			return;
+		}
+
+		window.localStorage.setItem(INVITATION_DRAFT_STORAGE_KEY, JSON.stringify(draftRef.current));
+	}, [draftRevision]);
+
+	// Pre-fill the form on mount. The local draft — written only when the user
+	// edits the form — has the highest priority. The saved invitation from the
+	// database is loaded only when no draft exists, so a user who typed data
+	// while logged out keeps their input after logging in.
 	useEffect(() => {
 		let cancelled = false;
 
-		const loadExistingInvitation = async () => {
+		const loadInvitationState = async () => {
+			const savedDraft = loadInvitationDraft();
+			if (savedDraft) {
+				setSelectedTemplateId(savedDraft.selectedTemplateId || defaultTemplate.id);
+				setConfig(savedDraft.config);
+				setWeddingDate(savedDraft.weddingDate);
+				setIsLoadingExisting(false);
+				return;
+			}
+
 			if (!isLoggedIn) {
 				setIsLoadingExisting(false);
 				return;
@@ -133,7 +191,7 @@ export default function InvitationPage() {
 			}
 		};
 
-		loadExistingInvitation();
+		loadInvitationState();
 
 		return () => {
 			cancelled = true;
@@ -278,35 +336,46 @@ export default function InvitationPage() {
 		);
 	}, [config, weddingDate]);
 
+	/**
+	 * Applies a change coming from the form in `Input.tsx` and flags the browser
+	 * draft as dirty so it gets persisted. Programmatic updates (restoring the
+	 * draft, loading the saved invitation, switching template) call `setConfig`
+	 * directly, so they never overwrite the stored draft.
+	 */
+	const applyInputChange = (updater: (prev: InvitationConfig) => InvitationConfig) => {
+		setDraftRevision((revision) => revision + 1);
+		setConfig(updater);
+	};
+
 	const updateField = <K extends keyof InvitationConfig>(key: K, value: InvitationConfig[K]) => {
-		setConfig((prev) => ({ ...prev, [key]: value }));
+		applyInputChange((prev) => ({ ...prev, [key]: value }));
 	};
 
 	const updateGroomParent = (field: keyof InvitationConfig['groomParents'], value: string) => {
-		setConfig((prev) => ({ ...prev, groomParents: { ...prev.groomParents, [field]: value } }));
+		applyInputChange((prev) => ({ ...prev, groomParents: { ...prev.groomParents, [field]: value } }));
 	};
 
 	const updateBrideParent = (field: keyof InvitationConfig['brideParents'], value: string) => {
-		setConfig((prev) => ({ ...prev, brideParents: { ...prev.brideParents, [field]: value } }));
+		applyInputChange((prev) => ({ ...prev, brideParents: { ...prev.brideParents, [field]: value } }));
 	};
 
 	const updateCeremony = (field: keyof InvitationConfig['ceremony'], value: string) => {
-		setConfig((prev) => ({ ...prev, ceremony: { ...prev.ceremony, [field]: value } }));
+		applyInputChange((prev) => ({ ...prev, ceremony: { ...prev.ceremony, [field]: value } }));
 	};
 
 	const updateReception = (field: keyof InvitationConfig['reception'], value: string) => {
-		setConfig((prev) => ({ ...prev, reception: { ...prev.reception, [field]: value } }));
+		applyInputChange((prev) => ({ ...prev, reception: { ...prev.reception, [field]: value } }));
 	};
 
 	const updateGift = (who: 'groom' | 'bride', field: keyof InvitationConfig['gifts']['groom'], value: string) => {
-		setConfig((prev) => ({
+		applyInputChange((prev) => ({
 			...prev,
 			gifts: { ...prev.gifts, [who]: { ...prev.gifts[who], [field]: value } }
 		}));
 	};
 
 	const updateScheduleItem = (index: number, field: keyof InvitationScheduleItem, value: string) => {
-		setConfig((prev) => {
+		applyInputChange((prev) => {
 			const schedule = [...prev.schedule];
 			schedule[index] = { ...schedule[index], [field]: value };
 			return { ...prev, schedule };
@@ -314,15 +383,15 @@ export default function InvitationPage() {
 	};
 
 	const addScheduleRow = () => {
-		setConfig((prev) => ({ ...prev, schedule: [...prev.schedule, { time: '', label: '' }] }));
+		applyInputChange((prev) => ({ ...prev, schedule: [...prev.schedule, { time: '', label: '' }] }));
 	};
 
 	const removeScheduleRow = (index: number) => {
-		setConfig((prev) => ({ ...prev, schedule: prev.schedule.filter((_, i) => i !== index) }));
+		applyInputChange((prev) => ({ ...prev, schedule: prev.schedule.filter((_, i) => i !== index) }));
 	};
 
 	const updateGalleryItem = (index: number, value: string) => {
-		setConfig((prev) => {
+		applyInputChange((prev) => {
 			const gallery = [...prev.gallery];
 			gallery[index] = value;
 			return { ...prev, gallery };
@@ -330,15 +399,15 @@ export default function InvitationPage() {
 	};
 
 	const addGalleryRow = () => {
-		setConfig((prev) => ({ ...prev, gallery: [...prev.gallery, ''] }));
+		applyInputChange((prev) => ({ ...prev, gallery: [...prev.gallery, ''] }));
 	};
 
 	const removeGalleryRow = (index: number) => {
-		setConfig((prev) => ({ ...prev, gallery: prev.gallery.filter((_, i) => i !== index) }));
+		applyInputChange((prev) => ({ ...prev, gallery: prev.gallery.filter((_, i) => i !== index) }));
 	};
 
 	const updateStoryItem = (index: number, field: keyof InvitationStoryItem, value: string) => {
-		setConfig((prev) => {
+		applyInputChange((prev) => {
 			const story = [...(prev.story ?? [])];
 			story[index] = { ...story[index], [field]: value };
 			return { ...prev, story };
@@ -346,15 +415,15 @@ export default function InvitationPage() {
 	};
 
 	const addStoryRow = () => {
-		setConfig((prev) => ({ ...prev, story: [...(prev.story ?? []), { date: '', text: '' }] }));
+		applyInputChange((prev) => ({ ...prev, story: [...(prev.story ?? []), { date: '', text: '' }] }));
 	};
 
 	const removeStoryRow = (index: number) => {
-		setConfig((prev) => ({ ...prev, story: (prev.story ?? []).filter((_, i) => i !== index) }));
+		applyInputChange((prev) => ({ ...prev, story: (prev.story ?? []).filter((_, i) => i !== index) }));
 	};
 
 	const updatePhoto = (field: keyof InvitationPhotos, value: string) => {
-		setConfig((prev) => ({
+		applyInputChange((prev) => ({
 			...prev,
 			photos: { ...(prev.photos ?? { coverPhoto: '', groomPhoto: '', bridePhoto: '' }), [field]: value }
 		}));
@@ -381,9 +450,8 @@ export default function InvitationPage() {
 		setInvitationTabLoading(true);
 
 		if (!isLoggedIn) {
-			setInvitationTabError('Vui lòng đăng nhập để xem thiệp đã tạo.');
+			setInvitationTabError('Vui lòng đăng nhập hoặc đăng ký để xem thiệp đã tạo.');
 			setInvitationTabLoading(false);
-			router.push('/login');
 			return;
 		}
 
@@ -419,8 +487,7 @@ export default function InvitationPage() {
 		setCopiedLinkId(null);
 
 		if (!isLoggedIn) {
-			setSaveError('Vui lòng đăng nhập để tạo link thiệp mời gửi cho khách.');
-			router.push('/login');
+			setSaveError('Vui lòng đăng nhập hoặc đăng ký để tạo link thiệp mời gửi cho khách.');
 			return;
 		}
 
@@ -597,10 +664,12 @@ export default function InvitationPage() {
 			invitationTabLoading={invitationTabLoading}
 			invitationTabError={invitationTabError}
 			invitationTabUrl={invitationTabUrl}
+			isLoggedIn={isLoggedIn}
 		/>
 
 		<Share
 			activeTab={activeTab}
+			isLoggedIn={isLoggedIn}
 			isPaid={user?.isPaid}
 			previewFileName={previewFileName}
 			saveError={saveError}

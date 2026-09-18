@@ -1,11 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import { Copy, Trash2 } from 'lucide-react';
 
 type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 
 interface ShareProps {
 	activeTab: InvitationTab;
+	isLoggedIn: boolean;
 	isPaid: boolean | undefined;
 	previewFileName: string | null;
 	saveError: string | null;
@@ -29,6 +31,7 @@ interface ShareProps {
  */
 export default function Share({
 	activeTab,
+	isLoggedIn,
 	isPaid,
 	previewFileName,
 	saveError,
@@ -55,7 +58,18 @@ export default function Share({
 						Xem thiệp demo trước khi tạo link gửi cho khách.
 					</p>
 				) : null}
-				{saveError ? <p className="mt-2 text-center text-sm text-pink-600">{saveError}</p> : null}
+				{saveError ? (
+					<div className="mt-2 rounded-xl border border-pink-100 bg-pink-50 p-4 text-center text-sm text-pink-600">
+						<p className="font-medium">{saveError}</p>
+						{!isLoggedIn ? (
+							<div className="mt-3 flex items-center justify-center gap-3">
+								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+								<span className="text-pink-700">or</span>
+								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+							</div>
+						) : null}
+					</div>
+				) : null}
 
 				<div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
 					<label htmlFor="guestNameInput" className="mb-2 block text-sm font-medium text-slate-700">
