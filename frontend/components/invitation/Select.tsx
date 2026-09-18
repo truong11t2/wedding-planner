@@ -55,6 +55,15 @@ export default function Select({
 								isSelected ? 'border-pink-400 ring-2 ring-pink-200' : 'border-slate-200'
 							}`}
 						>
+							<div className="flex items-center justify-between gap-3 pb-2">
+								<h3 className="line-clamp-1 text-sm font-semibold text-slate-900">{template.name}</h3>
+								<span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+									{template.tone}
+								</span>
+								<span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+									{template.category}
+								</span>
+							</div>
 							<div className="template-preview relative h-120 overflow-hidden rounded-xl border border-white/60 bg-white">
 								<div className="template-preview__content">
 									<iframe
@@ -67,13 +76,6 @@ export default function Select({
 							</div>
 
 							<div className="px-1 pb-1 pt-3">
-								<div className="flex items-center justify-between gap-3">
-									<h3 className="line-clamp-1 text-sm font-semibold text-slate-900">{template.name}</h3>
-									<span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-										{template.tone}
-									</span>
-								</div>
-								<p className="mt-1 text-xs text-slate-500">{template.category}</p>
 								<div className="mt-2 grid grid-cols-2 gap-2">
 								<button
 									type="button"

@@ -35,7 +35,7 @@ const navigationItems: NavItem[] = [
   { name: 'Việc cần làm', href: '/checklist', icon: CircleCheckBig },
   { name: 'Khách Mời', href: '/guests', icon: Users },
   // { name: 'Địa Điểm', href: '/venues', icon: MapPinned },
-  { name: 'Hình Cưới', href: '/photos', icon: Camera },
+  // { name: 'Hình Cưới', href: '/photos', icon: Camera },
   { name: 'Thiệp Cưới', href: '/invitation', icon: Mail },
 ];
 
