@@ -1,5 +1,10 @@
 import { API_BASE_URL, ENDPOINTS } from './config';
 
+const parsedMaxGalleryImages = Number.parseInt(process.env.NEXT_PUBLIC_MAX_GALLERY_IMAGES ?? '', 10);
+
+export const MAX_GALLERY_IMAGES =
+  Number.isFinite(parsedMaxGalleryImages) && parsedMaxGalleryImages > 0 ? parsedMaxGalleryImages : 8;
+
 export interface InvitationParent {
   father: string;
   mother: string;

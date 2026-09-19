@@ -13,6 +13,7 @@ import {
 	deleteGuestLink,
 	getMyInvitation,
 	renderInvitationPreview,
+	MAX_GALLERY_IMAGES,
 	type InvitationConfig,
 	type InvitationPhotos,
 	type InvitationScheduleItem,
@@ -246,7 +247,7 @@ export default function InvitationPage() {
 				mapQuery: currentConfig.reception?.mapQuery || templateDefaults.reception.mapQuery
 			},
 			schedule: currentConfig.schedule?.length ? currentConfig.schedule : templateDefaults.schedule,
-			gallery: currentConfig.gallery?.length ? currentConfig.gallery : templateDefaults.gallery,
+			gallery: (currentConfig.gallery?.length ? currentConfig.gallery : templateDefaults.gallery).slice(0, MAX_GALLERY_IMAGES),
 			gifts: {
 				groom: {
 					bank: currentConfig.gifts?.groom?.bank || templateDefaults.gifts.groom.bank,
@@ -399,7 +400,9 @@ export default function InvitationPage() {
 	};
 
 	const addGalleryRow = () => {
-		applyInputChange((prev) => ({ ...prev, gallery: [...prev.gallery, ''] }));
+		applyInputChange((prev) =>
+			prev.gallery.length >= MAX_GALLERY_IMAGES ? prev : { ...prev, gallery: [...prev.gallery, ''] }
+		);
 	};
 
 	const removeGalleryRow = (index: number) => {
@@ -441,7 +444,7 @@ export default function InvitationPage() {
 			reception: { ...config.reception, date: config.reception.date || weddingDate },
 			weddingDateISO: weddingDate ? `${weddingDate}T${startTime}:00` : config.weddingDateISO,
 			schedule: config.schedule.filter((item) => item.time.trim() || item.label.trim()),
-			gallery: config.gallery.map((url) => url.trim()).filter(Boolean)
+			gallery: config.gallery.map((url) => url.trim()).filter(Boolean).slice(0, MAX_GALLERY_IMAGES)
 		};
 	};
 

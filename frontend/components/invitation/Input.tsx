@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { uploadPhotos as apiUploadPhotos } from '@/api/photo';
+import { MAX_GALLERY_IMAGES } from '@/api/invitation';
 import type { InvitationConfig, InvitationPhotos, InvitationScheduleItem, InvitationStoryItem } from '@/api/invitation';
 import type { InvitationTemplate } from '@/data/invitationTemplates';
 import songs from '@/public/music/songs.json';
@@ -193,6 +194,11 @@ export default function Input({
 
 		if (!isLoggedIn) {
 			setGalleryUploadError('Vui lòng đăng nhập hoặc đăng ký để tải ảnh lên.');
+			return;
+		}
+
+		if (index >= MAX_GALLERY_IMAGES) {
+			setGalleryUploadError(`Chỉ được tải lên tối đa ${MAX_GALLERY_IMAGES} ảnh.`);
 			return;
 		}
 
@@ -597,7 +603,9 @@ export default function Input({
 				{/* Album ảnh */}
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Album Ảnh</h2>
-					<p className="mt-1 text-xs text-slate-500">Tải ảnh cưới của bạn lên để hiển thị trong thiệp</p>
+					<p className="mt-1 text-xs text-slate-500">
+						Tải ảnh cưới của bạn lên để hiển thị trong thiệp (tối đa {MAX_GALLERY_IMAGES} ảnh).
+					</p>
 					<div className="mt-4 grid gap-3 sm:grid-cols-3">
 						{config.gallery.map((url, index) => (
 							<div key={index} className="relative">
@@ -668,14 +676,23 @@ export default function Input({
 						))}
 					</div>
 					{galleryUploadError ? <p className="mt-3 text-xs text-pink-600">{galleryUploadError}</p> : null}
-					<button
-						type="button"
-						onClick={addGalleryRow}
-						className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-pink-300 px-3 py-1.5 text-xs font-medium text-pink-600 transition hover:bg-pink-50"
-					>
-						<Plus className="h-3.5 w-3.5" />
-						Thêm ảnh
-					</button>
+					<p className="mt-3 text-xs text-slate-500">
+						{config.gallery.length}/{MAX_GALLERY_IMAGES} ảnh
+					</p>
+					{config.gallery.length < MAX_GALLERY_IMAGES ? (
+						<button
+							type="button"
+							onClick={addGalleryRow}
+							className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-pink-300 px-3 py-1.5 text-xs font-medium text-pink-600 transition hover:bg-pink-50"
+						>
+							<Plus className="h-3.5 w-3.5" />
+							Thêm ảnh
+						</button>
+					) : (
+						<p className="mt-2 text-xs font-medium text-pink-600">
+							Đã đạt tối đa {MAX_GALLERY_IMAGES} ảnh.
+						</p>
+					)}
 				</section>
 
 				{/* Nhạc nền */}
