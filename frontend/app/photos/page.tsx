@@ -27,12 +27,9 @@ import {
 } from 'lucide-react';
 import {
   Photo,
-  getPhotos,
-  savePhotos,
-  uploadPhotos as apiUploadPhotos,
-  deletePhoto as apiDeletePhoto,
-  togglePhotoFavorite as apiToggleFavorite
+  savePhotos
 } from '@/api/photo';
+import { handlePhoto } from '@/lib/handlePhoto';
 import { generateAlbum, updateAlbum, getAlbum } from '@/api/album';
 import { API_BASE_URL } from '@/api/config';
 import Image from 'next/image';
@@ -536,8 +533,6 @@ function UploadModal({ isOpen, onClose, onUpload }: UploadModalProps) {
 
 export default function PhotosPage() {
   const { isLoggedIn } = useAuth();
-  const [photos, setPhotos] = useState<Photo[]>([]);
-  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -566,36 +561,26 @@ export default function PhotosPage() {
     type: 'success'
   });
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setToast({ show: true, message, type });
     setTimeout(() => {
       setToast(prev => ({ ...prev, show: false }));
     }, 3000);
-  };
+  }, []);
 
-  // Load photos from backend when component mounts
-  useEffect(() => {
-    const loadPhotosData = async () => {
-    if (isLoggedIn) {
-        setLoading(true);
-        try {
-          const response = await getPhotos();
-          if (response.success && response.data) {
-            setPhotos(response.data);
-          } else {
-            // Initialize with empty array if no photos exist
-            setPhotos([]);
-        }
-        } catch {
-          showToast('Không thể tải hình', 'error');
-        } finally {
-          setLoading(false);
+  // Shared photo-library state and actions (also used by the invitation builder).
+  const { photos, loading, handleUpload, handleDeletePhoto, handleToggleFavorite } = handlePhoto({
+    enabled: isLoggedIn,
+    onToast: showToast,
+    onPhotoDeleted: (photo) => {
+      setSelectedPhoto(null);
+      setSelectedPhotoIds(prev => {
+        const next = new Set(prev);
+        next.delete(photo.id);
+        return next;
+      });
     }
-      }
-    };
-
-    loadPhotosData();
-  }, [isLoggedIn]);
+  });
 
   // Load existing album data
   useEffect(() => {
@@ -669,81 +654,6 @@ export default function PhotosPage() {
     
     return matchesCategory && matchesSearch && matchesFavorites;
   });
-
-  const handleUpload = async (files: File[], category: string, description: string, tags: string[]) => {
-    try {
-      const response = await apiUploadPhotos(files, category, description, tags);
-      
-      if (response.success && response.data) {
-        setPhotos(prev => [...response.data!, ...prev]);
-        
-        let message = `Đã tải lên thành công ${response.data.length} hình${response.data.length !== 1 ? 's' : ''}`;
-        
-        if (response.errors && response.errors.length > 0) {
-          message += `. ${response.errors.length} hình không thể xử lý.`;
-          // eslint-disable-next-line no-console
-          console.warn('Upload errors:', response.errors);
-        }
-        
-        showToast(message, 'success');
-      } else {
-        showToast(response.message || 'Không thể tải hình', 'error');
-        
-        if (response.errors) {
-          // eslint-disable-next-line no-console
-          console.error('Upload errors:', response.errors);
-        }
-      }
-    } catch {
-      showToast('Không thể tải hình', 'error');
-    }
-  };
-
-  const handleToggleFavorite = async (photoId: string) => {
-    try {
-      const response = await apiToggleFavorite(photoId);
-      if (response.success && response.data) {
-    setPhotos(prev => prev.map(photo => 
-          photo.id === photoId ? response.data! : photo
-    ));
-    
-    const photo = photos.find(p => p.id === photoId);
-    if (photo) {
-      showToast(
-            response.data.isFavorite ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
-        'success'
-      );
-        }
-      } else {
-        showToast(response.message || 'Không thể cập nhật yêu thích', 'error');
-      }
-    } catch {
-      showToast('Không thể cập nhật yêu thích', 'error');
-    }
-  };
-
-  const handleDeletePhoto = async (photoId: string) => {
-    const photo = photos.find(p => p.id === photoId);
-    if (photo && window.confirm(`Bạn có chắc chắn muốn xóa "${photo.name}"?`)) {
-      try {
-        const response = await apiDeletePhoto(photoId);
-        if (response.success) {
-      setPhotos(prev => prev.filter(p => p.id !== photoId));
-      setSelectedPhoto(null);
-      setSelectedPhotoIds(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(photoId);
-        return newSet;
-      });
-      showToast(`Đã xóa "${photo.name}"`, 'success');
-        } else {
-          showToast(response.message || 'Không thể xóa hình', 'error');
-        }
-      } catch {
-        showToast('Không thể xóa hình', 'error');
-      }
-    }
-  };
 
   const openPhotoViewer = (photo: Photo) => {
     setSelectedPhoto(photo);

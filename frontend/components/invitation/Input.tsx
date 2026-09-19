@@ -5,7 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { uploadPhotos as apiUploadPhotos } from '@/api/photo';
+import type { Photo } from '@/api/photo';
+import type { PhotoUploadResult } from '@/lib/handlePhoto';
 import { MAX_GALLERY_IMAGES } from '@/api/invitation';
 import type { InvitationConfig, InvitationPhotos, InvitationScheduleItem, InvitationStoryItem } from '@/api/invitation';
 import type { InvitationTemplate } from '@/data/invitationTemplates';
@@ -37,6 +38,14 @@ interface InputProps {
 	removeStoryRow: (index: number) => void;
 	updatePhoto: (field: keyof InvitationPhotos, value: string) => void;
 	handleWeddingDateChange: (value: string) => void;
+	photos: Photo[];
+	onUploadPhotos: (
+		files: File[],
+		category: string,
+		description?: string,
+		tags?: string[]
+	) => Promise<PhotoUploadResult>;
+	onDeletePhoto: (photoId: string) => Promise<boolean>;
 }
 
 /**
@@ -69,7 +78,10 @@ export default function Input({
 	addStoryRow,
 	removeStoryRow,
 	updatePhoto,
-	handleWeddingDateChange
+	handleWeddingDateChange,
+	photos,
+	onUploadPhotos,
+	onDeletePhoto
 }: InputProps) {
 	const { isLoggedIn } = useAuth();
 
@@ -172,7 +184,7 @@ export default function Input({
 		setQrUploadError(null);
 		setUploadingQrFor(who);
 		try {
-			const response = await apiUploadPhotos([file], 'invitation', '', ['invitation', 'qr']);
+			const response = await onUploadPhotos([file], 'invitation', '', ['invitation', 'qr']);
 			if (response.success && response.data && response.data.length > 0) {
 				updateGift(who, 'qrImage', response.data[0].url);
 			} else {
@@ -185,8 +197,17 @@ export default function Input({
 		}
 	};
 
-	const removeQrImage = (who: 'groom' | 'bride') => {
-		updateGift(who, 'qrImage', '');
+
+	const handleRemovePhoto = async (url: string | undefined, clearField: () => void) => {
+		const libraryPhoto = photos.find(
+			(photo) => photo.url === url || photo.thumbnailUrl === url || photo.mediumUrl === url
+		);
+
+		if (libraryPhoto && !(await onDeletePhoto(libraryPhoto.id))) {
+			return;
+		}
+
+		clearField();
 	};
 
 	const handleGalleryFileUpload = async (index: number, file: File | null) => {
@@ -205,7 +226,7 @@ export default function Input({
 		setGalleryUploadError(null);
 		setUploadingGalleryIndex(index);
 		try {
-			const response = await apiUploadPhotos([file], 'invitation', '', ['invitation']);
+			const response = await onUploadPhotos([file], 'invitation', '', ['invitation']);
 			if (response.success && response.data && response.data.length > 0) {
 				updateGalleryItem(index, response.data[0].url);
 			} else {
@@ -229,7 +250,7 @@ export default function Input({
 		setPhotoUploadError(null);
 		setUploadingPhotoField(field);
 		try {
-			const response = await apiUploadPhotos([file], 'invitation', '', ['invitation']);
+			const response = await onUploadPhotos([file], 'invitation', '', ['invitation']);
 			if (response.success && response.data && response.data.length > 0) {
 				updatePhoto(field, response.data[0].url);
 			} else {
@@ -365,21 +386,21 @@ export default function Input({
 									value={config.photos.coverPhoto}
 									uploading={uploadingPhotoField === 'coverPhoto'}
 									onUpload={(file) => handlePhotoFileUpload('coverPhoto', file)}
-									onRemove={() => updatePhoto('coverPhoto', '')}
+									onRemove={() => handleRemovePhoto(config.photos?.coverPhoto, () => updatePhoto('coverPhoto', ''))}
 								/>
 								<PhotoUploadField
 									label="Ảnh chú rể"
 									value={config.photos.groomPhoto}
 									uploading={uploadingPhotoField === 'groomPhoto'}
 									onUpload={(file) => handlePhotoFileUpload('groomPhoto', file)}
-									onRemove={() => updatePhoto('groomPhoto', '')}
+									onRemove={() => handleRemovePhoto(config.photos?.groomPhoto, () => updatePhoto('groomPhoto', ''))}
 								/>
 								<PhotoUploadField
 									label="Ảnh cô dâu"
 									value={config.photos.bridePhoto}
 									uploading={uploadingPhotoField === 'bridePhoto'}
 									onUpload={(file) => handlePhotoFileUpload('bridePhoto', file)}
-									onRemove={() => updatePhoto('bridePhoto', '')}
+									onRemove={() => handleRemovePhoto(config.photos?.bridePhoto, () => updatePhoto('bridePhoto', ''))}
 								/>
 							</div>
 {photoUploadError ? (
@@ -901,7 +922,7 @@ export default function Input({
 										</label>
 										<button
 											type="button"
-											onClick={() => removeQrImage('groom')}
+											onClick={() => handleRemovePhoto(config.gifts?.groom?.qrImage, () => updateGift('groom', 'qrImage', ''))}
 											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
 										>
 											<Trash2 className="h-4 w-4" />
@@ -972,7 +993,7 @@ export default function Input({
 										</label>
 										<button
 											type="button"
-											onClick={() => removeQrImage('bride')}
+											onClick={() => handleRemovePhoto(config.gifts?.bride?.qrImage, () => updateGift('bride', 'qrImage', ''))}
 											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
 										>
 											<Trash2 className="h-4 w-4" />

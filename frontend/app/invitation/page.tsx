@@ -20,6 +20,7 @@ import {
 	type InvitationStoryItem
 } from '@/api/invitation';
 import { BACKEND_ORIGIN } from '@/api/config';
+import { handlePhoto } from '@/lib/handlePhoto';
 import Input from '@/components/invitation/Input';
 import Select from '@/components/invitation/Select';
 import Preview from '@/components/invitation/Preview';
@@ -78,6 +79,10 @@ function formatDateLabel(dateStr: string): string {
 
 export default function InvitationPage() {
 	const { isLoggedIn, user } = useAuth();
+	// Shared photo library: reused by the gallery/QR/photo uploads and deletes.
+	const { photos, handleUpload: handleUploadPhotos, handleDeletePhoto } = handlePhoto({
+		enabled: isLoggedIn
+	});
 	const [activeTab, setActiveTab] = useState<'select' | 'input' | 'preview' | 'share'>('select');
 	const [selectedTemplateId, setSelectedTemplateId] = useState(defaultTemplate.id);
 
@@ -405,7 +410,17 @@ export default function InvitationPage() {
 		);
 	};
 
-	const removeGalleryRow = (index: number) => {
+	const removeGalleryRow = async (index: number) => {
+		const url = config.gallery[index];
+		const libraryPhoto = photos.find(
+			(photo) => photo.url === url || photo.thumbnailUrl === url || photo.mediumUrl === url
+		);
+
+		if (libraryPhoto && !(await handleDeletePhoto(libraryPhoto.id))) {
+			// The deletion was cancelled or failed — keep the image in the form.
+			return;
+		}
+
 		applyInputChange((prev) => ({ ...prev, gallery: prev.gallery.filter((_, i) => i !== index) }));
 	};
 
@@ -660,6 +675,9 @@ export default function InvitationPage() {
 			removeStoryRow={removeStoryRow}
 			updatePhoto={updatePhoto}
 			handleWeddingDateChange={handleWeddingDateChange}
+			photos={photos}
+			onUploadPhotos={handleUploadPhotos}
+			onDeletePhoto={handleDeletePhoto}
 		/>
 
 		<Preview
