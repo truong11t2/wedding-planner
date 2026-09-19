@@ -252,9 +252,9 @@ exports.updateGuest = async (req, res) => {
       createdAt: currentGuestList[guestIndex].createdAt
     };
     
-    currentGuestList[guestIndex] = updatedGuest;
-    
-    user.guestData = currentGuestList;
+    user.guestData = currentGuestList.map(guest =>
+      guest.id === updatedGuest.id ? updatedGuest : guest
+    );
     await user.save();
 
     res.status(200).json({
@@ -298,9 +298,8 @@ exports.deleteGuest = async (req, res) => {
     }
 
     // Remove the guest
-    const deletedGuest = currentGuestList.splice(guestIndex, 1)[0];
-    
-    user.guestData = currentGuestList;
+    const deletedGuest = currentGuestList[guestIndex];
+    user.guestData = currentGuestList.filter(guest => guest.id !== deletedGuest.id);
     await user.save();
 
     res.status(200).json({
@@ -352,14 +351,16 @@ exports.updateRSVP = async (req, res) => {
     }
 
     // Update RSVP status
-    currentGuestList[guestIndex].rsvpStatus = rsvpStatus;
-    
-    user.guestData = currentGuestList;
+    const updatedGuest = { ...currentGuestList[guestIndex], rsvpStatus };
+
+    user.guestData = currentGuestList.map(guest =>
+      guest.id === updatedGuest.id ? updatedGuest : guest
+    );
     await user.save();
 
     res.status(200).json({
       success: true,
-      data: currentGuestList[guestIndex],
+      data: updatedGuest,
       message: 'RSVP status updated successfully'
     });
 

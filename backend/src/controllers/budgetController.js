@@ -316,10 +316,11 @@ exports.updateBudgetCategory = async (req, res) => {
       id: currentBudgetData.categories[categoryIndex].id
     };
     
-    currentBudgetData.categories[categoryIndex] = updatedCategory;
-    
     const updatedBudgetData = {
       ...currentBudgetData,
+      categories: currentBudgetData.categories.map(cat =>
+        cat.id === updatedCategory.id ? updatedCategory : cat
+      ),
       lastUpdated: new Date().toISOString()
     };
 
@@ -372,10 +373,11 @@ exports.deleteBudgetCategory = async (req, res) => {
     }
 
     // Remove the category
-    const deletedCategory = currentBudgetData.categories.splice(categoryIndex, 1)[0];
-    
+    const deletedCategory = currentBudgetData.categories[categoryIndex];
+
     const updatedBudgetData = {
       ...currentBudgetData,
+      categories: currentBudgetData.categories.filter(cat => cat.id !== deletedCategory.id),
       lastUpdated: new Date().toISOString()
     };
 

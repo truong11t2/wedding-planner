@@ -190,9 +190,9 @@ exports.updateChecklistItem = async (req, res) => {
 
     // Update the item
     const updatedItem = { ...currentChecklist[itemIndex], ...updates };
-    currentChecklist[itemIndex] = updatedItem;
-    
-    user.checklistData = currentChecklist;
+    user.checklistData = currentChecklist.map(item =>
+      item.id === updatedItem.id ? updatedItem : item
+    );
     await user.save();
 
     res.status(200).json({
@@ -236,9 +236,8 @@ exports.deleteChecklistItem = async (req, res) => {
     }
 
     // Remove the item
-    const deletedItem = currentChecklist.splice(itemIndex, 1)[0];
-    
-    user.checklistData = currentChecklist;
+    const deletedItem = currentChecklist[itemIndex];
+    user.checklistData = currentChecklist.filter(item => item.id !== deletedItem.id);
     await user.save();
 
     res.status(200).json({
@@ -282,14 +281,19 @@ exports.toggleChecklistItem = async (req, res) => {
     }
 
     // Toggle completion status
-    currentChecklist[itemIndex].completed = !currentChecklist[itemIndex].completed;
-    
-    user.checklistData = currentChecklist;
+    const toggledItem = {
+      ...currentChecklist[itemIndex],
+      completed: !currentChecklist[itemIndex].completed
+    };
+
+    user.checklistData = currentChecklist.map(item =>
+      item.id === toggledItem.id ? toggledItem : item
+    );
     await user.save();
 
     res.status(200).json({
       success: true,
-      data: currentChecklist[itemIndex],
+      data: toggledItem,
       message: 'Nhiệm vụ đã được chuyển đổi trạng thái thành công'
     });
 

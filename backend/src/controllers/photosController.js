@@ -283,9 +283,9 @@ exports.updatePhoto = async (req, res) => {
     }
 
     const currentPhotos = user.photosData || [];
-    const photoIndex = currentPhotos.findIndex(photo => photo.id === photoId);
+    const existingPhoto = currentPhotos.find(photo => photo.id === photoId);
 
-    if (photoIndex === -1) {
+    if (!existingPhoto) {
       return res.status(404).json({
         success: false,
         message: 'Photo not found'
@@ -294,21 +294,22 @@ exports.updatePhoto = async (req, res) => {
 
     // Update the photo metadata (don't allow changing file paths or IDs)
     const updatedPhoto = { 
-      ...currentPhotos[photoIndex], 
+      ...existingPhoto, 
       ...updates,
       // Preserve these fields
-      id: currentPhotos[photoIndex].id,
-      url: currentPhotos[photoIndex].url,
-      thumbnailUrl: currentPhotos[photoIndex].thumbnailUrl,
-      mediumUrl: currentPhotos[photoIndex].mediumUrl,
-      uploadDate: currentPhotos[photoIndex].uploadDate,
-      takenDate: currentPhotos[photoIndex].takenDate,
-      exifData: currentPhotos[photoIndex].exifData,
-      originalMetadata: currentPhotos[photoIndex].originalMetadata
+      id: existingPhoto.id,
+      url: existingPhoto.url,
+      thumbnailUrl: existingPhoto.thumbnailUrl,
+      mediumUrl: existingPhoto.mediumUrl,
+      uploadDate: existingPhoto.uploadDate,
+      takenDate: existingPhoto.takenDate,
+      exifData: existingPhoto.exifData,
+      originalMetadata: existingPhoto.originalMetadata
     };
     
-    currentPhotos[photoIndex] = updatedPhoto;
-    user.photosData = currentPhotos;
+    user.photosData = currentPhotos.map(photo =>
+      photo.id === photoId ? updatedPhoto : photo
+    );
     await user.save();
 
     res.status(200).json({
@@ -342,9 +343,9 @@ exports.deletePhoto = async (req, res) => {
     }
 
     const currentPhotos = user.photosData || [];
-    const photoIndex = currentPhotos.findIndex(photo => photo.id === photoId);
+    const deletedPhoto = currentPhotos.find(photo => photo.id === photoId);
 
-    if (photoIndex === -1) {
+    if (!deletedPhoto) {
       return res.status(404).json({
         success: false,
         message: 'Photo not found'
@@ -352,12 +353,12 @@ exports.deletePhoto = async (req, res) => {
     }
 
     // Remove the photo from database
-    const deletedPhoto = currentPhotos.splice(photoIndex, 1)[0];
-    user.photosData = currentPhotos;
+    user.photosData = currentPhotos.filter(photo => photo.id !== photoId);
     await user.save();
+    console.log(`Deleted photo ${deletedPhoto.id} from database for user ${userId}`);
 
     // Delete physical files
-    await imageProcessor.deleteUserImages(userId, photoId);
+    await imageProcessor.deleteUserImages(userId, deletedPhoto);
 
     res.status(200).json({
       success: true,
@@ -390,9 +391,9 @@ exports.toggleFavorite = async (req, res) => {
     }
 
     const currentPhotos = user.photosData || [];
-    const photoIndex = currentPhotos.findIndex(photo => photo.id === photoId);
+    const existingPhoto = currentPhotos.find(photo => photo.id === photoId);
 
-    if (photoIndex === -1) {
+    if (!existingPhoto) {
       return res.status(404).json({
         success: false,
         message: 'Photo not found'
@@ -400,15 +401,17 @@ exports.toggleFavorite = async (req, res) => {
     }
 
     // Toggle favorite status
-    currentPhotos[photoIndex].isFavorite = !currentPhotos[photoIndex].isFavorite;
-    
-    user.photosData = currentPhotos;
+    const toggledPhoto = { ...existingPhoto, isFavorite: !existingPhoto.isFavorite };
+
+    user.photosData = currentPhotos.map(photo =>
+      photo.id === photoId ? toggledPhoto : photo
+    );
     await user.save();
 
     res.status(200).json({
       success: true,
-      data: currentPhotos[photoIndex],
-      message: `Photo ${currentPhotos[photoIndex].isFavorite ? 'added to' : 'removed from'} favorites`
+      data: toggledPhoto,
+      message: `Photo ${toggledPhoto.isFavorite ? 'added to' : 'removed from'} favorites`
     });
 
   } catch (error) {

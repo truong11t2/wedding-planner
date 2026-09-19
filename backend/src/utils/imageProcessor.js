@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 
 class ImageProcessor {
   constructor() {
@@ -281,8 +281,22 @@ class ImageProcessor {
   // NEW: Delete file from S3
   async deleteFromS3(key) {
     try {
+      // S3 DeleteObject succeeds even for keys that don't exist, so confirm the
+      // object is really there first to keep the result and logs meaningful.
+      try {
+        await this.s3Client.send(
+          new HeadObjectCommand({
+            Bucket: this.bucketName,
+            Key: key,
+          })
+        );
+      } catch {
+        console.log(`↷ Not found on S3 (skipped): ${key}`);
+        return false;
+      }
+
       console.log(`Deleting from S3: ${key}`);
-      
+
       const command = new DeleteObjectCommand({
         Bucket: this.bucketName,
         Key: key,
@@ -290,7 +304,7 @@ class ImageProcessor {
 
       await this.s3Client.send(command);
       console.log(`✓ Successfully deleted from S3: ${key}`);
-      
+
       return true;
     } catch (error) {
       console.error(`✗ Failed to delete from S3: ${key}`, error);
@@ -441,56 +455,59 @@ class ImageProcessor {
     }
   }
 
-  async deleteUserImages(userId, photoId) {
-    try {
-      console.log(`Deleting images for user ${userId}, photo ${photoId}`);
-      
-      // Delete from S3
-      const s3Keys = [
-        `images/${userId}/thumbnail/${photoId}-*.jpg`,
-        `images/${userId}/full/${photoId}-*.jpg`
-      ];
+  /** Converts a public S3 URL back into its object key. */
+  keyFromUrl(url) {
+    if (!url || typeof url !== 'string') return null;
 
-      // Since we can't use wildcards in S3 delete, we need the exact keys
-      // In a real implementation, you'd store the S3 keys in your database
-      // For now, we'll try common patterns
-      const possibleKeys = [];
-      
-      // You should store the exact S3 keys in your database and use those instead
-      // This is a simplified approach for the example
-      const sizes = ['thumbnail', 'full'];
-      sizes.forEach(size => {
-        possibleKeys.push(`images/${userId}/${size}/${photoId}`);
-        possibleKeys.push(`images/${userId}/${size}/${photoId}.jpg`);
-      });
+    const base = this.s3BaseUrl ? this.s3BaseUrl.replace(/\/+$/, '') : '';
+    if (base && url.startsWith(base)) {
+      return url.slice(base.length).replace(/^\/+/, '');
+    }
+
+    // Fallback: strip the host from any absolute URL.
+    try {
+      return new URL(url).pathname.replace(/^\/+/, '');
+    } catch {
+      return url.replace(/^\/+/, '');
+    }
+  }
+
+  async deleteUserImages(userId, photo) {
+    try {
+      // `photo` is normally the stored photo object (preferred — it carries the
+      // real S3 URLs), but a legacy photo id string is still accepted.
+      const isPhotoObject = Boolean(photo) && typeof photo === 'object';
+      const photoId = isPhotoObject ? photo.id : photo;
+
+      console.log(`Deleting images for user ${userId}, photo ${photoId}`);
+
+      // Uploaded objects are keyed by the sanitized original filename (see
+      // `processImage`), NOT by the photo id, so the stored URLs are the only
+      // reliable source for the exact keys.
+      const keys = new Set();
+      if (isPhotoObject) {
+        ['url', 'thumbnailUrl', 'mediumUrl'].forEach((field) => {
+          const key = this.keyFromUrl(photo[field]);
+          if (key) keys.add(key);
+        });
+      }
+
+      // Legacy fallback when only an id is available.
+      if (keys.size === 0) {
+        ['thumbnail', 'full'].forEach((size) => {
+          keys.add(`images/${userId}/${size}/${photoId}`);
+          keys.add(`images/${userId}/${size}/${photoId}.jpg`);
+        });
+      }
 
       let deletedCount = 0;
-      for (const key of possibleKeys) {
+      for (const key of keys) {
         const deleted = await this.deleteFromS3(key);
         if (deleted) deletedCount++;
       }
 
-      // Also clean up local files
-      // const userDir = path.join(this.imagesDir, userId);
-      // const directories = ['thumbnails', 'full'];
-      
-      // for (const dir of directories) {
-      //   const dirPath = path.join(userDir, dir);
-        
-      //   try {
-      //     const files = await fs.readdir(dirPath);
-      //     const matchingFiles = files.filter(file => file.startsWith(photoId));
-          
-      //     for (const file of matchingFiles) {
-      //       await fs.unlink(path.join(dirPath, file));
-      //     }
-      //   } catch (error) {
-      //     console.warn(`Failed to clean up local files in ${dir}:`, error);
-      //   }
-      // }
-      
-      console.log(`✓ Deleted ${deletedCount} S3 objects and local files for photo ${photoId}`);
-      return true;
+      console.log(`✓ Deleted ${deletedCount} S3 objects for photo ${photoId}`);
+      return deletedCount > 0;
     } catch (error) {
       console.error('Failed to delete user images:', error);
       return false;
