@@ -6,7 +6,7 @@ import {
 	invitationTemplates,
 	defaultInvitationTemplate
 } from '@/data/invitationTemplates';
-import { getInvitationConfig } from '@/data/invitationConfigs';
+import { getInvitationConfig, getInvitationConfigFeatures } from '@/data/invitationConfigs';
 import { useAuth } from '@/context/AuthContext';
 import {
 	generateInvitation,
@@ -20,7 +20,7 @@ import {
 	type InvitationStoryItem
 } from '@/api/invitation';
 import { BACKEND_ORIGIN } from '@/api/config';
-import { handlePhoto } from '@/lib/handlePhoto';
+import { usePhotoLibrary } from '@/lib/usePhotoLibrary';
 import Input from '@/components/invitation/Input';
 import Select from '@/components/invitation/Select';
 import Preview from '@/components/invitation/Preview';
@@ -30,6 +30,55 @@ import Share from '@/components/invitation/Share';
 
 const defaultTemplate = defaultInvitationTemplate;
 const INVITATION_DRAFT_STORAGE_KEY = 'invitation-builder-draft-v1';
+
+/**
+ * The four builder steps. Each one is also its own anchor (`#select`, `#input`,
+ * `#preview`, `#share`) so a step can be linked to and restored after login.
+ */
+const INVITATION_TABS = ['select', 'input', 'preview', 'share'] as const;
+
+type InvitationTab = (typeof INVITATION_TABS)[number];
+
+const INVITATION_TAB_ITEMS: Array<{ id: InvitationTab; label: string }> = [
+	{ id: 'select', label: '1. Chọn mẫu' },
+	{ id: 'input', label: '2. Nhập thông tin' },
+	{ id: 'preview', label: '3. Xem thiệp' },
+	{ id: 'share', label: '4. Chia sẻ' }
+];
+
+/** Resolve an anchor hash (e.g. `#preview`) to a tab. `null` when absent/unknown. */
+function tabFromHash(hash: string): InvitationTab | null {
+	const value = hash.replace(/^#/, '');
+	return (INVITATION_TABS as readonly string[]).includes(value) ? (value as InvitationTab) : null;
+}
+
+/**
+ * Last step the user was on, so login/OAuth can return them to it even if the
+ * router drops the hash. `sessionStorage` survives the auth round-trip and a
+ * reload, but stays scoped to this tab and browser session.
+ */
+const INVITATION_TAB_STORAGE_KEY = 'invitation-builder-tab-v1';
+
+function readStoredTab(): InvitationTab | null {
+	if (typeof window === 'undefined') return null;
+
+	try {
+		const value = window.sessionStorage.getItem(INVITATION_TAB_STORAGE_KEY);
+		return (INVITATION_TABS as readonly string[]).includes(value ?? '') ? (value as InvitationTab) : null;
+	} catch {
+		return null;
+	}
+}
+
+function storeTab(tab: InvitationTab): void {
+	if (typeof window === 'undefined') return;
+
+	try {
+		window.sessionStorage.setItem(INVITATION_TAB_STORAGE_KEY, tab);
+	} catch {
+		// Storage can be unavailable (private mode) — the URL hash still drives the UI.
+	}
+}
 
 type InvitationDraft = {
 	selectedTemplateId: string;
@@ -80,10 +129,17 @@ function formatDateLabel(dateStr: string): string {
 export default function InvitationPage() {
 	const { isLoggedIn, user } = useAuth();
 	// Shared photo library: reused by the gallery/QR/photo uploads and deletes.
-	const { photos, handleUpload: handleUploadPhotos, handleDeletePhoto } = handlePhoto({
+	const { photos, handleUpload: handleUploadPhotos, handleDeletePhoto } = usePhotoLibrary({
 		enabled: isLoggedIn
 	});
-	const [activeTab, setActiveTab] = useState<'select' | 'input' | 'preview' | 'share'>('select');
+	// The hash is deliberately *not* read here: a client-side navigation (such as
+	// the post-login redirect to `/invitation#preview`) renders this page before
+	// Next.js commits the new URL, so `window.location` still points at the
+	// previous page. The effect below resolves the real tab after mount instead.
+	const [activeTab, setActiveTab] = useState<InvitationTab>('select');
+	// Guards the hash-sync effect so its first run — which still sees the `select`
+	// default — cannot overwrite the incoming hash before it has been read.
+	const skipFirstHashSyncRef = useRef(true);
 	const [selectedTemplateId, setSelectedTemplateId] = useState(defaultTemplate.id);
 
 	const [config, setConfig] = useState<InvitationConfig>(defaultConfig);
@@ -117,6 +173,51 @@ export default function InvitationPage() {
 	useEffect(() => {
 		draftRef.current = { selectedTemplateId, config, weddingDate };
 	}, [selectedTemplateId, config, weddingDate]);
+
+	// Resolve which step to open. Runs after mount so the URL has settled: an
+	// explicit anchor wins (deep links), otherwise fall back to the step the user
+	// was last on — which is what returns them to it after logging in when the
+	// router does not carry the hash across the redirect.
+	useEffect(() => {
+		const resolveTab = (allowStoredFallback: boolean) => {
+			const fromHash = tabFromHash(window.location.hash);
+			if (fromHash) {
+				setActiveTab(fromHash);
+				storeTab(fromHash);
+				return;
+			}
+
+			if (!allowStoredFallback) return;
+
+			const stored = readStoredTab();
+			if (stored) setActiveTab(stored);
+		};
+
+		resolveTab(true);
+
+		// Follow manual hash edits, pasted deep links and back/forward navigation.
+		const handleHashChange = () => resolveTab(false);
+		window.addEventListener('hashchange', handleHashChange);
+		return () => window.removeEventListener('hashchange', handleHashChange);
+	}, []);
+
+	// Keep the URL in sync with the active tab so every step is a shareable
+	// anchor link. The first run is skipped so the default `select` never wipes a
+	// deep link (or the hash the post-login redirect just set) before it is read.
+	// `replaceState` keeps the history free of one entry per step.
+	useEffect(() => {
+		if (skipFirstHashSyncRef.current) {
+			skipFirstHashSyncRef.current = false;
+			return;
+		}
+
+		storeTab(activeTab);
+
+		const nextHash = `#${activeTab}`;
+		if (window.location.hash !== nextHash) {
+			window.history.replaceState(null, '', nextHash);
+		}
+	}, [activeTab]);
 
 	// Persist the draft only after a user edit inside the input form.
 	useEffect(() => {
@@ -208,6 +309,16 @@ export default function InvitationPage() {
 		invitationTemplates.find((template) => template.id === selectedTemplateId) ?? defaultTemplate;
 
 	/**
+	 * Which optional form sections the selected template supports. Derived from
+	 * the template's own default config — not the merged `config` — so sections
+	 * never leak across template switches.
+	 */
+	const templateFeatures = useMemo(
+		() => getInvitationConfigFeatures(selectedTemplateId),
+		[selectedTemplateId]
+	);
+
+	/**
 	 * Merge user's current input with template defaults.
 	 * Preserves user-entered data while filling in missing fields from the template defaults.
 	 */
@@ -268,9 +379,15 @@ export default function InvitationPage() {
 				}
 			},
 			musicUrl: currentConfig.musicUrl || templateDefaults.musicUrl,
-			// Template-specific fields
-			story: currentConfig.story?.length ? currentConfig.story : templateDefaults.story,
-			photos: currentConfig.photos ? currentConfig.photos : templateDefaults.photos
+			// Template-specific fields are only kept when the target template
+			// actually supports them, so stale data from a previous template
+			// never gets rendered in the form.
+			story: templateDefaults.story
+				? currentConfig.story?.length
+					? currentConfig.story
+					: templateDefaults.story
+				: undefined,
+			photos: templateDefaults.photos ? currentConfig.photos ?? templateDefaults.photos : undefined
 		};
 
 		// Use current wedding date if exists, otherwise extract from config
@@ -557,6 +674,18 @@ export default function InvitationPage() {
 		}
 	};
 
+	/**
+	 * Tab anchors keep the URL hash authoritative (handled by the `hashchange`
+	 * listener); setting state here gives immediate feedback and lets the share
+	 * step kick off link generation like before.
+	 */
+	const handleTabClick = (tab: InvitationTab) => {
+		setActiveTab(tab);
+		if (tab === 'share') {
+			void handleGenerateLink();
+		}
+	};
+
 	const handleCopyLink = async (urlToCopy?: string) => {
 		const targetUrl = urlToCopy || shareUrl;
 		if (!targetUrl) return;
@@ -598,50 +727,20 @@ export default function InvitationPage() {
 		<div className="sticky top-[72px] z-30 border-b border-slate-200 bg-white/90 shadow-sm backdrop-blur-sm">
 
 				<div className="flex gap-2 border-b border-slate-200">
-					<button
-						type="button"
-						onClick={() => setActiveTab('select')}
-						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
-							activeTab === 'select'
-								? 'border-pink-500 text-pink-600'
-								: 'border-transparent text-slate-500 hover:text-slate-700'
-						}`}
-					>
-						1. Chọn mẫu
-					</button>
-					<button
-						type="button"
-						onClick={() => setActiveTab('input')}
-						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
-							activeTab === 'input'
-								? 'border-pink-500 text-pink-600'
-								: 'border-transparent text-slate-500 hover:text-slate-700'
-						}`}
-					>
-						2. Nhập thông tin
-					</button>
-					<button
-						type="button"
-						onClick={() => setActiveTab('preview')}
-						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
-							activeTab === 'preview'
-								? 'border-pink-500 text-pink-600'
-								: 'border-transparent text-slate-500 hover:text-slate-700'
-						}`}
-					>
-						3. Xem thiệp
-					</button>
-					<button
-						type="button"
-						onClick={() => {setActiveTab('share'); handleGenerateLink()}}
-						className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
-							activeTab === 'share'
-								? 'border-pink-500 text-pink-600'
-								: 'border-transparent text-slate-500 hover:text-slate-700'
-						}`}
-					>
-						4. Chia sẻ
-					</button>
+					{INVITATION_TAB_ITEMS.map((tab) => (
+						<a
+							key={tab.id}
+							href={`#${tab.id}`}
+							onClick={() => handleTabClick(tab.id)}
+							className={`flex items-center gap-2 border-b-2 px-2 md:px-4 py-3 text-sm font-semibold transition ${
+								activeTab === tab.id
+									? 'border-pink-500 text-pink-600'
+									: 'border-transparent text-slate-500 hover:text-slate-700'
+							}`}
+						>
+							{tab.label}
+						</a>
+					))}
 				</div>
 		</div>
 
@@ -656,6 +755,7 @@ export default function InvitationPage() {
 			activeTab={activeTab}
 			setActiveTab={setActiveTab}
 			selectedTemplate={selectedTemplate}
+			features={templateFeatures}
 			config={config}
 			weddingDate={weddingDate}
 			updateField={updateField}

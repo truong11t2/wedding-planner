@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Copy, Trash2 } from 'lucide-react';
+import { buildLoginHref } from '@/lib/authRedirect';
 
 type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 
@@ -45,8 +46,11 @@ export default function Share({
 	handleCopyLink,
 	handleDeleteLink
 }: ShareProps) {
+	// Send the user back to this very step after they sign in.
+	const loginHref = buildLoginHref(`/invitation#${activeTab}`);
+
 	return (
-		<section className={`mx-auto max-w-7xl ${activeTab === 'share' ? '' : 'hidden'}`}>
+		<section id="share" className={`mx-auto max-w-7xl ${activeTab === 'share' ? '' : 'hidden'}`}>
 			<div className="mt-6 border-t border-slate-100 pt-6">
 				{!isPaid ? (
 					//TODO: change text in future
@@ -63,9 +67,9 @@ export default function Share({
 						<p className="font-medium">{saveError}</p>
 						{!isLoggedIn ? (
 							<div className="mt-3 flex items-center justify-center gap-3">
-								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
 								<span className="text-pink-700">or</span>
-								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
 							</div>
 						) : null}
 					</div>

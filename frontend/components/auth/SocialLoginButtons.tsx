@@ -2,15 +2,28 @@
 
 import React, { useState } from 'react';
 import { socialLogin, type Provider } from '@/api/social';
+import { rememberReturnTo } from '@/lib/authRedirect';
 
-export default function SocialLoginButtons() {
+interface SocialLoginButtonsProps {
+  /**
+   * Where to send the user after the OAuth round-trip completes. Forwarded to
+   * the backend, which round-trips it through the provider's `state` parameter
+   * and returns it on `/auth/callback`.
+   */
+  returnTo?: string | null;
+}
+
+export default function SocialLoginButtons({ returnTo }: SocialLoginButtonsProps) {
   const [loading, setLoading] = useState<Provider | null>(null);
 
   const handleSocialLogin = async (provider: Provider) => {
     setLoading(provider);
     
     try {
-      const result = await socialLogin(provider);
+      // Also remember it locally as a fallback for the (common) case where the
+      // callback returns on this same origin.
+      rememberReturnTo(returnTo);
+      const result = await socialLogin(provider, returnTo);
       if (result.success) {
         // socialLogin will redirect to OAuth provider
         // onSuccess will be called from the callback page

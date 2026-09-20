@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import SocialLoginButtons from './SocialLoginButtons';
 import Toast from '@/components/common/Toast';
 import { loginUser, registerUser } from '@/api/auth';
+import { clearReturnTo, readReturnTo, sanitizeReturnTo } from '@/lib/authRedirect';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,9 +24,25 @@ export default function LoginPage() {
     setToast({ show: true, message, type });
   };
 
-  const destination = typeof window !== 'undefined'
-    ? new URLSearchParams(window.location.search).get('returnTo') || '/'
-    : '/';
+  /**
+   * Where to send the user after a successful sign-in. An explicit `returnTo`
+   * param wins; otherwise we fall back to the last visited page recorded by
+   * `ClientLayout` (so the header's login link also restores the user's place).
+   */
+  const requestedReturnTo =
+    typeof window !== 'undefined'
+      ? sanitizeReturnTo(new URLSearchParams(window.location.search).get('returnTo')) ?? readReturnTo()
+      : null;
+
+  const destination = requestedReturnTo ?? '/';
+
+  /** Send the user on their way and forget the one-shot destination. */
+  const redirectAfterAuth = () => {
+    setTimeout(() => {
+      clearReturnTo();
+      router.push(destination);
+    }, 1500);
+  };
 
   const handleSubmit = async () => {
     if (isLogin) {
@@ -39,9 +56,7 @@ export default function LoginPage() {
         login(result.user);
         showToast('Đăng nhập thành công!', 'success');
         // Short delay before redirect to show the success toast
-        setTimeout(() => {
-          router.push(destination.startsWith('/') ? destination : '/');
-        }, 1500);
+        redirectAfterAuth();
       } else {
         showToast(result.message || 'Đăng nhập thất bại', 'error');
       }
@@ -61,9 +76,7 @@ export default function LoginPage() {
         login(result.user);
         showToast('Đăng ký thành công!', 'success');
         // Short delay before redirect to show the success toast
-        setTimeout(() => {
-          router.push(destination.startsWith('/') ? destination : '/');
-        }, 1500);
+        redirectAfterAuth();
       } else {
         showToast(result.message || 'Đăng ký thất bại', 'error');
       }
@@ -199,7 +212,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <SocialLoginButtons />
+          <SocialLoginButtons returnTo={requestedReturnTo} />
         </div>
       </div>
     </main>

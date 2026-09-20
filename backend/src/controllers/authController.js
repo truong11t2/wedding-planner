@@ -12,6 +12,43 @@ const generateToken = (id) => {
 
 const { validationResult } = require('express-validator');
 
+/**
+ * Only allow same-app, path-relative destinations. Rejects absolute URLs and
+ * protocol-relative values such as `//evil.example`, so a crafted `returnTo`
+ * can never turn an auth redirect into an open redirect.
+ *
+ * Also tolerates a still percent-encoded value, since the destination is
+ * round-tripped through the provider's `state` parameter.
+ */
+function sanitizeReturnTo(value) {
+  if (!value || typeof value !== 'string') return null;
+
+  let candidate = value;
+  if (/%[0-9a-f]{2}/i.test(candidate)) {
+    try {
+      candidate = decodeURIComponent(candidate);
+    } catch {
+      // Not valid percent-encoding — fall through and validate the raw value.
+    }
+  }
+
+  if (!candidate.startsWith('/') || candidate.startsWith('//')) return null;
+  return candidate;
+}
+
+/**
+ * Build the frontend `/auth/callback` URL, forwarding the destination requested
+ * at the start of the flow (`req.query.state`) so the SPA can return the user to
+ * the page — and anchor — they left from.
+ */
+function buildFrontendCallbackUrl(provider, state) {
+  const returnTo = sanitizeReturnTo(state);
+  const suffix = returnTo ? `&returnTo=${encodeURIComponent(returnTo)}` : '';
+  return `${process.env.FRONTEND_URL}/auth/callback?provider=${provider}${suffix}`;
+}
+
+exports.sanitizeReturnTo = sanitizeReturnTo;
+
 // @desc    Google OAuth initiation
 // @route   GET /api/auth/google
 // @access  Public
@@ -45,7 +82,7 @@ exports.googleCallback = async (req, res) => {
     });
 
     // Redirect to frontend callback WITHOUT token in URL
-    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?provider=google`;
+    const redirectUrl = buildFrontendCallbackUrl('google', req.query.state);
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Google callback error:', error);
@@ -86,7 +123,7 @@ exports.facebookCallback = async (req, res) => {
     });
 
     // Redirect to frontend callback WITHOUT token in URL
-    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?provider=facebook`;
+    const redirectUrl = buildFrontendCallbackUrl('facebook', req.query.state);
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Facebook callback error:', error);

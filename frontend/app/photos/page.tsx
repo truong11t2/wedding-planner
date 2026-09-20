@@ -29,7 +29,7 @@ import {
   Photo,
   savePhotos
 } from '@/api/photo';
-import { handlePhoto } from '@/lib/handlePhoto';
+import { usePhotoLibrary } from '@/lib/usePhotoLibrary';
 import { generateAlbum, updateAlbum, getAlbum } from '@/api/album';
 import { API_BASE_URL } from '@/api/config';
 import Image from 'next/image';
@@ -569,7 +569,7 @@ export default function PhotosPage() {
   }, []);
 
   // Shared photo-library state and actions (also used by the invitation builder).
-  const { photos, loading, handleUpload, handleDeletePhoto, handleToggleFavorite } = handlePhoto({
+  const { photos, loading, handleUpload, handleDeletePhoto, handleToggleFavorite } = usePhotoLibrary({
     enabled: isLoggedIn,
     onToast: showToast,
     onPhotoDeleted: (photo) => {

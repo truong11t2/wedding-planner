@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
+import { buildLoginHref } from '@/lib/authRedirect';
 
 type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 
@@ -26,8 +27,11 @@ export default function Preview({
 	invitationTabUrl,
 	isLoggedIn
 }: PreviewProps) {
+	// Send the user back to this very step after they sign in.
+	const loginHref = buildLoginHref(`/invitation#${activeTab}`);
+
 	return (
-		<section className={`mx-auto max-w-7xl ${activeTab === 'preview' ? '' : 'hidden'}`}>
+		<section id="preview" className={`mx-auto max-w-7xl ${activeTab === 'preview' ? '' : 'hidden'}`}>
 			<div className="mt-6 rounded-2xl border border-slate-200">
 				{invitationTabLoading ? (
 					<div className="flex min-h-[60vh] items-center justify-center text-slate-500">
@@ -40,10 +44,10 @@ export default function Preview({
 							<p className="font-semibold">{invitationTabError}</p>
 							{!isLoggedIn ? (
 								<div className="mt-4 flex items-center justify-center gap-3">
-									<Link href="/login?returnTo=/invitation" className="rounded-lg bg-pink-600 px-4 py-2 font-semibold text-white transition hover:bg-pink-700">
+									<Link href={loginHref} className="rounded-lg bg-pink-600 px-4 py-2 font-semibold text-white transition hover:bg-pink-700">
 										Đăng nhập
 									</Link>
-									<Link href="/login?returnTo=/invitation" className="rounded-lg border border-pink-300 bg-white px-4 py-2 font-semibold text-pink-700 transition hover:bg-pink-50">
+									<Link href={loginHref} className="rounded-lg border border-pink-300 bg-white px-4 py-2 font-semibold text-pink-700 transition hover:bg-pink-50">
 										Đăng ký
 									</Link>
 								</div>

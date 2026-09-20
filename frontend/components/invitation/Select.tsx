@@ -43,7 +43,7 @@ export default function Select({
 	}, [descriptionTemplate]);
 
 	return (
-		<section className={`mx-auto max-w-7xl ${activeTab === 'select' ? '' : 'hidden'}`}>
+		<section id="select" className={`mx-auto max-w-7xl ${activeTab === 'select' ? '' : 'hidden'}`}>
 			<div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
 				{invitationTemplates.map((template) => {
 					const isSelected = template.id === selectedTemplateId;

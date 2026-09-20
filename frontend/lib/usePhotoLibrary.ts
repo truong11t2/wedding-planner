@@ -30,7 +30,11 @@ export interface UsePhotoLibraryOptions {
  * `handleDeletePhoto` implementations can be reused by other pages (the
  * invitation builder uploads and deletes the very same photos).
  */
-export function handlePhoto({ enabled = true, onToast, onPhotoDeleted }: UsePhotoLibraryOptions = {}) {
+export function usePhotoLibrary({
+	enabled = true,
+	onToast,
+	onPhotoDeleted
+}: UsePhotoLibraryOptions = {}) {
 	const [photos, setPhotos] = useState<Photo[]>([]);
 	const [loading, setLoading] = useState(true);
 

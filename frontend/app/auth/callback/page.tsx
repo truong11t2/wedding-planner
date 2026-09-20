@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getUserProfile } from '@/api/auth';
+import { clearReturnTo, readReturnTo, sanitizeReturnTo, buildLoginHref } from '@/lib/authRedirect';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -14,12 +15,20 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const handleCallback = async () => {
+      // Where the user was before starting the OAuth flow (e.g. the invitation
+      // builder's current tab). The backend forwards the destination it received
+      // through the OAuth `state` parameter, which works across origins;
+      // `sessionStorage` is a same-origin fallback. Declared outside the `try`
+      // so the failure paths can also send the user back to it.
+      const destination =
+        sanitizeReturnTo(searchParams?.get('returnTo') ?? null) ?? readReturnTo() ?? '/dashboard';
+
       try {
         if (!searchParams) {
           setStatus('error');
           setMessage('No search parameters available');
           setTimeout(() => {
-            router.push('/login');
+            router.push(buildLoginHref(destination));
           }, 3000);
           return;
         }
@@ -31,7 +40,7 @@ export default function AuthCallbackPage() {
           setStatus('error');
           setMessage(`Authentication failed: ${error.replace(/_/g, ' ')}`);
           setTimeout(() => {
-            router.push('/login');
+            router.push(buildLoginHref(destination));
           }, 3000);
           return;
         }
@@ -47,9 +56,10 @@ export default function AuthCallbackPage() {
           setStatus('success');
           setMessage(`Successfully logged in with ${provider}!`);
           
-          // Redirect to dashboard
+          // Redirect back to the page the user came from.
           setTimeout(() => {
-            router.push('/dashboard');
+            clearReturnTo();
+            router.push(destination);
           }, 2000);
         } else {
           throw new Error('Failed to fetch user profile after authentication');
@@ -59,7 +69,9 @@ export default function AuthCallbackPage() {
         setStatus('error');
         setMessage('Authentication processing failed. Please try again.');
         setTimeout(() => {
-          router.push('/login');
+          // Carry the destination into the retry, otherwise the user loses the
+          // page they were heading back to.
+          router.push(buildLoginHref(destination));
         }, 3000);
       }
     };
@@ -88,7 +100,7 @@ export default function AuthCallbackPage() {
               </div>
               <h2 className="text-xl font-semibold text-green-900">Authentication Successful</h2>
               <p className="mt-2 text-sm text-gray-600">{message}</p>
-              <p className="mt-1 text-xs text-gray-500">Redirecting to dashboard...</p>
+              <p className="mt-1 text-xs text-gray-500">Redirecting...</p>
             </>
           )}
           

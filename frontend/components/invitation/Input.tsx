@@ -6,10 +6,12 @@ import Link from 'next/link';
 import { Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import type { Photo } from '@/api/photo';
-import type { PhotoUploadResult } from '@/lib/handlePhoto';
+import type { PhotoUploadResult } from '@/lib/usePhotoLibrary';
 import { MAX_GALLERY_IMAGES } from '@/api/invitation';
 import type { InvitationConfig, InvitationPhotos, InvitationScheduleItem, InvitationStoryItem } from '@/api/invitation';
 import type { InvitationTemplate } from '@/data/invitationTemplates';
+import type { InvitationTemplateFormFeatures } from '@/data/invitationConfigs';
+import { buildLoginHref } from '@/lib/authRedirect';
 import songs from '@/public/music/songs.json';
 
 type InvitationTab = 'select' | 'input' | 'preview' | 'share';
@@ -19,6 +21,12 @@ interface InputProps {
 	activeTab: InvitationTab;
 	setActiveTab: (tab: InvitationTab) => void;
 	selectedTemplate: InvitationTemplate;
+	/**
+	 * Optional sections supported by the selected template, derived from that
+	 * template's own config. Sections render from these flags — not from the
+	 * merged `config` — so data from another template never leaks in.
+	 */
+	features: InvitationTemplateFormFeatures;
 	config: InvitationConfig;
 	weddingDate: string;
 	updateField: <K extends keyof InvitationConfig>(key: K, value: InvitationConfig[K]) => void;
@@ -60,6 +68,7 @@ export default function Input({
 	activeTab,
 	setActiveTab,
 	selectedTemplate,
+	features,
 	config,
 	weddingDate,
 	updateField,
@@ -93,6 +102,9 @@ export default function Input({
 
 	const [uploadingPhotoField, setUploadingPhotoField] = useState<keyof InvitationPhotos | null>(null);
 	const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+
+	// Send the user back to this very step after they sign in.
+	const loginHref = buildLoginHref(`/invitation#${activeTab}`);
 
 	const availableSongs: Song[] = songs;
 	const [playingSongUrl, setPlayingSongUrl] = useState<string | null>(null);
@@ -264,7 +276,7 @@ export default function Input({
 	};
 
 	return (
-		<section className={`mx-auto max-w-7xl ${activeTab === 'input' ? '' : 'hidden'}`}>
+		<section id="input" className={`mx-auto max-w-7xl ${activeTab === 'input' ? '' : 'hidden'}`}>
 			<div className="rounded-2xl border border-pink-100 bg-pink-50/70 mt-6 p-4 text-sm text-pink-600">
 				<div className="flex items-center justify-between gap-3">
 					<p className="inline-flex items-center gap-1 font-semibold">
@@ -375,29 +387,29 @@ export default function Input({
 						</div>
 					) : null} */}
 
-					{/* Ảnh trên thiệp (chỉ với mẫu hỗ trợ, VD: Thiệp cưới song long) */}
-					{config.photos ? (
+					{/* Ảnh trên thiệp (mẫu hỗ trợ khai báo `photos` trong config) */}
+					{features.photos ? (
 						<div className="mt-6 border-t border-slate-100 pt-6">
 							<h3 className="text-sm font-semibold text-slate-900">Ảnh Trên Thiệp</h3>
 							<p className="mt-1 text-xs text-slate-500">Tải ảnh lên để hiển thị trong thiệp. Lưu ý: Không hiển thị cho mẫu thiệp tối giản</p>
 							<div className="mt-4 grid gap-3 sm:grid-cols-3">
 								<PhotoUploadField
 									label="Ảnh bìa"
-									value={config.photos.coverPhoto}
+									value={config.photos?.coverPhoto ?? ''}
 									uploading={uploadingPhotoField === 'coverPhoto'}
 									onUpload={(file) => handlePhotoFileUpload('coverPhoto', file)}
 									onRemove={() => handleRemovePhoto(config.photos?.coverPhoto, () => updatePhoto('coverPhoto', ''))}
 								/>
 								<PhotoUploadField
 									label="Ảnh chú rể"
-									value={config.photos.groomPhoto}
+									value={config.photos?.groomPhoto ?? ''}
 									uploading={uploadingPhotoField === 'groomPhoto'}
 									onUpload={(file) => handlePhotoFileUpload('groomPhoto', file)}
 									onRemove={() => handleRemovePhoto(config.photos?.groomPhoto, () => updatePhoto('groomPhoto', ''))}
 								/>
 								<PhotoUploadField
 									label="Ảnh cô dâu"
-									value={config.photos.bridePhoto}
+									value={config.photos?.bridePhoto ?? ''}
 									uploading={uploadingPhotoField === 'bridePhoto'}
 									onUpload={(file) => handlePhotoFileUpload('bridePhoto', file)}
 									onRemove={() => handleRemovePhoto(config.photos?.bridePhoto, () => updatePhoto('bridePhoto', ''))}
@@ -407,9 +419,9 @@ export default function Input({
 									<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
 										<p>{photoUploadError}</p>
 										<div className="mt-2 flex gap-2">
-											<Link href="/login" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+											<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
 											<span className="text-pink-700">/</span>
-											<Link href="/login" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+											<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
 										</div>
 									</div>
 								) : null}
@@ -470,8 +482,8 @@ export default function Input({
 							/>
 						</Field>
 						<div />
-						{config.ceremony.lunar ? (
-							<Field label="Ngày âm lịch (ghi chú, tuỳ chọn)" full>
+						{features.lunar ? (
+							<Field label="Ngày âm lịch (tuỳ chọn)" full>
 								<input
 									placeholder="VD: Nhằm ngày 11 tháng 11 năm Bính Ngọ"
 									value={config.ceremony.lunar}
@@ -499,7 +511,7 @@ export default function Input({
 								className="input"
 							/>
 						</Field>
-						{config.reception.welcomeTime ? (
+						{features.welcomeTime ? (
 							<Field label="Giờ đón khách">
 								<input
 									type="time"
@@ -512,7 +524,7 @@ export default function Input({
 								/>
 							</Field>
 						) : null}
-						{config.reception.startTime ? (
+						{features.startTime ? (
 							<Field label="Giờ khai tiệc">
 								<input
 									required
@@ -581,10 +593,10 @@ export default function Input({
 				</section>
 
 				{/* Lịch trình */}
-				{config.schedule ? (
+				{features.schedule ? (
 					<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 						<h2 className="text-base font-semibold text-slate-900">Lịch Trình Ngày Cưới</h2>
-						<p className="mt-1 text-xs text-slate-500">Thêm từng mốc thời gian trong ngày</p>
+						<p className="mt-1 text-xs text-slate-500">Thêm từng mốc thời gian</p>
 						<div className="mt-4 space-y-2">
 							{config.schedule.map((item, index) => (
 								<div key={index} className="flex items-center gap-2">
@@ -625,7 +637,7 @@ export default function Input({
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Album Ảnh</h2>
 					<p className="mt-1 text-xs text-slate-500">
-						Tải ảnh cưới của bạn lên để hiển thị trong thiệp (tối đa {MAX_GALLERY_IMAGES} ảnh).
+						Hiển thị trong thiệp (tối đa {MAX_GALLERY_IMAGES} ảnh).
 					</p>
 					<div className="mt-4 grid gap-3 sm:grid-cols-3">
 						{config.gallery.map((url, index) => (
@@ -892,12 +904,12 @@ export default function Input({
 				{/* Mừng cưới online */}
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Mừng Cưới Online</h2>
-					{config.gifts ? (
-					<p className="mt-1 text-xs text-slate-500">Tải lên ảnh chụp mã QR chuyển khoản của ngân hàng (tuỳ chọn)</p>
+					{features.qrGift ? (
+					<p className="mt-1 text-xs text-slate-500">Thông tin ngân hàng (tuỳ chọn)</p>
 					) : null}
 					<div className="mt-4 grid gap-6 sm:grid-cols-2">
 						<div>
-							{config.gifts ? (
+							{features.qrGift ? (
 							<>
 							<p className="mb-2 text-xs font-medium text-slate-600">QR chú rể</p>
 							{config.gifts.groom.qrImage ? (
@@ -968,7 +980,7 @@ export default function Input({
 							</div>
 						</div>
 						<div>
-							{config.gifts ? (
+							{features.qrGift ? (
 							<>
 							<p className="mb-2 text-xs font-medium text-slate-600">QR cô dâu</p>
 							{config.gifts.bride.qrImage ? (
@@ -1043,9 +1055,9 @@ export default function Input({
 						<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
 							<p>{qrUploadError}</p>
 							<div className="mt-2 flex gap-2">
-								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
 								<span className="text-pink-700">/</span>
-								<Link href="/login?returnTo=/invitation" className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
 							</div>
 						</div>
 					) : null}
