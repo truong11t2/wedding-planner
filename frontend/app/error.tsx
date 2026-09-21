@@ -29,13 +29,13 @@ export default function Error({ error, reset }: ErrorProps) {
         {/* Error Message */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Something Went Wrong
+            Có lỗi xảy ra
           </h1>
           <p className="text-gray-600 mb-2">
-            We encountered an unexpected error while planning your perfect day.
+            Chúng tôi gặp lỗi không mong muốn trong lúc vận hành.
           </p>
           <p className="text-gray-500 text-sm">
-            Don't worry, we're here to help get you back on track!
+            Đừng lo lắng, chúng tôi sẽ khắc phục sớm nhất có thể!
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export default function Error({ error, reset }: ErrorProps) {
             className="inline-flex items-center justify-center w-full px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors duration-200 shadow-md hover:shadow-lg"
           >
             <RefreshCw className="h-5 w-5 mr-2" />
-            Try Again
+            Thử lại
           </button>
 
           <Link
@@ -64,17 +64,17 @@ export default function Error({ error, reset }: ErrorProps) {
             className="inline-flex items-center justify-center w-full px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
           >
             <Home className="h-5 w-5 mr-2" />
-            Back to Home
+            Về trang chủ
           </Link>
         </div>
 
         {/* Support Info */}
         <div className="mt-8 pt-8 border-t border-gray-200">
           <p className="text-sm text-gray-500 mb-2">
-            Still having trouble?
+            Vẫn gặp vấn đề?
           </p>
           <p className="text-xs text-gray-400">
-            Please refresh the page or contact support if the problem persists.
+            Vui lòng làm mới trang hoặc liên hệ bộ phận hỗ trợ nếu vấn đề vẫn tiếp diễn.
           </p>
         </div>
       </div>

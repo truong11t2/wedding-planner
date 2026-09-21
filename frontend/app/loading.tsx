@@ -23,10 +23,10 @@ export default function Loading() {
         {/* Loading Text */}
         <div className="space-y-2">
           <h2 className="text-2xl font-semibold text-gray-900">
-            Planning Your Perfect Day
+            Đang lên kế hoạch cho ngày cưới của bạn
           </h2>
           <p className="text-gray-600">
-            Just a moment while we prepare everything...
+            Chờ một chút trong khi chúng tôi chuẩn bị mọi thứ...
           </p>
         </div>
 
