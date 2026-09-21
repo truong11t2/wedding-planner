@@ -143,11 +143,18 @@ export function usePhotoLibrary({
 		[photos, showToast]
 	);
 
-	/** Confirms, deletes on the backend and drops the photo from local state. Resolves `true` when deleted. */
+	/**
+	 * Confirms, deletes on the backend and drops the photo from local state.
+	 * Resolves `true` when deleted.
+	 *
+	 * Pass `{ skipConfirm: true }` when the caller already asked — e.g. replacing a
+	 * photo, where the replacement confirmation covers the deletion too.
+	 */
 	const handleDeletePhoto = useCallback(
-		async (photoId: string): Promise<boolean> => {
+		async (photoId: string, { skipConfirm = false }: { skipConfirm?: boolean } = {}): Promise<boolean> => {
 			const photo = photos.find((p) => p.id === photoId);
-			if (!photo || !window.confirm(`Bạn có chắc chắn muốn xóa "${photo.name}"?`)) {
+			if (!photo) return false;
+			if (!skipConfirm && !window.confirm(`Bạn có chắc chắn muốn xóa "${photo.name}"?`)) {
 				return false;
 			}
 

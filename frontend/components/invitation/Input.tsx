@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { Loader2, Plus, Trash2, Upload } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
+import ImageUploadCard, { LabeledImageUploadCard } from '@/components/common/ImageUploadCard';
 import { useAuth } from '@/context/AuthContext';
 import type { Photo } from '@/api/photo';
 import type { PhotoUploadResult } from '@/lib/usePhotoLibrary';
@@ -53,7 +53,7 @@ interface InputProps {
 		description?: string,
 		tags?: string[]
 	) => Promise<PhotoUploadResult>;
-	onDeletePhoto: (photoId: string) => Promise<boolean>;
+	onDeletePhoto: (photoId: string, options?: { skipConfirm?: boolean }) => Promise<boolean>;
 }
 
 /**
@@ -210,16 +210,22 @@ export default function Input({
 	};
 
 
-	const handleRemovePhoto = async (url: string | undefined, clearField: () => void) => {
+	const handleRemovePhoto = async (
+		url: string | undefined,
+		clearField: () => void,
+		options?: { skipConfirm?: boolean }
+	): Promise<boolean> => {
 		const libraryPhoto = photos.find(
 			(photo) => photo.url === url || photo.thumbnailUrl === url || photo.mediumUrl === url
 		);
 
-		if (libraryPhoto && !(await onDeletePhoto(libraryPhoto.id))) {
-			return;
+		if (libraryPhoto && !(await onDeletePhoto(libraryPhoto.id, options))) {
+			// The deletion was cancelled or failed — keep the image in the form.
+			return false;
 		}
 
 		clearField();
+		return true;
 	};
 
 	const handleGalleryFileUpload = async (index: number, file: File | null) => {
@@ -273,6 +279,22 @@ export default function Input({
 		} finally {
 			setUploadingPhotoField(null);
 		}
+	};
+
+	/**
+	 * Gallery replacement must not use the default remove-then-upload flow:
+	 * `removeGalleryRow` drops the array entry, which shifts the index of every
+	 * later slot. Clear the slot in place instead, then upload over it.
+	 */
+	const handleGalleryReplace = async (index: number, file: File) => {
+		const removed = await handleRemovePhoto(
+			config.gallery[index],
+			() => updateGalleryItem(index, ''),
+			{ skipConfirm: true }
+		);
+		if (!removed) return;
+
+		await handleGalleryFileUpload(index, file);
 	};
 
 	return (
@@ -392,39 +414,48 @@ export default function Input({
 						<div className="mt-6 border-t border-slate-100 pt-6">
 							<h3 className="text-sm font-semibold text-slate-900">Ảnh Trên Thiệp</h3>
 							<p className="mt-1 text-xs text-slate-500">Tải ảnh lên để hiển thị trong thiệp. Lưu ý: Không hiển thị cho mẫu thiệp tối giản</p>
-							<div className="mt-4 grid gap-3 sm:grid-cols-3">
-								<PhotoUploadField
+							<div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+								<LabeledImageUploadCard
 									label="Ảnh bìa"
+									variant="square"
 									value={config.photos?.coverPhoto ?? ''}
 									uploading={uploadingPhotoField === 'coverPhoto'}
 									onUpload={(file) => handlePhotoFileUpload('coverPhoto', file)}
-									onRemove={() => handleRemovePhoto(config.photos?.coverPhoto, () => updatePhoto('coverPhoto', ''))}
+									onRemove={(options) => handleRemovePhoto(config.photos?.coverPhoto, () => updatePhoto('coverPhoto', ''), options)}
+									touchRemoveLabel="Xoá"
+									touchReplaceLabel="Đổi"
 								/>
-								<PhotoUploadField
+								<LabeledImageUploadCard
 									label="Ảnh chú rể"
+									variant="square"
 									value={config.photos?.groomPhoto ?? ''}
 									uploading={uploadingPhotoField === 'groomPhoto'}
 									onUpload={(file) => handlePhotoFileUpload('groomPhoto', file)}
-									onRemove={() => handleRemovePhoto(config.photos?.groomPhoto, () => updatePhoto('groomPhoto', ''))}
+									onRemove={(options) => handleRemovePhoto(config.photos?.groomPhoto, () => updatePhoto('groomPhoto', ''), options)}
+									touchRemoveLabel="Xoá"
+									touchReplaceLabel="Đổi"
 								/>
-								<PhotoUploadField
+								<LabeledImageUploadCard
 									label="Ảnh cô dâu"
+									variant="square"
 									value={config.photos?.bridePhoto ?? ''}
 									uploading={uploadingPhotoField === 'bridePhoto'}
 									onUpload={(file) => handlePhotoFileUpload('bridePhoto', file)}
-									onRemove={() => handleRemovePhoto(config.photos?.bridePhoto, () => updatePhoto('bridePhoto', ''))}
+									onRemove={(options) => handleRemovePhoto(config.photos?.bridePhoto, () => updatePhoto('bridePhoto', ''), options)}
+									touchRemoveLabel="Xoá"
+									touchReplaceLabel="Đổi"
 								/>
 							</div>
-{photoUploadError ? (
-									<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
-										<p>{photoUploadError}</p>
-										<div className="mt-2 flex gap-2">
-											<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
-											<span className="text-pink-700">/</span>
-											<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
-										</div>
+							{photoUploadError ? (
+								<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
+									<p>{photoUploadError}</p>
+									<div className="mt-2 flex gap-2">
+										<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+										<span className="text-pink-700">/</span>
+										<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
 									</div>
-								) : null}
+								</div>
+							) : null}
 						</div>
 					) : null}
 				</section>
@@ -639,76 +670,32 @@ export default function Input({
 					<p className="mt-1 text-xs text-slate-500">
 						Hiển thị trong thiệp (tối đa {MAX_GALLERY_IMAGES} ảnh).
 					</p>
-					<div className="mt-4 grid gap-3 sm:grid-cols-3">
+					<div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
 						{config.gallery.map((url, index) => (
-							<div key={index} className="relative">
-								{url ? (
-									<div className="group relative aspect-3/4 w-full overflow-hidden rounded-xl border border-slate-200">
-										<Image
-											src={url}
-											alt={`Ảnh cưới ${index + 1}`}
-											fill
-											sizes="(max-width: 640px) 100vw, 33vw"
-											className="object-cover"
-										/>
-										<div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
-											<label className="cursor-pointer rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white">
-												<Upload className="h-4 w-4" />
-												<input
-													type="file"
-													accept="image/*"
-													className="hidden"
-													disabled={uploadingGalleryIndex === index}
-													onChange={(e) => handleGalleryFileUpload(index, e.target.files?.[0] ?? null)}
-												/>
-											</label>
-											<button
-												type="button"
-												onClick={() => removeGalleryRow(index)}
-												className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
-											>
-												<Trash2 className="h-4 w-4" />
-											</button>
-										</div>
-										{uploadingGalleryIndex === index ? (
-											<div className="absolute inset-0 flex items-center justify-center bg-black/40">
-												<Loader2 className="h-6 w-6 animate-spin text-white" />
-											</div>
-										) : null}
-									</div>
-								) : (
-									<label className="flex aspect-3/4 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 text-slate-400 transition hover:border-pink-300 hover:text-pink-500">
-										{uploadingGalleryIndex === index ? (
-											<Loader2 className="h-6 w-6 animate-spin" />
-										) : (
-											<>
-												<Upload className="h-6 w-6" />
-												<span className="text-xs font-medium">Tải ảnh lên</span>
-											</>
-										)}
-										<input
-											type="file"
-											accept="image/*"
-											className="hidden"
-											disabled={uploadingGalleryIndex === index}
-											onChange={(e) => handleGalleryFileUpload(index, e.target.files?.[0] ?? null)}
-										/>
-									</label>
-								)}
-								{url ? (
-									<button
-										type="button"
-										onClick={() => removeGalleryRow(index)}
-										className="mt-1.5 inline-flex w-full items-center justify-center gap-1 rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-500 transition hover:border-pink-300 hover:text-pink-600 sm:hidden"
-									>
-										<Trash2 className="h-3.5 w-3.5" />
-										Xoá
-									</button>
-								) : null}
-							</div>
+							<ImageUploadCard
+								key={index}
+								value={url}
+								alt={`Ảnh cưới ${index + 1}`}
+								variant="square"
+								uploading={uploadingGalleryIndex === index}
+								onUpload={(file) => handleGalleryFileUpload(index, file)}
+								onRemove={() => removeGalleryRow(index)}
+								onReplace={(file) => handleGalleryReplace(index, file)}
+								touchRemoveLabel="Xoá"
+								touchReplaceLabel="Đổi"
+							/>
 						))}
 					</div>
-					{galleryUploadError ? <p className="mt-3 text-xs text-pink-600">{galleryUploadError}</p> : null}
+					{galleryUploadError ? (
+						<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
+							<p>{galleryUploadError}</p>
+							<div className="mt-2 flex gap-2">
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+								<span className="text-pink-700">/</span>
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+							</div>
+						</div>
+					) : null}
 					<p className="mt-3 text-xs text-slate-500">
 						{config.gallery.length}/{MAX_GALLERY_IMAGES} ảnh
 					</p>
@@ -912,59 +899,18 @@ export default function Input({
 							{features.qrGift ? (
 							<>
 							<p className="mb-2 text-xs font-medium text-slate-600">QR chú rể</p>
-							{config.gifts.groom.qrImage ? (
-								<div className="group relative h-32 w-32 overflow-hidden rounded-lg border border-slate-200">
-									<Image
-										src={config.gifts.groom.qrImage}
-										alt="QR chú rể"
-										fill
-										sizes="128px"
-										className="object-cover"
-									/>
-									<div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
-										<label className="cursor-pointer rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white">
-											<Upload className="h-4 w-4" />
-											<input
-												type="file"
-												accept="image/*"
-												className="hidden"
-												disabled={uploadingQrFor === 'groom'}
-												onChange={(e) => handleQrImageUpload('groom', e.target.files?.[0] ?? null)}
-											/>
-										</label>
-										<button
-											type="button"
-											onClick={() => handleRemovePhoto(config.gifts?.groom?.qrImage, () => updateGift('groom', 'qrImage', ''))}
-											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
-										>
-											<Trash2 className="h-4 w-4" />
-										</button>
-									</div>
-									{uploadingQrFor === 'groom' ? (
-										<div className="absolute inset-0 flex items-center justify-center bg-black/40">
-											<Loader2 className="h-5 w-5 animate-spin text-white" />
-										</div>
-									) : null}
-								</div>
-							) : (
-								<label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 text-slate-400 transition hover:border-pink-300 hover:text-pink-500">
-									{uploadingQrFor === 'groom' ? (
-										<Loader2 className="h-5 w-5 animate-spin" />
-									) : (
-										<>
-											<Upload className="h-5 w-5" />
-											<span className="text-[11px] font-medium">Tải ảnh QR</span>
-										</>
-									)}
-									<input
-										type="file"
-										accept="image/*"
-										className="hidden"
-										disabled={uploadingQrFor === 'groom'}
-										onChange={(e) => handleQrImageUpload('groom', e.target.files?.[0] ?? null)}
-									/>
-								</label>
-							)}
+							<ImageUploadCard
+								variant="square"
+								value={config.gifts.groom.qrImage}
+								alt="QR chú rể"
+								sizes="128px"
+								placeholderText="Tải ảnh QR"
+								uploading={uploadingQrFor === 'groom'}
+								onUpload={(file) => handleQrImageUpload('groom', file)}
+								onRemove={(options) => handleRemovePhoto(config.gifts?.groom?.qrImage, () => updateGift('groom', 'qrImage', ''), options)}
+								touchRemoveLabel="Xoá"
+								touchReplaceLabel="Đổi"
+							/>
 							</>
 							) : null}
 							<div className="mt-3 grid gap-2">
@@ -983,59 +929,18 @@ export default function Input({
 							{features.qrGift ? (
 							<>
 							<p className="mb-2 text-xs font-medium text-slate-600">QR cô dâu</p>
-							{config.gifts.bride.qrImage ? (
-								<div className="group relative h-32 w-32 overflow-hidden rounded-lg border border-slate-200">
-									<Image
-										src={config.gifts.bride.qrImage}
-										alt="QR cô dâu"
-										fill
-										sizes="128px"
-										className="object-cover"
-									/>
-									<div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
-										<label className="cursor-pointer rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white">
-											<Upload className="h-4 w-4" />
-											<input
-												type="file"
-												accept="image/*"
-												className="hidden"
-												disabled={uploadingQrFor === 'bride'}
-												onChange={(e) => handleQrImageUpload('bride', e.target.files?.[0] ?? null)}
-											/>
-										</label>
-										<button
-											type="button"
-											onClick={() => handleRemovePhoto(config.gifts?.bride?.qrImage, () => updateGift('bride', 'qrImage', ''))}
-											className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
-										>
-											<Trash2 className="h-4 w-4" />
-										</button>
-									</div>
-									{uploadingQrFor === 'bride' ? (
-										<div className="absolute inset-0 flex items-center justify-center bg-black/40">
-											<Loader2 className="h-5 w-5 animate-spin text-white" />
-										</div>
-									) : null}
-								</div>
-							) : (
-								<label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 text-slate-400 transition hover:border-pink-300 hover:text-pink-500">
-									{uploadingQrFor === 'bride' ? (
-										<Loader2 className="h-5 w-5 animate-spin" />
-									) : (
-										<>
-											<Upload className="h-5 w-5" />
-											<span className="text-[11px] font-medium">Tải ảnh QR</span>
-										</>
-									)}
-									<input
-										type="file"
-										accept="image/*"
-										className="hidden"
-										disabled={uploadingQrFor === 'bride'}
-										onChange={(e) => handleQrImageUpload('bride', e.target.files?.[0] ?? null)}
-									/>
-								</label>
-							)}
+							<ImageUploadCard
+								variant="square"
+								value={config.gifts.bride.qrImage}
+								alt="QR cô dâu"
+								sizes="128px"
+								placeholderText="Tải ảnh QR"
+								uploading={uploadingQrFor === 'bride'}
+								onUpload={(file) => handleQrImageUpload('bride', file)}
+								onRemove={(options) => handleRemovePhoto(config.gifts?.bride?.qrImage, () => updateGift('bride', 'qrImage', ''), options)}
+								touchRemoveLabel="Xoá"
+								touchReplaceLabel="Đổi"
+							/>
 							</>
 							) : null}
 							<div className="mt-3 grid gap-2">
@@ -1076,69 +981,3 @@ function Field({ label, children, full }: { label: string; children: React.React
 	);
 }
 
-function PhotoUploadField({
-	label,
-	value,
-	uploading,
-	onUpload,
-	onRemove
-}: {
-	label: string;
-	value: string;
-	uploading: boolean;
-	onUpload: (file: File | null) => void;
-	onRemove: () => void;
-}) {
-	return (
-		<div>
-			<p className="mb-2 text-xs font-medium text-slate-600">{label}</p>
-			{value ? (
-				<div className="group relative aspect-3/4 w-full overflow-hidden rounded-xl border border-slate-200">
-					<Image src={value} alt={label} fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" />
-					<div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
-						<label className="cursor-pointer rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white">
-							<Upload className="h-4 w-4" />
-							<input
-								type="file"
-								accept="image/*"
-								className="hidden"
-								disabled={uploading}
-								onChange={(e) => onUpload(e.target.files?.[0] ?? null)}
-							/>
-						</label>
-						<button
-							type="button"
-							onClick={onRemove}
-							className="rounded-lg bg-white/90 p-2 text-slate-700 transition hover:bg-white hover:text-pink-600"
-						>
-							<Trash2 className="h-4 w-4" />
-						</button>
-					</div>
-					{uploading ? (
-						<div className="absolute inset-0 flex items-center justify-center bg-black/40">
-							<Loader2 className="h-6 w-6 animate-spin text-white" />
-						</div>
-					) : null}
-				</div>
-			) : (
-				<label className="flex aspect-3/4 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 text-slate-400 transition hover:border-pink-300 hover:text-pink-500">
-					{uploading ? (
-						<Loader2 className="h-6 w-6 animate-spin" />
-					) : (
-						<>
-							<Upload className="h-6 w-6" />
-							<span className="text-xs font-medium">Tải ảnh lên</span>
-						</>
-					)}
-					<input
-						type="file"
-						accept="image/*"
-						className="hidden"
-						disabled={uploading}
-						onChange={(e) => onUpload(e.target.files?.[0] ?? null)}
-					/>
-				</label>
-			)}
-		</div>
-	);
-}

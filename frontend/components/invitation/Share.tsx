@@ -68,7 +68,7 @@ export default function Share({
 						{!isLoggedIn ? (
 							<div className="mt-3 flex items-center justify-center gap-3">
 								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
-								<span className="text-pink-700">or</span>
+								<span className="text-pink-700">/</span>
 								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
 							</div>
 						) : null}

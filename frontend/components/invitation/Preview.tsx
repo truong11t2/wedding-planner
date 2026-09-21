@@ -39,20 +39,15 @@ export default function Preview({
 						Đang tải thiệp cưới...
 					</div>
 				) : invitationTabError ? (
-					<div className="flex min-h-[60vh] items-center justify-center px-6">
-						<div className="max-w-md rounded-2xl border border-pink-100 bg-pink-50 p-6 text-center text-sm text-pink-700">
-							<p className="font-semibold">{invitationTabError}</p>
-							{!isLoggedIn ? (
-								<div className="mt-4 flex items-center justify-center gap-3">
-									<Link href={loginHref} className="rounded-lg bg-pink-600 px-4 py-2 font-semibold text-white transition hover:bg-pink-700">
-										Đăng nhập
-									</Link>
-									<Link href={loginHref} className="rounded-lg border border-pink-300 bg-white px-4 py-2 font-semibold text-pink-700 transition hover:bg-pink-50">
-										Đăng ký
-									</Link>
-								</div>
-							) : null}
-						</div>
+					<div className="rounded-xl border border-pink-100 bg-pink-50 p-4 text-center text-sm text-pink-600">
+						<p className="font-medium">{invitationTabError}</p>
+						{!isLoggedIn ? (
+							<div className="mt-3 flex items-center justify-center gap-3">
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+								<span className="text-pink-700">/</span>
+								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+							</div>
+						) : null}
 					</div>
 				) : invitationTabUrl ? (
 					<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
