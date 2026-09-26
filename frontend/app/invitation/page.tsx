@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import {
 	invitationTemplates,
@@ -17,7 +17,8 @@ import {
 	type InvitationConfig,
 	type InvitationPhotos,
 	type InvitationScheduleItem,
-	type InvitationStoryItem
+	type InvitationStoryItem,
+	type MyInvitation
 } from '@/api/invitation';
 import { BACKEND_ORIGIN } from '@/api/config';
 import { usePhotoLibrary } from '@/lib/usePhotoLibrary';
@@ -25,11 +26,11 @@ import Input from '@/components/invitation/Input';
 import Select from '@/components/invitation/Select';
 import Preview from '@/components/invitation/Preview';
 import Share from '@/components/invitation/Share';
+import Toast from '@/components/common/Toast';
 
 
 
 const defaultTemplate = defaultInvitationTemplate;
-const INVITATION_DRAFT_STORAGE_KEY = 'invitation-builder-draft-v1';
 
 /**
  * The four builder steps. Each one is also its own anchor (`#select`, `#input`,
@@ -80,12 +81,6 @@ function storeTab(tab: InvitationTab): void {
 	}
 }
 
-type InvitationDraft = {
-	selectedTemplateId: string;
-	config: InvitationConfig;
-	weddingDate: string;
-};
-
 /**
  * Returns a fresh deep-cloned default config for the given template.
  * Each template has its own default config (see @/data/invitationConfigs),
@@ -93,28 +88,6 @@ type InvitationDraft = {
  */
 function buildDefaultConfig(templateId: string = defaultTemplate.id): InvitationConfig {
 	return getInvitationConfig(templateId);
-}
-
-function loadInvitationDraft(): InvitationDraft | null {
-	if (typeof window === 'undefined') {
-		return null;
-	}
-
-	try {
-		const rawDraft = window.localStorage.getItem(INVITATION_DRAFT_STORAGE_KEY);
-		if (!rawDraft) {
-			return null;
-		}
-
-		const parsed = JSON.parse(rawDraft) as InvitationDraft;
-		if (!parsed || !parsed.config || !parsed.weddingDate) {
-			return null;
-		}
-
-		return parsed;
-	} catch {
-		return null;
-	}
 }
 
 /** Default config of the initial template — used to seed the form on first load. */
@@ -162,17 +135,27 @@ export default function InvitationPage() {
 	const [invitationTabError, setInvitationTabError] = useState<string | null>(null);
 
 	const [isLoadingExisting, setIsLoadingExisting] = useState(true);
-	// Bumped only when the user edits a field in `Input.tsx`, so the draft is
-	// never persisted by programmatic updates (restoring the draft, loading the
-	// saved invitation, switching template).
-	const [draftRevision, setDraftRevision] = useState(0);
-	const draftRef = useRef<InvitationDraft>({ selectedTemplateId, config, weddingDate });
-
-	// Keep the latest values available to the persistence effect below without
-	// re-triggering it on every state change.
-	useEffect(() => {
-		draftRef.current = { selectedTemplateId, config, weddingDate };
-	}, [selectedTemplateId, config, weddingDate]);
+	// "Lưu" state. The button runs the same request as the "3. Xem thiệp" step;
+	// success/failure is reported through the toast below.
+	const [isSavingInvitation, setIsSavingInvitation] = useState(false);
+	const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'error' }>({
+		show: false,
+		message: '',
+		type: 'success'
+	});
+	const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
+		setToast({ show: true, message, type });
+	}, []);
+	const hideToast = useCallback(() => {
+		setToast((prev) => ({ ...prev, show: false }));
+	}, []);
+	// The invitation is read from the database once per login and again every
+	// time the user opens the "Nhập thông tin" step.
+	const hasLoadedRef = useRef(false);
+	const previousTabRef = useRef<InvitationTab>('select');
+	// The request that stores the template picked in step 1. The step-2 refresh
+	// awaits it, so a quick step 1 → step 2 click cannot read the old template.
+	const templateSaveRef = useRef<Promise<unknown> | null>(null);
 
 	// Resolve which step to open. Runs after mount so the URL has settled: an
 	// explicit anchor wins (deep links), otherwise fall back to the step the user
@@ -219,91 +202,99 @@ export default function InvitationPage() {
 		}
 	}, [activeTab]);
 
-	// Persist the draft only after a user edit inside the input form.
+	// The database is the single source of truth for the invitation — nothing is
+	// kept in localStorage.
+
+	/** Copies an invitation fetched from the backend into the builder state. */
+	const applyInvitation = useCallback((invitation: MyInvitation) => {
+		if (invitation.templateId) {
+			setSelectedTemplateId(invitation.templateId);
+		}
+		if (invitation.config) {
+			const loaded = invitation.config;
+			const isoDate = loaded.weddingDateISO ? loaded.weddingDateISO.split('T')[0] : '';
+			setConfig({
+				...loaded,
+				reception: { ...loaded.reception, date: loaded.reception?.date || isoDate }
+			});
+			if (isoDate) {
+				setWeddingDate(isoDate);
+			}
+		} else if (invitation.templateId) {
+			// No saved config — fall back to the selected template's defaults.
+			const templateDefaults = buildDefaultConfig(invitation.templateId);
+			setConfig(templateDefaults);
+			const isoDate = templateDefaults.weddingDateISO.split('T')[0];
+			if (isoDate) {
+				setWeddingDate(isoDate);
+			}
+		}
+		if (invitation.publicUrl) {
+			const loadedUrl = `${BACKEND_ORIGIN}${invitation.publicUrl}?t=${Date.now()}`;
+			setPreviewUrl(loadedUrl);
+			setPreviewFileName(invitation.publicUrl.split('/').pop() ?? null);
+			setInvitationTabUrl(loadedUrl);
+		}
+		setGeneratedLinks(
+			(invitation.guestLinks || []).map((link) => ({
+				...link,
+				url: new URL(link.url, BACKEND_ORIGIN).toString()
+			}))
+		);
+	}, []);
+
+	/** Fetches the current user's invitation. Never rejects. */
+	const fetchInvitation = useCallback(async () => {
+		try {
+			const response = await getMyInvitation();
+			if (!response.success || !response.invitation) return;
+			applyInvitation(response.invitation);
+		} catch {
+			// No existing invitation yet (or fetch failed) — keep the current form.
+		}
+	}, [applyInvitation]);
+
+	// Initial load + every login state change. This effect is the ONLY place that
+	// resolves the full-page loader, and it deliberately does not depend on
+	// `activeTab`: resolving the landing step (e.g. `#preview` after a login
+	// redirect) must not cancel the request that is still in flight, because the
+	// cancelled run would then also skip clearing `isLoadingExisting` and leave
+	// the spinner on screen forever.
 	useEffect(() => {
-		if (draftRevision === 0 || typeof window === 'undefined') {
+		if (!isLoggedIn) {
+			setIsLoadingExisting(false);
+			// Logging back in must re-read the invitation, so forget the load.
+			hasLoadedRef.current = false;
 			return;
 		}
 
-		window.localStorage.setItem(INVITATION_DRAFT_STORAGE_KEY, JSON.stringify(draftRef.current));
-	}, [draftRevision]);
+		hasLoadedRef.current = true;
 
-	// Pre-fill the form on mount. The local draft — written only when the user
-	// edits the form — has the highest priority. The saved invitation from the
-	// database is loaded only when no draft exists, so a user who typed data
-	// while logged out keeps their input after logging in.
-	useEffect(() => {
+		// Only a logout (or unmount) invalidates this run.
 		let cancelled = false;
-
-		const loadInvitationState = async () => {
-			const savedDraft = loadInvitationDraft();
-			if (savedDraft) {
-				setSelectedTemplateId(savedDraft.selectedTemplateId || defaultTemplate.id);
-				setConfig(savedDraft.config);
-				setWeddingDate(savedDraft.weddingDate);
+		void fetchInvitation().finally(() => {
+			if (!cancelled) {
 				setIsLoadingExisting(false);
-				return;
 			}
-
-			if (!isLoggedIn) {
-				setIsLoadingExisting(false);
-				return;
-			}
-
-			try {
-				const response = await getMyInvitation();
-				if (!cancelled && response.success && response.invitation) {
-					const { invitation } = response;
-					if (invitation.templateId) {
-						setSelectedTemplateId(invitation.templateId);
-					}
-					if (invitation.config) {
-						const loaded = invitation.config;
-						const isoDate = loaded.weddingDateISO ? loaded.weddingDateISO.split('T')[0] : '';
-						setConfig({
-							...loaded,
-							reception: { ...loaded.reception, date: loaded.reception?.date || isoDate }
-						});
-						if (isoDate) {
-							setWeddingDate(isoDate);
-						}
-					} else if (invitation.templateId) {
-						// No saved config — fall back to the selected template's defaults.
-						const templateDefaults = buildDefaultConfig(invitation.templateId);
-						setConfig(templateDefaults);
-						const isoDate = templateDefaults.weddingDateISO.split('T')[0];
-						if (isoDate) {
-							setWeddingDate(isoDate);
-						}
-					}
-					if (invitation.publicUrl) {
-						const loadedUrl = `${BACKEND_ORIGIN}${invitation.publicUrl}?t=${Date.now()}`;
-						setPreviewUrl(loadedUrl);
-						setPreviewFileName(invitation.publicUrl.split('/').pop() ?? null);
-						setInvitationTabUrl(loadedUrl);
-					}
-					setGeneratedLinks(
-						(invitation.guestLinks || []).map((link) => ({
-							...link,
-							url: new URL(link.url, BACKEND_ORIGIN).toString()
-						}))
-					);
-				}
-			} catch {
-				// No existing invitation yet (or fetch failed) — silently keep defaults.
-			} finally {
-				if (!cancelled) {
-					setIsLoadingExisting(false);
-				}
-			}
-		};
-
-		loadInvitationState();
+		});
 
 		return () => {
 			cancelled = true;
 		};
-	}, [isLoggedIn]);
+	}, [isLoggedIn, fetchInvitation]);
+
+	// Opening the "Nhập thông tin" step re-reads the database, so data saved on
+	// another device shows up here. The template picked in step 1 is stored by
+	// `handleSelectTemplate`, so this read returns the up-to-date choice once that
+	// request has finished.
+	useEffect(() => {
+		const enteredInput = previousTabRef.current !== 'input' && activeTab === 'input';
+		previousTabRef.current = activeTab;
+
+		if (!enteredInput || !hasLoadedRef.current) return;
+
+		void (templateSaveRef.current ?? Promise.resolve()).then(() => fetchInvitation());
+	}, [activeTab, fetchInvitation]);
 
 	const selectedTemplate =
 		invitationTemplates.find((template) => template.id === selectedTemplateId) ?? defaultTemplate;
@@ -397,53 +388,73 @@ export default function InvitationPage() {
 	};
 
 	/**
-	 * Switching templates tries to load saved data from database first.
-	 * If saved data exists, merges it with the new template's defaults.
-	 * If no saved data, uses user's current input merged with new template's defaults.
-	 * This preserves user-entered information when switching templates.
+	 * Switching templates loads the stored invitation (when there is one) and
+	 * merges it with the new template's defaults, so user-entered information is
+	 * kept. The choice is then written to the database straight away — the
+	 * template is stored nowhere else, and the other steps read the form back from
+	 * there.
 	 */
 	const handleSelectTemplate = async (templateId: string) => {
 		if (templateId === selectedTemplateId) return;
-		
+
+		let nextConfig = config;
+		let nextWeddingDate = weddingDate;
+
 		try {
 			// Try to load saved invitation from database
 			const response = await getMyInvitation();
-			let nextConfig = config;
-			let nextWeddingDate = weddingDate;
 
 			if (response.success && response.invitation?.config) {
 				// Use saved config from database
 				nextConfig = response.invitation.config;
 				nextWeddingDate = response.invitation.config.weddingDateISO?.split('T')[0] || weddingDate;
 			}
-
-			// Merge with new template defaults, preserving user data
-			const { config: mergedConfig, weddingDate: mergedDate } = mergeConfigWithDefaults(
-				nextConfig,
-				nextWeddingDate,
-				templateId
-			);
-
-			setSelectedTemplateId(templateId);
-			setConfig(mergedConfig);
-			setWeddingDate(mergedDate);
 		} catch {
-			// If database fetch fails, just merge current state with new template defaults
-			const { config: mergedConfig, weddingDate: mergedDate } = mergeConfigWithDefaults(
-				config,
-				weddingDate,
-				templateId
-			);
-
-			setSelectedTemplateId(templateId);
-			setConfig(mergedConfig);
-			setWeddingDate(mergedDate);
+			// No stored invitation (or the fetch failed) — merge the current form.
 		}
+
+		// Merge with new template defaults, preserving user data
+		const { config: mergedConfig, weddingDate: mergedDate } = mergeConfigWithDefaults(
+			nextConfig,
+			nextWeddingDate,
+			templateId
+		);
+
+		setSelectedTemplateId(templateId);
+		setConfig(mergedConfig);
+		setWeddingDate(mergedDate);
 
 		// Always reset preview/share on template change
 		setPreviewUrl(null);
 		setPreviewFileName(null);
 		setShareUrl(null);
+
+		templateSaveRef.current = saveSelectedTemplate(templateId, mergedConfig, mergedDate);
+		await templateSaveRef.current;
+	};
+
+	/**
+	 * Stores the picked template (plus the config it starts from) in the database.
+	 * The render endpoint is the existing upsert, so no new API is needed.
+	 */
+	const saveSelectedTemplate = async (
+		templateId: string,
+		nextConfig: InvitationConfig,
+		nextWeddingDate: string
+	): Promise<void> => {
+		if (!isLoggedIn) return;
+
+		try {
+			await renderInvitationPreview(
+				templateId,
+				buildFinalConfig({ config: nextConfig, weddingDate: nextWeddingDate })
+			);
+		} catch (error) {
+			showToast(
+				error instanceof Error ? error.message : 'Không thể lưu mẫu thiệp. Vui lòng thử lại.',
+				'error'
+			);
+		}
 	};
 
 	const canPreview = useMemo(() => {
@@ -460,13 +471,9 @@ export default function InvitationPage() {
 	}, [config, weddingDate]);
 
 	/**
-	 * Applies a change coming from the form in `Input.tsx` and flags the browser
-	 * draft as dirty so it gets persisted. Programmatic updates (restoring the
-	 * draft, loading the saved invitation, switching template) call `setConfig`
-	 * directly, so they never overwrite the stored draft.
+	 * Applies a change coming from the form in `Input.tsx`.
 	 */
 	const applyInputChange = (updater: (prev: InvitationConfig) => InvitationConfig) => {
-		setDraftRevision((revision) => revision + 1);
 		setConfig(updater);
 	};
 
@@ -569,31 +576,44 @@ export default function InvitationPage() {
 		updateField('ceremony', { ...config.ceremony, dateLabel: formatDateLabel(value) } as InvitationConfig['ceremony']);
 	};
 
-	const buildFinalConfig = (): InvitationConfig => {
-		const startTime = config.reception.startTime || '18:00';
+	const buildFinalConfig = (overrides?: {
+		config?: InvitationConfig;
+		weddingDate?: string;
+	}): InvitationConfig => {
+		const sourceConfig = overrides?.config ?? config;
+		const sourceWeddingDate = overrides?.weddingDate ?? weddingDate;
+		const startTime = sourceConfig.reception.startTime || '18:00';
 		return {
-			...config,
-			reception: { ...config.reception, date: config.reception.date || weddingDate },
-			weddingDateISO: weddingDate ? `${weddingDate}T${startTime}:00` : config.weddingDateISO,
-			schedule: config.schedule.filter((item) => item.time.trim() || item.label.trim()),
-			gallery: config.gallery.map((url) => url.trim()).filter(Boolean).slice(0, MAX_GALLERY_IMAGES)
+			...sourceConfig,
+			reception: { ...sourceConfig.reception, date: sourceConfig.reception.date || sourceWeddingDate },
+			weddingDateISO: sourceWeddingDate ? `${sourceWeddingDate}T${startTime}:00` : sourceConfig.weddingDateISO,
+			schedule: sourceConfig.schedule.filter((item) => item.time.trim() || item.label.trim()),
+			gallery: sourceConfig.gallery.map((url) => url.trim()).filter(Boolean).slice(0, MAX_GALLERY_IMAGES)
 		};
 	};
 
-	const loadInvitationTabPreview = async () => {
+	/**
+	 * Sends the current form to the render endpoint — the exact request the
+	 * "3. Xem thiệp" step makes. The backend stores the invitation (including the
+	 * uploaded photo URLs) as part of that call, so it doubles as "save".
+	 * Returns the error message on failure, `null` on success.
+	 */
+	const loadInvitationTabPreview = async (): Promise<string | null> => {
 		setInvitationTabError(null);
 		setInvitationTabLoading(true);
 
 		if (!isLoggedIn) {
-			setInvitationTabError('Vui lòng đăng nhập hoặc đăng ký để xem thiệp đã tạo.');
+			const message = 'Vui lòng đăng nhập hoặc đăng ký để xem thiệp đã tạo.';
+			setInvitationTabError(message);
 			setInvitationTabLoading(false);
-			return;
+			return message;
 		}
 
 		if (!canPreview) {
-			setInvitationTabError('Vui lòng điền đủ thông tin để xem thiệp.');
+			const message = 'Vui lòng điền đủ thông tin để xem thiệp.';
+			setInvitationTabError(message);
 			setInvitationTabLoading(false);
-			return;
+			return message;
 		}
 
 		try {
@@ -603,8 +623,11 @@ export default function InvitationPage() {
 			setPreviewUrl(fullUrl);
 			setPreviewFileName(response.htmlFileName);
 			setInvitationTabUrl(fullUrl);
+			return null;
 		} catch (error) {
-			setInvitationTabError(error instanceof Error ? error.message : 'Không thể tải thiệp cưới. Vui lòng thử lại.');
+			const message = error instanceof Error ? error.message : 'Không thể tải thiệp cưới. Vui lòng thử lại.';
+			setInvitationTabError(message);
+			return message;
 		} finally {
 			setInvitationTabLoading(false);
 		}
@@ -615,6 +638,28 @@ export default function InvitationPage() {
 		if (activeTab !== 'preview') return;
 		void loadInvitationTabPreview();
 	}, [activeTab, isLoggedIn, selectedTemplate.id, canPreview]);
+
+	/**
+	 * "Lưu": runs exactly the same request the "3. Xem thiệp" step runs, which
+	 * stores the invitation in the database. Nothing is kept in localStorage, so
+	 * the saved data is what the form is loaded from — on any device.
+	 */
+	const handleSaveInvitation = async () => {
+		if (!isLoggedIn) {
+			showToast('Vui lòng đăng nhập hoặc đăng ký để lưu thiệp cưới của bạn.', 'error');
+			return;
+		}
+
+		setIsSavingInvitation(true);
+		const errorMessage = await loadInvitationTabPreview();
+		setIsSavingInvitation(false);
+
+		if (errorMessage) {
+			showToast(errorMessage, 'error');
+		} else {
+			showToast('Đã lưu thông tin thiệp cưới.', 'success');
+		}
+	};
 
 	const handleGenerateLink = async () => {
 		setSaveError(null);
@@ -758,6 +803,8 @@ export default function InvitationPage() {
 			features={templateFeatures}
 			config={config}
 			weddingDate={weddingDate}
+			isSaving={isSavingInvitation}
+			onSave={handleSaveInvitation}
 			updateField={updateField}
 			updateGroomParent={updateGroomParent}
 			updateBrideParent={updateBrideParent}
@@ -804,6 +851,9 @@ export default function InvitationPage() {
 			handleCopyLink={handleCopyLink}
 			handleDeleteLink={handleDeleteLink}
 		/>
+
+		{/* Success/failure feedback for the "Lưu" button in the input step. */}
+		<Toast message={toast.message} type={toast.type} show={toast.show} onClose={hideToast} />
 
 		<style jsx global>{`
 			.input {

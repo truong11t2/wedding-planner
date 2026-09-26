@@ -25,6 +25,24 @@ function slugify(text) {
     .replace(/(^-|-$)+/g, '');
 }
 
+const SLUG_SUFFIX_LENGTH = 8;
+const SLUG_SUFFIX_PATTERN = new RegExp(`-[a-z0-9]{${SLUG_SUFFIX_LENGTH}}$`);
+
+// Slug base derived from the couple's short names, e.g. "minh-anh".
+function slugBase(groomName, brideName) {
+  return slugify([groomName, brideName].filter(Boolean).join('-')) || 'thiep-cuoi';
+}
+
+// `${base}-${random}`, retried until no other invitation owns it.
+async function generateUniqueSlug(base, invitationId) {
+  for (;;) {
+    const slug = `${base}-${generateRandomId(SLUG_SUFFIX_LENGTH)}`;
+    // eslint-disable-next-line no-await-in-loop
+    const clash = await Invitation.findOne({ where: { slug } });
+    if (!clash || clash.id === invitationId) return slug;
+  }
+}
+
 const TEMPLATES_DIR = path.join(__dirname, '../../public/templates/invitation');
 const INVITATIONS_DIR = path.join(__dirname, '../../public/invitations');
 const DEFAULT_TEMPLATE_ID = 'minimal-red';
@@ -93,15 +111,22 @@ async function upsertInvitationRecord(userId, { templateId, htmlFileName, public
     invitation.config = config;
     invitation.isPaid = isPaid;
     invitation.expiresAt = expiresAt;
+
+    // The slug mirrors `<groomShort>-<brideShort>`: renaming the couple
+    // re-derives it and re-points the saved guest links to the new URL.
+    const nextSlugBase = slugBase(resolvedGroomName, resolvedBrideName);
+    if (nextSlugBase !== invitation.slug.replace(SLUG_SUFFIX_PATTERN, '')) {
+      const previousPath = `/i/${invitation.slug}`;
+      invitation.slug = await generateUniqueSlug(nextSlugBase, invitation.id);
+      invitation.guestLinks = (invitation.guestLinks || []).map((link) => ({
+        ...link,
+        url: link.url.replace(previousPath, `/i/${invitation.slug}`)
+      }));
+    }
+
     await invitation.save();
   } else {
-    const baseSlug = slugify(`${resolvedGroomName}-${resolvedBrideName}`) || 'thiep-cuoi';
-    let slug = `${baseSlug}-${generateRandomId()}`;
-
-    // eslint-disable-next-line no-await-in-loop
-    while (await Invitation.findOne({ where: { slug } })) {
-      slug = `${baseSlug}-${generateRandomId()}`;
-    }
+    const slug = await generateUniqueSlug(slugBase(resolvedGroomName, resolvedBrideName));
 
     invitation = await Invitation.create({
       userId,

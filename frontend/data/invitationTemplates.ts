@@ -8,10 +8,6 @@ export interface InvitationTemplate {
   tone: TemplateTone;
   badge?: 'Mới' | 'Hot';
   description: string;
-  accent: string;
-  background: string;
-  /** Soft accent used for section backgrounds on the demo page. */
-  soft: string;
 }
 
 export const invitationTemplates: InvitationTemplate[] = [
@@ -22,20 +18,14 @@ export const invitationTemplates: InvitationTemplate[] = [
     tone: 'Xanh navy',
     badge: 'Hot',
     description: 'Thiết kế truyền thống với chủ đề vũ trụ bao la, biểu tượng rồng vàng in chìm bên dưới, mang đậm nét khoa học viễn tưởng nhưng không kém phần trang trọng.',
-    accent: '#A61B1B',
-    background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
-    soft: '#FFF1F1'
   },
   {
-    id: 'vintage',
-    name: 'Cổ Điển',
-    category: 'Cổ điển',
-    tone: 'Đỏ',
+    id: 'passport',
+    name: 'Hộ chiếu',
+    category: 'Sáng tạo',
+    tone: 'Xanh navy',
     badge: 'Hot',
-    description: 'Thiết kế truyền thống theo phong cách cổ điển, biểu tượng rồng vàng in chìm bên dưới',
-    accent: '#A61B1B',
-    background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
-    soft: '#FFF1F1'
+    description: 'Thiết kế hộ chiếu trẻ trung sáng tạo cho giới trẻ, biểu tượng rồng vàng in chìm bên dưới',
   },
   {
     id: 'mien-tay',
@@ -44,9 +34,14 @@ export const invitationTemplates: InvitationTemplate[] = [
     tone: 'Xanh lá',
     badge: 'Hot',
     description: 'Thiết kế truyền thống theo phong cách miền Tây sông nước, nhẹ nhàng thôn quê',
-    accent: '#A61B1B',
-    background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
-    soft: '#FFF1F1'
+  },
+  {
+    id: 'vintage',
+    name: 'Cổ Điển',
+    category: 'Cổ điển',
+    tone: 'Đỏ',
+    badge: 'Hot',
+    description: 'Thiết kế truyền thống theo phong cách cổ điển, biểu tượng rồng vàng in chìm bên dưới',
   },
   {
     id: 'thiep-cuoi-song-long',
@@ -55,9 +50,6 @@ export const invitationTemplates: InvitationTemplate[] = [
     tone: 'Xanh dương',
     badge: 'Hot',
     description: 'Thiết kế truyền thống màu nền xanh với biểu tượng rồng vàng in chìm bên dưới, mang đậm nét văn hóa Á Đông và sự trang trọng.',
-    accent: '#A61B1B',
-    background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
-    soft: '#FFF1F1'
   },
   {
     id: 'thiep-cuoi-song-long-pink',
@@ -66,9 +58,6 @@ export const invitationTemplates: InvitationTemplate[] = [
     tone: 'Hồng phai',
     badge: 'Hot',
     description: 'Thiết kế truyền thống màu nền hồng phai nhẹ nhàng tinh tế với biểu tượng rồng vàng in chìm bên dưới, mang đậm nét văn hóa Á Đông và sự trang trọng.',
-    accent: '#A61B1B',
-    background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
-    soft: '#FFF1F1'
   },
   {
     id: 'minimal-red',
@@ -77,9 +66,6 @@ export const invitationTemplates: InvitationTemplate[] = [
     tone: 'Đỏ',
     badge: 'Hot',
     description: 'Thiết kế tối giản với sắc đỏ nổi bật, phù hợp cho một lễ cưới hiện đại và ấm áp.',
-    accent: '#A61B1B',
-    background: 'linear-gradient(160deg, #FFF6F6 0%, #FFE9E9 100%)',
-    soft: '#FFF1F1'
   },
   {
     id: 'minimal-green',
@@ -88,9 +74,6 @@ export const invitationTemplates: InvitationTemplate[] = [
     tone: 'Xanh lá',
     badge: 'Hot',
     description: 'Phong cách thanh thoát với sắc xanh dịu, mang đến cảm giác tự nhiên và gần gũi.',
-    accent: '#17683C',
-    background: 'linear-gradient(160deg, #F3FFF8 0%, #DFF7EA 100%)',
-    soft: '#EEFCF3'
   },
   {
     id: 'minimal-gold',
@@ -99,41 +82,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     tone: 'Vàng',
     badge: 'Mới',
     description: 'Bố cục tinh tế cùng sắc vàng sang trọng, dành cho những cặp đôi yêu vẻ đẹp trang nhã.',
-    accent: '#A4741A',
-    background: 'linear-gradient(160deg, #FFF8E8 0%, #FCE9BD 100%)',
-    soft: '#FFF7E4'
-  },
-  // {
-  //   id: 'garden-blue',
-  //   name: 'Vườn Xuân - Lam',
-  //   category: 'Thiên nhiên',
-  //   tone: 'Xanh dương',
-  //   description: 'Cảm hứng khu vườn xanh trong trẻo, tạo nên lời mời nhẹ nhàng và tươi mới.',
-  //   accent: '#1E5EA8',
-  //   background: 'linear-gradient(160deg, #F2F9FF 0%, #E0EEFF 100%)',
-  //   soft: '#EEF6FF'
-  // },
-  // {
-  //   id: 'floral-pink',
-  //   name: 'Hoa Mộc - Hồng',
-  //   category: 'Thiên nhiên',
-  //   tone: 'Hồng',
-  //   badge: 'Mới',
-  //   description: 'Họa tiết hoa mềm mại và gam hồng lãng mạn, dành cho một ngày cưới đầy cảm xúc.',
-  //   accent: '#B04374',
-  //   background: 'linear-gradient(160deg, #FFF3FA 0%, #FFE5F3 100%)',
-  //   soft: '#FFF0F8'
-  // },
-  // {
-  //   id: 'royal-brown',
-  //   name: 'Hoàng Kim - Nâu',
-  //   category: 'Sang trọng',
-  //   tone: 'Nâu',
-  //   description: 'Gam nâu trầm ấm kết hợp phong cách cổ điển, tạo cảm giác sang trọng và bền vững.',
-  //   accent: '#7B4B2B',
-  //   background: 'linear-gradient(160deg, #F9F5F1 0%, #EFE4DA 100%)',
-  //   soft: '#F7F1EA'
-  // },
+  }
 ];
 
 export const defaultInvitationTemplate = invitationTemplates[0];

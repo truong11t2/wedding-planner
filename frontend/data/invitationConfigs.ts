@@ -52,7 +52,7 @@ const minimalConfig: InvitationConfig = {
 		groom: { bank: 'Vietcombank', account: '0123 4567 89', name: 'NGUYEN GIA BAO', qrImage: 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/qr-bank/qrcode_chu-re.png' },
 		bride: { bank: 'BIDV', account: '9876 5432 10', name: 'TRAN MINH ANH', qrImage: 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/qr-bank/qrcode_co-dau.jpg' }
 	},
-	musicUrl: ''
+	musicUrl: 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/Vietnamese/Anh-Nang-Cua-Anh_Duc-Phuc.mp3'
 };
 
 const songLongConfig: InvitationConfig = {
@@ -115,7 +115,7 @@ const songLongConfig: InvitationConfig = {
       "groomPhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/chu-re.webp",
       "bridePhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/co-dau.webp"
 	},
-	musicUrl: '',
+	musicUrl: 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/English/I-Do_911.mp3',
 };
 
 export const invitationConfigs: Record<string, InvitationConfig> = {
@@ -127,6 +127,7 @@ export const invitationConfigs: Record<string, InvitationConfig> = {
 	'universe': songLongConfig,
 	'vintage': songLongConfig,
 	'mien-tay': songLongConfig,
+	'passport': songLongConfig,
 };
 
 /** Deep-clone a config so callers never mutate the shared registry objects. */

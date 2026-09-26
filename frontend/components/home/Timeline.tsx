@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTimeline } from '@/context/TimelineContext';
-import { CheckCircle, Clock, Database, Check, X, ChevronDown, ChevronUp, Phone, MapPin, DollarSign } from 'lucide-react';
+import { CheckCircle, Clock, Check, X, ChevronDown, ChevronUp, Phone, MapPin, DollarSign, Save } from 'lucide-react';
 import Link from 'next/link';
 import WeddingDateInput from '@/components/common/WeddingDateInput';
 
@@ -127,7 +127,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
           onClick={handleSaveTimeline}
           disabled={isLoading || saveStatus === 'saving'}
           className={`
-            px-3 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-lg hover:shadow-xl
+            px-3 py-1 rounded-lg font-semibold transition-all flex items-center gap-2 shadow-lg hover:shadow-xl
             ${saveStatus === 'saving' || isLoading
               ? 'bg-gray-400 cursor-not-allowed'
               : saveStatus === 'success'
@@ -145,7 +145,7 @@ export default function Timeline({ initialWeddingDate, onChangeDate }: TimelineP
           ) : saveStatus === 'error' ? (
             <X className="h-5 w-5" />
           ) : (
-            <Database className="h-5 w-5" />
+            <Save className="h-5 w-5" />
           )}
           <span className="hidden sm:inline">
             {saveStatus === 'saving' ? 'Đang lưu...' :

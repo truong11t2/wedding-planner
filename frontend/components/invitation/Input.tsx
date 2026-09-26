@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Plus, Trash2 } from 'lucide-react';
+import { Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import ImageUploadCard, { LabeledImageUploadCard } from '@/components/common/ImageUploadCard';
 import { useAuth } from '@/context/AuthContext';
 import type { Photo } from '@/api/photo';
@@ -54,6 +54,13 @@ interface InputProps {
 		tags?: string[]
 	) => Promise<PhotoUploadResult>;
 	onDeletePhoto: (photoId: string, options?: { skipConfirm?: boolean }) => Promise<boolean>;
+	/**
+	 * Stores the form by running the same request as the "3. Xem thiệp" step.
+	 * Nothing is kept in localStorage — the database is the single source of truth.
+	 * Success/failure is reported by the host page as a toast.
+	 */
+	onSave: () => void;
+	isSaving: boolean;
 }
 
 /**
@@ -90,7 +97,9 @@ export default function Input({
 	handleWeddingDateChange,
 	photos,
 	onUploadPhotos,
-	onDeletePhoto
+	onDeletePhoto,
+	onSave,
+	isSaving
 }: InputProps) {
 	const { isLoggedIn } = useAuth();
 
@@ -312,7 +321,7 @@ export default function Input({
 						Đổi mẫu
 					</button>
 				</div>
-				<p className="mt-1">Điền đầy đủ thông tin bên dưới, sau đó bấm &ldquo;Xem thiệp &rdquo;.</p>
+				<p className="mt-1">Điền đầy đủ thông tin bên dưới, ấn &ldquo;Lưu&rdquo;, sau đó ấn &ldquo;3. Xem thiệp &rdquo;.</p>
 			</div>
 
 			<form className="mt-6 space-y-8" onSubmit={(event) => event.preventDefault()}>
@@ -968,6 +977,22 @@ export default function Input({
 					) : null}
 				</section>
 			</form>
+
+			{/* Sticky "Lưu" button — runs the same backend request as "3. Xem thiệp",
+			    which stores the form in the current user's account. The outcome is
+			    announced by the host page through a toast. The wrapper only exists
+			    to pin the button; it has no background of its own. */}
+			<div className="sticky bottom-3 md:bottom-6 z-20 flex justify-end">
+				<button
+					type="button"
+					onClick={onSave}
+					disabled={isSaving}
+					className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-pink-600 px-3 py-1.5 text-sm font-semibold text-white shadow-lg ring-1 ring-black/5 transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
+				>
+					{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+					{isSaving ? 'Đang lưu...' : 'Lưu'}
+				</button>
+			</div>
 		</section>
 	);
 }

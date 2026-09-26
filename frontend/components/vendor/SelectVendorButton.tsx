@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { API_BASE_URL, ENDPOINTS } from '@/api/config';
-import { Check, Database, X } from 'lucide-react';
+import { Check, Save, X } from 'lucide-react';
 import Toast from '@/components/common/Toast';
 
 interface Props {
@@ -107,7 +107,7 @@ export default function SelectVendorButton({ vendorId, timelineId }: Props) {
           </span>
         ) : (
           <span className="flex items-center gap-2">
-            <Database className="h-5 w-5" />
+            <Save className="h-5 w-5" />
             <span className="hidden sm:inline">Chọn</span>
           </span>
         )}
