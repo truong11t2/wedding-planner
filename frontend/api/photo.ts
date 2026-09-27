@@ -183,6 +183,54 @@ export const uploadPhotos = async (
   }
 };
 
+// Generate a VietQR image from a bank BIN + account number and store it in S3
+export const generateVietQrPhoto = async (params: {
+  bankBin: string;
+  accountNumber: string;
+  /** URL of the QR this one replaces, so the backend can delete it. */
+  previousUrl?: string;
+  /** Human-readable name for the resulting photo record. */
+  label?: string;
+}): Promise<{
+  success: boolean;
+  data?: Photo;
+  message?: string;
+  /** True when the session is missing/expired, so the UI can offer a sign-in. */
+  needsLogin?: boolean;
+}> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${ENDPOINTS.PHOTO.BASE}/vietqr`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Không thể tạo mã QR',
+        needsLogin: response.status === 401,
+      };
+    }
+
+    return {
+      success: true,
+      data: data.data,
+      message: data.message,
+    };
+  } catch {
+    return {
+      success: false,
+      message: 'Không thể tạo mã QR. Vui lòng thử lại.',
+    };
+  }
+};
+
 // Update photo
 export const updatePhoto = async (photoId: string, updates: Partial<Photo>): Promise<{
   success: boolean;

@@ -6,6 +6,7 @@ const {
   searchPhotos,
   getPhotosByCategory,
   uploadPhotos,
+  generateVietQrPhoto,
   savePhotos,
   updatePhoto,
   deletePhoto,
@@ -32,6 +33,9 @@ router.get('/serve/:userId/:size/:filename', protect, serveImage);
 
 // POST /api/photos/upload - Upload and process photos
 router.post('/upload', protect, uploadMiddleware, debugFormData, uploadPhotos);
+
+// POST /api/photos/vietqr - Generate a VietQR image and store it in S3
+router.post('/vietqr', protect, generateVietQrPhoto);
 
 // POST /api/photos - Save entire photos collection
 router.post('/', protect, savePhotos);

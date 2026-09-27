@@ -46,6 +46,7 @@ export const ENDPOINTS = {
     SELECT_VENDOR: '/timeline/select-vendor'
   },
   CONTACT: '/contact',
+  BANKS: '/banks',
   INVITATION: {
     RENDER: '/invitations/render',
     GENERATE: '/invitations/generate',

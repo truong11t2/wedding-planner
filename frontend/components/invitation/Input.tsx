@@ -1,14 +1,25 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { Loader2, Plus, Save, Trash2 } from 'lucide-react';
+import { Loader2, Plus, RefreshCw, Save, Trash2 } from 'lucide-react';
+import BankSelect from '@/components/common/BankSelect';
 import ImageUploadCard, { LabeledImageUploadCard } from '@/components/common/ImageUploadCard';
 import { useAuth } from '@/context/AuthContext';
+import { generateVietQrPhoto } from '@/api/photo';
 import type { Photo } from '@/api/photo';
+import { getBanks } from '@/api/bank';
+import type { Bank } from '@/api/bank';
 import type { PhotoUploadResult } from '@/lib/usePhotoLibrary';
 import { MAX_GALLERY_IMAGES } from '@/api/invitation';
-import type { InvitationConfig, InvitationPhotos, InvitationScheduleItem, InvitationStoryItem } from '@/api/invitation';
+import type {
+	InvitationConfig,
+	InvitationGift,
+	InvitationPhotos,
+	InvitationScheduleItem,
+	InvitationStoryItem
+} from '@/api/invitation';
 import type { InvitationTemplate } from '@/data/invitationTemplates';
 import type { InvitationTemplateFormFeatures } from '@/data/invitationConfigs';
 import { buildLoginHref } from '@/lib/authRedirect';
@@ -16,6 +27,52 @@ import songs from '@/public/music/songs.json';
 
 type InvitationTab = 'select' | 'input' | 'preview' | 'share';
 type Song = { name: string; singer?: string; lang?: string; url: string };
+type GiftSide = 'groom' | 'bride';
+
+/**
+ * A failed QR generation. `needsLogin` marks the only case where signing in is
+ * the fix — only then are the login / register links worth showing.
+ */
+type QrError = { message: string; needsLogin?: boolean };
+
+/** Bank apps expect a plain account number, so spaces/dots/dashes are dropped. */
+const sanitizeAccountNumber = (value: string) => value.replace(/\D/g, '');
+
+/**
+ * Resolves the VietQR BIN for a stored gift.
+ *
+ * Configs saved by this form keep the BIN explicitly; older ones only have the
+ * bank name, so the bank list is used to recover it.
+ */
+function resolveBankBin(gift: InvitationGift | undefined, banks: Bank[]): string {
+	if (!gift) return '';
+	if (gift.bankBin) return gift.bankBin;
+
+	const needle = (gift.bank || '').trim().toLowerCase();
+	if (!needle) return '';
+
+	const match = banks.find((bank) =>
+		[bank.shortName, bank.code, bank.name].some((field) => field.trim().toLowerCase() === needle)
+	);
+
+	return match?.bin || '';
+}
+
+const GIFT_SIDES: GiftSide[] = ['groom', 'bride'];
+
+/** The two values the QR encodes: the bank BIN and a digits-only account number. */
+function giftQrParams(gift: InvitationGift, banks: Bank[]) {
+	return {
+		bankBin: resolveBankBin(gift, banks),
+		accountNumber: sanitizeAccountNumber(gift.account || '')
+	};
+}
+
+/** A gift can produce a QR once it has a bank with a BIN and a plausible account number. */
+function canGenerateGiftQr(gift: InvitationGift, banks: Bank[]): boolean {
+	const { bankBin, accountNumber } = giftQrParams(gift, banks);
+	return Boolean(bankBin) && accountNumber.length >= 6;
+}
 
 interface InputProps {
 	activeTab: InvitationTab;
@@ -106,8 +163,25 @@ export default function Input({
 	const [uploadingGalleryIndex, setUploadingGalleryIndex] = useState<number | null>(null);
 	const [galleryUploadError, setGalleryUploadError] = useState<string | null>(null);
 
-	const [uploadingQrFor, setUploadingQrFor] = useState<'groom' | 'bride' | null>(null);
-	const [qrUploadError, setQrUploadError] = useState<string | null>(null);
+	const [banks, setBanks] = useState<Bank[]>([]);
+	const [banksLoading, setBanksLoading] = useState(true);
+	const [qrGenerating, setQrGenerating] = useState<Record<GiftSide, boolean>>({ groom: false, bride: false });
+	const [qrError, setQrError] = useState<Record<GiftSide, QrError | null>>({ groom: null, bride: null });
+	/**
+	 * A QR is only regenerated after the user edited the bank/account. Loading a
+	 * saved config must NOT trigger it — that would replace (and delete) the QR
+	 * the stored invitation already points to.
+	 */
+	const qrDirtyRef = useRef<Record<GiftSide, boolean>>({ groom: false, bride: false });
+
+	/**
+	 * The latest gifts, so a generation that finishes after the user edited the
+	 * bank/account can be discarded instead of writing a QR for the old values.
+	 */
+	const giftsRef = useRef(config.gifts);
+	useEffect(() => {
+		giftsRef.current = config.gifts;
+	}, [config.gifts]);
 
 	const [uploadingPhotoField, setUploadingPhotoField] = useState<keyof InvitationPhotos | null>(null);
 	const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
@@ -194,30 +268,20 @@ export default function Input({
 		setPlayingSongUrl(songUrl);
 	};
 
-	const handleQrImageUpload = async (who: 'groom' | 'bride', file: File | null) => {
-		if (!file) return;
+	// Load the VietQR bank list once so the pickers only offer banks with a BIN.
+	useEffect(() => {
+		let cancelled = false;
 
-		if (!isLoggedIn) {
-			setQrUploadError('Vui lòng đăng nhập hoặc đăng ký để tải ảnh QR lên.');
-			return;
-		}
+		void getBanks().then((list) => {
+			if (cancelled) return;
+			setBanks(list);
+			setBanksLoading(false);
+		});
 
-		setQrUploadError(null);
-		setUploadingQrFor(who);
-		try {
-			const response = await onUploadPhotos([file], 'invitation', '', ['invitation', 'qr']);
-			if (response.success && response.data && response.data.length > 0) {
-				updateGift(who, 'qrImage', response.data[0].url);
-			} else {
-				setQrUploadError(response.message || 'Không thể tải ảnh QR lên. Vui lòng thử lại.');
-			}
-		} catch (error) {
-			setQrUploadError(error instanceof Error ? error.message : 'Không thể tải ảnh QR lên. Vui lòng thử lại.');
-		} finally {
-			setUploadingQrFor(null);
-		}
-	};
-
+		return () => {
+			cancelled = true;
+		};
+	}, []);
 
 	const handleRemovePhoto = async (
 		url: string | undefined,
@@ -236,6 +300,133 @@ export default function Input({
 		clearField();
 		return true;
 	};
+
+	/**
+	 * Asks the backend to build a VietQR image for one gift, store it in S3 and
+	 * point the form at the returned URL.
+	 */
+	const generateGiftQr = useCallback(
+		async (who: GiftSide) => {
+			if (!isLoggedIn) {
+				setQrError((prev) => ({
+					...prev,
+					[who]: { message: 'Vui lòng đăng nhập để tạo mã QR.', needsLogin: true }
+				}));
+				return;
+			}
+
+			const gift = config.gifts[who];
+			const { bankBin, accountNumber } = giftQrParams(gift, banks);
+
+			if (!bankBin || accountNumber.length < 6) return;
+
+			setQrError((prev) => ({ ...prev, [who]: null }));
+			setQrGenerating((prev) => ({ ...prev, [who]: true }));
+
+			try {
+				const response = await generateVietQrPhoto({
+					bankBin,
+					accountNumber,
+					previousUrl: gift.qrImage || undefined,
+					label: who === 'groom' ? 'QR chú rể' : 'QR cô dâu'
+				});
+
+				if (response.success && response.data) {
+					// The request may have outlived the values it was built from — e.g. the
+					// user cleared the account while it was in flight. Applying that QR would
+					// save a code that does not match the account, so drop it.
+					const latest = giftQrParams(giftsRef.current[who], banks);
+					if (latest.bankBin !== bankBin || latest.accountNumber !== accountNumber) return;
+
+					updateGift(who, 'qrImage', response.data.url);
+					qrDirtyRef.current[who] = false;
+				} else {
+					setQrError((prev) => ({
+						...prev,
+						[who]: {
+							message: response.message || 'Không thể tạo mã QR. Vui lòng thử lại.',
+							needsLogin: response.needsLogin
+						}
+					}));
+				}
+			} finally {
+				setQrGenerating((prev) => ({ ...prev, [who]: false }));
+			}
+		},
+		[banks, config.gifts, isLoggedIn, updateGift]
+	);
+
+	/**
+	 * Keeps the stored QR in step with the bank/account inputs.
+	 *
+	 * Clearing the account must drop the QR, otherwise a code left over from a
+	 * previous account number would be saved with the invitation and shown to
+	 * guests beside an empty or mismatched account.
+	 */
+	const syncGiftQr = (who: GiftSide, nextGift: InvitationGift) => {
+		if (canGenerateGiftQr(nextGift, banks)) {
+			// The inputs are usable again, so a previous failure message is stale.
+			setQrError((prev) => (prev[who] ? { ...prev, [who]: null } : prev));
+			return;
+		}
+
+		const currentUrl = config.gifts[who].qrImage;
+		if (!currentUrl) return;
+
+		void handleRemovePhoto(currentUrl, () => updateGift(who, 'qrImage', ''), { skipConfirm: true });
+	};
+
+	const handleSelectBank = (who: GiftSide, bank: Bank) => {
+		qrDirtyRef.current[who] = true;
+
+		// The holder name belongs to the account, so switching bank invalidates it
+		// (this also drops the placeholder name shipped with the template).
+		if ((config.gifts[who].bank || '') !== bank.shortName) {
+			updateGift(who, 'name', '');
+		}
+
+		updateGift(who, 'bank', bank.shortName);
+		updateGift(who, 'bankBin', bank.bin);
+		syncGiftQr(who, { ...config.gifts[who], bank: bank.shortName, bankBin: bank.bin });
+	};
+
+	const handleAccountNumberChange = (who: GiftSide, value: string) => {
+		const account = sanitizeAccountNumber(value);
+		qrDirtyRef.current[who] = true;
+		updateGift(who, 'account', account);
+		syncGiftQr(who, { ...config.gifts[who], account });
+	};
+
+	/**
+	 * The holder name is shown on the invitation card, but it is not part of the
+	 * QR image (`qr_only` ignores it), so editing it does NOT regenerate.
+	 */
+	const handleGiftNameChange = (who: GiftSide, value: string) => {
+		updateGift(who, 'name', value);
+	};
+
+	/**
+	 * "Tạo lại" is disabled while the gift cannot produce a QR, so there is no
+	 * invalid-input case to report here.
+	 */
+	const handleRegenerateQr = (who: GiftSide) => {
+		if (!canGenerateGiftQr(config.gifts[who], banks)) return;
+
+		qrDirtyRef.current[who] = true;
+		void generateGiftQr(who);
+	};
+
+	// Debounced auto-generation. It runs only after a real edit — never on load,
+	// which would replace (and delete) the QR the saved invitation still points to.
+	useEffect(() => {
+		if (!features.qrGift) return;
+
+		const timers = GIFT_SIDES.filter(
+			(who) => qrDirtyRef.current[who] && canGenerateGiftQr(config.gifts[who], banks)
+		).map((who) => setTimeout(() => void generateGiftQr(who), 700));
+
+		return () => timers.forEach(clearTimeout);
+	}, [banks, config.gifts, features.qrGift, generateGiftQr]);
 
 	const handleGalleryFileUpload = async (index: number, file: File | null) => {
 		if (!file) return;
@@ -904,77 +1095,35 @@ export default function Input({
 					<p className="mt-1 text-xs text-slate-500">Thông tin ngân hàng (tuỳ chọn)</p>
 					) : null}
 					<div className="mt-4 grid gap-6 sm:grid-cols-2">
-						<div>
-							{features.qrGift ? (
-							<>
-							<p className="mb-2 text-xs font-medium text-slate-600">QR chú rể</p>
-							<ImageUploadCard
-								variant="square"
-								value={config.gifts.groom.qrImage}
-								alt="QR chú rể"
-								sizes="128px"
-								placeholderText="Tải ảnh QR"
-								uploading={uploadingQrFor === 'groom'}
-								onUpload={(file) => handleQrImageUpload('groom', file)}
-								onRemove={(options) => handleRemovePhoto(config.gifts?.groom?.qrImage, () => updateGift('groom', 'qrImage', ''), options)}
-								touchRemoveLabel="Xoá"
-								touchReplaceLabel="Đổi"
-							/>
-							</>
-							) : null}
-							<div className="mt-3 grid gap-2">
-								<Field label="Ngân hàng (chú rể)">
-									<input value={config.gifts.groom.bank} onChange={(e) => updateGift('groom', 'bank', e.target.value)} className="input" />
-								</Field>
-								<Field label="Số tài khoản (chú rể)">
-									<input value={config.gifts.groom.account} onChange={(e) => updateGift('groom', 'account', e.target.value)} className="input" />
-								</Field>
-								<Field label="Tên chủ tài khoản (chú rể)">
-									<input value={config.gifts.groom.name} onChange={(e) => updateGift('groom', 'name', e.target.value)} className="input" />
-								</Field>
-							</div>
-						</div>
-						<div>
-							{features.qrGift ? (
-							<>
-							<p className="mb-2 text-xs font-medium text-slate-600">QR cô dâu</p>
-							<ImageUploadCard
-								variant="square"
-								value={config.gifts.bride.qrImage}
-								alt="QR cô dâu"
-								sizes="128px"
-								placeholderText="Tải ảnh QR"
-								uploading={uploadingQrFor === 'bride'}
-								onUpload={(file) => handleQrImageUpload('bride', file)}
-								onRemove={(options) => handleRemovePhoto(config.gifts?.bride?.qrImage, () => updateGift('bride', 'qrImage', ''), options)}
-								touchRemoveLabel="Xoá"
-								touchReplaceLabel="Đổi"
-							/>
-							</>
-							) : null}
-							<div className="mt-3 grid gap-2">
-								<Field label="Ngân hàng (cô dâu)">
-									<input value={config.gifts.bride.bank} onChange={(e) => updateGift('bride', 'bank', e.target.value)} className="input" />
-								</Field>
-								<Field label="Số tài khoản (cô dâu)">
-									<input value={config.gifts.bride.account} onChange={(e) => updateGift('bride', 'account', e.target.value)} className="input" />
-								</Field>
-								<Field label="Tên chủ tài khoản (cô dâu)">
-									<input value={config.gifts.bride.name} onChange={(e) => updateGift('bride', 'name', e.target.value)} className="input" />
-								</Field>
-							</div>
-						</div>
+						<GiftColumn
+							who="groom"
+							gift={config.gifts.groom}
+							showQr={features.qrGift}
+							banks={banks}
+							banksLoading={banksLoading}
+							generating={qrGenerating.groom}
+							error={qrError.groom}
+							onSelectBank={(bank) => handleSelectBank('groom', bank)}
+							onAccountChange={(value) => handleAccountNumberChange('groom', value)}
+							onNameChange={(value) => handleGiftNameChange('groom', value)}
+							onRegenerate={() => handleRegenerateQr('groom')}
+							loginHref={loginHref}
+						/>
+						<GiftColumn
+							who="bride"
+							gift={config.gifts.bride}
+							showQr={features.qrGift}
+							banks={banks}
+							banksLoading={banksLoading}
+							generating={qrGenerating.bride}
+							error={qrError.bride}
+							onSelectBank={(bank) => handleSelectBank('bride', bank)}
+							onAccountChange={(value) => handleAccountNumberChange('bride', value)}
+							onNameChange={(value) => handleGiftNameChange('bride', value)}
+							onRegenerate={() => handleRegenerateQr('bride')}
+							loginHref={loginHref}
+						/>
 					</div>
-					{qrUploadError ? (
-						<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
-							<p>{qrUploadError}</p>
-							<div className="mt-2 flex gap-2">
-								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
-								<span className="text-pink-700">/</span>
-								<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
-							</div>
-						</div>
-					) : null}
 				</section>
 			</form>
 
@@ -1002,6 +1151,144 @@ function Field({ label, children, full }: { label: string; children: React.React
 		<div className={full ? 'sm:col-span-2' : ''}>
 			<label className="mb-1 block text-xs font-medium text-slate-600">{label}</label>
 			{children}
+		</div>
+	);
+}
+
+/**
+ * One giver column: the generated VietQR preview above the bank / account
+ * number / holder name inputs that produce it.
+ */
+function GiftColumn({
+	who,
+	gift,
+	showQr,
+	banks,
+	banksLoading,
+	generating,
+	error,
+	onSelectBank,
+	onAccountChange,
+	onNameChange,
+	onRegenerate,
+	loginHref
+}: {
+	who: GiftSide;
+	gift: InvitationGift;
+	showQr: boolean;
+	banks: Bank[];
+	banksLoading: boolean;
+	generating: boolean;
+	error: QrError | null;
+	onSelectBank: (bank: Bank) => void;
+	onAccountChange: (value: string) => void;
+	onNameChange: (value: string) => void;
+	onRegenerate: () => void;
+	loginHref: string;
+}) {
+	const label = who === 'groom' ? 'chú rể' : 'cô dâu';
+	const canGenerate = canGenerateGiftQr(gift, banks);
+	// A QR with no bank/account behind it is not shown (see `syncGiftQr`). While the
+	// bank list is still loading a legacy config cannot be verified, so it stays
+	// visible rather than flickering away.
+	const qrUrl = canGenerate || banksLoading ? gift.qrImage : undefined;
+
+	return (
+		<div>
+			{showQr ? (
+				<div className="mb-3">
+					<div className="flex items-center justify-between gap-2">
+						<p className="text-xs font-medium text-slate-600">QR {label}</p>
+						<button
+							type="button"
+							onClick={onRegenerate}
+							disabled={generating || !canGenerate}
+							className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-[11px] font-medium text-slate-600 transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-60"
+						>
+							{generating ? (
+								<Loader2 className="h-3 w-3 animate-spin" />
+							) : (
+								<RefreshCw className="h-3 w-3" />
+							)}
+							Tạo lại
+						</button>
+					</div>
+
+					<div className="relative mt-2 h-32 w-32 overflow-hidden rounded-lg border border-slate-200 bg-white">
+						{qrUrl ? (
+							<Image
+								src={qrUrl}
+								alt={`QR ${label}`}
+								fill
+								sizes="128px"
+								className="object-contain"
+							/>
+						) : (
+							<span className="flex h-full w-full items-center justify-center px-2 text-center text-[11px] text-slate-400">
+								Nhập ngân hàng và số tài khoản để tạo mã QR
+							</span>
+						)}
+
+						{generating ? (
+							<div className="absolute inset-0 flex items-center justify-center bg-white/70">
+								<Loader2 className="h-5 w-5 animate-spin text-pink-600" />
+							</div>
+						) : null}
+					</div>
+
+					{/* The QR is a bare code, so the account details the guest will
+					    see are spelled out underneath it. */}
+					{qrUrl ? (
+						<div className="mt-2 w-32 text-[11px] leading-snug text-slate-500">
+							<p className="truncate font-medium text-slate-700" title={gift.name}>
+								{gift.name || '—'}
+							</p>
+							<p className="truncate">{gift.bank}</p>
+							<p className="truncate tabular-nums">{gift.account}</p>
+						</div>
+					) : null}
+
+					{error ? (
+						<div className="mt-2 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
+							<p>{error.message}</p>
+							{error.needsLogin ? (
+								<div className="mt-2 flex gap-2">
+									<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+									<span className="text-pink-700">/</span>
+									<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+								</div>
+							) : null}
+						</div>
+					) : null}
+				</div>
+			) : null}
+
+			<div className="grid gap-2">
+				<Field label={`Ngân hàng (${label})`}>
+					<BankSelect
+						value={gift.bank}
+						banks={banks}
+						loading={banksLoading}
+						onSelect={onSelectBank}
+					/>
+				</Field>
+				<Field label={`Số tài khoản (${label})`}>
+					<input
+						inputMode="numeric"
+						autoComplete="off"
+						value={gift.account}
+						onChange={(event) => onAccountChange(event.target.value)}
+						className="input"
+					/>
+				</Field>
+				<Field label={`Tên chủ tài khoản (${label})`}>
+					<input
+						value={gift.name}
+						onChange={(event) => onNameChange(event.target.value)}
+						className="input"
+					/>
+				</Field>
+			</div>
 		</div>
 	);
 }

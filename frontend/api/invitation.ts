@@ -33,6 +33,7 @@ export interface InvitationScheduleItem {
 
 export interface InvitationGift {
   bank: string;
+  bankBin?: string;
   account: string;
   name: string;
   qrImage?: string;
