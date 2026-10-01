@@ -1,5 +1,5 @@
 export type TemplateCategory = 'Tối giản' | 'Truyền thống' | 'Cổ điển' | 'Thiên nhiên' | 'Sang trọng' | 'Sáng tạo';
-export type TemplateTone = 'Đỏ' | 'Xanh lá' | 'Xanh dương' | 'Xanh navy' | 'Hồng phai' | 'Vàng' | 'Nâu';
+export type TemplateTone = 'Nâu nhạt' | 'Đỏ' | 'Xanh lá' | 'Xanh dương' | 'Xanh navy' | 'Hồng phai' | 'Vàng' | 'Nâu';
 
 export interface InvitationTemplate {
   id: string;
@@ -11,6 +11,14 @@ export interface InvitationTemplate {
 }
 
 export const invitationTemplates: InvitationTemplate[] = [
+  {
+    id: 'thiep-cuoi-western',
+    name: 'Hiện đại',
+    category: 'Sáng tạo',
+    tone: 'Nâu nhạt',
+    badge: 'Hot',
+    description: 'Thiết kế đơn giản, hiện đại nhưng vẫn trang trọng và tinh tế theo phong cách phương Tây. Phù hợp việc mời khách nước ngoài.',
+  },
   {
     id: 'universe',
     name: 'Vũ Trụ',

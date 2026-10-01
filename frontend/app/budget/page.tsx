@@ -629,18 +629,18 @@ export default function BudgetPage() {
               const sampleCategories: BudgetCategory[] = [
                 {
                   id: '1',
-                  name: 'Địa điểm',
-                  budgeted: 8000,
-                  spent: 7500,
+                  name: 'Gia tiên, quà tặng',
+                  budgeted: 30000000,
+                  spent: 2500000,
                   color: 'bg-blue-500',
-                  description: 'Ceremony and reception venue costs',
+                  description: 'Tổ chức lễ cưới',
                   priority: 'cao'
                 },
                 {
                   id: '2',
-                  name: 'Nhà hàng',
-                  budgeted: 6000,
-                  spent: 5800,
+                  name: 'Tiệc cưới',
+                  budgeted: 200000000,
+                  spent: 0,
                   color: 'bg-green-500',
                   description: 'Đãi tiệc cho khách mời',
                   priority: 'cao'
@@ -648,8 +648,8 @@ export default function BudgetPage() {
                 {
                   id: '3',
                   name: 'Chụp hình',
-                  budgeted: 3000,
-                  spent: 3200,
+                  budgeted: 30000000,
+                  spent: 0,
                   color: 'bg-purple-500',
                   description: 'Chụp hình và quay phim đám cưới',
                   priority: 'cao'
@@ -657,34 +657,52 @@ export default function BudgetPage() {
                 {
                   id: '4',
                   name: 'Trang phục',
-                  budgeted: 2500,
-                  spent: 1800,
+                  budgeted: 15000000,
+                  spent: 0,
                   color: 'bg-pink-500',
                   description: 'Váy cưới, vest, và phụ kiện',
                   priority: 'cao'
                 },
                 {
                   id: '5',
-                  name: 'Hoa',
-                  budgeted: 1500,
-                  spent: 1200,
-                  color: 'bg-yellow-500',
-                  description: 'Hoa cưới, trung tâm bàn tiệc, và trang trí',
-                  priority: 'thấp'
+                  name: 'Nhẫn cưới',
+                  budgeted: 10000000,
+                  spent: 0,
+                  color: 'bg-pink-500',
+                  description: 'Nhẫn cưới, trang sức cho cô dâu và chú rể',
+                  priority: 'cao'
                 },
                 {
                   id: '6',
+                  name: 'Trang trí',
+                  budgeted: 20000000,
+                  spent: 0,
+                  color: 'bg-yellow-500',
+                  description: 'Hoa cưới, trung tâm bàn tiệc, và trang trí thêm',
+                  priority: 'thấp'
+                },
+                {
+                  id: '7',
                   name: 'Âm nhạc & Giải trí',
-                  budgeted: 1200,
-                  spent: 1000,
+                  budgeted: 3000000,
+                  spent: 0,
                   color: 'bg-indigo-500',
-                  description: 'DJ, ban nhạc, hoặc dịch vụ giải trí khác',
+                  description: 'Karaoke, ban nhạc, hoặc dịch vụ giải trí khác',
                   priority: 'trung bình'
+                },
+                {
+                  id: '8',
+                  name: 'Dự phòng',
+                  budgeted: 3000000,
+                  spent: 0,
+                  color: 'bg-indigo-500',
+                  description: 'Dành cho những chi phí phát sinh hoặc khẩn cấp',
+                  priority: 'cao'
                 }
               ];
               setCategories(sampleCategories);
               // Save initial data to backend
-              await saveBudgetData({ totalBudget: 25000, categories: sampleCategories });
+              await saveBudgetData({ totalBudget: 250000000, categories: sampleCategories });
             }
           }            
         } catch {

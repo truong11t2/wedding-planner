@@ -41,7 +41,9 @@ export interface InvitationGift {
 
 export interface InvitationStoryItem {
   date: string;
+  title?: string;
   text: string;
+  photo?: string;
 }
 
 export interface InvitationPhotos {
@@ -59,9 +61,9 @@ export interface InvitationConfig {
   brideRole: string;
   monogram: string;
   weddingDateISO: string;
-  groomParents: InvitationParent;
-  brideParents: InvitationParent;
-  ceremony: InvitationCeremony;
+  groomParents: InvitationParent | null;
+  brideParents: InvitationParent | null;
+  ceremony: InvitationCeremony | null;
   reception: InvitationReception;
   schedule: InvitationScheduleItem[];
   gallery: string[];

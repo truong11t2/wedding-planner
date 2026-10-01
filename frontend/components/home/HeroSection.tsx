@@ -10,6 +10,7 @@ import HeroIconBackground, {
 } from '@/components/home/HeroIconBackground';
 import { useTimeline } from '@/context/TimelineContext';
 import { useAuth } from '@/context/AuthContext';
+import SplitTextAnimation from '../common/SplitTextAnimation';
 
 const SLIDE_INTERVAL = 20000;
 
@@ -225,8 +226,9 @@ export default function HeroSection() {
               <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 tracking-wide">
                 Thiệp Cưới Online
               </h2>
+              <SplitTextAnimation loop text="Đơn giản, Sang trọng, Sáng tạo" goldWords={['Đơn', 'Sang', 'Sáng']} />
               <p className="text-lg md:text-2xl font-light mb-6 tracking-wide text-amber-100">
-                Thiệp mời cưới trực tuyến — thiết kế, cá nhân hóa và gửi tới khách mời chỉ trong vài phút.
+                Thiết kế, cá nhân hóa và gửi tới khách mời chỉ trong vài phút.
               </p>
             </div>
 
@@ -271,6 +273,10 @@ export default function HeroSection() {
                     <div className="flex items-center gap-2">
                       <span className="text-amber-300">✓</span>
                       <span className="font-medium text-left">Sổ lưu bút và lời chúc online</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-amber-300">✓</span>
+                      <span className="font-medium text-left">Tự động tạo mã QR ngân hàng</span>
                     </div>
                   </div>
                 </div>

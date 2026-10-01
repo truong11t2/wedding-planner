@@ -18,7 +18,9 @@ import {
 	type InvitationPhotos,
 	type InvitationScheduleItem,
 	type InvitationStoryItem,
-	type MyInvitation
+	type MyInvitation,
+	InvitationCeremony,
+	InvitationParent
 } from '@/api/invitation';
 import { BACKEND_ORIGIN } from '@/api/config';
 import { usePhotoLibrary } from '@/lib/usePhotoLibrary';
@@ -330,21 +332,9 @@ export default function InvitationPage() {
 			brideRole: currentConfig.brideRole || templateDefaults.brideRole,
 			monogram: currentConfig.monogram || templateDefaults.monogram,
 			weddingDateISO: currentConfig.weddingDateISO || templateDefaults.weddingDateISO,
-			groomParents: {
-				father: currentConfig.groomParents?.father || templateDefaults.groomParents.father,
-				mother: currentConfig.groomParents?.mother || templateDefaults.groomParents.mother,
-				address: currentConfig.groomParents?.address || templateDefaults.groomParents.address
-			},
-			brideParents: {
-				father: currentConfig.brideParents?.father || templateDefaults.brideParents.father,
-				mother: currentConfig.brideParents?.mother || templateDefaults.brideParents.mother,
-				address: currentConfig.brideParents?.address || templateDefaults.brideParents.address
-			},
-			ceremony: {
-				time: currentConfig.ceremony?.time || templateDefaults.ceremony.time,
-				dateLabel: currentConfig.ceremony?.dateLabel || templateDefaults.ceremony.dateLabel,
-				lunar: currentConfig.ceremony?.lunar || templateDefaults.ceremony.lunar
-			},
+			groomParents: templateDefaults.groomParents ? currentConfig.groomParents ?? templateDefaults.groomParents : null,
+			brideParents: templateDefaults.brideParents ? currentConfig.brideParents ?? templateDefaults.brideParents : null,
+			ceremony: templateDefaults.ceremony ? currentConfig.ceremony ?? templateDefaults.ceremony : null,
 			reception: {
 				date: currentConfig.reception?.date || templateDefaults.reception.date,
 				welcomeTime: currentConfig.reception?.welcomeTime || templateDefaults.reception.welcomeTime,
@@ -481,16 +471,25 @@ export default function InvitationPage() {
 		applyInputChange((prev) => ({ ...prev, [key]: value }));
 	};
 
-	const updateGroomParent = (field: keyof InvitationConfig['groomParents'], value: string) => {
-		applyInputChange((prev) => ({ ...prev, groomParents: { ...prev.groomParents, [field]: value } }));
+	const updateGroomParent = (field: keyof InvitationParent, value: string) => {
+		applyInputChange((prev) => ({
+			...prev,
+			groomParents: { ...(prev.groomParents ?? { father: '', mother: '', address: '' }), [field]: value }
+		}));
 	};
 
-	const updateBrideParent = (field: keyof InvitationConfig['brideParents'], value: string) => {
-		applyInputChange((prev) => ({ ...prev, brideParents: { ...prev.brideParents, [field]: value } }));
+	const updateBrideParent = (field: keyof InvitationParent, value: string) => {
+		applyInputChange((prev) => ({
+			...prev,
+			brideParents: { ...(prev.brideParents ?? { father: '', mother: '', address: '' }), [field]: value }
+		}));
 	};
 
-	const updateCeremony = (field: keyof InvitationConfig['ceremony'], value: string) => {
-		applyInputChange((prev) => ({ ...prev, ceremony: { ...prev.ceremony, [field]: value } }));
+	const updateCeremony = (field: keyof InvitationCeremony, value: string) => {
+		applyInputChange((prev) => ({
+			...prev,
+			ceremony: { ...(prev.ceremony ?? { time: '', dateLabel: '', lunar: '' }), [field]: value }
+		}));
 	};
 
 	const updateReception = (field: keyof InvitationConfig['reception'], value: string) => {

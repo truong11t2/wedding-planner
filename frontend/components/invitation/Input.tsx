@@ -14,8 +14,10 @@ import type { Bank } from '@/api/bank';
 import type { PhotoUploadResult } from '@/lib/usePhotoLibrary';
 import { MAX_GALLERY_IMAGES } from '@/api/invitation';
 import type {
+	InvitationCeremony,
 	InvitationConfig,
 	InvitationGift,
+	InvitationParent,
 	InvitationPhotos,
 	InvitationScheduleItem,
 	InvitationStoryItem
@@ -87,9 +89,9 @@ interface InputProps {
 	config: InvitationConfig;
 	weddingDate: string;
 	updateField: <K extends keyof InvitationConfig>(key: K, value: InvitationConfig[K]) => void;
-	updateGroomParent: (field: keyof InvitationConfig['groomParents'], value: string) => void;
-	updateBrideParent: (field: keyof InvitationConfig['brideParents'], value: string) => void;
-	updateCeremony: (field: keyof InvitationConfig['ceremony'], value: string) => void;
+	updateGroomParent: (field: keyof InvitationParent, value: string) => void;
+	updateBrideParent: (field: keyof InvitationParent, value: string) => void;
+	updateCeremony: (field: keyof InvitationCeremony, value: string) => void;
 	updateReception: (field: keyof InvitationConfig['reception'], value: string) => void;
 	updateGift: (who: 'groom' | 'bride', field: keyof InvitationConfig['gifts']['groom'], value: string) => void;
 	updateScheduleItem: (index: number, field: keyof InvitationScheduleItem, value: string) => void;
@@ -185,6 +187,9 @@ export default function Input({
 
 	const [uploadingPhotoField, setUploadingPhotoField] = useState<keyof InvitationPhotos | null>(null);
 	const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+
+	const [uploadingStoryPhotoIndex, setUploadingStoryPhotoIndex] = useState<number | null>(null);
+	const [storyPhotoError, setStoryPhotoError] = useState<string | null>(null);
 
 	// Send the user back to this very step after they sign in.
 	const loginHref = buildLoginHref(`/invitation#${activeTab}`);
@@ -419,14 +424,12 @@ export default function Input({
 	// Debounced auto-generation. It runs only after a real edit — never on load,
 	// which would replace (and delete) the QR the saved invitation still points to.
 	useEffect(() => {
-		if (!features.qrGift) return;
-
 		const timers = GIFT_SIDES.filter(
 			(who) => qrDirtyRef.current[who] && canGenerateGiftQr(config.gifts[who], banks)
 		).map((who) => setTimeout(() => void generateGiftQr(who), 700));
 
 		return () => timers.forEach(clearTimeout);
-	}, [banks, config.gifts, features.qrGift, generateGiftQr]);
+	}, [banks, config.gifts, generateGiftQr]);
 
 	const handleGalleryFileUpload = async (index: number, file: File | null) => {
 		if (!file) return;
@@ -482,6 +485,33 @@ export default function Input({
 	};
 
 	/**
+	 * Uploads the photo for one story milestone and stores its URL on the item.
+	 */
+	const handleStoryPhotoUpload = async (index: number, file: File | null) => {
+		if (!file) return;
+
+		if (!isLoggedIn) {
+			setStoryPhotoError('Vui lòng đăng nhập hoặc đăng ký để tải ảnh lên.');
+			return;
+		}
+
+		setStoryPhotoError(null);
+		setUploadingStoryPhotoIndex(index);
+		try {
+			const response = await onUploadPhotos([file], 'invitation', '', ['invitation']);
+			if (response.success && response.data && response.data.length > 0) {
+				updateStoryItem(index, 'photo', response.data[0].url);
+			} else {
+				setStoryPhotoError(response.message || 'Không thể tải ảnh lên. Vui lòng thử lại.');
+			}
+		} catch (error) {
+			setStoryPhotoError(error instanceof Error ? error.message : 'Không thể tải ảnh lên. Vui lòng thử lại.');
+		} finally {
+			setUploadingStoryPhotoIndex(null);
+		}
+	};
+
+	/**
 	 * Gallery replacement must not use the default remove-then-upload flow:
 	 * `removeGalleryRow` drops the array entry, which shifts the index of every
 	 * later slot. Clear the slot in place instead, then upload over it.
@@ -515,7 +545,19 @@ export default function Input({
 				<p className="mt-1">Điền đầy đủ thông tin bên dưới, ấn &ldquo;Lưu&rdquo;, sau đó ấn &ldquo;3. Xem thiệp &rdquo;.</p>
 			</div>
 
+			{!isLoggedIn ? (
+				<div className="mt-4 rounded-xl border border-pink-100 bg-pink-50 p-4 text-center text-sm text-pink-600">
+					<p className="font-medium">Vui lòng đăng nhập / đăng ký để nhập thông tin thiệp cưới.</p>
+					<div className="mt-3 flex items-center justify-center gap-3">
+						<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+						<span className="text-pink-700">/</span>
+						<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+					</div>
+				</div>
+			) : null}
+
 			<form className="mt-6 space-y-8" onSubmit={(event) => event.preventDefault()}>
+				<fieldset disabled={!isLoggedIn} className="m-0 min-w-0 space-y-8 border-0 p-0">
 				{/* Cô dâu & chú rể */}
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Cô Dâu &amp; Chú Rể</h2>
@@ -569,35 +611,69 @@ export default function Input({
 					</div>
 
 					{/* Chuyện tình (chỉ với mẫu hỗ trợ, VD: Thiệp cưới song long) */}
-					{/* {config.story ? (
+					{config.story ? (
 						<div className="mt-6 border-t border-slate-100 pt-6">
 							<h3 className="text-sm font-semibold text-slate-900">Chuyện Tình</h3>
 							<p className="mt-1 text-xs text-slate-500">Thêm từng cột mốc trong chuyện tình của hai bạn</p>
-							<div className="mt-4 space-y-2">
+							<div className="mt-4 space-y-3">
 								{config.story.map((item, index) => (
-									<div key={index} className="flex items-center gap-2">
-										<input
-											placeholder="Mốc thời gian (VD: Mùa thu 2021)"
-											value={item.date}
-											onChange={(e) => updateStoryItem(index, 'date', e.target.value)}
-											className="input max-w-48"
-										/>
-										<input
-											placeholder="Nội dung (VD: Lần đầu gặp gỡ tại một quán cà phê nhỏ ven sông.)"
-											value={item.text}
-											onChange={(e) => updateStoryItem(index, 'text', e.target.value)}
-											className="input"
-										/>
-										<button
-											type="button"
-											onClick={() => removeStoryRow(index)}
-											className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-pink-300 hover:text-pink-600"
-										>
-											<Trash2 className="h-4 w-4" />
-										</button>
+									<div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+										<div className="flex items-start gap-3">
+											<LabeledImageUploadCard
+												label="Ảnh"
+												variant="square"
+												value={item.photo ?? ''}
+												uploading={uploadingStoryPhotoIndex === index}
+												onUpload={(file) => handleStoryPhotoUpload(index, file)}
+												onRemove={(options) =>
+													handleRemovePhoto(item.photo, () => updateStoryItem(index, 'photo', ''), options)
+												}
+												touchRemoveLabel="Xoá"
+												touchReplaceLabel="Đổi"
+											/>
+											<div className="grid min-w-0 flex-1 gap-2">
+												<div className="grid gap-2 sm:grid-cols-2">
+													<input
+														placeholder="Mốc thời gian (VD: Mùa thu 2021)"
+														value={item.date}
+														onChange={(e) => updateStoryItem(index, 'date', e.target.value)}
+														className="input"
+													/>
+													<input
+														placeholder="Tiêu đề (VD: Lần đầu gặp gỡ)"
+														value={item.title ?? ''}
+														onChange={(e) => updateStoryItem(index, 'title', e.target.value)}
+														className="input"
+													/>
+												</div>
+												<input
+													placeholder="Nội dung (VD: Lần đầu gặp gỡ tại một quán cà phê nhỏ ven sông.)"
+													value={item.text}
+													onChange={(e) => updateStoryItem(index, 'text', e.target.value)}
+													className="input"
+												/>
+											</div>
+											<button
+												type="button"
+												onClick={() => removeStoryRow(index)}
+												className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-pink-300 hover:text-pink-600"
+											>
+												<Trash2 className="h-4 w-4" />
+											</button>
+										</div>
 									</div>
 								))}
 							</div>
+							{storyPhotoError ? (
+								<div className="mt-3 rounded-xl border border-pink-100 bg-pink-50 p-3 text-xs text-pink-600">
+									<p>{storyPhotoError}</p>
+									<div className="mt-2 flex gap-2">
+										<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng nhập</Link>
+										<span className="text-pink-700">/</span>
+										<Link href={loginHref} className="font-semibold text-pink-700 underline hover:text-pink-800">Đăng ký</Link>
+									</div>
+								</div>
+							) : null}
 							<button
 								type="button"
 								onClick={addStoryRow}
@@ -607,7 +683,7 @@ export default function Input({
 								Thêm cột mốc
 							</button>
 						</div>
-					) : null} */}
+					) : null}
 
 					{/* Ảnh trên thiệp (mẫu hỗ trợ khai báo `photos` trong config) */}
 					{features.photos ? (
@@ -661,31 +737,35 @@ export default function Input({
 				</section>
 
 				{/* Gia đình hai bên */}
+				{(features.groomParents && features.brideParents) ? (
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Gia Đình Hai Bên</h2>
 					<div className="mt-4 grid gap-3 sm:grid-cols-2">
 						<Field label="Cha chú rể">
-							<input value={config.groomParents.father} onChange={(e) => updateGroomParent('father', e.target.value)} className="input" />
+							<input value={config.groomParents?.father} onChange={(e) => updateGroomParent('father', e.target.value)} className="input" />
 						</Field>
 						<Field label="Mẹ chú rể">
-							<input value={config.groomParents.mother} onChange={(e) => updateGroomParent('mother', e.target.value)} className="input" />
+							<input value={config.groomParents?.mother} onChange={(e) => updateGroomParent('mother', e.target.value)} className="input" />
 						</Field>
 						<Field label="Địa chỉ nhà trai" full>
-							<input value={config.groomParents.address} onChange={(e) => updateGroomParent('address', e.target.value)} className="input" />
+							<input value={config.groomParents?.address} onChange={(e) => updateGroomParent('address', e.target.value)} className="input" />
 						</Field>
 						<Field label="Cha cô dâu">
-							<input value={config.brideParents.father} onChange={(e) => updateBrideParent('father', e.target.value)} className="input" />
+							<input value={config.brideParents?.father} onChange={(e) => updateBrideParent('father', e.target.value)} className="input" />
 						</Field>
 						<Field label="Mẹ cô dâu">
-							<input value={config.brideParents.mother} onChange={(e) => updateBrideParent('mother', e.target.value)} className="input" />
+							<input value={config.brideParents?.mother} onChange={(e) => updateBrideParent('mother', e.target.value)} className="input" />
 						</Field>
 						<Field label="Địa chỉ nhà gái" full>
-							<input value={config.brideParents.address} onChange={(e) => updateBrideParent('address', e.target.value)} className="input" />
+							<input value={config.brideParents?.address} onChange={(e) => updateBrideParent('address', e.target.value)} className="input" />
 						</Field>
 					</div>
+						
 				</section>
+				) : null}
 
 				{/* Lễ cưới */}
+				{features.ceremony ? (
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Lễ Cưới</h2>
 					<div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -704,7 +784,7 @@ export default function Input({
 						<Field label="Giờ làm lễ">
 							<input
 								type="time"
-								value={config.ceremony.time}
+								value={config.ceremony?.time}
 								onChange={(e) => {
 									updateCeremony('time', e.target.value);
 									e.target.blur();
@@ -713,18 +793,17 @@ export default function Input({
 							/>
 						</Field>
 						<div />
-						{features.lunar ? (
-							<Field label="Ngày âm lịch (tuỳ chọn)" full>
-								<input
-									placeholder="VD: Nhằm ngày 11 tháng 11 năm Bính Ngọ"
-									value={config.ceremony.lunar}
-									onChange={(e) => updateCeremony('lunar', e.target.value)}
-									className="input"
-								/>
-							</Field>
-						) : null}
+						<Field label="Ngày âm lịch (tuỳ chọn)" full>
+							<input
+								placeholder="VD: Nhằm ngày 11 tháng 11 năm Bính Ngọ"
+								value={config.ceremony?.lunar ?? ''}
+								onChange={(e) => updateCeremony('lunar', e.target.value)}
+								className="input"
+							/>
+						</Field>
 					</div>
 				</section>
+				) : null}
 
 				{/* Tiệc cưới */}
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
@@ -742,33 +821,29 @@ export default function Input({
 								className="input"
 							/>
 						</Field>
-						{features.welcomeTime ? (
-							<Field label="Giờ đón khách">
-								<input
-									type="time"
-									value={config.reception.welcomeTime}
-									onChange={(e) => {
-										updateReception('welcomeTime', e.target.value);
-										e.target.blur();
-									}}
-									className="input"
-								/>
-							</Field>
-						) : null}
-						{features.startTime ? (
-							<Field label="Giờ khai tiệc">
-								<input
-									required
-									type="time"
-									value={config.reception.startTime}
-									onChange={(e) => {
-										updateReception('startTime', e.target.value);
-										e.target.blur();
-									}}
-									className="input"
-								/>
-							</Field>
-						) : null}
+						<Field label="Giờ đón khách">
+							<input
+								type="time"
+								value={config.reception.welcomeTime}
+								onChange={(e) => {
+									updateReception('welcomeTime', e.target.value);
+									e.target.blur();
+								}}
+								className="input"
+							/>
+						</Field>
+						<Field label="Giờ khai tiệc">
+							<input
+								required
+								type="time"
+								value={config.reception.startTime}
+								onChange={(e) => {
+									updateReception('startTime', e.target.value);
+									e.target.blur();
+								}}
+								className="input"
+							/>
+						</Field>
 					</div>
 					<div className="mt-4">
 						<Field label="Tên nhà hàng / trung tâm tiệc cưới">
@@ -824,45 +899,43 @@ export default function Input({
 				</section>
 
 				{/* Lịch trình */}
-				{features.schedule ? (
-					<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-						<h2 className="text-base font-semibold text-slate-900">Lịch Trình Ngày Cưới</h2>
-						<p className="mt-1 text-xs text-slate-500">Thêm từng mốc thời gian</p>
-						<div className="mt-4 space-y-2">
-							{config.schedule.map((item, index) => (
-								<div key={index} className="flex items-center gap-2">
-									<input
-										placeholder="Giờ"
-										value={item.time}
-										onChange={(e) => updateScheduleItem(index, 'time', e.target.value)}
-										className="input max-w-24"
-									/>
-									<input
-										placeholder="Nội dung (VD: Đón khách)"
-										value={item.label}
-										onChange={(e) => updateScheduleItem(index, 'label', e.target.value)}
-										className="input"
-									/>
-									<button
-										type="button"
-										onClick={() => removeScheduleRow(index)}
-										className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-pink-300 hover:text-pink-600"
-									>
-										<Trash2 className="h-4 w-4" />
-									</button>
-								</div>
-							))}
-						</div>
-						<button
-							type="button"
-							onClick={addScheduleRow}
-							className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-pink-300 px-3 py-1.5 text-xs font-medium text-pink-600 transition hover:bg-pink-50"
-						>
-							<Plus className="h-3.5 w-3.5" />
-							Thêm mốc thời gian
-						</button>
-					</section>
-				) : null}
+				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+					<h2 className="text-base font-semibold text-slate-900">Lịch Trình Ngày Cưới</h2>
+					<p className="mt-1 text-xs text-slate-500">Thêm từng mốc thời gian</p>
+					<div className="mt-4 space-y-2">
+						{config.schedule.map((item, index) => (
+							<div key={index} className="flex items-center gap-2">
+								<input
+									placeholder="Giờ"
+									value={item.time}
+									onChange={(e) => updateScheduleItem(index, 'time', e.target.value)}
+									className="input max-w-24"
+								/>
+								<input
+									placeholder="Nội dung (VD: Đón khách)"
+									value={item.label}
+									onChange={(e) => updateScheduleItem(index, 'label', e.target.value)}
+									className="input"
+								/>
+								<button
+									type="button"
+									onClick={() => removeScheduleRow(index)}
+									className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-pink-300 hover:text-pink-600"
+								>
+									<Trash2 className="h-4 w-4" />
+								</button>
+							</div>
+						))}
+					</div>
+					<button
+						type="button"
+						onClick={addScheduleRow}
+						className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-dashed border-pink-300 px-3 py-1.5 text-xs font-medium text-pink-600 transition hover:bg-pink-50"
+					>
+						<Plus className="h-3.5 w-3.5" />
+						Thêm mốc thời gian
+					</button>
+				</section>
 
 				{/* Album ảnh */}
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
@@ -1091,14 +1164,12 @@ export default function Input({
 				{/* Mừng cưới online */}
 				<section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 					<h2 className="text-base font-semibold text-slate-900">Mừng Cưới Online</h2>
-					{features.qrGift ? (
 					<p className="mt-1 text-xs text-slate-500">Thông tin ngân hàng (tuỳ chọn)</p>
-					) : null}
 					<div className="mt-4 grid gap-6 sm:grid-cols-2">
 						<GiftColumn
 							who="groom"
 							gift={config.gifts.groom}
-							showQr={features.qrGift}
+							showQr={Boolean(config.gifts.groom.qrImage)}
 							banks={banks}
 							banksLoading={banksLoading}
 							generating={qrGenerating.groom}
@@ -1112,7 +1183,7 @@ export default function Input({
 						<GiftColumn
 							who="bride"
 							gift={config.gifts.bride}
-							showQr={features.qrGift}
+							showQr={Boolean(config.gifts.groom.qrImage)}
 							banks={banks}
 							banksLoading={banksLoading}
 							generating={qrGenerating.bride}
@@ -1125,6 +1196,7 @@ export default function Input({
 						/>
 					</div>
 				</section>
+				</fieldset>
 			</form>
 
 			{/* Sticky "Lưu" button — runs the same backend request as "3. Xem thiệp",
@@ -1135,7 +1207,7 @@ export default function Input({
 				<button
 					type="button"
 					onClick={onSave}
-					disabled={isSaving}
+					disabled={isSaving || !isLoggedIn}
 					className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-pink-600 px-3 py-1.5 text-sm font-semibold text-white shadow-lg ring-1 ring-black/5 transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
 				>
 					{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
