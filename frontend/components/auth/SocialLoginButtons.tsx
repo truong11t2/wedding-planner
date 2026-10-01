@@ -49,16 +49,7 @@ export default function SocialLoginButtons({ returnTo }: SocialLoginButtonsProps
 
   return (
     <div className="mt-8">
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300"></div>
-        </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Hoặc tiếp tục với</span>
-        </div>
-      </div>
-
-      <div className="mt-6 grid grid-cols-1 gap-0">
+      <div className="mt-6 mb-6 grid grid-cols-1 gap-0">
         <button
           onClick={() => handleSocialLogin('Gmail')}
           disabled={isButtonDisabled('Gmail')}
@@ -123,6 +114,14 @@ export default function SocialLoginButtons({ returnTo }: SocialLoginButtonsProps
           </svg>
           Twitter (Soon)
         </button> */}
+      </div>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">Hoặc tiếp tục với</span>
+        </div>
       </div>
     </div>
   );

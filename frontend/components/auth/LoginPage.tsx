@@ -144,6 +144,7 @@ export default function LoginPage() {
                 </div>
               </>
             )}
+          <SocialLoginButtons returnTo={requestedReturnTo} />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -212,7 +213,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <SocialLoginButtons returnTo={requestedReturnTo} />
         </div>
       </div>
     </main>
