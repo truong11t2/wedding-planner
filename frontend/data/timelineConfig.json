@@ -60,7 +60,7 @@
       "vendorType": "altarCeremony"
     },
     {
-      "id": "book-caterer",
+      "id": "choose-menu",
       "title": "Lựa Chọn Thực Đơn",
       "description": "Liên hệ với địa điểm tổ chức tiệc cưới để chọn thực đơn phù hợp với phong cách và ngân sách đám cưới của bạn. Có thể yêu cầu thực đơn mẫu, tư vấn thực đơn theo ngân sách và yêu thử món trước khi quyết định.",
       "monthsBeforeWedding": 4,
@@ -165,6 +165,13 @@
       "category": "Nhà cung cấp"
     },
     {
+      "id": "send-invitations",
+      "title": "Gửi Thiệp Mời",
+      "description": "Gửi thiệp mời cho khách mời và theo dõi xác nhận tham dự",
+      "monthsBeforeWedding": 0.5,
+      "category": "Nhà cung cấp"
+    },
+    {
       "id": "wedding-rehearsal-planning",
       "title": "Lên Kế Hoạch Tập Dượt",
       "description": "Tổ chức tiệc tập dượt và thực hành lễ cưới",
@@ -214,7 +221,7 @@
     },
     {
       "id": "marriage-license",
-      "title": "Đăng Ký Kết Hôn",
+      "title": "Lấy Giấy Đăng Ký Kết Hôn",
       "description": "Đảm bảo giấy phép kết hôn đã sẵn sàng và hợp lệ",
       "monthsBeforeWedding": 0.25,
       "category": "Pháp lý"

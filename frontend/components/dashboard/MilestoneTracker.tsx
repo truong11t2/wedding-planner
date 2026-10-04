@@ -12,18 +12,18 @@ interface MilestoneTrackerProps {
 export default function MilestoneTracker({ timelineItems }: MilestoneTrackerProps) {
   // Define major milestones
   const majorMilestones = [
-    'Set Your Budget',
-    'Book Venue',
-    'Book Photographer',
-    'Order Wedding Dress',
-    'Book Caterer',
-    'Send Invitations',
-    'Final Dress Fitting',
-    'Enjoy Your Wedding Day!'
+    'set-your-budget',
+    'book-venue',
+    'book-photographer',
+    'order-wedding-dress',
+    'choose-menu',
+    'send-invitations',
+    'final-dress-fitting',
+    'enjoy-your-wedding-day'
   ];
 
   const milestoneItems = timelineItems.filter(item => 
-    majorMilestones.includes(item.title)
+    majorMilestones.includes(item.id)
   ).sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
 
   const getStatusIcon = (item: TimelineItem) => {
@@ -76,7 +76,7 @@ export default function MilestoneTracker({ timelineItems }: MilestoneTrackerProp
                 <div className="flex space-x-4 mt-1">
                   {getStatusIcon(item)}
                   <h3 className={`font-medium ${
-                    item.completed ? 'text-green-900 line-through' :
+                    item.completed ? 'text-green-900' :
                     isOverdue ? 'text-red-900' :
                     'text-gray-900'
                   }`}>
@@ -96,13 +96,13 @@ export default function MilestoneTracker({ timelineItems }: MilestoneTrackerProp
                   <div className="flex justify-between">
                     <div>
 
-                      <p className={`text-sm mt-1 ${
+                      {/* <p className={`text-sm mt-1 ${
                         item.completed ? 'text-green-700' :
                         isOverdue ? 'text-red-700' :
                         'text-gray-600'
                       }`}>
                         {item.description}
-                      </p>
+                      </p> */}
                     </div>
                     
                     <div className="flex flex-col items-end ml-4">

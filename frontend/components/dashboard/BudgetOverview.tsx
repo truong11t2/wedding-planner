@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { PiggyBank, TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
-import { getBudgetData, BudgetCategory } from '@/api/budget';
+import { getBudgetData, BudgetCategory, INITIAL_TOTAL_BUDGET } from '@/api/budget';
 import { useAuth } from '@/context/AuthContext';
 
 
 export default function BudgetOverview() {
   const { isLoggedIn } = useAuth();
-  const [totalBudget, setTotalBudget] = useState(25000);
+  const [totalBudget, setTotalBudget] = useState(INITIAL_TOTAL_BUDGET);
   const [budgetCategories, setBudgetCategories] = useState<BudgetCategory[]>([]);
   const [loading, setLoading] = useState(true);
 
