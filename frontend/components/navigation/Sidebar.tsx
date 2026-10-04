@@ -29,9 +29,9 @@ interface SidebarProps {
 }
 
 const navigationItems: NavItem[] = [
-  { name: 'Bảng Tổng Hợp', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Tổng Quan', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Kế Hoạch Cưới', href: '/timeline', icon: Clock },
   { name: 'Ngân Sách', href: '/budget', icon: PiggyBank },
-  { name: 'Lịch Trình Đám Cưới', href: '/timeline', icon: Clock },
   { name: 'Việc cần làm', href: '/checklist', icon: CircleCheckBig },
   { name: 'Khách Mời', href: '/guests', icon: Users },
   // { name: 'Địa Điểm', href: '/venues', icon: MapPinned },

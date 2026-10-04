@@ -102,13 +102,13 @@ export default function Select({
 				})}
 			</div>
 
-			{invitationTemplates.length === 0 ? (
+			{/* {invitationTemplates.length === 0 ? (
 				<div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-600">
 					Không tìm thấy mẫu phù hợp. Hãy thử đổi bộ lọc hoặc từ khóa tìm kiếm.
 				</div>
-			) : null}
+			) : null} */}
 
-			<div className="mt-8 flex justify-end">
+			{/* <div className="mt-8 flex justify-end">
 				<button
 					type="button"
 					onClick={() => setActiveTab('input')}
@@ -116,7 +116,7 @@ export default function Select({
 				>
 					Tiếp tục: Nhập thông tin đám cưới
 				</button>
-			</div>
+			</div> */}
 
 			{descriptionTemplate ? (
 				<div

@@ -41,7 +41,7 @@ const coreConfig: CoreInvitationConfig = {
 		'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-2.webp',
 		'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-3.webp'
 	],
-	musicUrl: 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/music/English/I-Do_911.mp3'
+	musicUrl: ''
 };
 
 const minimalConfig: InvitationConfig = {
@@ -66,7 +66,7 @@ const minimalConfig: InvitationConfig = {
 		dateLabel: '20 · 12 · 2026',
 		lunar: '(Nhằm ngày 12 tháng 11 năm Bính Ngọ)'
 	},
-	story: []
+	story: null,
 };
 
 const songLongConfig: InvitationConfig = {
@@ -126,7 +126,9 @@ export const invitationConfigs: Record<string, InvitationConfig> = {
 	'vintage': songLongConfig,
 	'mien-tay': songLongConfig,
 	'passport': songLongConfig,
-	'western': hienDaiConfig,
+	// Must match the template id in `invitationTemplates` — `thiep-cuoi-western`,
+	// not `western`. A missing key silently fell back to `minimalConfig`.
+	'thiep-cuoi-western': hienDaiConfig,
 };
 
 /** Deep-clone a config so callers never mutate the shared registry objects. */

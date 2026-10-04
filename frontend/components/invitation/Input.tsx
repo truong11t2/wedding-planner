@@ -618,9 +618,9 @@ export default function Input({
 							<div className="mt-4 space-y-3">
 								{config.story.map((item, index) => (
 									<div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-										<div className="flex items-start gap-3">
+										<div className="flex flex-col gap-3 sm:flex-row sm:items-start">
 											<LabeledImageUploadCard
-												label="Ảnh"
+												label=""
 												variant="square"
 												value={item.photo ?? ''}
 												uploading={uploadingStoryPhotoIndex === index}
@@ -656,7 +656,7 @@ export default function Input({
 											<button
 												type="button"
 												onClick={() => removeStoryRow(index)}
-												className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-pink-300 hover:text-pink-600"
+												className="self-end rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-pink-300 hover:text-pink-600 sm:self-auto"
 											>
 												<Trash2 className="h-4 w-4" />
 											</button>

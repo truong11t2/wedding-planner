@@ -107,6 +107,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-4">
+            <SocialLoginButtons returnTo={requestedReturnTo} />
             {!isLogin && (
               <>
                 <div className="grid grid-cols-2 gap-4">
@@ -144,8 +145,6 @@ export default function LoginPage() {
                 </div>
               </>
             )}
-          <SocialLoginButtons returnTo={requestedReturnTo} />
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Thư điện tử

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTimeline } from '@/context/TimelineContext';
 import { CheckCircle, Clock, Check, X, ChevronDown, ChevronUp, Phone, MapPin, DollarSign, Save } from 'lucide-react';
 import Link from 'next/link';

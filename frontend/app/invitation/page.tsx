@@ -312,114 +312,31 @@ export default function InvitationPage() {
 	);
 
 	/**
-	 * Merge user's current input with template defaults.
-	 * Preserves user-entered data while filling in missing fields from the template defaults.
-	 */
-	const mergeConfigWithDefaults = (
-		currentConfig: InvitationConfig,
-		currentWeddingDate: string,
-		templateId: string
-	): { config: InvitationConfig; weddingDate: string } => {
-		const templateDefaults = buildDefaultConfig(templateId);
-		
-		// Merge configs, preserving user input where it exists
-		const merged: InvitationConfig = {
-			groomShort: currentConfig.groomShort || templateDefaults.groomShort,
-			brideShort: currentConfig.brideShort || templateDefaults.brideShort,
-			groomFull: currentConfig.groomFull || templateDefaults.groomFull,
-			brideFull: currentConfig.brideFull || templateDefaults.brideFull,
-			groomRole: currentConfig.groomRole || templateDefaults.groomRole,
-			brideRole: currentConfig.brideRole || templateDefaults.brideRole,
-			monogram: currentConfig.monogram || templateDefaults.monogram,
-			weddingDateISO: currentConfig.weddingDateISO || templateDefaults.weddingDateISO,
-			groomParents: templateDefaults.groomParents ? currentConfig.groomParents ?? templateDefaults.groomParents : null,
-			brideParents: templateDefaults.brideParents ? currentConfig.brideParents ?? templateDefaults.brideParents : null,
-			ceremony: templateDefaults.ceremony ? currentConfig.ceremony ?? templateDefaults.ceremony : null,
-			reception: {
-				date: currentConfig.reception?.date || templateDefaults.reception.date,
-				welcomeTime: currentConfig.reception?.welcomeTime || templateDefaults.reception.welcomeTime,
-				startTime: currentConfig.reception?.startTime || templateDefaults.reception.startTime,
-					venueName: currentConfig.reception?.venueName || templateDefaults.reception.venueName,
-					address: currentConfig.reception?.address || templateDefaults.reception.address,
-				mapQuery: currentConfig.reception?.mapQuery || templateDefaults.reception.mapQuery
-			},
-			schedule: currentConfig.schedule?.length ? currentConfig.schedule : templateDefaults.schedule,
-			gallery: (currentConfig.gallery?.length ? currentConfig.gallery : templateDefaults.gallery).slice(0, MAX_GALLERY_IMAGES),
-			gifts: {
-				groom: {
-					bank: currentConfig.gifts?.groom?.bank || templateDefaults.gifts.groom.bank,
-					account: currentConfig.gifts?.groom?.account || templateDefaults.gifts.groom.account,
-					name: currentConfig.gifts?.groom?.name || templateDefaults.gifts.groom.name,
-					qrImage: currentConfig.gifts?.groom?.qrImage || templateDefaults.gifts.groom.qrImage
-				},
-				bride: {
-					bank: currentConfig.gifts?.bride?.bank || templateDefaults.gifts.bride.bank,
-					account: currentConfig.gifts?.bride?.account || templateDefaults.gifts.bride.account,
-					name: currentConfig.gifts?.bride?.name || templateDefaults.gifts.bride.name,
-					qrImage: currentConfig.gifts?.bride?.qrImage || templateDefaults.gifts.bride.qrImage
-				}
-			},
-			musicUrl: currentConfig.musicUrl || templateDefaults.musicUrl,
-			// Template-specific fields are only kept when the target template
-			// actually supports them, so stale data from a previous template
-			// never gets rendered in the form.
-			story: templateDefaults.story
-				? currentConfig.story?.length
-					? currentConfig.story
-					: templateDefaults.story
-				: undefined,
-			photos: templateDefaults.photos ? currentConfig.photos ?? templateDefaults.photos : undefined
-		};
-
-		// Use current wedding date if exists, otherwise extract from config
-		const mergedWeddingDate = currentWeddingDate || (merged.weddingDateISO ? merged.weddingDateISO.split('T')[0] : '');
-
-		return { config: merged, weddingDate: mergedWeddingDate };
-	};
-
-	/**
-	 * Switching templates loads the stored invitation (when there is one) and
-	 * merges it with the new template's defaults, so user-entered information is
-	 * kept. The choice is then written to the database straight away — the
-	 * template is stored nowhere else, and the other steps read the form back from
-	 * there.
+	 * Switching templates loads that template's own default config — never a merge
+	 * with the form that was on screen before, so data belonging to another
+	 * template (its story, photos, parents, ...) can never leak into this one.
+	 *
+	 * The form is filled in straight away, whether or not the user is logged in;
+	 * only the database write is skipped when logged out. The choice is stored via
+	 * the render endpoint — the template is kept nowhere else, and the other steps
+	 * read the form back from there.
 	 */
 	const handleSelectTemplate = async (templateId: string) => {
 		if (templateId === selectedTemplateId) return;
 
-		let nextConfig = config;
-		let nextWeddingDate = weddingDate;
-
-		try {
-			// Try to load saved invitation from database
-			const response = await getMyInvitation();
-
-			if (response.success && response.invitation?.config) {
-				// Use saved config from database
-				nextConfig = response.invitation.config;
-				nextWeddingDate = response.invitation.config.weddingDateISO?.split('T')[0] || weddingDate;
-			}
-		} catch {
-			// No stored invitation (or the fetch failed) — merge the current form.
-		}
-
-		// Merge with new template defaults, preserving user data
-		const { config: mergedConfig, weddingDate: mergedDate } = mergeConfigWithDefaults(
-			nextConfig,
-			nextWeddingDate,
-			templateId
-		);
+		const templateConfig = buildDefaultConfig(templateId);
+		const templateWeddingDate = templateConfig.weddingDateISO.split('T')[0];
 
 		setSelectedTemplateId(templateId);
-		setConfig(mergedConfig);
-		setWeddingDate(mergedDate);
+		setConfig(templateConfig);
+		setWeddingDate(templateWeddingDate);
 
 		// Always reset preview/share on template change
 		setPreviewUrl(null);
 		setPreviewFileName(null);
 		setShareUrl(null);
 
-		templateSaveRef.current = saveSelectedTemplate(templateId, mergedConfig, mergedDate);
+		templateSaveRef.current = saveSelectedTemplate(templateId, templateConfig, templateWeddingDate);
 		await templateSaveRef.current;
 	};
 
