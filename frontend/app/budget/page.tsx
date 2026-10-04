@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import {
   BudgetCategory,
+  INITIAL_TOTAL_BUDGET,
   getBudgetData,
   saveBudgetData,
   updateTotalBudget as apiUpdateTotalBudget,
@@ -595,7 +596,7 @@ export default function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<BudgetCategory | null>(null);
-  const [totalBudget, setTotalBudget] = useState(25000);
+  const [totalBudget, setTotalBudget] = useState(INITIAL_TOTAL_BUDGET);
   const [toast, setToast] = useState<{
     show: boolean;
     message: string;
@@ -621,8 +622,8 @@ export default function BudgetPage() {
         try {
           const response = await getBudgetData();
           if (response.success && response.data) {
-            setTotalBudget(response.data.totalBudget);
             if (response.data.categories.length > 0) {
+            setTotalBudget(response.data.totalBudget);
             setCategories(response.data.categories);
             } else {
               // Initialize with sample data if no budget exists
@@ -700,9 +701,10 @@ export default function BudgetPage() {
                   priority: 'cao'
                 }
               ];
+              setTotalBudget(INITIAL_TOTAL_BUDGET);
               setCategories(sampleCategories);
               // Save initial data to backend
-              await saveBudgetData({ totalBudget: 250000000, categories: sampleCategories });
+              await saveBudgetData({ totalBudget: INITIAL_TOTAL_BUDGET, categories: sampleCategories });
             }
           }            
         } catch {
@@ -718,7 +720,7 @@ export default function BudgetPage() {
 
   // Auto-save budget data whenever it changes (debounced)
   useEffect(() => {
-    if (!loading && isLoggedIn && (categories.length > 0 || totalBudget !== 25000)) {
+    if (!loading && isLoggedIn && (categories.length > 0 || totalBudget !== INITIAL_TOTAL_BUDGET)) {
       const timeoutId = setTimeout(async () => {
         try {
           await saveBudgetData({ totalBudget, categories });

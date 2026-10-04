@@ -1,5 +1,8 @@
 import { API_BASE_URL, ENDPOINTS } from './config';
 
+// Default budget used before the user configures their own
+export const INITIAL_TOTAL_BUDGET = 250000000;
+
 export interface BudgetCategory {
   id: string;
   name: string;

@@ -16,7 +16,7 @@ exports.getBudget = async (req, res) => {
 
     // Return budget data or default structure
     const budgetData = user.budgetData || {
-      totalBudget: 25000,
+      totalBudget: 250000000,
       categories: [],
       lastUpdated: new Date().toISOString()
     };
@@ -141,7 +141,7 @@ exports.updateTotalBudget = async (req, res) => {
 
     // Get existing budget data or initialize
     const currentBudgetData = user.budgetData || {
-      totalBudget: 25000,
+      totalBudget: 250000000,
       categories: [],
       lastUpdated: new Date().toISOString()
     };
@@ -210,7 +210,7 @@ exports.addBudgetCategory = async (req, res) => {
 
     // Get existing budget data or initialize
     const currentBudgetData = user.budgetData || {
-      totalBudget: 25000,
+      totalBudget: 250000000,
       categories: [],
       lastUpdated: new Date().toISOString()
     };
@@ -272,7 +272,7 @@ exports.updateBudgetCategory = async (req, res) => {
     }
 
     const currentBudgetData = user.budgetData || {
-      totalBudget: 25000,
+      totalBudget: 250000000,
       categories: [],
       lastUpdated: new Date().toISOString()
     };
@@ -358,7 +358,7 @@ exports.deleteBudgetCategory = async (req, res) => {
     }
 
     const currentBudgetData = user.budgetData || {
-      totalBudget: 25000,
+      totalBudget: 250000000,
       categories: [],
       lastUpdated: new Date().toISOString()
     };
@@ -414,7 +414,7 @@ exports.getBudgetStats = async (req, res) => {
     }
 
     const budgetData = user.budgetData || {
-      totalBudget: 25000,
+      totalBudget: 250000000,
       categories: [],
       lastUpdated: new Date().toISOString()
     };
