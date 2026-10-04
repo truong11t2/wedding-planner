@@ -7,8 +7,12 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies.
+# Alpine uses musl, so force the musl-native SWC binary. Without this npm can
+# resolve the glibc (@next/swc-linux-x64-gnu) binding, which fails to load on
+# musl and makes Next.js fall back to the WASM binding that Turbopack cannot use
+# ("turbo.createProject is not supported by the wasm bindings").
+RUN npm ci --libc=musl
 
 # Stage 2: Build the application
 FROM ${NODE} AS builder
