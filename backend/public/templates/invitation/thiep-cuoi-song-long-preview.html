@@ -3,56 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!--
-  ==============================================================
-  THẺ CHIA SẺ LINK — Open Graph (Zalo / Facebook / Messenger)
-  ==============================================================
-  1. Zalo đọc HTML bằng crawler phía server và KHÔNG chạy JavaScript,
-     nên các thẻ og:* dưới đây phải là thẻ TĨNH mới có tác dụng.
-     Phần JS ở cuối file chỉ ghi đè lại cho đúng tên cô dâu/chú rể và
-     ảnh bìa thật (dùng cho tab trình duyệt + crawler có chạy JS).
-  2. og:image PHẢI là URL tuyệt đối, công khai qua https (Zalo không
-     đọc được đường dẫn tương đối như "/images/...").
-  3. Ảnh nên là JPG/PNG, nặng dưới ~5MB thì Zalo hiển thị chắc chắn
-     hơn. Vì vậy ngoài ảnh mặc định của thiệp (webp) còn khai báo
-     thêm 1 ảnh JPG dự phòng cùng domain.
-  4. Zalo cache preview theo URL: muốn Zalo đọc lại, hãy chia sẻ kèm
-     tham số khác, ví dụ .../invitations/abc.html?v=2
-  ==============================================================
--->
-<meta name="description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="author" content="Vemotnha">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0b3d39">
-<title>Thiệp mời cưới — Trân trọng kính mời</title>
-
-<meta property="og:locale" content="vi_VN">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Vemotnha — Thiệp cưới online">
-<meta property="og:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta property="og:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-
-<!-- Ảnh chính: đúng ảnh bìa mặc định của mẫu thiệp này -->
-<meta property="og:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:secure_url" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:type" content="image/webp">
-<meta property="og:image:width" content="1707">
-<meta property="og:image:height" content="2560">
-<meta property="og:image:alt" content="Ảnh cưới của cô dâu và chú rể">
-
-<!-- Ảnh dự phòng: khổ ngang + định dạng JPG, nằm cùng domain với trang thiệp -->
-<meta property="og:image" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:secure_url" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1920">
-<meta property="og:image:height" content="1074">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta name="twitter:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="twitter:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-
+<title>Thiệp mẫu — Song Long (bản học tập)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Noto+Serif+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -1093,98 +1044,18 @@
     });
   }
 
-  /*
-    ==============================================================
-    BƯỚC B3 — CẬP NHẬT THẺ CHIA SẺ (Open Graph) THEO DỮ LIỆU THẬT
-    Thẻ og:* tĩnh trong <head> là bản mặc định dành cho crawler của
-    Zalo/Facebook (chúng không chạy JavaScript). Hàm dưới đây ghi đè
-    lại bằng tên cô dâu/chú rể, địa điểm và ảnh bìa thật của thiệp —
-    có tác dụng với tiêu đề tab trình duyệt và các crawler/app có
-    chạy JavaScript. Nhớ: og:image luôn phải là URL tuyệt đối https.
-    ==============================================================
-  */
-  const ANH_BIA_MAC_DINH = 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp';
-
-  // Thêm thẻ <meta> nếu chưa có, cập nhật nếu đã có.
-  function datTheMeta(thuocTinh, ten, noiDung) {
-    let the = document.head.querySelector(`meta[${thuocTinh}="${ten}"]`);
-    if (!the) {
-      the = document.createElement('meta');
-      the.setAttribute(thuocTinh, ten);
-      document.head.appendChild(the);
-    }
-    the.setAttribute('content', noiDung);
-  }
-
-  // Xoá hết các thẻ <meta> khớp (dùng khi con số cũ không còn đúng nữa).
-  function xoaTheMeta(thuocTinh, ten) {
-    document.head.querySelectorAll(`meta[${thuocTinh}="${ten}"]`).forEach((the) => the.remove());
-  }
-
-  // Ảnh bìa để chia sẻ: ưu tiên ảnh thật của thiệp, cuối cùng mới dùng ảnh mặc định.
-  function anhBiaChiaSe(config) {
-    const anh = config?.photos?.coverPhoto
-      || (Array.isArray(config?.gallery) ? config.gallery.find(Boolean) : '')
-      || ANH_BIA_MAC_DINH;
-    return tuyetDoiHoaUrl(anh);
-  }
-
-  // Crawler không chạy JS nên chỉ cần URL tuyệt đối; hàm này cũng giúp
-  // link thiệp chạy đúng khi xem offline / trên domain khác.
-  function tuyetDoiHoaUrl(url) {
-    try {
-      return new URL(url, window.location.href).href;
-    } catch {
-      return ANH_BIA_MAC_DINH;
-    }
-  }
-
-  function capNhatTheChiaSe(config) {
-    const tenCapDoi = [config.groomShort, config.brideShort].filter(Boolean).join(' & ');
-    const tieuDe = tenCapDoi ? `Thiệp mời cưới ${tenCapDoi}` : 'Thiệp mời cưới';
-    const diaDiem = [config.reception?.venueName, config.reception?.address].filter(Boolean).join(', ');
-    const moTa = `Trân trọng kính mời bạn đến dự lễ thành hôn của ${tenCapDoi || 'chúng tôi'}`
-      + (diaDiem ? ` tại ${diaDiem}` : '')
-      + '. Nhấn để mở thiệp và xem chi tiết.';
-    const url = window.location.origin + window.location.pathname + window.location.search;
-    const anh = anhBiaChiaSe(config);
-
-    document.title = tieuDe;
-    datTheMeta('property', 'og:title', tieuDe);
-    datTheMeta('property', 'og:description', moTa);
-    datTheMeta('name', 'twitter:title', tieuDe);
-    datTheMeta('name', 'twitter:description', moTa);
-    datTheMeta('property', 'og:url', url);
-
-    // Ảnh bìa thật (khách tự upload) có kích thước/định dạng khác ảnh
-    // mặc định trong <head>, nên bỏ các thẻ mô tả ảnh cũ trước khi thay.
-    xoaTheMeta('property', 'og:image');
-    xoaTheMeta('property', 'og:image:secure_url');
-    xoaTheMeta('property', 'og:image:type');
-    xoaTheMeta('property', 'og:image:width');
-    xoaTheMeta('property', 'og:image:height');
-    xoaTheMeta('property', 'og:image:alt');
-    datTheMeta('property', 'og:image', anh);
-    datTheMeta('property', 'og:image:secure_url', anh);
-    datTheMeta('property', 'og:image:alt', `Ảnh cưới ${tenCapDoi}`.trim());
-    datTheMeta('name', 'twitter:image', anh);
-
-    // Link chuẩn của thiệp (bỏ phần #anchor nội bộ).
-    let canonical = document.head.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', url);
-  }
-
   function init() {
     config = window.__INVITATION_CONFIG__ || DEFAULT_CONFIG;
     invitationId = window.__INVITATION_ID__ || DEFAULT_INVITATION_ID;
     render(config);
     racHoaTietRongChim();
-    capNhatTheChiaSe(config);
+	
+	// Ẩn bìa thiệp, hiển thị nội dung trực tiếp ngay khi tải trang
+    // (bỏ qua bước bấm "Mở thiệp")
+    // document.getElementById('manBia').style.display = 'none';
+    // const manNoiDung = document.getElementById('manNoiDung');
+    // manNoiDung.style.display = 'flex';
+    // manNoiDung.classList.add('hien');
   }
 
   init();
@@ -1344,7 +1215,7 @@
     // Đợi 1 khung hình để trình duyệt ghi nhận trạng thái ẩn (opacity 0) trước
     // khi thêm class 'hien' — nhờ vậy hiệu ứng mờ dần vẫn chạy mượt.
     requestAnimationFrame(() => { manNoiDung.classList.add('hien'); });
-    playMusicIfAvailable();
+    //playMusicIfAvailable();
     window.scrollTo(0, 0);
     }, 500); // khớp với thời lượng transition ở CSS (.man-bia)
   }
@@ -1359,41 +1230,9 @@
     }, 400); // khớp với thời lượng transition ở CSS (.man-noi-dung)
   }
 
-  // nutMo.addEventListener('click', moThiep);
-  nutMo.addEventListener('click', () => {
-    // // Bắn từ 2 bên vào giữa
-    // const duration = 2000;
-    // const end = Date.now() + duration;
-
-    // (function frame() {
-    //   confetti({
-    //     particleCount: 4,
-    //     angle: 60,
-    //     spread: 55,
-    //     origin: { x: 0, y: 0.7 },
-    //     colors: ['#FFD700', '#FF69B4', '#00CED1', '#FF4500']
-    //   });
-    //   confetti({
-    //     particleCount: 4,
-    //     angle: 120,
-    //     spread: 55,
-    //     origin: { x: 1, y: 0.7 },
-    //     colors: ['#FFD700', '#FF69B4', '#00CED1', '#FF4500']
-    //   });
-
-    //   if (Date.now() < end) requestAnimationFrame(frame);
-    // })();
-    moThiep();
-    confetti({
-      particleCount: 200,
-      spread: 80,
-      origin: { y: 0.6 }
-    });
-  });
+  nutMo.addEventListener('click', moThiep);
   nutQuayLai.addEventListener('click', dongThiep);
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
 </body>
 </html>

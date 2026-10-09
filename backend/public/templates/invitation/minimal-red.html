@@ -90,7 +90,7 @@
     background:linear-gradient(90deg, transparent, var(--gold), transparent);
   }
   .eyebrow{
-    font-family:var(--font-body); font-size:11px; letter-spacing:.32em; font-weight:600;
+    font-family:var(--font-body); font-size:12px; letter-spacing:.32em; font-weight:600;
     text-transform:uppercase; color:var(--gold);
   }
   .section-title{
@@ -132,6 +132,13 @@
   }
   @media (min-width:900px){ .cover-inner{ max-width:420px; padding:48px 40px; } .cover-names{ font-size:48px; } }
   .cover-eyebrow{ font-size:12px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-top:28px; margin-bottom:14px; }
+  .cover-guest{
+    display:none;
+    margin-top:10px; margin-bottom:8px;
+    font-family:var(--font-display); font-size:22px; letter-spacing:.12em;
+    text-transform:capitalize; font-weight:500; color:var(--gold-light);
+    text-shadow:0 0 18px rgba(232,205,130,.25);
+  }
   .cover-names{
     font-family:var(--font-script); font-style:italic; font-weight:500;
     font-size:40px; line-height:1.15; color:var(--gold-pale);
@@ -160,29 +167,26 @@
     font-family:var(--font-script); font-style:italic; font-weight:500;
     font-size:46px; line-height:1.1; color:#fff; margin-top:10px;
   }
-  .hero-names small{ 
-    font-family:var(--font-script); font-style:italic;
-    display:block; font-size:22px; color:var(--gold-light);
-    margin:4px 0; letter-spacing:.15em; }
+  .hero-names small{ display:block; font-size:36px; color:var(--gold-light); margin:4px 0; font-style:italic; letter-spacing:.15em; }
   /* .hero-date{
     margin-top:20px; font-family:var(--font-body); font-size:13px; letter-spacing:.15em;
     color:var(--gold-pale); text-transform:uppercase;
   } */
 
   /* ============ FAMILY / INFO ============ */
-  .info{ padding:40px 26px 8px; text-align:center; }
+  .info{ padding:40px 26px 8px; text-align:center; background:var(--ivory-soft);}
   .parents{
     display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:start;
     margin-top:26px; font-size:13.5px; color:var(--ink-soft); line-height:1.65;
   }
   .parents .side b{ display:block; color:var(--ink); font-weight:600; font-family:var(--font-body); }
   .parents .divider{ width:1px; background:var(--gold); opacity:.4; align-self:stretch; }
-  .parents .label{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; display:block; }
+  .parents .label{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold-deep); margin-bottom:6px; display:block; }
 
   .couple-block{ margin-top:34px; }
   .couple-name{ font-family:var(--font-display); font-size:20px; color:var(--wine); font-weight:600; }
   .couple-role{ font-size:12px; color:var(--ink-soft); margin-top:2px; letter-spacing:.05em; }
-  .couple-amp{ font-family:var(--font-script); font-style:italic; font-size:24px; color:var(--gold); margin:12px 0; }
+  .couple-amp{ font-family:var(--font-script); font-style:italic; font-size:24px; color:var(--gold-deep); margin:12px 0; }
 
   .ceremony-box{
     margin-top:30px; padding:22px 18px; background:var(--ivory-soft);
@@ -197,15 +201,15 @@
   .ceremony-box .lunar{ margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-style:italic; }
 
   /* ============ GALLERY ============ */
-  .gallery{ padding:44px 20px; text-align:center; background:var(--ivory); }
+  .gallery{ padding:44px 20px; text-align:center; background:var(--ivory-soft); }
   .gallery-grid{
     margin-top:22px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px;
   }
   .gallery-grid img{
     width:100%; height:120px; object-fit:cover; border-radius:3px; cursor:pointer;
-    transition:transform .35s ease, filter .35s ease; filter:saturate(.92);
+    transition:transform .35s ease, filter .35s ease; filter:saturate(.95);
   }
-  .gallery-grid img:hover{ transform:scale(1.03); filter:saturate(1.05); }
+  .gallery-grid img:hover{ transform:scale(1.03); filter:saturate(1.08); }
   .gallery-grid .tall{ grid-row: span 2; height:100%; }
   @media (min-width:640px){ .gallery-grid img{ height:160px; } }
 
@@ -230,8 +234,6 @@
       var(--wine);
     color:#fff;
   }
-  /* subtle 囍 lattice, same language as the cover — shared by the
-     three "silk red" sections so they read as one continuous fabric */
   .countdown-sec::before, .hero::before, .gift::before, footer::before{
     content:''; position:absolute; inset:0; pointer-events:none; opacity:.10;
     background-image:
@@ -322,9 +324,17 @@
     font-size:13px; color:var(--gold-pale); line-height:1.7;
   }
   .party-info b{
-    display:block; font-family:var(--font-script); font-style:italic; font-weight:600;
+    display:block; font-family:var(--font-script); font-weight:600;
     font-size:21px; color:#fff; margin-bottom:14px;
   }
+
+  .guest-invite{ margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .guest-invite .guest-prefix{ font-size:14px; color:var(--ivory); }
+  .guest-invite .guest-name{ display:inline-block; font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--ivory-soft); padding:10px 14px; }
+  .guest-invite .guest-suffix{ font-size:12px; color:var(--ivory); }
+
+
+  #partyTimeTitle .party-date{ display:block; font-family:var(--font-display); font-size:24px; font-weight:600; color:#fff; line-height:1.4; margin-top:4px; }
   .party-times{ display:flex; justify-content:center; gap:0; margin-top:2px; }
   .party-times .t{ flex:1; position:relative; }
   .party-times .t + .t::before{
@@ -338,6 +348,8 @@
     font-size:13px; color:#fff; line-height:1.6;
   }
   .venue-line .lbl{ display:block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+  .venue-line #venueName{ display:block; font-family:var(--font-display); font-size:24px; font-weight:600; color:#fff; line-height:1.4; }
+  .venue-line #venueAddress{ display:block; font-size:14px; color:#fff; line-height:1.45; margin-top:4px; }
 
   .cta-row{ margin-top:26px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
   .btn{
@@ -362,16 +374,11 @@
 
   /* ============ SCHEDULE ============ */
   .schedule{ padding:46px 26px; text-align:center; background:var(--ivory-soft); }
-  .schedule ol{ list-style:none; margin-top:28px; position:relative; }
-  .schedule ol::before{ content:''; position:absolute; left:29px; top:6px; bottom:6px; width:1px; background:rgba(201,162,75,.5); }
-  .schedule li{ position:relative; padding-left:60px; margin-bottom:24px; }
-  .schedule li:last-child{ margin-bottom:0; }
-  .schedule .dot{
-    position:absolute; left:22px; top:2px; width:15px; height:15px; border-radius:50%;
-    background:var(--ivory-soft); border:2px solid var(--gold); box-shadow:0 0 0 3px var(--ivory-soft);
-  }
-  .schedule .time{ font-family:var(--font-display); font-size:14px; color:var(--wine); font-weight:600; }
-  .schedule .label{ font-size:13px; color:var(--ink-soft); margin-top:2px; }
+  .schedule ol{ list-style:none; margin-top:28px; position:relative; max-width:360px; margin-left:auto; margin-right:auto; padding:0; }
+  .schedule li{ display:grid; grid-template-columns:2fr 3fr; align-items:center; gap:24px; margin-bottom:14px; padding:8px 0; border-bottom:1px solid rgba(110,20,35,.12); width:100%; }
+  .schedule li:last-child{ margin-bottom:0; border-bottom:none; }
+  .schedule .time{ font-family:var(--font-display); font-size:16px; color:var(--wine); font-weight:600; text-align:right; }
+  .schedule .label{ font-size:13px; color:var(--ink-soft);  text-align:left; }
 
   /* ============ GUESTBOOK ============ */
   .guestbook{ padding:46px 22px; text-align:center; background:var(--ivory-soft); }
@@ -403,7 +410,7 @@
   }
   .gb-list{ margin-top:28px; display:flex; flex-direction:column; gap:14px; max-width:500px; margin-left:auto; margin-right:auto; text-align:left; }
   .gb-item{ background:var(--ivory-soft); border-radius:6px; padding:12px 14px; border-left:3px solid var(--gold); }
-  .gb-item b{ font-size:13px; color:var(--wine); }
+  .gb-item b{ font-size:13px; color:var(--wine); text-transform: capitalize; }
   .gb-item p{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.5; }
   .gb-empty{ font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-top:22px; }
 
@@ -474,6 +481,7 @@
   <div class="cover-inner">
     <div class="cover-names" id="coverNames">Gia Bảo <span class="cover-amp">&amp;</span> Minh Anh</div>
     <div class="cover-eyebrow">Trân trọng kính mời</div>
+    <div class="cover-guest" id="coverGuest">Chị Lan</div>
     <div class="cover-date" id="coverDate">20 . 12 . 2026</div>
     <button class="open-btn" id="openBtn">Mở Thiệp</button>
   </div>
@@ -491,15 +499,15 @@
       <div class="eyebrow">Lễ Thành Hôn</div>
       <div class="hy-seal">囍</div>
       <div class="hero-names">
-        <small id="heroGroom">Nguyễn Gia Bảo</small>
-        <small>&amp</small>
-        <small id="heroBride">Trần Minh Anh</small>
+        <small id="heroGroom">Gia Bảo</small>
+        <small>❦</small>
+        <small id="heroBride">Minh Anh</small>
       </div>
       <!-- <div class="hero-date" id="heroDate">Chủ Nhật · 20 tháng 12 · 2026</div> -->
     </section>
 
     <section class="info fade-in">
-      <span class="eyebrow">Thông Tin Lễ Cưới</span>
+      <span class="eyebrow">Lễ Cưới</span>
       <div class="gold-rule"></div>
 
       <div class="parents">
@@ -549,7 +557,13 @@
     </div>
 
     <section class="countdown-sec fade-in">
-      <span class="eyebrow" style="color:var(--gold-light)">Thông Tin Tiệc Cưới</span>
+      <span class="eyebrow">Tiệc Cưới</span>
+        <div class="guest-invite">
+          <div class="guest-prefix">Trân trọng kính mời</div>
+          <div class="guest-name" id="guestInviteName">Chị Lan</div>
+          <div class="guest-suffix">Đến dự bữa tiệc chung vui cùng gia đình.</div>
+          <div class="gold-rule"></div>
+        </div>
       <div class="party-info">
         <b id="partyTimeTitle"></b>
         <div class="venue-line"></div>
@@ -561,6 +575,7 @@
         <div class="venue-line">
           <span class="lbl">Địa điểm</span>
           <span id="venueName">Địa điểm tiệc cưới</span>
+          <span id="venueAddress"></span>
         </div>
       </div>
       <!-- <div class="cal">
@@ -606,7 +621,7 @@
     </section>
 
     <section class="gift fade-in">
-      <span class="eyebrow" style="color:var(--gold-light)">Hộp Quà Mừng</span>
+      <span class="eyebrow">Hộp Quà Mừng</span>
       <div class="section-title" style="color:#fff">Mừng Cưới Online</div>
       <div class="gift-cards">
         <div class="gift-card" data-who="groom">
@@ -617,13 +632,13 @@
         <div class="gift-card" data-who="bride">
           <div class="role">Cô Dâu</div>
           <div class="nm" id="giftBrideName">Minh Anh</div>
-          <div class="tap">Chạm để xem QR</div>
+          <div class="tap">Ấn để xem QR</div>
         </div>
       </div>
 
       <div class="msg">"Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi"</div>
       <div class="credit" id="footerCredit">Gia Bảo &amp; Minh Anh · 20.12.2026</div>
-      <a class="home-link" href="https://vemotnha.com" target="_blank" rel="noopener">vemotnha.com</a>
+      <a class="home-link" href="https://vemotnha.com.vn" target="_blank" rel="noopener">vemotnha.com.vn</a>
     </section>
 
     <div id="qr-modal">
@@ -652,7 +667,7 @@
         <label><input type="radio" name="attendanceStatus" value="attending" checked /> Có, tôi sẽ tham dự</label>
         <label><input type="radio" name="attendanceStatus" value="declined" /> Rất tiếc, tôi không thể tham dự</label>
       </fieldset>
-      <input type="number" id="rsvpGuestCount" min="1" max="10" value="1" aria-label="Số người tham dự" placeholder="Số người tham dự" required />
+      <input type="number" id="rsvpGuestCount" min="1" max="100" value="1" aria-label="Số người tham dự" placeholder="Số người tham dự" required />
       <select id="rsvpMealPreference" aria-label="Lựa chọn món ăn">
         <option value="">Lựa chọn món ăn (không bắt buộc)</option>
         <option value="Bình thường">Thực đơn thường</option>
@@ -694,26 +709,32 @@ const DEFAULT_CONFIG = {
   weddingDateISO: "2026-12-20T18:00:00",
   groomParents: { father: "Ông Nguyễn Văn Long", mother: "Bà Lê Thị Hồng", address: "12 Trần Phú, Hải Châu, Đà Nẵng" },
   brideParents: { father: "Ông Trần Văn Nam", mother: "Bà Phạm Thị Lan", address: "45 Lê Duẩn, Quận 1, TP.HCM" },
-  ceremony: { time: "09:00", dateLabel: "20 · 12 · 2026", lunar: "(Nhằm ngày 11 tháng 11 năm Bính Ngọ)" },
+  ceremony: { time: "09:00", dateLabel: "20 · 12 · 2026", lunar: "(Nhằm ngày 12 tháng 11 năm Bính Ngọ)" },
   reception: {
     date: "2026-12-20",
     welcomeTime: "17:30",
     startTime: "18:00",
-    venueName: "The Adora Center, 431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
-    mapQuery: ""
+    venueName: "The Adora Center",
+    address: "431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
+    mapQuery: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.1683051673813!2d106.6568232753989!3d10.798418358786982!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529d96e56d9bd%3A0x205428f74d7f4ddb!2sThe%20ADORA!5e0!3m2!1sen!2s!4v1788687164235!5m2!1sen!2s"
   },
   schedule: [
     { time: "17:30", label: "Đón khách" },
-    { time: "18:00", label: "Khai tiệc" },
-    { time: "18:20", label: "Nghi thức rót rượu, cắt bánh" },
+    { time: "18:00", label: "Nghi thức cưới" },
+    { time: "18:20", label: "Khai tiệc" },
     { time: "19:00", label: "Phục vụ tiệc chính" },
     { time: "21:00", label: "Kết thúc tiệc" }
   ],
   gallery: [
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp",
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/DSC_8736.webp",
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-1.webp",
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-2.webp",
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-3.webp"
   ],
   gifts: {
-    groom: { bank: "Vietcombank", account: "0123 4567 89", name: "NGUYEN GIA BAO", qrImage: "" },
-    bride: { bank: "BIDV",        account: "9876 5432 10", name: "TRAN MINH ANH", qrImage: "" }
+    groom: { bank: "Vietcombank", account: "0123 4567 89", name: "NGUYEN GIA BAO", qrImage: "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/qr-bank/qrcode_chu-re.png" },
+    bride: { bank: "BIDV",        account: "9876 5432 10", name: "TRAN MINH ANH", qrImage: "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/qr-bank/qrcode_co-dau.jpg" }
   },
   musicUrl: ""
 };
@@ -730,9 +751,27 @@ let countdownInterval = null;
 function renderInvitation(cfg){
   CONFIG = cfg;
 
+  const guestName = new URLSearchParams(window.location.search).get('guest');
+  const guestText = (guestName || '').trim();
+  const coverEyebrow = document.querySelector('.cover-eyebrow');
+  const coverGuest = document.getElementById('coverGuest');
+  const guestInviteName = document.getElementById('guestInviteName');
+
+  if (coverEyebrow) {
+    coverEyebrow.textContent = 'Trân trọng kính mời';
+  }
+  if (coverGuest) {
+    coverGuest.textContent = guestText || '';
+    coverGuest.style.display = guestText ? 'block' : 'none';
+  }
+  if (guestInviteName) {
+    guestInviteName.textContent = guestText || 'Chị Lan';
+    guestInviteName.style.display = guestText ? 'inline-block' : 'inline-block';
+  }
+
   $('coverNames').innerHTML = `${cfg.groomShort} <span class="cover-amp">&amp;</span> ${cfg.brideShort}`;
-  $('heroGroom').textContent = cfg.groomFull;
-  $('heroBride').textContent = cfg.brideFull;
+  $('heroGroom').textContent = cfg.groomShort;
+  $('heroBride').textContent = cfg.brideShort;
   $('groomFather').textContent = cfg.groomParents.father;
   $('groomMother').textContent = cfg.groomParents.mother;
   $('groomAddress').textContent = cfg.groomParents.address;
@@ -755,7 +794,7 @@ function renderInvitation(cfg){
   const receptionDateText = receptionDateObj && !isNaN(receptionDateObj)
     ? receptionDateObj.toLocaleDateString('vi-VN', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric' })
     : '';
-  $('partyTimeTitle').innerHTML = `Tiệc cưới sẽ diễn ra vào ngày${receptionDateText ? '<br>' + receptionDateText : ''}`;
+  $('partyTimeTitle').innerHTML = `Tiệc cưới sẽ diễn ra vào ngày${receptionDateText ? '<br><span class="party-date">' + receptionDateText + '</span>' : ''}`;
   const receptionStartObj = receptionDateRaw
     ? new Date(`${receptionDateRaw}T${cfg.reception.startTime || '00:00'}:00`)
     : null;
@@ -763,6 +802,7 @@ function renderInvitation(cfg){
     ? receptionStartObj
     : new Date(cfg.weddingDateISO);
   $('venueName').textContent = cfg.reception.venueName;
+  $('venueAddress').textContent = cfg.reception.address || '';
 
   const mapWrap = document.querySelector('.map-wrap');
   const hasMapQuery = !!(cfg.reception && cfg.reception.mapQuery && String(cfg.reception.mapQuery).trim());
@@ -805,7 +845,7 @@ function renderInvitation(cfg){
 
   // schedule
   $('scheduleList').innerHTML = cfg.schedule.map(s => `
-    <li><span class="dot"></span><div class="time">${s.time}</div><div class="label">${s.label}</div></li>
+    <li><div class="time">${s.time}</div><div class="label">${s.label}</div></li>
   `).join('');
 
   // gallery
@@ -865,7 +905,6 @@ function renderCalendar(date){
   const dows = ['T2','T3','T4','T5','T6','T7','CN'];
   let html = dows.map(d => `<div class="dow">${d}</div>`).join('');
 
-  // getDay(): 0 = Chủ Nhật → dịch để cột đầu tiên là Thứ Hai
   const firstOffset = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 

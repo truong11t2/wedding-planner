@@ -3,92 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!--
-  ==============================================================
-  THẺ CHIA SẺ LINK — Open Graph (Zalo / Facebook / Messenger)
-  ==============================================================
-  1. Zalo đọc HTML bằng crawler phía server và KHÔNG chạy JavaScript,
-     nên các thẻ og:* dưới đây phải là thẻ TĨNH mới có tác dụng.
-     Phần JS ở cuối file chỉ ghi đè lại cho đúng tên cô dâu/chú rể và
-     ảnh bìa thật (dùng cho tab trình duyệt + crawler có chạy JS).
-  2. og:image PHẢI là URL tuyệt đối, công khai qua https (Zalo không
-     đọc được đường dẫn tương đối như "/images/...").
-  3. Ảnh nên là JPG/PNG, nặng dưới ~5MB thì Zalo hiển thị chắc chắn
-     hơn. Vì vậy ngoài ảnh mặc định của thiệp (webp) còn khai báo
-     thêm 1 ảnh JPG dự phòng cùng domain.
-  4. Zalo cache preview theo URL: muốn Zalo đọc lại, hãy chia sẻ kèm
-     tham số khác, ví dụ .../invitations/abc.html?v=2
-  ==============================================================
--->
-<meta name="description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="author" content="Vemotnha">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0b3d39">
-<title>Thiệp mời cưới — Trân trọng kính mời</title>
-
-<meta property="og:locale" content="vi_VN">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Vemotnha — Thiệp cưới online">
-<meta property="og:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta property="og:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-
-<!-- Ảnh chính: đúng ảnh bìa mặc định của mẫu thiệp này -->
-<meta property="og:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:secure_url" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:type" content="image/webp">
-<meta property="og:image:width" content="1707">
-<meta property="og:image:height" content="2560">
-<meta property="og:image:alt" content="Ảnh cưới của cô dâu và chú rể">
-
-<!-- Ảnh dự phòng: khổ ngang + định dạng JPG, nằm cùng domain với trang thiệp -->
-<meta property="og:image" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:secure_url" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1920">
-<meta property="og:image:height" content="1074">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta name="twitter:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="twitter:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-
+<title>Thiệp mẫu — Vintage (bản học tập)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Noto+Serif+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /*
     ==============================================================
-    BẢNG MÀU & BIẾN DÙNG CHUNG (design tokens)
+    BẢNG MÀU VINTAGE — giấy ngả vàng + mực sepia + vàng đồng cổ
     ==============================================================
   */
   :root {
-    --jade-deep: #0b3d39;
-    --jade: #12574e;
-    --jade-light: #1f7a6c;
-    --gold: #d4af37;
-    --gold-light: #f3dfa0;
-    --gold-deep: #8a6a1f;
-    --cream: #faf6ec;
-    --cream-2: #f1e9d8;
-    --ink: #14231f;
-    --ink-dark: #0d1f1c;
-    --bronze-dark: #4a3319;
-    --bronze-deep: #2b1f10;
+    /* Giấy */
+    --paper:       #f0e5cc;
+    --paper-2:     #e8dabb;
+    --paper-3:     #dccaa0;
+    --paper-edge:  #bfa878;
+
+    /* Mực */
+    --ink:         #3b2c1e;
+    --ink-soft:    #5e4b35;
+    --ink-muted:   #8a7255;
+
+    /* Rượu vang (nền tối) */
+    --wine:        #4d1e2a;
+    --wine-deep:   #2b0e16;
+    --wine-light:  #6b2a3a;
+
+    /* Vàng đồng cổ */
+    --gold:        #b58c4a;
+    --gold-light:  #d9bb7c;
+    --gold-deep:   #7d5e2c;
+
+    /* Hồng tro */
+    --rose:        #b78b7f;
+    --rose-deep:   #8e5f52;
+
+    /* Họa tiết nhiễu giấy — SVG data URI */
+    --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.24 0 0 0 0 0.12 0 0 0 0.10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   * { box-sizing: border-box; }
 
+  html, body { margin: 0; padding: 0; }
+
   body {
-    margin: 0;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #04110f;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    /* padding: 32px 16px; */
-    /* box-sizing: border-box; */
+    background:
+      radial-gradient(ellipse at center, #2b1e12 0%, #140c06 70%, #0a0603 100%);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
   }
 
   /* LỚP 1 — KHUNG THIỆP */
@@ -97,234 +65,788 @@
     width: 100%;
     max-width: 500px;
     overflow: hidden;
-    border-radius: 22px;
-    background: radial-gradient(circle at 50% 20%, var(--jade-light) 0%, var(--jade) 45%, var(--jade-deep) 100%);
-    color: var(--cream);
-    box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(212,175,55,.15);
+    border-radius: 6px;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow:
+      0 30px 90px rgba(0,0,0,.7),
+      0 0 0 1px rgba(181,140,74,.35),
+      0 0 0 6px rgba(20,12,6,.6),
+      0 0 0 7px rgba(181,140,74,.25);
   }
 
-  /* Trên di động: hiển thị toàn màn hình, bỏ padding/bo góc/đổ bóng của "thẻ nổi" */
   @media (max-width: 480px) {
-    body { padding: 0; background: var(--jade-deep); }
+    body { padding: 0; background: var(--paper); }
     .thiep { max-width: 100%; border-radius: 0; box-shadow: none; }
-    .man-bia { min-height: 100vh; padding: 0 26px; }
+    .man-bia { min-height: 100vh; }
   }
 
-  /* LỚP 2 — HỌA TIẾT TRANG TRÍ (chỉ dùng ở màn bìa) */
-  .hoa-tiet { position: absolute; inset: 0; pointer-events: none; }
-  .rong-nen { position: absolute; top: 50%; transform: translateY(-50%); height: 62%; width: auto; object-fit: contain; opacity: .12; }
-  .rong-trai { right: 50%; }
-  .rong-phai { left: 50%; }
-  .song { position: absolute; bottom: 0; left: 0; width: 100%; opacity: .9; }
+  /* HỌA TIẾT TRANG TRÍ NỀN BÌA */
+  .hoa-tiet { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .rong-nen { display: none; } /* ẩn rồng trong bản vintage — thay bằng họa tiết giấy */
+  .song { display: none; }
 
-  /* LỚP 3 — CHỮ HỈ BAY LƯỢN (màn bìa) */
+  /* CHỮ HỈ BAY LƯỢN — họa tiết giấy */
   .chu-hi {
-    position: absolute; color: var(--gold-light); font-size: 22px; opacity: .35;
-    animation: bayLen 6s ease-in-out infinite; user-select: none;
+    position: absolute;
+    color: var(--gold);
+    font-size: 18px;
+    opacity: .22;
+    animation: bayLen 7s ease-in-out infinite;
+    user-select: none;
+    font-family: 'Playfair Display', serif;
   }
   @keyframes bayLen {
-    0%, 100% { transform: translateY(0); opacity: .25; }
-    50%      { transform: translateY(-14px); opacity: .55; }
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: .16; }
+    50%      { transform: translateY(-12px) rotate(8deg); opacity: .34; }
   }
 
   /* MÀN HÌNH BÌA */
   .man-bia {
-    position: relative; z-index: 2; min-height: calc(100vh);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    transition: opacity .5s ease, transform .5s ease;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(217,187,124,.08) 0%, transparent 60%),
+      radial-gradient(ellipse at center, var(--wine-light) 0%, var(--wine) 55%, var(--wine-deep) 100%);
+    background-blend-mode: normal;
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .man-bia::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: var(--paper-texture);
+    opacity: .5;
+    mix-blend-mode: overlay;
+    pointer-events: none;
   }
   .man-bia.dang-dong { opacity: 0; transform: scale(.96) translateY(-16px); pointer-events: none; }
 
-  .nhan-nho { font-size: 13px; letter-spacing: .08em; color: var(--gold-light); margin-bottom: 18px; }
-  .ten-cap-doi { font-family: 'Noto Serif Display', serif; font-size: 28px; line-height: 1.15; margin: 0 0 14px; color: var(--gold-light); }
-  .hoa-van-nho { color: var(--gold); font-size: 20px; margin: 6px 0 18px; }
-  .ngay-cuoi { font-size: 15px; letter-spacing: .04em; opacity: .9; margin-bottom: 34px; }
-  .loi-moi { font-size: 18px; opacity: .85; margin-bottom: 4px; margin-top: 38px }
-  .ten-khach { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-light); margin: 4px 0 6px; }
-  .mo-ta-loi-moi { font-size: 13px; opacity: .75; margin-bottom: 38px; }
+  /* Khung viền kép kiểu cổ điển trên bìa */
+  .khung-vien {
+    position: relative;
+    z-index: 1;
+    margin: 26px;
+    padding: 46px 26px 42px;
+    border: 1px solid rgba(181,140,74,.55);
+    width: calc(100% - 52px);
+    color: var(--paper);
+  }
+  .khung-vien::before {
+    content: '';
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(181,140,74,.28);
+    pointer-events: none;
+  }
+  .khung-vien::after {
+    content: '❦';
+    position: absolute;
+    left: 50%; top: -13px;
+    transform: translateX(-50%);
+    background: var(--wine);
+    padding: 0 10px;
+    color: var(--gold);
+    font-size: 16px;
+    letter-spacing: .3em;
+  }
+
+  .nhan-nho {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: .42em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+    padding-left: .42em;
+  }
+
+  .ten-cap-doi {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 1.05;
+    margin: 6px 0 6px;
+    color: var(--gold-light);
+    text-shadow: 0 1px 0 rgba(0,0,0,.25);
+  }
+  .ten-cap-doi span { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--gold); }
+
+  .hoa-van-nho {
+    color: var(--gold);
+    font-size: 16px;
+    letter-spacing: .5em;
+    margin: 12px 0 18px;
+    opacity: .85;
+  }
+
+  .ngay-cuoi {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    letter-spacing: .06em;
+    color: var(--paper);
+    opacity: .85;
+    margin-bottom: 8px;
+  }
+
+  .loi-moi {
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    margin-top: 30px;
+    padding-left: .35em;
+  }
+
+  .ten-khach {
+    font-family: 'Dancing Script', cursive;
+    font-size: 34px;
+    line-height: 1.15;
+    color: var(--gold-light);
+    margin: 6px 0 4px;
+  }
+
+  .mo-ta-loi-moi {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--paper);
+    opacity: .7;
+    margin-bottom: 30px;
+  }
 
   .nut-mo {
-    font-family: 'Be Vietnam Pro', sans-serif; font-size: 14px; letter-spacing: .05em;
-    color: var(--jade-deep); background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    border: none; padding: 14px 36px; border-radius: 999px; cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease; box-shadow: 0 8px 24px rgba(212,175,55,.35);
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--wine-deep);
+    background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+    border: 1px solid var(--gold-deep);
+    padding: 14px 34px 13px 36px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    box-shadow: 0 8px 22px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,240,200,.35);
   }
-  .nut-mo:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(212,175,55,.45); }
-  .nut-mo:active { transform: scale(.94); box-shadow: 0 4px 14px rgba(212,175,55,.35); }
-  
-  /* Nút nhạc nền kiểu floating button giống minimal-red */
+  .nut-mo:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,240,200,.45); filter: brightness(1.05); }
+  .nut-mo:active { transform: scale(.96); box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+
+  /* MUSIC FAB */
   .music-fab{
     position: fixed; bottom: 18px; left: 18px; z-index: 70;
-    width: 44px; height: 44px; border-radius: 50%;
-    border: none; background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    color: var(--jade-deep); box-shadow: 0 6px 20px rgba(0,0,0,.35);
-    display: none; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
+    width: 46px; height: 46px; border-radius: 50%;
+    border: 1px solid var(--gold-deep);
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    color: var(--wine-deep);
+    box-shadow: 0 6px 20px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,240,200,.4);
+    display: none; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer;
   }
   .music-fab.show{ display: flex; }
   .music-fab .bar{ display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
-  .music-fab .bar span{ width: 2.5px; background: var(--jade-deep); border-radius: 1px; animation: eq .9s ease-in-out infinite; }
+  .music-fab .bar span{ width: 2.5px; background: var(--wine-deep); border-radius: 1px; animation: eq .9s ease-in-out infinite; }
   .music-fab .bar span:nth-child(1){ height: 6px; animation-delay:0s; }
   .music-fab .bar span:nth-child(2){ height: 14px; animation-delay:.15s; }
   .music-fab .bar span:nth-child(3){ height: 9px; animation-delay:.3s; }
   .music-fab.paused .bar span{ animation-play-state:paused; height: 4px; }
   @keyframes eq{ 0%,100%{ transform:scaleY(0.4);} 50%{ transform:scaleY(1);} }
 
-  /*
-    ==============================================================
-    MÀN NỘI DUNG — nay là 1 trang cuộn dọc gồm nhiều SECTION,
-    mỗi section 1 màu nền riêng để phân biệt.
-    ==============================================================
-  */
+  /* MÀN NỘI DUNG */
   .man-noi-dung {
-    display: none; flex-direction: column; align-items: stretch; padding: 0;
-    opacity: 0; transform: translateY(24px);
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    opacity: 0;
+    transform: translateY(24px);
     transition: opacity .4s ease, transform .4s ease;
+    background: var(--paper);
   }
   .man-noi-dung.hien { opacity: 1; transform: translateY(0); }
 
-  /* Khối section dùng chung */
-  .khoi { position: relative; z-index: 0; width: 100%; padding: 56px 26px 46px; text-align: center; overflow: hidden; }
-  .rong-chim-khoi {
-    position: absolute; top: 50%; left: 50%; height: 55%; width: auto;
-    object-fit: contain; opacity: .18; z-index: -1; pointer-events: none;
+  /* Khối section */
+  .khoi {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    padding: 56px 26px 46px;
+    text-align: center;
+    overflow: hidden;
   }
-  .nhan-khoi { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; margin-bottom: 10px; }
-  .tieu-de-khoi { font-family: 'Noto Serif Display', serif; font-size: 22px; margin: 0 0 28px; }
+  .rong-chim-khoi {
+    position: absolute;
+    top: 50%; left: 50%;
+    height: 55%; width: auto;
+    object-fit: contain;
+    opacity: .06;
+    z-index: -1;
+    pointer-events: none;
+    filter: sepia(1) saturate(.4) hue-rotate(-15deg);
+  }
 
-  /* Section 1 — Hero: ảnh hiển thị ĐẦY ĐỦ theo đúng tỷ lệ gốc (không cắt),
-     có lớp phủ tối + tên cặp đôi đè lên phía dưới ảnh */
-  .khoi-hero { padding: 0; background: var(--jade-deep); color: var(--cream); }
+  .nhan-khoi {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: .45em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    opacity: .9;
+    margin-bottom: 12px;
+    padding-left: .45em;
+  }
+  .tieu-de-khoi {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: 32px;
+    margin: 0 0 30px;
+    color: var(--wine);
+    line-height: 1.15;
+  }
+
+  /* HERO */
+  .khoi-hero { padding: 0; background: var(--wine-deep); color: var(--paper); }
   .hero-anh-wrap { position: relative; width: 100%; min-height: 220px; }
-  .hero-anh { width: 100%; height: auto; display: block; }
+  .hero-anh {
+    width: 100%; height: auto; display: block;
+    filter: sepia(.28) contrast(1.02) saturate(.85) brightness(.98);
+  }
   .hero-phu {
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(11,61,57,.05) 65%, rgba(11,61,57,.5) 80%, rgba(11,61,57,1) 90%, rgba(11,61,57,1) 100%);;
+    background: linear-gradient(180deg,
+      rgba(43,14,22,.0) 55%,
+      rgba(43,14,22,.35) 72%,
+      rgba(43,14,22,.85) 88%,
+      rgba(43,14,22,1) 100%);
   }
-  .hero-noi-dung { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; color: var(--gold-light); }
-  .ten-cap-doi-lon { font-family: 'Noto Serif Display', serif; font-size: 32px; margin: 8px 0; }
+  .hero-noi-dung {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    text-align: center; color: var(--gold-light);
+    padding-bottom: 14px;
+  }
+  .ten-cap-doi-lon {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: 40px;
+    margin: 8px 0 4px;
+    color: var(--gold-light);
+    letter-spacing: .01em;
+  }
+  .ten-cap-doi-lon span { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: var(--gold); }
 
-  /* Section 2 — Lễ thành hôn (nhà trai / nhà gái) — NỀN TỐI */
-  .khoi-le { background: var(--jade-deep); color: var(--cream); }
-  .hai-cot { display: flex; flex-direction: column; gap: 22px; }
+  /* LỄ THÀNH HÔN — nền giấy */
+  .khoi-le {
+    background:
+      var(--paper-texture),
+      radial-gradient(ellipse at 50% 0%, var(--paper) 0%, var(--paper-2) 100%);
+    background-blend-mode: multiply, normal;
+    color: var(--ink);
+  }
+  .khoi-le::before,
+  .khoi-le::after {
+    content: '';
+    position: absolute; left: 26px; right: 26px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+    opacity: .55;
+  }
+  .khoi-le::before { top: 22px; }
+  .khoi-le::after  { bottom: 22px; }
 
-  /* Hàng 1: thông tin cha mẹ 2 bên, có đường kẻ ngắn ở giữa */
+  .hai-cot { display: flex; flex-direction: column; gap: 26px; }
+
   .hang-phu-huynh { display: flex; align-items: stretch; justify-content: center; }
-  .phu-huynh-cot { flex: 1; text-align: center; }
-  .duong-ke-giua { width: 1px; align-self: stretch; background: var(--gold); opacity: .5; margin: 2px 16px; }
-  .phu-huynh-cot .nhan-nha { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-  .phu-huynh-cot .cha, .phu-huynh-cot .me { font-size: 12px; line-height: 1.7; opacity: .9; }
-  .phu-huynh-cot .dia-chi { font-size: 11px; opacity: .7; margin-top: 4px; line-height: 1.5; }
+  .phu-huynh-cot { flex: 1; text-align: center; padding: 0 4px; }
+  .duong-ke-giua {
+    width: 1px; align-self: stretch;
+    background: linear-gradient(180deg, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+    opacity: .55;
+    margin: 4px 14px;
+    position: relative;
+  }
+  .duong-ke-giua::after {
+    content: '❦';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--paper-2);
+    padding: 3px 0;
+    color: var(--gold);
+    font-size: 11px;
+  }
+  .phu-huynh-cot .nhan-nha {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 12px;
+    padding-left: .28em;
+  }
+  .phu-huynh-cot .cha,
+  .phu-huynh-cot .me {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .phu-huynh-cot .me { font-style: italic; color: var(--ink-soft); }
+  .phu-huynh-cot .dia-chi {
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-top: 6px;
+    line-height: 1.5;
+    font-style: italic;
+  }
 
-  /* Hàng 2: tên + ảnh chú rể / cô dâu, không có đường kẻ */
-  .hang-ca-nhan { display: flex; justify-content: center; gap: 18px; }
+  .hang-ca-nhan { display: flex; justify-content: center; gap: 18px; margin-top: 4px; }
   .cot-ca-nhan { flex: 1; text-align: center; }
-  .cot-ca-nhan .ten { font-family: 'Noto Serif Display', serif; font-size: 16px; margin-bottom: 2px; }
-  .cot-ca-nhan .vai-tro { font-size: 11px; opacity: .7; margin-bottom: 12px; }
-  .cot-ca-nhan img { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+  .cot-ca-nhan .ten {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--wine);
+    margin-bottom: 2px;
+    letter-spacing: .02em;
+  }
+  .cot-ca-nhan .vai-tro {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--gold-deep);
+    margin-bottom: 14px;
+  }
+  .cot-ca-nhan img {
+    width: 84px; height: 84px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--gold);
+    box-shadow:
+      0 0 0 4px var(--paper-2),
+      0 0 0 5px rgba(181,140,74,.5),
+      0 6px 14px rgba(59,44,30,.25);
+    filter: sepia(.18) saturate(.9);
+  }
 
   .thong-tin-le {
-    margin-top: 26px; text-align: center;
-    background: rgba(250,246,236,.06); border: 1px solid rgba(212,175,55,.3);
-    border-radius: 16px; padding: 22px 18px;
+    margin-top: 30px;
+    text-align: center;
+    background: rgba(255,250,235,.55);
+    border: 1px solid rgba(181,140,74,.45);
+    border-radius: 2px;
+    padding: 26px 20px 24px;
+    position: relative;
   }
-  .le-cau-mo-dau { font-size: 13px; opacity: .85; margin-bottom: 12px; }
-  .le-gio { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-light); line-height: 1; margin-bottom: 10px; }
-  .le-ngay { font-size: 15px; margin-bottom: 8px; }
-  .le-am-lich { font-size: 12px; font-style: italic; opacity: .75; }
+  .thong-tin-le::before {
+    content: '';
+    position: absolute; inset: 4px;
+    border: 1px solid rgba(181,140,74,.22);
+    pointer-events: none;
+  }
+  .le-cau-mo-dau {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .le-gio {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    color: var(--wine);
+    line-height: 1;
+    margin-bottom: 10px;
+    letter-spacing: .02em;
+  }
+  .le-ngay {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .le-am-lich {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
 
-  /* Section 3 — Album ảnh — NỀN SÁNG */
-  .khoi-album { background: var(--cream); color: var(--ink); }
+  /* ALBUM — nền giấy */
+  .khoi-album {
+    background:
+      var(--paper-texture),
+      linear-gradient(180deg, var(--paper-2) 0%, var(--paper) 100%);
+    background-blend-mode: multiply, normal;
+    color: var(--ink);
+  }
   .khoi-album .nhan-khoi { color: var(--gold-deep); }
-  .thu-vien-anh { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .thu-vien-anh img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
-  .album-trong { font-size: 13px; opacity: .7; padding: 20px 0; }
+  .khoi-album .tieu-de-khoi { color: var(--wine); }
 
-  /* Section 4 — Tiệc cưới — NỀN TỐI */
-  .khoi-tiec { background: var(--jade-deep); color: var(--cream); }
+  .thu-vien-anh {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 6px;
+    background: rgba(181,140,74,.08);
+    border: 1px solid rgba(181,140,74,.35);
+  }
+  .thu-vien-anh img {
+    width: 100%; aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 0;
+    filter: sepia(.22) saturate(.9) contrast(1.02);
+    box-shadow: 0 2px 6px rgba(59,44,30,.18);
+    cursor: pointer;
+    transition: filter .3s ease, transform .3s ease;
+  }
+  .thu-vien-anh img:hover {
+    filter: sepia(.05) saturate(1) contrast(1.02);
+    transform: scale(1.02);
+  }
+  .album-trong {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-muted);
+    padding: 24px 0;
+  }
+
+  /* TIỆC CƯỚI — nền wine */
+  .khoi-tiec {
+    background:
+      radial-gradient(ellipse at center, var(--wine-light) 0%, var(--wine) 60%, var(--wine-deep) 100%);
+    color: var(--paper);
+  }
+  .khoi-tiec::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: var(--paper-texture);
+    opacity: .45;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .khoi-tiec .nhan-khoi { color: var(--gold-light); opacity: .9; }
+  .khoi-tiec .tieu-de-khoi { color: var(--gold-light); }
+
   .tiec-ten-khach {
-    font-family: 'Noto Serif Display', serif; font-size: 20px; color: var(--gold-light);
-    margin: -14px 0 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(212,175,55,.35);
+    font-family: 'Dancing Script', cursive;
+    font-size: 34px;
+    color: var(--gold-light);
+    margin: -14px 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(181,140,74,.4);
     display: inline-block;
+    min-width: 60%;
   }
-  .tiec-loi-moi { font-size: 15px; opacity: .85; margin-bottom: 22px; }
+  .tiec-loi-moi {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--paper);
+    opacity: .85;
+    margin-bottom: 24px;
+  }
   #ndThongTinTiec {
-    background: rgba(250,246,236,.06); border: 1px solid rgba(212,175,55,.3);
-    border-radius: 16px; padding: 22px 18px;
+    background: rgba(255,245,220,.06);
+    border: 1px solid rgba(181,140,74,.4);
+    border-radius: 2px;
+    padding: 24px 20px;
+    position: relative;
   }
-  .tiec-nhan { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-light); margin: 22px 0 8px; }
+  #ndThongTinTiec::before {
+    content: '';
+    position: absolute; inset: 5px;
+    border: 1px solid rgba(181,140,74,.2);
+    pointer-events: none;
+  }
+  .tiec-nhan {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 22px 0 10px;
+    padding-left: .35em;
+  }
   #ndThongTinTiec .tiec-nhan:first-child { margin-top: 0; }
-  .tiec-gia-tri-noi-bat { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-light); line-height: 1.2; margin-bottom: 6px; }
-  .tiec-ngay { font-size: 14px; color: var(--cream); opacity: .9; }
-  .tiec-dia-chi { font-size: 14px; opacity: .9; max-width: 280px; margin: 0 auto; }
+  .tiec-gia-tri-noi-bat {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--gold-light);
+    line-height: 1.2;
+    margin-bottom: 6px;
+    letter-spacing: .02em;
+  }
+  .tiec-ngay {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--paper);
+    opacity: .9;
+  }
+  .tiec-dia-chi {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--paper);
+    opacity: .9;
+    max-width: 280px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
 
-  .tiec-hanh-dong { display: flex; flex-direction: row; gap: 12px; margin-top: 26px; }
+  .tiec-hanh-dong { display: flex; flex-direction: row; gap: 12px; margin-top: 28px; }
   .nut-tiec {
-    flex: 1; font-family: 'Be Vietnam Pro', sans-serif; font-size: 10px; letter-spacing: .02em;
-    padding: 10px 10px; border-radius: 999px; cursor: pointer;
-    border: 1px solid rgba(212,175,55,.4); background: transparent; color: var(--cream);
+    flex: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    padding: 10px 10px 10px;
+    border-radius: 0;
+    cursor: pointer;
+    border: 1px solid rgba(181,140,74,.5);
+    background: transparent;
+    color: var(--gold-light);
+    transition: background .25s ease, color .25s ease, border-color .25s ease;
+  }
+  .nut-tiec:hover {
+    background: rgba(181,140,74,.15);
+    border-color: var(--gold-light);
+    color: var(--gold-light);
   }
   .nut-tiec-rsvp {
-    background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    color: var(--jade-deep); border: none; font-weight: 600;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    color: var(--wine-deep);
+    border: 1px solid var(--gold-deep);
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px rgba(255,240,200,.4);
+  }
+  .nut-tiec-rsvp:hover {
+    background: linear-gradient(180deg, #e6c88a, #c09a54);
+    color: var(--wine-deep);
+    border-color: var(--gold-deep);
   }
 
-  /* Bản đồ nằm NGOÀI khối thông tin, kéo full-width hết chiều ngang section (phá lề của .khoi) */
   .tiec-ban-do-wrap {
-    margin: 24px -26px 0; width: calc(100% + 52px);
-    overflow: hidden; border-top: 1px solid rgba(212,175,55,.3); border-bottom: 1px solid rgba(212,175,55,.3);
+    margin: 26px -26px 0;
+    width: calc(100% + 52px);
+    overflow: hidden;
+    border-top: 1px solid rgba(181,140,74,.4);
+    border-bottom: 1px solid rgba(181,140,74,.4);
+    filter: sepia(.25) saturate(.85) contrast(1.02);
   }
   .tiec-ban-do { width: 100%; height: 300px; border: 0; display: block; }
 
-  /* Section 5 — Lịch trình — NỀN SÁNG */
-  .khoi-lichtrinh { background: var(--cream); color: var(--ink); }
+  /* LỊCH TRÌNH — nền giấy */
+  .khoi-lichtrinh {
+    background:
+      var(--paper-texture),
+      linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+    background-blend-mode: multiply, normal;
+    color: var(--ink);
+  }
   .khoi-lichtrinh .nhan-khoi { color: var(--gold-deep); }
-  .danh-sach-lich-trinh { text-align: left; max-width: 300px; margin: 0 auto; }
-  .muc-chuong-trinh { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(20,35,31,.1); }
+  .khoi-lichtrinh .tieu-de-khoi { color: var(--wine); }
+
+  .danh-sach-lich-trinh {
+    text-align: left;
+    max-width: 320px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .muc-chuong-trinh {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(181,140,74,.28);
+    align-items: baseline;
+  }
   .muc-chuong-trinh:last-child { border-bottom: none; }
-  .muc-chuong-trinh .gio { flex-shrink: 0; width: 52px; color: var(--gold-deep); font-weight: 600; font-size: 13px; }
-  .muc-chuong-trinh .noi-dung-muc { font-size: 14px; }
-
-  /* Section 6 — Sổ lưu bút — NỀN TỐI */
-  .khoi-luubut { background: var(--jade-deep); color: var(--cream); }
-  .form-luu-but { display: flex; flex-direction: column; gap: 10px; text-align: left; margin-bottom: 26px; }
-  .form-luu-but input, .form-luu-but textarea {
-    font-family: 'Be Vietnam Pro', sans-serif; padding: 10px 14px; border-radius: 10px;
-    border: 1px solid rgba(20,35,31,.15); background: #fff; font-size: 14px;
+  .muc-chuong-trinh .gio {
+    flex-shrink: 0;
+    width: 56px;
+    font-family: 'Playfair Display', serif;
+    color: var(--wine);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: .02em;
   }
-  .form-luu-but textarea { min-height: 70px; resize: vertical; }
+  .muc-chuong-trinh .noi-dung-muc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  /* SỔ LƯU BÚT — nền wine */
+  .khoi-luubut {
+    background:
+      radial-gradient(ellipse at center, var(--wine-light) 0%, var(--wine) 60%, var(--wine-deep) 100%);
+    color: var(--paper);
+  }
+  .khoi-luubut::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: var(--paper-texture);
+    opacity: .45;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .khoi-luubut .nhan-khoi { color: var(--gold-light); opacity: .9; }
+  .khoi-luubut .tieu-de-khoi { color: var(--gold-light); }
+
+  .form-luu-but {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .form-luu-but input,
+  .form-luu-but textarea {
+    font-family: 'Cormorant Garamond', serif;
+    padding: 11px 14px;
+    border-radius: 0;
+    border: 1px solid rgba(181,140,74,.45);
+    background: rgba(240,229,204,.96);
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s ease;
+  }
+  .form-luu-but input::placeholder,
+  .form-luu-but textarea::placeholder {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+  .form-luu-but input:focus,
+  .form-luu-but textarea:focus {
+    border-color: var(--gold-light);
+  }
+  .form-luu-but textarea { min-height: 80px; resize: vertical; }
   .form-luu-but button {
-    align-self: flex-end; font-family: 'Be Vietnam Pro', sans-serif; font-size: 13px; letter-spacing: .03em;
-    color: var(--jade-deep); background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    border: none; padding: 10px 22px; border-radius: 999px; cursor: pointer;
+    align-self: flex-end;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--wine-deep);
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    border: 1px solid var(--gold-deep);
+    padding: 11px 24px;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(255,240,200,.4);
   }
-  .danh-sach-loi-chuc { text-align: left; display: flex; flex-direction: column; gap: 12px; }
-  .mot-loi-chuc { background: var(--jade-deep); color: var(--cream); border-radius: 12px; padding: 12px 14px; border: 1px solid rgba(212,175,55,.25); }
-  .mot-loi-chuc .ten { font-weight: 600; font-size: 13px; margin-bottom: 4px; color: var(--gold-light); text-transform: capitalize; }
-  .mot-loi-chuc .noi-dung { font-size: 13px; line-height: 1.5; color: var(--cream); }
-  .chua-co-loi-chuc { font-size: 13px; opacity: .7; text-align: center; }
 
-  /* Section 7 — Hộp quà mừng cưới & lời cảm ơn — NỀN SÁNG */
-  .khoi-qua { background: var(--cream); color: var(--ink); }
+  .danh-sach-loi-chuc {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .mot-loi-chuc {
+    background: rgba(255,245,220,.06);
+    border: 1px solid rgba(181,140,74,.35);
+    border-radius: 2px;
+    padding: 14px 16px;
+    position: relative;
+  }
+  .mot-loi-chuc::before {
+    content: '“';
+    position: absolute;
+    top: 4px; left: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--gold);
+    opacity: .5;
+  }
+  .mot-loi-chuc .ten {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: var(--gold-light);
+    text-transform: capitalize;
+    letter-spacing: .08em;
+    padding-left: 12px;
+  }
+  .mot-loi-chuc .noi-dung {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--paper);
+    padding-left: 12px;
+  }
+  .chua-co-loi-chuc {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--paper);
+    opacity: .7;
+    text-align: center;
+  }
+
+  /* HỘP QUÀ — nền giấy */
+  .khoi-qua {
+    background:
+      var(--paper-texture),
+      linear-gradient(180deg, var(--paper-2) 0%, var(--paper) 100%);
+    background-blend-mode: multiply, normal;
+    color: var(--ink);
+  }
   .khoi-qua .nhan-khoi { color: var(--gold-deep); }
+  .khoi-qua .tieu-de-khoi { color: var(--wine); }
 
-  /* Phong bì lì xì — lắc lư nhẹ nhàng khi rảnh rỗi */
-  .phong-bi-wrap { display: flex; justify-content: center; gap: 30px; margin-bottom: 8px; transition: transform .3s ease; }
-  .phong-bi {
-    background: none; border: none; cursor: pointer; padding: 0;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    animation: docDua 3s ease-in-out infinite;
+  .phong-bi-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 34px;
+    margin-bottom: 8px;
+    transition: transform .3s ease;
   }
-  .phong-bi:nth-child(2) { animation-delay: 1.4s; }
+  .phong-bi {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    animation: docDua 3.5s ease-in-out infinite;
+  }
+  .phong-bi:nth-child(2) { animation-delay: 1.6s; }
   @keyframes docDua {
     0%, 100% { transform: translateY(0) rotate(0deg); }
-    50%      { transform: translateY(-6px) rotate(-2deg); }
+    50%      { transform: translateY(-5px) rotate(-1.5deg); }
   }
-  .phong-bi svg { width: 64px; height: 80px; filter: drop-shadow(0 6px 14px rgba(0,0,0,.18)); transition: transform .2s ease; }
-  .phong-bi:hover svg { transform: scale(1.06) rotate(1.5deg); }
-  .phong-bi-nhan { font-size: 12px; color: var(--gold-deep); letter-spacing: .04em; }
+  .phong-bi svg {
+    width: 72px; height: 90px;
+    filter: drop-shadow(0 8px 16px rgba(59,44,30,.28));
+    transition: transform .25s ease;
+  }
+  .phong-bi:hover svg { transform: scale(1.06) rotate(1deg); }
+  .phong-bi-nhan {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    padding-left: .28em;
+  }
 
-  /* Hiệu ứng "bung nở" — chỉ áp dụng cho phong bì vừa được bấm */
   @keyframes bungNo {
     0%   { transform: scale(1) rotate(0deg); opacity: 1; }
     45%  { transform: scale(1.35) rotate(-6deg); opacity: 1; }
@@ -332,103 +854,288 @@
   }
   .phong-bi.bung-no { animation: bungNo .4s ease forwards; }
 
-  .loi-cam-on { margin-top: 30px; font-size: 14px; line-height: 1.8; opacity: .85; }
-  .monogram-cuoi { font-family: 'Noto Serif Display', serif; font-size: 22px; color: var(--gold-deep); margin-top: 16px; }
-
-  .nut-quay-lai-cuoi {
-    margin-top: 34px; background: none; border: 1px solid rgba(20,35,31,.25); color: var(--ink);
-    padding: 10px 24px; border-radius: 999px; font-size: 13px; cursor: pointer;
+  .loi-cam-on {
+    margin-top: 34px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .loi-cam-on .hoa-van-nho { color: var(--gold); font-size: 18px; letter-spacing: 0; margin: 0 0 10px; }
+  .monogram-cuoi {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: 32px;
+    color: var(--wine);
+    margin-top: 20px;
   }
 
-  /* Chân trang — link nhỏ, canh giữa */
-  .chan-trang { background: var(--cream); text-align: center; padding: 6px 0 22px; }
-  .chan-trang a { font-size: 11px; color: var(--gold-deep); text-decoration: none; letter-spacing: .03em; opacity: .75; }
+  .nut-quay-lai-cuoi {
+    margin-top: 36px;
+    background: none;
+    border: 1px solid rgba(94,75,53,.35);
+    color: var(--ink-soft);
+    padding: 10px 26px;
+    border-radius: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+  }
+  .nut-quay-lai-cuoi:hover {
+    background: rgba(181,140,74,.12);
+    color: var(--wine);
+    border-color: var(--gold);
+  }
+
+  .chan-trang {
+    background: var(--paper-2);
+    text-align: center;
+    padding: 12px 0 22px;
+    border-top: 1px solid rgba(181,140,74,.3);
+  }
+  .chan-trang a {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    color: var(--gold-deep);
+    text-decoration: none;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    opacity: .8;
+  }
   .chan-trang a:hover { text-decoration: underline; opacity: 1; }
 
-  /* POPUP thông tin chuyển khoản + QR */
+  /* MODAL */
   .modal-qua-overlay {
     position: fixed; inset: 0; z-index: 20;
-    background: rgba(13,31,28,.72);
-    display: flex; align-items: center; justify-content: center; padding: 24px;
-    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+    background: rgba(20,12,6,.82);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s ease;
   }
   .modal-qua-overlay.hien { opacity: 1; pointer-events: auto; }
   .modal-qua {
-    width: 100%; max-width: 340px; background: var(--cream); color: var(--ink);
-    border-radius: 20px; padding: 26px 20px; position: relative;
-    transform: scale(.9); transition: transform .3s ease;
-    box-shadow: 0 24px 60px rgba(0,0,0,.4);
+    width: 100%;
+    max-width: 340px;
+    background:
+      var(--paper-texture),
+      linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+    background-blend-mode: multiply, normal;
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 30px 22px 26px;
+    position: relative;
+    transform: scale(.9);
+    transition: transform .3s ease;
+    box-shadow:
+      0 24px 60px rgba(0,0,0,.6),
+      0 0 0 1px rgba(181,140,74,.4),
+      0 0 0 6px rgba(20,12,6,.4);
+  }
+  .modal-qua::before {
+    content: '';
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(181,140,74,.28);
+    pointer-events: none;
   }
   .modal-qua-overlay.hien .modal-qua { transform: scale(1); }
-  .modal-dong {
-    position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; border-radius: 50%;
-    border: none; background: rgba(20,35,31,.08); color: var(--ink); font-size: 16px; cursor: pointer;
-  }
-  .modal-tieu-de { text-align: center; font-family: 'Noto Serif Display', serif; font-size: 18px; margin-bottom: 18px; }
-  .modal-hai-cot { display: flex; gap: 14px; }
-  .modal-cot { flex: 1; text-align: center; }
-  .modal-nhan { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 8px; }
-  .modal-qr img, .modal-qr-trong { width: 100%; aspect-ratio: 1; border-radius: 10px; margin-bottom: 10px; }
-  .modal-qr img { object-fit: contain; border: 1px solid rgba(20,35,31,.1); }
-  .modal-qr-trong {
-    display: flex; align-items: center; justify-content: center; background: #efe7d6;
-    font-size: 10px; color: var(--ink); opacity: .65; line-height: 1.4; padding: 6px; text-align: center;
-  }
-  .modal-ngan-hang { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-  .modal-so-tk { font-size: 12px; margin-bottom: 2px; }
-  .modal-ten-tk { font-size: 11px; opacity: .7; }
 
-  /* Form Xác nhận tham dự (RSVP) */
-  .form-rsvp { display: flex; flex-direction: column; gap: 14px; text-align: left; margin-top: 6px; }
-  .rsvp-lua-chon { display: flex; flex-direction: column; gap: 8px; }
-  .rsvp-radio { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
-  .rsvp-truong { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--gold-deep); }
-  .rsvp-truong input, .rsvp-truong select, .rsvp-truong textarea {
-    font-family: 'Be Vietnam Pro', sans-serif; padding: 9px 12px; border-radius: 10px;
-    border: 1px solid rgba(20,35,31,.2); font-size: 14px; background: #fff; color: var(--ink);
+  .modal-dong {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(181,140,74,.35);
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s ease;
   }
+  .modal-dong:hover { background: rgba(181,140,74,.15); }
+
+  .modal-tieu-de {
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: 26px;
+    color: var(--wine);
+    margin-bottom: 22px;
+    position: relative;
+  }
+
+  .modal-hai-cot { display: flex; gap: 16px; }
+  .modal-cot { flex: 1; text-align: center; }
+  .modal-nhan {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 10px;
+    padding-left: .3em;
+  }
+  .modal-qr img,
+  .modal-qr-trong {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+  .modal-qr img {
+    object-fit: contain;
+    border: 1px solid rgba(181,140,74,.35);
+    background: #fff;
+  }
+  .modal-qr-trong {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper-3);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    padding: 6px;
+    text-align: center;
+    border: 1px dashed rgba(181,140,74,.5);
+  }
+  .modal-ngan-hang {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wine);
+    margin-bottom: 3px;
+  }
+  .modal-so-tk {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--ink);
+    letter-spacing: .04em;
+    margin-bottom: 2px;
+  }
+  .modal-ten-tk {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
+
+  /* FORM RSVP */
+  .form-rsvp {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  .rsvp-lua-chon { display: flex; flex-direction: column; gap: 8px; }
+  .rsvp-radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  .rsvp-radio input { accent-color: var(--wine); }
+  .rsvp-truong {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+  }
+  .rsvp-truong input,
+  .rsvp-truong select,
+  .rsvp-truong textarea {
+    font-family: 'Cormorant Garamond', serif;
+    padding: 10px 12px;
+    border-radius: 0;
+    border: 1px solid rgba(181,140,74,.45);
+    font-size: 15px;
+    background: rgba(255,250,235,.95);
+    color: var(--ink);
+    outline: none;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .rsvp-truong input:focus,
+  .rsvp-truong select:focus,
+  .rsvp-truong textarea:focus { border-color: var(--gold-light); }
   .rsvp-truong textarea { min-height: 60px; resize: vertical; }
   .nut-gui-rsvp {
-    align-self: flex-end; background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    color: var(--jade-deep); border: none; padding: 10px 22px; border-radius: 999px;
-    font-size: 13px; font-weight: 600; cursor: pointer;
+    align-self: flex-end;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    color: var(--wine-deep);
+    border: 1px solid var(--gold-deep);
+    padding: 11px 24px;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(255,240,200,.4);
   }
   .nut-gui-rsvp:disabled { opacity: .6; cursor: not-allowed; }
 
-  /* Lightbox gallery tối giản: nền đen, ảnh full view, không viền, nút prev/next rõ ràng */
+  /* LIGHTBOX — nền nâu trầm */
   .gallery-lightbox-overlay {
     position: fixed; inset: 0; z-index: 120;
-    background: #000;
+    background: #0e0805;
     display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity .25s ease;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
   }
   .gallery-lightbox-overlay.open { opacity: 1; pointer-events: auto; }
   .gallery-lightbox-frame {
-    position: relative; width: 100vw; height: 100vh;
+    position: relative;
+    width: 100vw; height: 100vh;
     display: flex; align-items: center; justify-content: center;
-    background: #000;
+    background: #0e0805;
   }
   .gallery-lightbox-img {
     width: 100vw; height: 100vh;
     object-fit: contain;
-    background: #000;
+    background: #0e0805;
     border: none; border-radius: 0;
     box-shadow: none;
+    filter: sepia(.12) saturate(.95);
   }
   .gallery-lightbox-close,
   .gallery-lightbox-prev,
   .gallery-lightbox-next {
     position: absolute; z-index: 2;
-    border: 1px solid rgba(255,255,255,.6);
-    color: #fff; background: rgba(0,0,0,.55);
-    width: 48px; height: 48px; border-radius: 50%; font-size: 26px; cursor: pointer;
+    border: 1px solid rgba(217,187,124,.55);
+    color: var(--gold-light);
+    background: rgba(20,12,6,.7);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    font-size: 26px;
+    cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: background .2s ease, transform .2s ease, border-color .2s ease;
+    transition: background .2s ease, transform .2s ease, border-color .2s ease, color .2s ease;
   }
   .gallery-lightbox-close:hover,
   .gallery-lightbox-prev:hover,
   .gallery-lightbox-next:hover {
-    background: rgba(255,255,255,.95); color: #000; border-color: #fff; transform: scale(1.04);
+    background: var(--gold-light);
+    color: var(--wine-deep);
+    border-color: var(--gold-light);
+    transform: scale(1.04);
   }
   .gallery-lightbox-close { top: 16px; right: 16px; }
   .gallery-lightbox-prev { left: 16px; top: 50%; transform: translateY(-50%); }
@@ -436,9 +1143,18 @@
   .gallery-lightbox-prev:hover,
   .gallery-lightbox-next:hover { transform: translateY(-50%) scale(1.04); }
   .gallery-lightbox-count {
-    position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
-    color: #fff; font-size: 12px; opacity: .9; letter-spacing: .04em;
-    background: rgba(0,0,0,.45); padding: 6px 10px; border-radius: 999px;
+    position: absolute; left: 50%; bottom: 18px;
+    transform: translateX(-50%);
+    color: var(--gold-light);
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    opacity: .9;
+    background: rgba(20,12,6,.7);
+    border: 1px solid rgba(217,187,124,.4);
+    padding: 6px 14px;
+    border-radius: 999px;
   }
 </style>
 </head>
@@ -446,40 +1162,35 @@
 
 <div class="thiep">
 
-  <!-- Họa tiết trang trí — chỉ cho màn bìa -->
-  <!-- Hình long/phụng sẽ được lồng vào đây sau -->
+  <!-- Họa tiết trang trí nền bìa -->
   <div class="hoa-tiet">
-    <img class="rong-nen rong-trai" src="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/dragon_left_MMnU.webp" alt="">
-    <img class="rong-nen rong-phai" src="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/dragon_right_MMnU.webp" alt="">
-    <svg class="song" viewBox="0 0 430 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 30 Q35 10 70 30 T140 30 T210 30 T280 30 T350 30 T430 30 V60 H0 Z" fill="#0b3d39"/>
-      <path d="M0 40 Q35 22 70 40 T140 40 T210 40 T280 40 T350 40 T430 40 V60 H0 Z" fill="#12574e" opacity="0.8"/>
-    </svg>
-  </div>
-
-  <div class="hoa-tiet">
-    <span class="chu-hi" style="top:8%; left:8%; animation-delay:0s;">囍</span>
-    <span class="chu-hi" style="top:14%; right:10%; animation-delay:1.2s;">囍</span>
-    <span class="chu-hi" style="top:30%; left:6%; animation-delay:2.4s;">囍</span>
-    <span class="chu-hi" style="top:34%; right:6%; animation-delay:.6s;">囍</span>
-    <span class="chu-hi" style="top:55%; left:10%; animation-delay:1.8s;">囍</span>
-    <span class="chu-hi" style="top:58%; right:9%; animation-delay:3s;">囍</span>
+    <span class="chu-hi" style="top:8%; left:8%; animation-delay:0s;">❦</span>
+    <span class="chu-hi" style="top:14%; right:10%; animation-delay:1.2s;">✦</span>
+    <span class="chu-hi" style="top:30%; left:6%; animation-delay:2.4s;">❧</span>
+    <span class="chu-hi" style="top:34%; right:6%; animation-delay:.6s;">❦</span>
+    <span class="chu-hi" style="top:55%; left:10%; animation-delay:1.8s;">✦</span>
+    <span class="chu-hi" style="top:58%; right:9%; animation-delay:3s;">❧</span>
+    <span class="chu-hi" style="top:78%; left:14%; animation-delay:2.1s;">❦</span>
+    <span class="chu-hi" style="top:82%; right:12%; animation-delay:.9s;">✦</span>
   </div>
 
   <!-- MÀN HÌNH BÌA -->
   <div class="man-bia" id="manBia">
-    <div class="nhan-nho">THIỆP MỜI CƯỚI</div>
-    <h1 class="ten-cap-doi">
-      <span id="biaTenChuRe"></span><span> &amp; </span><span id="biaTenCoDau"></span>
-    </h1>
-    <div class="loi-moi">Trân trọng kính mời</div>
-    <div class="ten-khach" id="tenKhach">Quý khách</div>
-    <div class="mo-ta-loi-moi">đến dự buổi tiệc chung vui cùng gia đình</div>
-    <div class="ngay-cuoi" id="biaNgayCuoi"></div>
-    <button class="nut-mo" id="nutMo">Mở thiệp</button>
+    <div class="khung-vien">
+      <div class="nhan-nho">Thiệp Mời Cưới</div>
+      <h1 class="ten-cap-doi">
+        <span id="biaTenChuRe"></span><span> &amp; </span><span id="biaTenCoDau"></span>
+      </h1>
+      <div class="hoa-van-nho">❦ ❦ ❦</div>
+      <div class="loi-moi">Trân trọng kính mời</div>
+      <div class="ten-khach" id="tenKhach">Quý khách</div>
+      <div class="mo-ta-loi-moi">đến dự buổi tiệc chung vui cùng gia đình</div>
+      <div class="ngay-cuoi" id="biaNgayCuoi"></div>
+      <button class="nut-mo" id="nutMo">Mở thiệp</button>
+    </div>
   </div>
 
-  <!-- MÀN NỘI DUNG — 7 SECTION, mỗi section 1 màu nền riêng -->
+  <!-- MÀN NỘI DUNG -->
   <div class="man-noi-dung" id="manNoiDung">
 
     <!-- 1. HERO -->
@@ -493,7 +1204,7 @@
       </div>
     </section>
 
-    <!-- 2. LỄ THÀNH HÔN — nhà trai / nhà gái theo 2 cột -->
+    <!-- 2. LỄ THÀNH HÔN -->
     <section class="khoi khoi-le">
       <div class="nhan-khoi">Lễ Thành Hôn</div>
       <div class="tieu-de-khoi">Thông tin hai gia đình</div>
@@ -504,12 +1215,12 @@
     <!-- 3. ALBUM ẢNH -->
     <section class="khoi khoi-album">
       <div class="nhan-khoi">Album ảnh</div>
-      <div class="tieu-de-khoi">Khoảnh khắc của đôi uyên ương</div>
+      <div class="tieu-de-khoi">Khoảnh khắc đôi uyên ương</div>
       <div class="thu-vien-anh" id="ndGallery"></div>
       <div class="album-trong" id="ndAlbumTrong" style="display:none;"></div>
     </section>
 
-    <!-- 4. TIỆC CƯỚI — ngày giờ địa điểm -->
+    <!-- 4. TIỆC CƯỚI -->
     <section class="khoi khoi-tiec">
       <div class="nhan-khoi">Tiệc Cưới</div>
       <div class="tieu-de-khoi">Trân trọng kính mời</div>
@@ -525,7 +1236,7 @@
       </div>
     </section>
 
-    <!-- 5. LỊCH TRÌNH TIỆC CƯỚI -->
+    <!-- 5. LỊCH TRÌNH -->
     <section class="khoi khoi-lichtrinh">
       <div class="nhan-khoi">Lịch Trình</div>
       <div class="tieu-de-khoi">Chương trình tiệc cưới</div>
@@ -544,7 +1255,7 @@
       <div class="danh-sach-loi-chuc" id="danhSachLoiChuc"></div>
     </section>
 
-    <!-- 7. HỘP QUÀ MỪNG CƯỚI & CẢM ƠN -->
+    <!-- 7. HỘP QUÀ -->
     <section class="khoi khoi-qua" id="khoiQua">
       <div class="nhan-khoi">Mừng Cưới</div>
       <div class="tieu-de-khoi">Hộp mừng cưới</div>
@@ -552,19 +1263,27 @@
       <div class="phong-bi-wrap" id="phongBiWrap">
         <button type="button" class="phong-bi" id="phongBiChuRe" aria-label="Mừng cưới chú rể">
           <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="60" height="76" rx="6" fill="#12574e" stroke="#d4af37" stroke-width="2"/>
-            <path d="M2 8 L32 32 L62 8" fill="none" stroke="#d4af37" stroke-width="2"/>
-            <circle cx="32" cy="46" r="10" fill="none" stroke="#d4af37" stroke-width="1.5"/>
-            <text x="32" y="51" text-anchor="middle" font-size="12" fill="#d4af37" font-family="serif">囍</text>
+            <!-- thân phong bì giấy ngả vàng -->
+            <rect x="2" y="2" width="60" height="76" rx="2" fill="#e8dabb" stroke="#b58c4a" stroke-width="1.5"/>
+            <!-- nắp phong bì -->
+            <path d="M2 10 L32 34 L62 10" fill="none" stroke="#b58c4a" stroke-width="1.4"/>
+            <!-- viền trong -->
+            <rect x="5" y="5" width="54" height="70" fill="none" stroke="#b58c4a" stroke-width="0.5" opacity="0.5"/>
+            <!-- con dấu sáp đỏ -->
+            <circle cx="32" cy="52" r="11" fill="#6d2f3c" stroke="#8e4a56" stroke-width="1"/>
+            <circle cx="32" cy="52" r="8" fill="none" stroke="#d9bb7c" stroke-width="0.5" opacity="0.55"/>
+            <text x="32" y="56" text-anchor="middle" font-size="11" fill="#d9bb7c" font-family="serif">囍</text>
           </svg>
           <span class="phong-bi-nhan">Chú Rể</span>
         </button>
         <button type="button" class="phong-bi" id="phongBiCoDau" aria-label="Mừng cưới cô dâu">
           <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="60" height="76" rx="6" fill="#12574e" stroke="#d4af37" stroke-width="2"/>
-            <path d="M2 8 L32 32 L62 8" fill="none" stroke="#d4af37" stroke-width="2"/>
-            <circle cx="32" cy="46" r="10" fill="none" stroke="#d4af37" stroke-width="1.5"/>
-            <text x="32" y="51" text-anchor="middle" font-size="12" fill="#d4af37" font-family="serif">囍</text>
+            <rect x="2" y="2" width="60" height="76" rx="2" fill="#e8dabb" stroke="#b58c4a" stroke-width="1.5"/>
+            <path d="M2 10 L32 34 L62 10" fill="none" stroke="#b58c4a" stroke-width="1.4"/>
+            <rect x="5" y="5" width="54" height="70" fill="none" stroke="#b58c4a" stroke-width="0.5" opacity="0.5"/>
+            <circle cx="32" cy="52" r="11" fill="#6d2f3c" stroke="#8e4a56" stroke-width="1"/>
+            <circle cx="32" cy="52" r="8" fill="none" stroke="#d9bb7c" stroke-width="0.5" opacity="0.55"/>
+            <text x="32" y="56" text-anchor="middle" font-size="11" fill="#d9bb7c" font-family="serif">囍</text>
           </svg>
           <span class="phong-bi-nhan">Cô Dâu</span>
         </button>
@@ -585,7 +1304,7 @@
 
   </div>
 
-  <!-- POPUP: hiện khi bấm vào phong bì lì xì -->
+  <!-- POPUP: mừng cưới -->
   <div class="modal-qua-overlay" id="modalQuaOverlay">
     <div class="modal-qua">
       <button type="button" class="modal-dong" id="modalDong" aria-label="Đóng">×</button>
@@ -594,7 +1313,7 @@
     </div>
   </div>
 
-  <!-- POPUP: hiện khi bấm "Xác nhận tham dự" -->
+  <!-- POPUP: RSVP -->
   <div class="modal-qua-overlay" id="modalRsvpOverlay">
     <div class="modal-qua">
       <button type="button" class="modal-dong" id="modalRsvpDong" aria-label="Đóng">×</button>
@@ -630,7 +1349,7 @@
     </div>
   </div>
 
-  <!-- LIGHTBOX ALBUM ẢNH -->
+  <!-- LIGHTBOX ALBUM -->
   <div class="gallery-lightbox-overlay" id="galleryLightbox">
     <div class="gallery-lightbox-frame">
       <button type="button" class="gallery-lightbox-close" id="galleryClose" aria-label="Đóng">×</button>
@@ -652,11 +1371,6 @@
   /*
     ==============================================================
     BƯỚC A — DỮ LIỆU THIỆP
-    Backend sẽ gán dữ liệu thật vào window.__INVITATION_CONFIG__ và
-    window.__INVITATION_ID__ trước khi các script bên dưới chạy —
-    nên ở đây chỉ để null. DEFAULT_CONFIG / DEFAULT_INVITATION_ID
-    là dữ liệu mẫu, chỉ dùng khi backend chưa gán gì (chạy thử file
-    này độc lập) — xem hàm init() ở Bước B.
     ==============================================================
   */
   window.__INVITATION_CONFIG__ = null;
@@ -733,8 +1447,6 @@
   /*
     ==============================================================
     BƯỚC B — ĐỌC DỮ LIỆU & HIỂN THỊ (render)
-    Chỉ đọc từ window.__INVITATION_CONFIG__, không tự bịa dữ liệu.
-    Phần nào rỗng thì tự ẩn thay vì hiện chữ trống.
     ==============================================================
   */
 
@@ -748,13 +1460,11 @@
     return `${gio}:${phut}, ${thu} ${ngay}/${thang}/${d.getFullYear()}`;
   }
 
-  // "20 · 12 · 2026" -> { ngay:'20', thang:'12', nam:'2026' }
   function phanTichNgayCham(nhan) {
     const phan = nhan.split('·').map(p => p.trim());
     return { ngay: phan[0], thang: phan[1], nam: phan[2] };
   }
 
-  // "2026-12-20" -> "Chủ Nhật, 20-12-2026"
   function dinhDangNgayThu(chuoiNgay) {
     const d = new Date(chuoiNgay + 'T00:00:00');
     const thu = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'][d.getDay()];
@@ -762,8 +1472,6 @@
     return `${thu}, ${ngay}-${thang}-${nam}`;
   }
 
-  // Dựng link "Thêm vào lịch" (Google Calendar) từ thông tin tiệc cưới.
-  // Sự kiện bắt đầu từ giờ đón khách, mặc định kéo dài 4 giờ.
   function taoLinkGoogleCalendar(config) {
     const [nam, thang, ngay] = config.reception.date.split('-').map(Number);
     const [gio, phut] = config.reception.welcomeTime.split(':').map(Number);
@@ -834,7 +1542,7 @@
       document.getElementById('heroAnh').src = config.photos.coverPhoto;
     }
 
-    // --- 2. Lễ thành hôn: hàng cha mẹ (có đường kẻ ngắn ở giữa) + hàng tên/ảnh (không đường kẻ) ---
+    // --- 2. Lễ thành hôn ---
     const haiCot = document.getElementById('ndHaiCot');
 
     const hangPhuHuynh = document.createElement('div');
@@ -944,18 +1652,16 @@
       <div class="tiec-dia-chi">${config.reception.address}</div>
     `;
 
-    // Chỉ nhúng bản đồ khi có mapQuery — tránh hiện khung trống nếu chưa cập nhật
     if (config.reception.mapQuery) {
       document.getElementById('mapFrame').src = config.reception.mapQuery;
       document.getElementById('tiecBanDoWrap').style.display = 'block';
     }
 
-    // --- "Thêm vào lịch" — mở link Google Calendar ở tab mới ---
     document.getElementById('nutThemLich').addEventListener('click', () => {
       window.open(taoLinkGoogleCalendar(config), '_blank', 'noopener');
     });
 
-    // --- "Xác nhận tham dự" — mở popup RSVP, gửi kết quả về backend ---
+    // --- RSVP ---
     const modalRsvpOverlay = document.getElementById('modalRsvpOverlay');
     function dongRsvp() { modalRsvpOverlay.classList.remove('hien'); }
 
@@ -964,7 +1670,7 @@
     });
     document.getElementById('modalRsvpDong').addEventListener('click', dongRsvp);
     modalRsvpOverlay.addEventListener('click', (e) => {
-      if (e.target === modalRsvpOverlay) dongRsvp(); // bấm ra ngoài card cũng đóng được
+      if (e.target === modalRsvpOverlay) dongRsvp();
     });
 
     const rsvpSoLuong = document.getElementById('rsvpSoLuong');
@@ -981,7 +1687,6 @@
       if(trangThai === 'co') {
         soLuong = rsvpSoLuong.value;
       }
-      // const monAn = document.getElementById('rsvpMonAn').value;
       const monAn = 'Bình thường';
       const ghiChu = document.getElementById('rsvpGhiChu').value.trim();
 
@@ -992,7 +1697,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name:tenKhach,
+          name: tenKhach,
           phone:'',
           attendanceStatus: trangThai === 'co' ? 'attending' : 'declined',
           guestCount: parseInt(soLuong) || 1,
@@ -1019,18 +1724,15 @@
       boxChuongTrinh.appendChild(div);
     });
 
-    // --- 7. Mừng cưới: hiển thị tên rút gọn 2 người trong lời cảm ơn (thay cho monogram) ---
+    // --- 7. Mừng cưới ---
     document.getElementById('quaMonogram').textContent = `${config.groomShort} & ${config.brideShort}`;
 
-    // --- Phong bì lì xì: bấm vào phong bì của ai thì CHỈ phong bì đó
-    //     bung nở, và popup CHỈ hiển thị thông tin người đó ---
     const phongBiChuRe = document.getElementById('phongBiChuRe');
     const phongBiCoDau = document.getElementById('phongBiCoDau');
     const modalQuaOverlay = document.getElementById('modalQuaOverlay');
     const modalHaiCot = document.getElementById('modalHaiCot');
     const modalTieuDe = document.getElementById('modalTieuDe');
 
-    // who: 'groom' hoặc 'bride' — chỉ dựng lại popup đúng 1 cột tương ứng
     function moHopQua(who) {
       const laChuRe = who === 'groom';
       const nutDaBam = laChuRe ? phongBiChuRe : phongBiCoDau;
@@ -1057,25 +1759,18 @@
     phongBiCoDau.addEventListener('click', () => moHopQua('bride'));
     document.getElementById('modalDong').addEventListener('click', dongHopQua);
     modalQuaOverlay.addEventListener('click', (e) => {
-      if (e.target === modalQuaOverlay) dongHopQua(); // bấm ra ngoài card cũng đóng được
+      if (e.target === modalQuaOverlay) dongHopQua();
     });
   }
 
   /*
     ==============================================================
-    BƯỚC B2 — init(): lấy dữ liệu backend đã gán (nếu có), nếu
-    chưa có thì dùng dữ liệu mẫu DEFAULT_CONFIG / DEFAULT_INVITATION_ID
-    (khai báo ở Bước A) để file vẫn chạy được khi xem thử độc lập.
-    `config` và `invitationId` là 2 biến duy nhất được dùng để
-    render và gọi API bên dưới — không đọc thẳng window.__...__ nữa.
+    BƯỚC B2 — init()
     ==============================================================
   */
   let config;
   let invitationId;
 
-  // Rắc 1 hình rồng in chìm (ngẫu nhiên chọn ảnh + hướng) vào mỗi section nội dung.
-  // Dùng z-index:-1 kết hợp .khoi{position:relative;z-index:0} (đã khai báo ở CSS)
-  // để watermark luôn nằm DƯỚI nội dung nhưng vẫn TRÊN màu nền của section.
   function racHoaTietRongChim() {
     const anhRong = [
       'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/dragon_left_MMnU.webp',
@@ -1086,97 +1781,11 @@
       anh.className = 'rong-chim-khoi';
       anh.alt = '';
       anh.src = anhRong[Math.floor(Math.random() * anhRong.length)];
-      const goc = Math.floor(Math.random() * 360); // xoay ngẫu nhiên 0-360 độ
-      const lat = Math.random() < 0.5 ? -1 : 1; // 50% lật ngang ngẫu nhiên
+      const goc = Math.floor(Math.random() * 360);
+      const lat = Math.random() < 0.5 ? -1 : 1;
       anh.style.transform = `translate(-50%, -50%) rotate(${goc}deg) scaleX(${lat})`;
       khoi.appendChild(anh);
     });
-  }
-
-  /*
-    ==============================================================
-    BƯỚC B3 — CẬP NHẬT THẺ CHIA SẺ (Open Graph) THEO DỮ LIỆU THẬT
-    Thẻ og:* tĩnh trong <head> là bản mặc định dành cho crawler của
-    Zalo/Facebook (chúng không chạy JavaScript). Hàm dưới đây ghi đè
-    lại bằng tên cô dâu/chú rể, địa điểm và ảnh bìa thật của thiệp —
-    có tác dụng với tiêu đề tab trình duyệt và các crawler/app có
-    chạy JavaScript. Nhớ: og:image luôn phải là URL tuyệt đối https.
-    ==============================================================
-  */
-  const ANH_BIA_MAC_DINH = 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp';
-
-  // Thêm thẻ <meta> nếu chưa có, cập nhật nếu đã có.
-  function datTheMeta(thuocTinh, ten, noiDung) {
-    let the = document.head.querySelector(`meta[${thuocTinh}="${ten}"]`);
-    if (!the) {
-      the = document.createElement('meta');
-      the.setAttribute(thuocTinh, ten);
-      document.head.appendChild(the);
-    }
-    the.setAttribute('content', noiDung);
-  }
-
-  // Xoá hết các thẻ <meta> khớp (dùng khi con số cũ không còn đúng nữa).
-  function xoaTheMeta(thuocTinh, ten) {
-    document.head.querySelectorAll(`meta[${thuocTinh}="${ten}"]`).forEach((the) => the.remove());
-  }
-
-  // Ảnh bìa để chia sẻ: ưu tiên ảnh thật của thiệp, cuối cùng mới dùng ảnh mặc định.
-  function anhBiaChiaSe(config) {
-    const anh = config?.photos?.coverPhoto
-      || (Array.isArray(config?.gallery) ? config.gallery.find(Boolean) : '')
-      || ANH_BIA_MAC_DINH;
-    return tuyetDoiHoaUrl(anh);
-  }
-
-  // Crawler không chạy JS nên chỉ cần URL tuyệt đối; hàm này cũng giúp
-  // link thiệp chạy đúng khi xem offline / trên domain khác.
-  function tuyetDoiHoaUrl(url) {
-    try {
-      return new URL(url, window.location.href).href;
-    } catch {
-      return ANH_BIA_MAC_DINH;
-    }
-  }
-
-  function capNhatTheChiaSe(config) {
-    const tenCapDoi = [config.groomShort, config.brideShort].filter(Boolean).join(' & ');
-    const tieuDe = tenCapDoi ? `Thiệp mời cưới ${tenCapDoi}` : 'Thiệp mời cưới';
-    const diaDiem = [config.reception?.venueName, config.reception?.address].filter(Boolean).join(', ');
-    const moTa = `Trân trọng kính mời bạn đến dự lễ thành hôn của ${tenCapDoi || 'chúng tôi'}`
-      + (diaDiem ? ` tại ${diaDiem}` : '')
-      + '. Nhấn để mở thiệp và xem chi tiết.';
-    const url = window.location.origin + window.location.pathname + window.location.search;
-    const anh = anhBiaChiaSe(config);
-
-    document.title = tieuDe;
-    datTheMeta('property', 'og:title', tieuDe);
-    datTheMeta('property', 'og:description', moTa);
-    datTheMeta('name', 'twitter:title', tieuDe);
-    datTheMeta('name', 'twitter:description', moTa);
-    datTheMeta('property', 'og:url', url);
-
-    // Ảnh bìa thật (khách tự upload) có kích thước/định dạng khác ảnh
-    // mặc định trong <head>, nên bỏ các thẻ mô tả ảnh cũ trước khi thay.
-    xoaTheMeta('property', 'og:image');
-    xoaTheMeta('property', 'og:image:secure_url');
-    xoaTheMeta('property', 'og:image:type');
-    xoaTheMeta('property', 'og:image:width');
-    xoaTheMeta('property', 'og:image:height');
-    xoaTheMeta('property', 'og:image:alt');
-    datTheMeta('property', 'og:image', anh);
-    datTheMeta('property', 'og:image:secure_url', anh);
-    datTheMeta('property', 'og:image:alt', `Ảnh cưới ${tenCapDoi}`.trim());
-    datTheMeta('name', 'twitter:image', anh);
-
-    // Link chuẩn của thiệp (bỏ phần #anchor nội bộ).
-    let canonical = document.head.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', url);
   }
 
   function init() {
@@ -1184,28 +1793,17 @@
     invitationId = window.__INVITATION_ID__ || DEFAULT_INVITATION_ID;
     render(config);
     racHoaTietRongChim();
-    capNhatTheChiaSe(config);
   }
 
   init();
 
   /*
     ==============================================================
-    BƯỚC C — SỔ LƯU BÚT (gọi API thật)
-    invitationId (lấy ở init() phía trên) dùng để xác định thiệp
-    nào khi gọi API.
-    Ghi chú: bản này dùng lại các id có sẵn trong HTML của file
-    (formLuuBut / inputTenKhach / inputLoiChuc / danhSachLoiChuc)
-    thay vì gbForm/gbName/gbMsg, và thay $('id') bằng
-    document.getElementById('id') cho khớp phần còn lại của file.
+    BƯỚC C — SỔ LƯU BÚT
     ==============================================================
   */
-
   const wishes = [];
 
-  // Vẽ danh sách lời chúc hiện có trong mảng `wishes` ra DOM.
-  // Dùng textContent (không phải innerHTML) để tránh chèn mã độc
-  // từ nội dung do khách nhập vào.
   function renderWishes() {
     const box = document.getElementById('danhSachLoiChuc');
     box.innerHTML = '';
@@ -1278,8 +1876,7 @@
 
   /*
     ==============================================================
-    Hàm dựng 1 cột thông tin chuyển khoản + QR — dùng bởi phần
-    "phong bì lì xì" bên trong render().
+    Hàm dựng cột mừng cưới
     ==============================================================
   */
   function xayCotMungCuoi(nhan, taiKhoan) {
@@ -1300,7 +1897,7 @@
 
   /*
     ==============================================================
-    BƯỚC D — TƯƠNG TÁC "MỞ THIỆP" + CÁ NHÂN HÓA THEO KHÁCH (URL)
+    BƯỚC D — MỞ THIỆP + CÁ NHÂN HÓA
     ==============================================================
   */
   const thamSo = new URLSearchParams(window.location.search);
@@ -1337,57 +1934,33 @@
   });
 
   function moThiep() {
-    manBia.classList.add('dang-dong'); // bắt đầu hiệu ứng mờ dần + thu nhỏ của màn bìa
+    manBia.classList.add('dang-dong');
     setTimeout(() => {
-    manBia.style.display = 'none';
-    manNoiDung.style.display = 'flex';
-    // Đợi 1 khung hình để trình duyệt ghi nhận trạng thái ẩn (opacity 0) trước
-    // khi thêm class 'hien' — nhờ vậy hiệu ứng mờ dần vẫn chạy mượt.
-    requestAnimationFrame(() => { manNoiDung.classList.add('hien'); });
-    playMusicIfAvailable();
-    window.scrollTo(0, 0);
-    }, 500); // khớp với thời lượng transition ở CSS (.man-bia)
+      manBia.style.display = 'none';
+      manNoiDung.style.display = 'flex';
+      requestAnimationFrame(() => { manNoiDung.classList.add('hien'); });
+      playMusicIfAvailable();
+      window.scrollTo(0, 0);
+    }, 550);
   }
   function dongThiep() {
     manNoiDung.classList.remove('hien');
     setTimeout(() => {
       manNoiDung.style.display = 'none';
       manBia.style.display = 'flex';
-      // Tương tự: đợi 1 khung hình rồi mới bỏ 'dang-dong' để màn bìa mờ dần HIỆN LẠI thay vì bật lên đột ngột
       requestAnimationFrame(() => { manBia.classList.remove('dang-dong'); });
       window.scrollTo(0, 0);
-    }, 400); // khớp với thời lượng transition ở CSS (.man-noi-dung)
+    }, 400);
   }
 
-  // nutMo.addEventListener('click', moThiep);
   nutMo.addEventListener('click', () => {
-    // // Bắn từ 2 bên vào giữa
-    // const duration = 2000;
-    // const end = Date.now() + duration;
-
-    // (function frame() {
-    //   confetti({
-    //     particleCount: 4,
-    //     angle: 60,
-    //     spread: 55,
-    //     origin: { x: 0, y: 0.7 },
-    //     colors: ['#FFD700', '#FF69B4', '#00CED1', '#FF4500']
-    //   });
-    //   confetti({
-    //     particleCount: 4,
-    //     angle: 120,
-    //     spread: 55,
-    //     origin: { x: 1, y: 0.7 },
-    //     colors: ['#FFD700', '#FF69B4', '#00CED1', '#FF4500']
-    //   });
-
-    //   if (Date.now() < end) requestAnimationFrame(frame);
-    // })();
     moThiep();
+    // Confetti tông vintage: vàng đồng + hồng tro + rượu vang + giấy
     confetti({
-      particleCount: 200,
-      spread: 80,
-      origin: { y: 0.6 }
+      particleCount: 160,
+      spread: 90,
+      origin: { y: 0.65 },
+      colors: ['#b58c4a', '#d9bb7c', '#b78b7f', '#6d2f3c', '#f0e5cc']
     });
   });
   nutQuayLai.addEventListener('click', dongThiep);

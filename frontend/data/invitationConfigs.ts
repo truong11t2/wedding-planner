@@ -129,6 +129,8 @@ export const invitationConfigs: Record<string, InvitationConfig> = {
 	// Must match the template id in `invitationTemplates` — `thiep-cuoi-western`,
 	// not `western`. A missing key silently fell back to `minimalConfig`.
 	'thiep-cuoi-western': hienDaiConfig,
+	'thiep-cuoi-nhat-ban': hienDaiConfig,
+	'thiep-cuoi-chau-au-do': hienDaiConfig,
 };
 
 /** Deep-clone a config so callers never mutate the shared registry objects. */

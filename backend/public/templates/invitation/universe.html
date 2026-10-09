@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiệp mẫu — Vũ Trụ Tình Yêu (bản học tập)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;600;700&family=Noto+Serif+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    ==============================================================
+    BẢNG MÀU & BIẾN DÙNG CHUNG — CHỦ ĐỀ KHÔNG GIAN
+    ==============================================================
+  */
+  :root {
+    --space-void: #050714;
+    --space-deep: #0a0e27;
+    --space-dark: #10162f;
+    --space-mid: #1a2145;
+    --space-light: #252d5c;
+    --nebula-purple: #2d1b4e;
+    --nebula-violet: #4a2c7a;
+    --nebula-pink: #e94b8a;
+    --nebula-rose: #ff6b9d;
+    --star-gold: #ffd700;
+    --star-gold-light: #ffe066;
+    --star-gold-deep: #c9a227;
+    --starlight: #e8eaf6;
+    --starlight-soft: #b8c1ec;
+    --aurora-cyan: #4dd0e1;
+    --aurora-teal: #38b2ac;
+    --ink: #e8eaf6;
+    --ink-dark: #ffffff;
+    --ink-soft: #b8c1ec;
+    --bronze-dark: #8b6dcc;
+    --bronze-deep: #6b4fa0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { min-height: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--space-void);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: var(--ink);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /*
+    ==============================================================
+    NỀN THIÊN HÀ BAO QUANH THIỆP (ngoài .thiep)
+    ==============================================================
+  */
+  .vu-tru-nen {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 15%, rgba(74,44,122,.55) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 82% 22%, rgba(233,75,138,.32) 0%, transparent 55%),
+      radial-gradient(ellipse 90% 70% at 50% 88%, rgba(77,208,225,.22) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 45% at 12% 78%, rgba(107,79,160,.4) 0%, transparent 55%),
+      radial-gradient(ellipse 55% 40% at 88% 82%, rgba(255,107,157,.25) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 50%, #10162f 0%, #0a0e27 55%, #050714 100%);
+  }
+
+  /* Vệt sáng dải Ngân Hà xoay chậm */
+  .vu-tru-nen::before {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    background:
+      conic-gradient(from 210deg at 50% 50%,
+        transparent 0deg,
+        rgba(184,193,236,.06) 60deg,
+        rgba(255,215,0,.1) 120deg,
+        rgba(233,75,138,.08) 180deg,
+        rgba(77,208,225,.1) 240deg,
+        rgba(107,79,160,.1) 300deg,
+        transparent 360deg);
+    animation: xoayThienHa 180s linear infinite;
+    filter: blur(28px);
+    opacity: .85;
+  }
+
+  /* Mây tinh vân trôi nhẹ */
+  .vu-tru-nen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle 220px at 18% 30%, rgba(233,75,138,.35), transparent 70%),
+      radial-gradient(circle 280px at 78% 68%, rgba(74,44,122,.45), transparent 70%),
+      radial-gradient(circle 180px at 55% 12%, rgba(255,215,0,.18), transparent 70%),
+      radial-gradient(circle 200px at 30% 82%, rgba(77,208,225,.22), transparent 70%);
+    filter: blur(50px);
+    animation: troiMay 28s ease-in-out infinite;
+  }
+
+  @keyframes xoayThienHa {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes troiMay {
+    0%, 100% { transform: translate3d(0,0,0) scale(1); }
+    50%      { transform: translate3d(2%, -1.5%, 0) scale(1.05); }
+  }
+
+  /* 3 lớp sao lấp lánh khác nhịp */
+  .nen-sao {
+    position: absolute;
+    inset: -30%;
+    background-repeat: repeat;
+    animation: lapLanhNen ease-in-out infinite;
+    will-change: opacity;
+  }
+  .nen-sao.lop-1 {
+    background-image:
+      radial-gradient(1.6px 1.6px at 12% 18%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 28% 42%, #ffe066, transparent),
+      radial-gradient(1.8px 1.8px at 45% 12%, #fff, transparent),
+      radial-gradient(1px 1px at 62% 68%, #b8c1ec, transparent),
+      radial-gradient(2.2px 2.2px at 78% 28%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 88% 82%, #ffd700, transparent),
+      radial-gradient(1.6px 1.6px at 18% 78%, #fff, transparent),
+      radial-gradient(1px 1px at 52% 88%, #4dd0e1, transparent),
+      radial-gradient(1.4px 1.4px at 8% 52%, #fff, transparent),
+      radial-gradient(1.8px 1.8px at 92% 48%, #ffe066, transparent),
+      radial-gradient(1.2px 1.2px at 35% 22%, #fff, transparent),
+      radial-gradient(1px 1px at 72% 8%, #b8c1ec, transparent),
+      radial-gradient(2.4px 2.4px at 5% 88%, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 48% 55%, #fff, transparent),
+      radial-gradient(1.6px 1.6px at 82% 62%, #ffd700, transparent),
+      radial-gradient(1px 1px at 25% 92%, #fff, transparent),
+      radial-gradient(1.6px 1.6px at 68% 42%, #ff6b9d, transparent),
+      radial-gradient(1.2px 1.2px at 42% 78%, #fff, transparent);
+    background-size: 100% 100%;
+    animation-duration: 4s;
+    opacity: 1;
+  }
+  .nen-sao.lop-2 {
+    background-image:
+      radial-gradient(1.2px 1.2px at 22% 8%, #fff, transparent),
+      radial-gradient(1.6px 1.6px at 58% 32%, #ffe066, transparent),
+      radial-gradient(1px 1px at 32% 58%, #fff, transparent),
+      radial-gradient(1.4px 1.4px at 68% 78%, #b8c1ec, transparent),
+      radial-gradient(1.8px 1.8px at 12% 68%, #fff, transparent),
+      radial-gradient(1px 1px at 88% 18%, #4dd0e1, transparent),
+      radial-gradient(1.2px 1.2px at 42% 92%, #fff, transparent),
+      radial-gradient(1.6px 1.6px at 72% 42%, #ffd700, transparent),
+      radial-gradient(1.4px 1.4px at 5% 40%, #fff, transparent),
+      radial-gradient(1px 1px at 55% 20%, #e94b8a, transparent),
+      radial-gradient(1.8px 1.8px at 92% 72%, #fff, transparent),
+      radial-gradient(1px 1px at 15% 30%, #ffe066, transparent);
+    background-size: 100% 100%;
+    animation-duration: 6.5s;
+    animation-direction: reverse;
+    opacity: .7;
+  }
+  .nen-sao.lop-3 {
+    background-image:
+      radial-gradient(2.6px 2.6px at 40% 60%, #fff, transparent),
+      radial-gradient(2.2px 2.2px at 75% 25%, #ffe066, transparent),
+      radial-gradient(2.8px 2.8px at 15% 85%, #fff, transparent),
+      radial-gradient(2.4px 2.4px at 88% 55%, #b8c1ec, transparent),
+      radial-gradient(2.6px 2.6px at 60% 8%, #ff6b9d, transparent);
+    background-size: 100% 100%;
+    animation-duration: 8s;
+    opacity: .55;
+    filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 12px rgba(255,215,0,.6));
+  }
+
+  @keyframes lapLanhNen {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .35; transform: scale(1.02); }
+  }
+
+  /* Hành tinh trôi nổi xung quanh thiệp */
+  .hanh-tinh {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: inset -12px -12px 30px rgba(0,0,0,.6);
+    animation: hanhTinhTroi linear infinite;
+  }
+  .hanh-tinh::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 28%, rgba(255,255,255,.6), transparent 45%);
+    pointer-events: none;
+  }
+
+  /* Hành tinh 1 — tím lớn có vành đai */
+  .ht-1 {
+    width: 110px; height: 110px;
+    top: 12%; left: 6%;
+    background: radial-gradient(circle at 32% 30%, #c8a8f0 0%, #6b4fa0 45%, #2d1b4e 100%);
+    animation-duration: 60s;
+    box-shadow:
+      inset -12px -12px 30px rgba(0,0,0,.6),
+      0 0 60px rgba(107,79,160,.5);
+  }
+  .ht-1::before {
+    content: '';
+    position: absolute;
+    inset: -22% -42%;
+    border-radius: 50%;
+    border: 6px solid rgba(200,168,240,.35);
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    transform: rotate(-22deg) scaleY(.28);
+    box-shadow: 0 0 20px rgba(200,168,240,.5);
+    pointer-events: none;
+  }
+
+  /* Hành tinh 2 — xanh cyan nhỏ */
+  .ht-2 {
+    width: 56px; height: 56px;
+    top: 68%; right: 8%;
+    background: radial-gradient(circle at 32% 30%, #a0f0ff 0%, #38b2ac 55%, #0d3c3c 100%);
+    animation-duration: 45s;
+    animation-direction: reverse;
+    box-shadow:
+      inset -6px -6px 16px rgba(0,0,0,.6),
+      0 0 40px rgba(77,208,225,.55);
+  }
+
+  /* Hành tinh 3 — hồng nhỏ xa */
+  .ht-3 {
+    width: 38px; height: 38px;
+    top: 22%; right: 14%;
+    background: radial-gradient(circle at 32% 30%, #ff9fc4 0%, #e94b8a 55%, #6b1440 100%);
+    animation-duration: 70s;
+    box-shadow:
+      inset -4px -4px 10px rgba(0,0,0,.6),
+      0 0 28px rgba(233,75,138,.6);
+  }
+
+  /* Hành tinh 4 — vàng lớn thấp */
+  .ht-4 {
+    width: 84px; height: 84px;
+    bottom: 8%; left: 10%;
+    background: radial-gradient(circle at 32% 30%, #fff5b8 0%, #c9a227 55%, #5c4a10 100%);
+    animation-duration: 55s;
+    animation-direction: reverse;
+    box-shadow:
+      inset -10px -10px 24px rgba(0,0,0,.6),
+      0 0 50px rgba(255,215,0,.5);
+  }
+
+  /* Hành tinh 5 — tinh thể băng */
+  .ht-5 {
+    width: 46px; height: 46px;
+    top: 45%; left: 3%;
+    background: radial-gradient(circle at 32% 30%, #ffffff 0%, #b8c1ec 55%, #39406a 100%);
+    animation-duration: 80s;
+    box-shadow:
+      inset -5px -5px 12px rgba(0,0,0,.6),
+      0 0 32px rgba(184,193,236,.65);
+  }
+
+  @keyframes hanhTinhTroi {
+    0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50%  { transform: translate3d(14px, -22px, 0) rotate(180deg); }
+    100% { transform: translate3d(0, 0, 0) rotate(360deg); }
+  }
+
+  /* Sao băng ngoài thiệp */
+  .sao-bang-nen {
+    position: absolute;
+    width: 160px; height: 2px;
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,.9) 60%,
+      #fff 85%,
+      rgba(255,215,0,.9) 100%);
+    border-radius: 999px;
+    filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px #ffd700);
+    opacity: 0;
+    animation: saoBangNen linear infinite;
+  }
+  .sao-bang-nen::before {
+    content: '';
+    position: absolute;
+    right: -2px; top: 50%;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translateY(-50%);
+    box-shadow: 0 0 14px #fff, 0 0 28px #ffd700;
+  }
+  .sb-nen-1 { top: 8%;  left: -20%; animation-duration: 7s;  animation-delay: 0s;   }
+  .sb-nen-2 { top: 34%; left: -20%; animation-duration: 9s;  animation-delay: 3.2s; }
+  .sb-nen-3 { top: 62%; left: -20%; animation-duration: 8s;  animation-delay: 6s;   }
+  .sb-nen-4 { top: 82%; left: -20%; animation-duration: 10s; animation-delay: 1.6s; }
+
+  @keyframes saoBangNen {
+    0%   { transform: translate3d(0, 0, 0) rotate(18deg); opacity: 0; }
+    6%   { opacity: 1; }
+    40%  { transform: translate3d(130vw, 40vh, 0) rotate(18deg); opacity: 0; }
+    100% { transform: translate3d(130vw, 40vh, 0) rotate(18deg); opacity: 0; }
+  }
+
+  /* LỚP 1 — KHUNG THIỆP */
+  .thiep {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    border-radius: 22px;
+    background: radial-gradient(ellipse at 50% 30%, var(--space-mid) 0%, var(--space-dark) 40%, var(--space-deep) 75%, var(--space-void) 100%);
+    color: var(--ink);
+    box-shadow:
+      0 30px 90px rgba(0,0,0,.75),
+      0 0 100px rgba(74,44,122,.55),
+      0 0 180px rgba(233,75,138,.25),
+      0 0 0 1px rgba(255,215,0,.2),
+      0 0 0 2px rgba(74,44,122,.35);
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 0; }
+    /* Trên mobile, giữ nền thiên hà vẫn hiển thị phía sau và hai bên thiệp */
+    .vu-tru-nen { position: fixed; }
+    .thiep {
+      max-width: 100%;
+      border-radius: 0;
+      box-shadow: none;
+      min-height: 100vh;
+    }
+    .man-bia { min-height: 100vh; padding: 0 26px; }
+    /* Mobile: hành tinh nhỏ lại để không rối */
+    .ht-1 { width: 70px; height: 70px; }
+    .ht-2 { width: 38px; height: 38px; }
+    .ht-3 { width: 26px; height: 26px; }
+    .ht-4 { width: 56px; height: 56px; }
+    .ht-5 { width: 30px; height: 30px; }
+  }
+
+  /* LỚP 2 — HỌA TIẾT TRANG TRÍ (trong thiệp) */
+  .hoa-tiet { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+  .bautroi-sao {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .bautroi-sao::before,
+  .bautroi-sao::after {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent),
+      radial-gradient(1px 1px at 28% 42%, #ffe066, transparent),
+      radial-gradient(1.5px 1.5px at 45% 12%, #fff, transparent),
+      radial-gradient(1px 1px at 62% 68%, #b8c1ec, transparent),
+      radial-gradient(2px 2px at 78% 28%, #fff, transparent),
+      radial-gradient(1px 1px at 88% 82%, #ffd700, transparent),
+      radial-gradient(1.5px 1.5px at 18% 78%, #fff, transparent),
+      radial-gradient(1px 1px at 52% 88%, #4dd0e1, transparent),
+      radial-gradient(1px 1px at 8% 52%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 92% 48%, #ffe066, transparent),
+      radial-gradient(1px 1px at 35% 22%, #fff, transparent),
+      radial-gradient(1px 1px at 72% 8%, #b8c1ec, transparent),
+      radial-gradient(2px 2px at 5% 88%, #fff, transparent),
+      radial-gradient(1px 1px at 48% 55%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 82% 62%, #ffd700, transparent);
+    animation: lapLanh 4s ease-in-out infinite;
+  }
+  .bautroi-sao::after {
+    background-image:
+      radial-gradient(1px 1px at 22% 8%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 58% 32%, #ffe066, transparent),
+      radial-gradient(1px 1px at 32% 58%, #fff, transparent),
+      radial-gradient(1px 1px at 68% 78%, #b8c1ec, transparent),
+      radial-gradient(1.5px 1.5px at 12% 68%, #fff, transparent),
+      radial-gradient(1px 1px at 88% 18%, #4dd0e1, transparent),
+      radial-gradient(1px 1px at 42% 92%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 72% 42%, #ffd700, transparent);
+    animation-duration: 6s;
+    animation-direction: reverse;
+    opacity: .7;
+  }
+  @keyframes lapLanh {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .35; }
+  }
+
+  .he-mat-troi {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 130%;
+    height: 130%;
+    opacity: .85;
+  }
+
+  .sao-bang {
+    position: absolute;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, #fff 50%, rgba(255,215,0,.8) 100%);
+    border-radius: 999px;
+    filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 12px #ffd700);
+    opacity: 0;
+    animation: saoBang 6s ease-in infinite;
+  }
+  .sao-bang::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(50%, -50%);
+    box-shadow: 0 0 12px #fff, 0 0 24px #ffd700;
+  }
+  .sao-bang.sb1 { top: 12%; left: -20%; animation-delay: 0s; }
+  .sao-bang.sb2 { top: 28%; left: -20%; animation-delay: 3.5s; }
+  .sao-bang.sb3 { top: 72%; left: -20%; animation-delay: 1.8s; }
+  .sao-bang.sb4 { top: 58%; left: -20%; animation-delay: 5.2s; }
+  @keyframes saoBang {
+    0% { transform: translate(0,0) rotate(20deg); opacity: 0; }
+    5% { opacity: 1; }
+    35% { transform: translate(140vw, 40vh) rotate(20deg); opacity: 0; }
+    100% { transform: translate(140vw, 40vh) rotate(20deg); opacity: 0; }
+  }
+
+  .chu-hi {
+    position: absolute; color: var(--star-gold); font-size: 20px; opacity: .55;
+    animation: bayLen 6s ease-in-out infinite; user-select: none;
+    text-shadow: 0 0 10px rgba(255,215,0,.8), 0 0 20px rgba(255,215,0,.4);
+    font-family: 'Noto Serif Display', serif;
+  }
+  @keyframes bayLen {
+    0%, 100% { transform: translateY(0) scale(1); opacity: .35; }
+    50%      { transform: translateY(-14px) scale(1.15); opacity: .85; }
+  }
+
+  /* MÀN HÌNH BÌA */
+  .man-bia {
+    position: relative; z-index: 2; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 40px 26px;
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .man-bia.dang-dong { opacity: 0; transform: scale(.96) translateY(-16px); pointer-events: none; }
+
+  .nhan-nho {
+    font-size: 11px; letter-spacing: .32em; color: var(--star-gold-light);
+    margin-bottom: 22px; text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(255,215,0,.5);
+    position: relative;
+  }
+  .nhan-nho::before,
+  .nhan-nho::after {
+    content: '';
+    position: absolute; top: 50%; width: 28px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--star-gold));
+  }
+  .nhan-nho::before { right: calc(100% + 8px); }
+  .nhan-nho::after { left: calc(100% + 8px); transform: scaleX(-1); }
+
+  .ten-cap-doi {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 42px; line-height: 1.1; margin: 0 0 18px;
+    color: var(--starlight);
+    text-shadow: 0 0 20px rgba(255,215,0,.4), 0 0 40px rgba(74,44,122,.6);
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .ten-cap-doi span:first-child,
+  .ten-cap-doi span:last-child {
+    background: linear-gradient(180deg, #fff 0%, #ffe066 50%, #ffd700 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 12px rgba(255,215,0,.4));
+  }
+
+  .hoa-van-nho { color: var(--star-gold); font-size: 20px; margin: 6px 0 18px; }
+
+  .ngay-cuoi {
+    font-size: 14px; letter-spacing: .12em; color: var(--starlight-soft);
+    margin-bottom: 34px;
+    padding: 8px 20px;
+    border-top: 1px solid rgba(255,215,0,.2);
+    border-bottom: 1px solid rgba(255,215,0,.2);
+    text-transform: uppercase;
+    display: inline-block;
+  }
+
+  .loi-moi { font-size: 15px; opacity: .8; margin-bottom: 6px; margin-top: 0px; letter-spacing: .06em; }
+  .ten-khach {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 30px; color: var(--aurora-teal); margin: 6px 0 8px;
+    text-shadow: 0 0 18px rgba(255,215,0,.5);
+    font-weight: 800;
+    letter-spacing: .02em;
+  }
+  .mo-ta-loi-moi { font-size: 13px; opacity: .7; margin-bottom: 38px; line-height: 1.6; }
+
+  .nut-mo {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--space-deep); font-weight: 600;
+    background: linear-gradient(135deg, #fff 0%, var(--star-gold-light) 40%, var(--star-gold) 100%);
+    border: none; padding: 15px 42px; border-radius: 999px; cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow:
+      0 0 24px rgba(255,215,0,.6),
+      0 0 60px rgba(255,215,0,.3),
+      inset 0 0 12px rgba(255,255,255,.6);
+    position: relative;
+  }
+  .nut-mo:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 32px rgba(255,215,0,.8),
+      0 0 80px rgba(255,215,0,.5),
+      inset 0 0 16px rgba(255,255,255,.8);
+  }
+  .nut-mo:active { transform: scale(.94); }
+
+  .music-fab{
+    position: fixed; bottom: 18px; left: 18px; z-index: 70;
+    width: 46px; height: 46px; border-radius: 50%;
+    border: 1px solid rgba(255,215,0,.4);
+    background: radial-gradient(circle at 30% 30%, var(--nebula-violet), var(--space-deep));
+    color: var(--star-gold);
+    box-shadow: 0 0 20px rgba(255,215,0,.4), inset 0 0 12px rgba(74,44,122,.8);
+    display: none; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
+  }
+  .music-fab.show{ display: flex; }
+  .music-fab .bar{ display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+  .music-fab .bar span{
+    width: 2.5px; background: var(--star-gold); border-radius: 1px;
+    animation: eq .9s ease-in-out infinite;
+    box-shadow: 0 0 4px var(--star-gold);
+  }
+  .music-fab .bar span:nth-child(1){ height: 6px; animation-delay:0s; }
+  .music-fab .bar span:nth-child(2){ height: 14px; animation-delay:.15s; }
+  .music-fab .bar span:nth-child(3){ height: 9px; animation-delay:.3s; }
+  .music-fab.paused .bar span{ animation-play-state:paused; height: 4px; }
+  @keyframes eq{ 0%,100%{ transform:scaleY(0.4);} 50%{ transform:scaleY(1);} }
+
+  .man-noi-dung {
+    display: none; flex-direction: column; align-items: stretch; padding: 0;
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .4s ease, transform .4s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .man-noi-dung.hien { opacity: 1; transform: translateY(0); }
+
+  .khoi {
+    position: relative; z-index: 0; width: 100%;
+    padding: 60px 26px 50px; text-align: center; overflow: hidden;
+  }
+
+  .khoi::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1px 1px at 78% 32%, rgba(255,224,102,.6), transparent),
+      radial-gradient(1px 1px at 42% 72%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1.5px 1.5px at 88% 82%, rgba(184,193,236,.6), transparent),
+      radial-gradient(1px 1px at 8% 62%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 62% 12%, rgba(77,208,225,.5), transparent);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .rong-chim-khoi {
+    position: absolute; top: 50%; left: 50%; height: 55%; width: auto;
+    object-fit: contain; opacity: .08; z-index: -1; pointer-events: none;
+    filter: hue-rotate(200deg) brightness(1.4);
+  }
+
+  .nhan-khoi {
+    font-size: 11px; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--star-gold-light); margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(255,215,0,.5);
+    position: relative;
+    display: inline-block;
+  }
+  .nhan-khoi::before,
+  .nhan-khoi::after {
+    content: '✦';
+    color: var(--star-gold); margin: 0 10px;
+    font-size: 8px; opacity: .7;
+    vertical-align: middle;
+  }
+
+  .tieu-de-khoi {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 28px; margin: 0 0 32px; color: var(--starlight);
+    font-weight: 600;
+    letter-spacing: .01em;
+    text-shadow: 0 0 20px rgba(255,215,0,.2);
+  }
+
+  .khoi-hero { padding: 0; background: var(--space-void); color: var(--ink); }
+  .hero-anh-wrap { position: relative; width: 100%; min-height: 220px; }
+  .hero-anh { width: 100%; height: auto; display: block; }
+  .hero-phu {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(5,7,20,.15) 0%,
+      rgba(5,7,20,.25) 40%,
+      rgba(10,14,39,.75) 75%,
+      rgba(5,7,20,1) 100%);
+  }
+  .hero-noi-dung { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; padding: 0 20px 30px; }
+  .ten-cap-doi-lon {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 36px; margin: 8px 0; font-weight: 600;
+    color: var(--star-gold);
+    text-shadow: 0 0 24px rgba(255,215,0,.5), 0 0 48px rgba(74,44,122,.7);
+  }
+  .ten-cap-doi-lon span { color: var(--star-gold); }
+
+  .khoi-le {
+    background: linear-gradient(180deg, var(--space-void) 0%, var(--nebula-purple) 50%, var(--space-deep) 100%);
+    color: var(--ink);
+  }
+  .hai-cot { display: flex; flex-direction: column; gap: 26px; }
+
+  .hang-phu-huynh { display: flex; align-items: stretch; justify-content: center; }
+  .phu-huynh-cot { flex: 1; text-align: center; }
+  .duong-ke-giua {
+    width: 1px; align-self: stretch;
+    background: linear-gradient(180deg, transparent, var(--star-gold), transparent);
+    opacity: .6; margin: 2px 16px;
+  }
+  .phu-huynh-cot .nhan-nha {
+    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--star-gold-light); margin-bottom: 12px;
+    text-shadow: 0 0 8px rgba(255,215,0,.4);
+  }
+  .phu-huynh-cot .cha, .phu-huynh-cot .me {
+    font-size: 12px; line-height: 1.7; opacity: .95; color: var(--starlight);
+  }
+  .phu-huynh-cot .dia-chi {
+    font-size: 11px; opacity: .65; margin-top: 6px; line-height: 1.5;
+    color: var(--starlight-soft);
+  }
+
+  .hang-ca-nhan { display: flex; justify-content: center; gap: 18px; margin-top: 8px; }
+  .cot-ca-nhan { flex: 1; text-align: center; }
+  .cot-ca-nhan .ten {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 17px; margin-bottom: 2px; color: var(--star-gold-light);
+    font-weight: 600;
+  }
+  .cot-ca-nhan .vai-tro {
+    font-size: 10px; opacity: .6; margin-bottom: 14px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--starlight-soft);
+  }
+  .cot-ca-nhan img {
+    width: 86px; height: 86px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--star-gold);
+    box-shadow:
+      0 0 20px rgba(255,215,0,.5),
+      0 0 40px rgba(74,44,122,.6),
+      inset 0 0 12px rgba(0,0,0,.5);
+  }
+
+  .thong-tin-le {
+    margin-top: 30px; text-align: center;
+    background: linear-gradient(135deg, rgba(45,27,78,.7), rgba(26,33,69,.7));
+    border: 1px solid rgba(255,215,0,.3);
+    border-radius: 18px; padding: 26px 20px;
+    box-shadow: 0 0 30px rgba(74,44,122,.4), inset 0 0 30px rgba(0,0,0,.4);
+    backdrop-filter: blur(8px);
+    position: relative;
+  }
+  .thong-tin-le::before {
+    position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    background: var(--space-deep); padding: 0 12px;
+    color: var(--star-gold); font-size: 12px;
+    text-shadow: 0 0 10px var(--star-gold);
+  }
+  .le-cau-mo-dau { font-size: 14px; opacity: .8; margin-bottom: 14px; letter-spacing: .05em; }
+  .le-gio {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 38px; color: var(--star-gold-light); line-height: 1; margin-bottom: 12px;
+    text-shadow: 0 0 24px rgba(255,215,0,.6);
+    font-weight: 600;
+  }
+  .le-ngay { font-size: 14px; margin-bottom: 8px; letter-spacing: .04em; }
+  .le-am-lich { font-size: 12px; font-style: italic; opacity: .7; color: var(--starlight-soft); }
+
+  .khoi-album {
+    background: linear-gradient(180deg, var(--space-deep) 0%, var(--space-void) 100%);
+    color: var(--ink);
+  }
+  .khoi-album .nhan-khoi { color: var(--star-gold-light); }
+  .thu-vien-anh { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .thu-vien-anh img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px;
+    cursor: pointer; transition: transform .3s ease, box-shadow .3s ease;
+    border: 1px solid rgba(255,215,0,.25);
+    box-shadow: 0 0 12px rgba(74,44,122,.4);
+  }
+  .thu-vien-anh img:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 24px rgba(255,215,0,.6), 0 0 48px rgba(74,44,122,.8);
+    border-color: var(--star-gold);
+  }
+  .album-trong { font-size: 13px; opacity: .7; padding: 20px 0; }
+
+  .khoi-tiec {
+    background: linear-gradient(180deg, var(--space-void) 0%, var(--nebula-purple) 50%, var(--space-deep) 100%);
+    color: var(--ink);
+  }
+  .tiec-ten-khach {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 24px; color: var(--star-gold-light);
+    margin: -14px 0 14px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,215,0,.3);
+    display: inline-block; font-weight: 600;
+    text-shadow: 0 0 16px rgba(255,215,0,.5);
+  }
+  .tiec-loi-moi { font-size: 14px; opacity: .8; margin-bottom: 24px; line-height: 1.6; }
+  #ndThongTinTiec {
+    background: linear-gradient(135deg, rgba(45,27,78,.7), rgba(26,33,69,.7));
+    border: 1px solid rgba(255,215,0,.3);
+    border-radius: 18px; padding: 26px 20px;
+    box-shadow: 0 0 30px rgba(74,44,122,.4), inset 0 0 30px rgba(0,0,0,.4);
+    backdrop-filter: blur(8px);
+    position: relative;
+  }
+  #ndThongTinTiec::before {
+    position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    background: var(--space-deep); padding: 0 12px;
+    color: var(--star-gold); font-size: 12px;
+    text-shadow: 0 0 10px var(--star-gold);
+  }
+  .tiec-nhan {
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--star-gold-light); margin: 22px 0 10px;
+    text-shadow: 0 0 8px rgba(255,215,0,.4);
+  }
+  #ndThongTinTiec .tiec-nhan:first-child { margin-top: 0; }
+  .tiec-gia-tri-noi-bat {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 26px; color: var(--starlight); line-height: 1.2; margin-bottom: 6px;
+    font-weight: 600;
+    text-shadow: 0 0 16px rgba(255,215,0,.3);
+  }
+  .tiec-ngay { font-size: 13px; color: var(--starlight-soft); opacity: .9; letter-spacing: .04em; }
+  .tiec-dia-chi { font-size: 13px; opacity: .85; max-width: 280px; margin: 0 auto; line-height: 1.6; }
+
+  .tiec-hanh-dong { display: flex; flex-direction: row; gap: 12px; margin-top: 28px; }
+  .nut-tiec {
+    flex: 1; font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    padding: 10px 10px; border-radius: 999px; cursor: pointer;
+    border: 1px solid rgba(255,215,0,.4);
+    background: transparent; color: var(--starlight);
+    transition: all .2s ease;
+  }
+  .nut-tiec:hover {
+    border-color: var(--star-gold);
+    box-shadow: 0 0 16px rgba(255,215,0,.3);
+  }
+  .nut-tiec-rsvp {
+    background: linear-gradient(135deg, #fff 0%, var(--star-gold-light) 40%, var(--star-gold) 100%);
+    color: var(--space-deep); border: none; font-weight: 600;
+    box-shadow: 0 0 20px rgba(255,215,0,.5);
+  }
+  .nut-tiec-rsvp:hover {
+    box-shadow: 0 0 32px rgba(255,215,0,.8);
+    transform: translateY(-1px);
+  }
+
+  .tiec-ban-do-wrap {
+    margin: 28px -26px 0; width: calc(100% + 52px);
+    overflow: hidden;
+    border-top: 1px solid rgba(255,215,0,.3);
+    border-bottom: 1px solid rgba(255,215,0,.3);
+    filter: hue-rotate(180deg) invert(.9) contrast(.9);
+  }
+  .tiec-ban-do { width: 100%; height: 300px; border: 0; display: block; }
+
+  .khoi-lichtrinh {
+    background: linear-gradient(180deg, var(--space-deep) 0%, var(--space-void) 100%);
+    color: var(--ink);
+  }
+  .khoi-lichtrinh .nhan-khoi { color: var(--star-gold-light); }
+  .danh-sach-lich-trinh { text-align: left; max-width: 320px; margin: 0 auto; }
+  .muc-chuong-trinh {
+    display: flex; gap: 16px; padding: 14px 0;
+    border-bottom: 1px solid rgba(255,215,0,.12);
+    align-items: baseline;
+  }
+  .muc-chuong-trinh:last-child { border-bottom: none; }
+  .muc-chuong-trinh .gio {
+    flex-shrink: 0; width: 58px; color: var(--star-gold);
+    font-weight: 600; font-size: 14px;
+    text-shadow: 0 0 10px rgba(255,215,0,.5);
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .muc-chuong-trinh .noi-dung-muc { font-size: 14px; color: var(--starlight); }
+
+  .khoi-luubut {
+    background: linear-gradient(180deg, var(--space-void) 0%, var(--nebula-purple) 50%, var(--space-deep) 100%);
+    color: var(--ink);
+  }
+  .form-luu-but { display: flex; flex-direction: column; gap: 10px; text-align: left; margin-bottom: 28px; }
+  .form-luu-but input, .form-luu-but textarea {
+    font-family: 'Be Vietnam Pro', sans-serif; padding: 12px 16px; border-radius: 12px;
+    border: 1px solid rgba(255,215,0,.3);
+    background: rgba(10,14,39,.7);
+    color: var(--starlight);
+    font-size: 14px;
+    transition: all .2s ease;
+  }
+  .form-luu-but input::placeholder, .form-luu-but textarea::placeholder { color: rgba(184,193,236,.5); }
+  .form-luu-but input:focus, .form-luu-but textarea:focus {
+    outline: none;
+    border-color: var(--star-gold);
+    box-shadow: 0 0 16px rgba(255,215,0,.3);
+  }
+  .form-luu-but textarea { min-height: 76px; resize: vertical; }
+  .form-luu-but button {
+    align-self: flex-end; font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--space-deep); font-weight: 600;
+    background: linear-gradient(135deg, #fff 0%, var(--star-gold-light) 40%, var(--star-gold) 100%);
+    border: none; padding: 12px 26px; border-radius: 999px; cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,215,0,.5);
+    transition: all .2s ease;
+  }
+  .form-luu-but button:hover { box-shadow: 0 0 32px rgba(255,215,0,.8); transform: translateY(-1px); }
+
+  .danh-sach-loi-chuc { text-align: left; display: flex; flex-direction: column; gap: 12px; }
+  .mot-loi-chuc {
+    background: linear-gradient(135deg, rgba(45,27,78,.6), rgba(26,33,69,.6));
+    border-radius: 14px; padding: 14px 16px;
+    border: 1px solid rgba(255,215,0,.25);
+    box-shadow: 0 0 16px rgba(74,44,122,.3);
+    backdrop-filter: blur(6px);
+  }
+  .mot-loi-chuc .ten {
+    font-weight: 600; font-size: 13px; margin-bottom: 6px;
+    color: var(--star-gold-light); text-transform: capitalize;
+    letter-spacing: .04em;
+    text-shadow: 0 0 8px rgba(255,215,0,.4);
+  }
+  .mot-loi-chuc .noi-dung { font-size: 13px; line-height: 1.6; color: var(--starlight-soft); }
+  .chua-co-loi-chuc { font-size: 13px; opacity: .6; text-align: center; color: var(--starlight-soft); }
+
+  .khoi-qua {
+    background: linear-gradient(180deg, var(--space-deep) 0%, var(--space-void) 100%);
+    color: var(--ink);
+  }
+  .khoi-qua .nhan-khoi { color: var(--star-gold-light); }
+
+  .phong-bi-wrap { display: flex; justify-content: center; gap: 36px; margin-bottom: 12px; }
+  .phong-bi {
+    background: none; border: none; cursor: pointer; padding: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    animation: docDua 4s ease-in-out infinite;
+  }
+  .phong-bi:nth-child(2) { animation-delay: 1.8s; }
+  @keyframes docDua {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-8px) rotate(-2deg); }
+  }
+  .phong-bi svg {
+    width: 72px; height: 90px;
+    filter: drop-shadow(0 0 16px rgba(255,215,0,.5)) drop-shadow(0 0 32px rgba(74,44,122,.7));
+    transition: transform .2s ease, filter .2s ease;
+  }
+  .phong-bi:hover svg {
+    transform: scale(1.08) rotate(2deg);
+    filter: drop-shadow(0 0 24px rgba(255,215,0,.8)) drop-shadow(0 0 48px rgba(74,44,122,1));
+  }
+  .phong-bi-nhan {
+    font-size: 11px; color: var(--star-gold-light); letter-spacing: .18em;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(255,215,0,.4);
+  }
+
+  @keyframes bungNo {
+    0%   { transform: scale(1) rotate(0deg); opacity: 1; }
+    45%  { transform: scale(1.4) rotate(-8deg); opacity: 1; }
+    100% { transform: scale(0) rotate(10deg); opacity: 0; }
+  }
+  .phong-bi.bung-no { animation: bungNo .4s ease forwards; }
+
+  .loi-cam-on { margin-top: 34px; font-size: 14px; line-height: 1.9; opacity: .85; color: var(--starlight-soft); }
+  .monogram-cuoi {
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 26px; color: var(--star-gold-light); margin-top: 18px; font-weight: 600;
+    text-shadow: 0 0 20px rgba(255,215,0,.6);
+  }
+
+  .nut-quay-lai-cuoi {
+    margin-top: 38px; background: transparent;
+    border: 1px solid rgba(255,215,0,.4); color: var(--star-gold-light);
+    padding: 12px 28px; border-radius: 999px; font-size: 12px;
+    letter-spacing: .12em; text-transform: uppercase;
+    cursor: pointer; transition: all .2s ease;
+    font-family: 'Be Vietnam Pro', sans-serif;
+  }
+  .nut-quay-lai-cuoi:hover {
+    border-color: var(--star-gold);
+    box-shadow: 0 0 16px rgba(255,215,0,.4);
+    color: #fff;
+  }
+
+  .chan-trang {
+    background: var(--space-void);
+    text-align: center; padding: 16px 0 26px;
+    border-top: 1px solid rgba(255,215,0,.1);
+  }
+  .chan-trang a {
+    font-size: 11px; color: var(--starlight-soft); text-decoration: none;
+    letter-spacing: .18em; text-transform: uppercase; opacity: .6;
+    transition: all .2s ease;
+  }
+  .chan-trang a:hover { color: var(--star-gold); opacity: 1; text-shadow: 0 0 8px var(--star-gold); }
+
+  .modal-qua-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(5,7,20,.85);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  }
+  .modal-qua-overlay.hien { opacity: 1; pointer-events: auto; }
+  .modal-qua {
+    width: 100%; max-width: 350px;
+    background: linear-gradient(160deg, var(--nebula-purple) 0%, var(--space-dark) 100%);
+    color: var(--ink);
+    border-radius: 22px; padding: 28px 22px; position: relative;
+    transform: scale(.9); transition: transform .3s ease;
+    box-shadow:
+      0 0 60px rgba(255,215,0,.3),
+      0 0 120px rgba(74,44,122,.6),
+      0 24px 60px rgba(0,0,0,.7),
+      inset 0 0 40px rgba(0,0,0,.4);
+    border: 1px solid rgba(255,215,0,.3);
+  }
+  .modal-qua::before {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--space-void); padding: 0 14px;
+    color: var(--star-gold); font-size: 14px;
+    text-shadow: 0 0 12px var(--star-gold);
+  }
+  .modal-qua-overlay.hien .modal-qua { transform: scale(1); }
+  .modal-dong {
+    position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid rgba(255,215,0,.3);
+    background: rgba(255,215,0,.1); color: var(--star-gold);
+    font-size: 18px; cursor: pointer; line-height: 1;
+    transition: all .2s ease;
+  }
+  .modal-dong:hover {
+    background: rgba(255,215,0,.25);
+    box-shadow: 0 0 12px rgba(255,215,0,.5);
+  }
+  .modal-tieu-de {
+    text-align: center;
+    font-family: 'Cormorant Garamond', 'Noto Serif Display', serif;
+    font-size: 22px; margin-bottom: 20px; color: var(--star-gold-light);
+    font-weight: 600;
+    text-shadow: 0 0 16px rgba(255,215,0,.4);
+  }
+  .modal-hai-cot { display: flex; gap: 14px; }
+  .modal-cot { flex: 1; text-align: center; }
+  .modal-nhan {
+    font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--star-gold-light); margin-bottom: 10px;
+    text-shadow: 0 0 8px rgba(255,215,0,.4);
+  }
+  .modal-qr img, .modal-qr-trong { width: 100%; aspect-ratio: 1; border-radius: 12px; margin-bottom: 12px; }
+  .modal-qr img { object-fit: contain; border: 1px solid rgba(255,215,0,.3); background: #fff; }
+  .modal-qr-trong {
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,215,0,.08);
+    border: 1px dashed rgba(255,215,0,.4);
+    font-size: 10px; color: var(--starlight-soft); opacity: .7; line-height: 1.5; padding: 8px; text-align: center;
+  }
+  .modal-ngan-hang { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--starlight); }
+  .modal-so-tk { font-size: 12px; margin-bottom: 4px; color: var(--star-gold-light); letter-spacing: .04em; }
+  .modal-ten-tk { font-size: 11px; opacity: .7; color: var(--starlight-soft); }
+
+  .form-rsvp { display: flex; flex-direction: column; gap: 14px; text-align: left; margin-top: 6px; }
+  .rsvp-lua-chon { display: flex; flex-direction: column; gap: 10px; }
+  .rsvp-radio {
+    display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer;
+    color: var(--starlight);
+  }
+  .rsvp-radio input[type="radio"] { accent-color: var(--star-gold); }
+  .rsvp-truong { display: flex; flex-direction: column; gap: 6px; font-size: 11px; color: var(--star-gold-light); letter-spacing: .1em; text-transform: uppercase; }
+  .rsvp-truong input, .rsvp-truong select, .rsvp-truong textarea {
+    font-family: 'Be Vietnam Pro', sans-serif; padding: 10px 14px; border-radius: 10px;
+    border: 1px solid rgba(255,215,0,.3);
+    background: rgba(10,14,39,.7); color: var(--starlight);
+    font-size: 14px; text-transform: none; letter-spacing: 0;
+    transition: all .2s ease;
+  }
+  .rsvp-truong input:focus, .rsvp-truong select:focus, .rsvp-truong textarea:focus {
+    outline: none; border-color: var(--star-gold);
+    box-shadow: 0 0 12px rgba(255,215,0,.4);
+  }
+  .rsvp-truong textarea { min-height: 60px; resize: vertical; }
+  .nut-gui-rsvp {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #fff 0%, var(--star-gold-light) 40%, var(--star-gold) 100%);
+    color: var(--space-deep); border: none; padding: 12px 26px; border-radius: 999px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    letter-spacing: .14em; text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(255,215,0,.5);
+    transition: all .2s ease;
+    font-family: 'Be Vietnam Pro', sans-serif;
+  }
+  .nut-gui-rsvp:hover { box-shadow: 0 0 32px rgba(255,215,0,.8); transform: translateY(-1px); }
+  .nut-gui-rsvp:disabled { opacity: .5; cursor: not-allowed; }
+
+  .gallery-lightbox-overlay {
+    position: fixed; inset: 0; z-index: 220;
+    background: rgba(0,0,0,.95);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .25s ease;
+  }
+  .gallery-lightbox-overlay.open { opacity: 1; pointer-events: auto; }
+  .gallery-lightbox-frame {
+    position: relative; width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: #000;
+  }
+  .gallery-lightbox-img {
+    width: 100vw; height: 100vh;
+    object-fit: contain;
+    background: #000;
+    border: none; border-radius: 0;
+    box-shadow: none;
+  }
+  .gallery-lightbox-close,
+  .gallery-lightbox-prev,
+  .gallery-lightbox-next {
+    position: absolute; z-index: 2;
+    border: 1px solid rgba(255,215,0,.5);
+    color: var(--star-gold); background: rgba(10,14,39,.7);
+    width: 48px; height: 48px; border-radius: 50%; font-size: 26px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s ease, transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .gallery-lightbox-close:hover,
+  .gallery-lightbox-prev:hover,
+  .gallery-lightbox-next:hover {
+    background: var(--star-gold); color: var(--space-deep);
+    border-color: var(--star-gold); transform: scale(1.06);
+    box-shadow: 0 0 24px rgba(255,215,0,.8);
+  }
+  .gallery-lightbox-close { top: 16px; right: 16px; }
+  .gallery-lightbox-prev { left: 16px; top: 50%; transform: translateY(-50%); }
+  .gallery-lightbox-next { right: 16px; top: 50%; transform: translateY(-50%); }
+  .gallery-lightbox-prev:hover,
+  .gallery-lightbox-next:hover { transform: translateY(-50%) scale(1.06); }
+  .gallery-lightbox-count {
+    position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
+    color: var(--star-gold-light); font-size: 12px; opacity: .95; letter-spacing: .12em;
+    background: rgba(10,14,39,.8); padding: 8px 16px; border-radius: 999px;
+    border: 1px solid rgba(255,215,0,.3);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==============================================================
+     NỀN THIÊN HÀ BAO QUANH THIỆP
+     - Tinh vân nhiều màu (tím, hồng, xanh cyan, vàng)
+     - 3 lớp sao lấp lánh nhịp khác nhau
+     - 5 hành tinh trôi nổi với quầng sáng
+     - 4 sao băng bay ngang
+     ============================================================== -->
+<div class="vu-tru-nen" aria-hidden="true">
+  <!-- Lớp sao lấp lánh -->
+  <div class="nen-sao lop-1"></div>
+  <div class="nen-sao lop-2"></div>
+  <div class="nen-sao lop-3"></div>
+
+  <!-- Các hành tinh trôi nổi -->
+  <div class="hanh-tinh ht-1"></div>
+  <div class="hanh-tinh ht-2"></div>
+  <div class="hanh-tinh ht-3"></div>
+  <div class="hanh-tinh ht-4"></div>
+  <div class="hanh-tinh ht-5"></div>
+
+  <!-- Sao băng -->
+  <div class="sao-bang-nen sb-nen-1"></div>
+  <div class="sao-bang-nen sb-nen-2"></div>
+  <div class="sao-bang-nen sb-nen-3"></div>
+  <div class="sao-bang-nen sb-nen-4"></div>
+</div>
+
+<div class="thiep">
+
+  <!-- Họa tiết trang trí vũ trụ — chỉ cho màn bìa -->
+  <div class="hoa-tiet">
+    <div class="bautroi-sao"></div>
+
+    <svg class="he-mat-troi" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff7d6" stop-opacity="1"/>
+          <stop offset="25%" stop-color="#ffe066" stop-opacity=".8"/>
+          <stop offset="55%" stop-color="#ffd700" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#ffd700" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="planetCyan" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#a0f0ff"/>
+          <stop offset="100%" stop-color="#38b2ac"/>
+        </radialGradient>
+        <radialGradient id="planetPink" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#ff9fc4"/>
+          <stop offset="100%" stop-color="#e94b8a"/>
+        </radialGradient>
+        <radialGradient id="planetPurple" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#c8a8f0"/>
+          <stop offset="100%" stop-color="#6b4fa0"/>
+        </radialGradient>
+        <radialGradient id="planetGold" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#fff5b8"/>
+          <stop offset="100%" stop-color="#c9a227"/>
+        </radialGradient>
+      </defs>
+
+      <circle cx="200" cy="200" r="140" fill="url(#sunGlow)" opacity=".35"/>
+
+      <ellipse cx="200" cy="200" rx="65" ry="65" fill="none" stroke="rgba(255,215,0,.28)" stroke-width=".8" stroke-dasharray="2 4"/>
+      <ellipse cx="200" cy="200" rx="100" ry="100" fill="none" stroke="rgba(255,215,0,.22)" stroke-width=".8" stroke-dasharray="2 4"/>
+      <ellipse cx="200" cy="200" rx="140" ry="140" fill="none" stroke="rgba(255,215,0,.18)" stroke-width=".8" stroke-dasharray="2 4"/>
+      <ellipse cx="200" cy="200" rx="180" ry="180" fill="none" stroke="rgba(255,215,0,.12)" stroke-width=".8" stroke-dasharray="2 4"/>
+
+      <circle cx="200" cy="200" r="34" fill="url(#sunGlow)"/>
+      <circle cx="200" cy="200" r="18" fill="#fff7d6" opacity=".45"/>
+
+      <circle cx="265" cy="200" r="4.5" fill="url(#planetCyan)"/>
+      <circle cx="200" cy="100" r="6" fill="url(#planetPink)"/>
+      <circle cx="300" cy="270" r="7" fill="url(#planetPurple)"/>
+      <circle cx="120" cy="90" r="5" fill="url(#planetGold)"/>
+      <circle cx="60" cy="200" r="5.5" fill="url(#planetCyan)" opacity=".8"/>
+      <circle cx="310" cy="100" r="3.5" fill="url(#planetGold)"/>
+
+      <circle cx="150" cy="300" r="1.5" fill="#fff" opacity=".6"/>
+      <circle cx="320" cy="180" r="1.2" fill="#ffe066" opacity=".7"/>
+      <circle cx="80" cy="280" r="1.3" fill="#b8c1ec" opacity=".6"/>
+    </svg>
+
+    <div class="sao-bang sb1"></div>
+    <div class="sao-bang sb2"></div>
+    <div class="sao-bang sb3"></div>
+    <div class="sao-bang sb4"></div>
+  </div>
+
+  <div class="hoa-tiet">
+    <span class="chu-hi" style="top:8%; left:8%; animation-delay:0s;">✦</span>
+    <span class="chu-hi" style="top:14%; right:10%; animation-delay:1.2s;">✧</span>
+    <span class="chu-hi" style="top:30%; left:6%; animation-delay:2.4s;">☾</span>
+    <span class="chu-hi" style="top:34%; right:6%; animation-delay:.6s;">★</span>
+    <span class="chu-hi" style="top:55%; left:10%; animation-delay:1.8s;">✧</span>
+    <span class="chu-hi" style="top:58%; right:9%; animation-delay:3s;">✦</span>
+    <span class="chu-hi" style="top:78%; left:12%; animation-delay:2s;">★</span>
+    <span class="chu-hi" style="top:82%; right:14%; animation-delay:1s;">☾</span>
+  </div>
+
+  <!-- MÀN HÌNH BÌA -->
+  <div class="man-bia" id="manBia">
+    <div class="nhan-nho">Vũ Trụ Tình Yêu</div>
+    <h1 class="ten-cap-doi">
+      <span id="biaTenChuRe"></span><span style="color:var(--star-gold);font-size:32px;"> &amp; </span><span id="biaTenCoDau"></span>
+    </h1>
+    <div class="hoa-van-nho">✦ ✧ ☾ ✧ ✦</div>
+    <div class="loi-moi">Trân trọng kính mời</div>
+    <div class="ten-khach" id="tenKhach">Quý khách</div>
+    <div class="mo-ta-loi-moi">đến dự buổi tiệc chung vui cùng gia đình</div>
+    <div class="ngay-cuoi" id="biaNgayCuoi"></div>
+    <button class="nut-mo" id="nutMo">Mở Thiệp</button>
+  </div>
+
+  <!-- MÀN NỘI DUNG -->
+  <div class="man-noi-dung" id="manNoiDung">
+
+    <section class="khoi khoi-hero" id="khoiHero">
+      <div class="hero-anh-wrap">
+        <img class="hero-anh" id="heroAnh" src="" alt="Ảnh cưới">
+        <div class="hero-phu"></div>
+        <div class="hero-noi-dung">
+          <h2 class="ten-cap-doi-lon" id="heroTenCapDoi"></h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="khoi khoi-le">
+      <div class="nhan-khoi">Lễ Thành Hôn</div>
+      <div class="tieu-de-khoi">Hai Vì Sao Gặp Nhau</div>
+      <div class="hai-cot" id="ndHaiCot"></div>
+      <div class="thong-tin-le" id="ndThongTinLe"></div>
+    </section>
+
+    <section class="khoi khoi-album">
+      <div class="nhan-khoi">Album Vũ Trụ</div>
+      <div class="tieu-de-khoi">Khoảnh Khắc Của Đôi Uyên Ương</div>
+      <div class="thu-vien-anh" id="ndGallery"></div>
+      <div class="album-trong" id="ndAlbumTrong" style="display:none;"></div>
+    </section>
+
+    <section class="khoi khoi-tiec">
+      <div class="nhan-khoi">Tiệc Cưới</div>
+      <div class="tieu-de-khoi">Trân Trọng Kính Mời</div>
+      <div class="tiec-ten-khach" id="tiecTenKhach">Quý khách</div>
+      <div class="tiec-loi-moi">Đến dự bữa tiệc chung vui cùng gia đình.</div>
+      <div id="ndThongTinTiec"></div>
+      <div class="tiec-ban-do-wrap" id="tiecBanDoWrap" style="display:none;">
+        <iframe id="mapFrame" class="tiec-ban-do" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
+      </div>
+      <div class="tiec-hanh-dong">
+        <button type="button" class="nut-tiec" id="nutThemLich">Thêm vào lịch</button>
+        <button type="button" class="nut-tiec nut-tiec-rsvp" id="nutXacNhan">Xác nhận tham dự</button>
+      </div>
+    </section>
+
+    <section class="khoi khoi-lichtrinh">
+      <div class="nhan-khoi">Lịch Trình</div>
+      <div class="tieu-de-khoi">Chương Trình Tiệc Cưới</div>
+      <div class="danh-sach-lich-trinh" id="ndChuongTrinh"></div>
+    </section>
+
+    <section class="khoi khoi-luubut">
+      <div class="nhan-khoi">Sổ Lưu Bút</div>
+      <div class="tieu-de-khoi">Gửi Lời Chúc Phúc</div>
+      <form class="form-luu-but" id="formLuuBut">
+        <input type="text" id="inputTenKhach" placeholder="Tên của bạn" required>
+        <textarea id="inputLoiChuc" placeholder="Lời chúc của bạn..." required></textarea>
+        <button type="submit">Gửi Lời Chúc</button>
+      </form>
+      <div class="danh-sach-loi-chuc" id="danhSachLoiChuc"></div>
+    </section>
+
+    <section class="khoi khoi-qua" id="khoiQua">
+      <div class="nhan-khoi">Mừng Cưới</div>
+      <div class="tieu-de-khoi">Hộp Quà Từ Vũ Trụ</div>
+
+      <div class="phong-bi-wrap" id="phongBiWrap">
+        <button type="button" class="phong-bi" id="phongBiChuRe" aria-label="Mừng cưới chú rể">
+          <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="envGradGroom" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4a2c7a"/>
+                <stop offset="100%" stop-color="#1a2145"/>
+              </linearGradient>
+              <linearGradient id="envFlapGroom" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#6b4fa0"/>
+                <stop offset="100%" stop-color="#2d1b4e"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="60" height="76" rx="6" fill="url(#envGradGroom)" stroke="#ffd700" stroke-width="1.5"/>
+            <path d="M2 8 L32 32 L62 8" fill="url(#envFlapGroom)" stroke="#ffd700" stroke-width="1.2"/>
+            <circle cx="32" cy="46" r="11" fill="none" stroke="#ffd700" stroke-width="1.2"/>
+            <text x="32" y="52" text-anchor="middle" font-size="14" fill="#ffd700" font-family="serif">♂</text>
+            <circle cx="32" cy="46" r="14" fill="none" stroke="#ffd700" stroke-width=".5" opacity=".5" stroke-dasharray="2 3"/>
+          </svg>
+          <span class="phong-bi-nhan">Chú Rể</span>
+        </button>
+        <button type="button" class="phong-bi" id="phongBiCoDau" aria-label="Mừng cưới cô dâu">
+          <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="envGradBride" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4a2c7a"/>
+                <stop offset="100%" stop-color="#1a2145"/>
+              </linearGradient>
+              <linearGradient id="envFlapBride" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#6b4fa0"/>
+                <stop offset="100%" stop-color="#2d1b4e"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="60" height="76" rx="6" fill="url(#envGradBride)" stroke="#ffd700" stroke-width="1.5"/>
+            <path d="M2 8 L32 32 L62 8" fill="url(#envFlapBride)" stroke="#ffd700" stroke-width="1.2"/>
+            <circle cx="32" cy="46" r="11" fill="none" stroke="#ffd700" stroke-width="1.2"/>
+            <text x="32" y="52" text-anchor="middle" font-size="14" fill="#ffd700" font-family="serif">♀</text>
+            <circle cx="32" cy="46" r="14" fill="none" stroke="#ffd700" stroke-width=".5" opacity=".5" stroke-dasharray="2 3"/>
+          </svg>
+          <span class="phong-bi-nhan">Cô Dâu</span>
+        </button>
+      </div>
+
+      <div class="loi-cam-on">
+        <div class="hoa-van-nho">✦ ☾ ✦</div>
+        <p>Sự hiện diện của quý khách là niềm vinh hạnh <br>cho gia đình chúng tôi.</p>
+        <div class="monogram-cuoi" id="quaMonogram"></div>
+      </div>
+      <button class="nut-quay-lai-cuoi" id="nutQuayLai">‹ Quay Lại Thiệp Bìa</button>
+    </section>
+
+    <div class="chan-trang">
+      <a href="https://vemotnha.com.vn" target="_blank" rel="noopener">✦ vemotnha.com.vn ✦</a>
+    </div>
+
+  </div>
+
+  <div class="modal-qua-overlay" id="modalQuaOverlay">
+    <div class="modal-qua">
+      <button type="button" class="modal-dong" id="modalDong" aria-label="Đóng">×</button>
+      <div class="modal-tieu-de" id="modalTieuDe">Thông tin mừng cưới</div>
+      <div class="modal-hai-cot" id="modalHaiCot"></div>
+    </div>
+  </div>
+
+  <div class="modal-qua-overlay" id="modalRsvpOverlay">
+    <div class="modal-qua">
+      <button type="button" class="modal-dong" id="modalRsvpDong" aria-label="Đóng">×</button>
+      <div class="modal-tieu-de">Xác nhận tham dự</div>
+      <form class="form-rsvp" id="formRsvp">
+        <div class="rsvp-lua-chon">
+          <label class="rsvp-radio">
+            <input type="radio" name="rsvpTrangThai" value="co" checked>
+            <span>Có, tôi sẽ tham dự</span>
+          </label>
+          <label class="rsvp-radio">
+            <input type="radio" name="rsvpTrangThai" value="khong">
+            <span>Rất tiếc, tôi không thể tham dự</span>
+          </label>
+        </div>
+        <label class="rsvp-truong">
+          <span>Số lượng người tham dự</span>
+          <input type="number" id="rsvpSoLuong" min="1" value="1">
+        </label>
+        <label style="display: none;" class="rsvp-truong">
+          <span>Món ăn</span>
+          <select id="rsvpMonAn">
+            <option value="mặn">Món mặn</option>
+            <option value="chay">Món chay</option>
+          </select>
+        </label>
+        <label class="rsvp-truong">
+          <span>Ghi chú (không bắt buộc)</span>
+          <textarea id="rsvpGhiChu" placeholder="Lời nhắn thêm..."></textarea>
+        </label>
+        <button type="submit" class="nut-gui-rsvp">Gửi Xác Nhận</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="gallery-lightbox-overlay" id="galleryLightbox">
+    <div class="gallery-lightbox-frame">
+      <button type="button" class="gallery-lightbox-close" id="galleryClose" aria-label="Đóng">×</button>
+      <button type="button" class="gallery-lightbox-prev" id="galleryPrev" aria-label="Ảnh trước">‹</button>
+      <img class="gallery-lightbox-img" id="galleryImage" src="" alt="">
+      <button type="button" class="gallery-lightbox-next" id="galleryNext" aria-label="Ảnh sau">›</button>
+      <div class="gallery-lightbox-count" id="galleryCount">1 / 1</div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="bgMusic" loop preload="none"></audio>
+<button class="music-fab" id="musicToggle" title="Bật / tắt nhạc nền" type="button" aria-label="Bật / tắt nhạc nền">
+  <span class="bar"><span></span><span></span><span></span></span>
+</button>
+
+<script>
+  window.__INVITATION_CONFIG__ = null;
+  window.__INVITATION_ID__ = null;
+
+  const DEFAULT_CONFIG = {
+    "groomShort": "Gia Bảo",
+    "brideShort": "Minh Anh",
+    "groomFull": "Nguyễn Gia Bảo",
+    "brideFull": "Trần Minh Anh",
+    "groomRole": "Trưởng Nam",
+    "brideRole": "Út Nữ",
+    "monogram": "B & A",
+    "weddingDateISO": "2026-12-20T18:00:00",
+    "groomParents": {
+      "father": "Ông Nguyễn Văn Long",
+      "mother": "Bà Lê Thị Hồng",
+      "address": "12 Trần Phú, Hải Châu, Đà Nẵng"
+    },
+    "brideParents": {
+      "father": "Ông Trần Văn Nam",
+      "mother": "Bà Phạm Thị Lan",
+      "address": "45 Lê Duẩn, Quận 1, TP.HCM"
+    },
+    "ceremony": {
+      "time": "09:00",
+      "dateLabel": "20 · 12 · 2026",
+      "lunar": "(Nhằm ngày 11 tháng 11 năm Bính Ngọ)"
+    },
+    "reception": {
+      "date": "2026-12-20",
+      "welcomeTime": "17:30",
+      "startTime": "18:00",
+      "venueName": "The Adora Center",
+      "address": "431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
+      "mapQuery": ""
+    },
+    "schedule": [
+      { "time": "17:30", "label": "Đón khách" },
+      { "time": "18:00", "label": "Nghi thức cưới" },
+      { "time": "18:20", "label": "Khai tiệc" },
+      { "time": "19:00", "label": "Phục vụ tiệc chính" },
+      { "time": "21:00", "label": "Kết thúc tiệc" }
+    ],
+    "gallery": [
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi-1.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/DSC_8736.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-1.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-2.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-3.webp"
+    ],
+    "gifts": {
+      "groom": { "bank": "Vietcombank", "account": "0123 4567 89", "name": "NGUYEN GIA BAO", "qrImage": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/qrcode_chu-re.png" },
+      "bride": { "bank": "BIDV", "account": "9876 5432 10", "name": "TRAN MINH ANH", "qrImage": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/qrcode_co-dau.jpg" }
+    },
+    "musicUrl": "",
+    "story": [
+      { "date": "Mùa thu 2021", "text": "Lần đầu gặp gỡ tại một quán cà phê nhỏ ven sông." },
+      { "date": "Mùa hè 2025", "text": "Lời cầu hôn bất ngờ dưới ánh hoàng hôn." },
+      { "date": "20.12.2026", "text": "Ngày chúng tôi chính thức nên duyên vợ chồng." }
+    ],
+    "photos": {
+      "coverPhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp",
+      "groomPhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/chu-re.webp",
+      "bridePhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/co-dau.webp"
+    }
+  };
+
+  const DEFAULT_INVITATION_ID = "d8795988-035b-445c-813f-e1e5ff5f9f9e";
+</script>
+
+<script>
+  function dinhDangNgayGio(iso) {
+    const d = new Date(iso);
+    const thu = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][d.getDay()];
+    const gio = String(d.getHours()).padStart(2, '0');
+    const phut = String(d.getMinutes()).padStart(2, '0');
+    const ngay = String(d.getDate()).padStart(2, '0');
+    const thang = String(d.getMonth() + 1).padStart(2, '0');
+    return `${gio}:${phut}, ${thu} ${ngay}/${thang}/${d.getFullYear()}`;
+  }
+
+  function phanTichNgayCham(nhan) {
+    const phan = nhan.split('·').map(p => p.trim());
+    return { ngay: phan[0], thang: phan[1], nam: phan[2] };
+  }
+
+  function dinhDangNgayThu(chuoiNgay) {
+    const d = new Date(chuoiNgay + 'T00:00:00');
+    const thu = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'][d.getDay()];
+    const [nam, thang, ngay] = chuoiNgay.split('-');
+    return `${thu}, ${ngay}-${thang}-${nam}`;
+  }
+
+  function taoLinkGoogleCalendar(config) {
+    const [nam, thang, ngay] = config.reception.date.split('-').map(Number);
+    const [gio, phut] = config.reception.welcomeTime.split(':').map(Number);
+    const batDau = new Date(nam, thang - 1, ngay, gio, phut);
+    const ketThuc = new Date(batDau.getTime() + 4 * 60 * 60 * 1000);
+
+    const dinhDangGoogleCal = (d) => {
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+    };
+
+    const thamSoLich = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: `Tiệc cưới ${config.groomShort} & ${config.brideShort}`,
+      dates: `${dinhDangGoogleCal(batDau)}/${dinhDangGoogleCal(ketThuc)}`,
+      details: `Trân trọng kính mời đến dự tiệc cưới của ${config.groomFull} & ${config.brideFull}.`,
+      location: `${config.reception.venueName}, ${config.reception.address}`
+    });
+
+    return `https://calendar.google.com/calendar/render?${thamSoLich.toString()}`;
+  }
+
+  function xayThongTinPhuHuynh(nhanGiaDinh, phuHuynh) {
+    const div = document.createElement('div');
+    div.className = 'phu-huynh-cot';
+    div.innerHTML = `
+      <div class="nhan-nha">${nhanGiaDinh}</div>
+      <div class="cha">${phuHuynh.father}</div>
+      <div class="me">${phuHuynh.mother}</div>
+      <div class="dia-chi">${phuHuynh.address}</div>
+    `;
+    return div;
+  }
+
+  function xayThongTinCaNhan(ten, vaiTro, anhUrl) {
+    const div = document.createElement('div');
+    div.className = 'cot-ca-nhan';
+    div.innerHTML = `
+      <div class="ten">${ten}</div>
+      <div class="vai-tro">${vaiTro}</div>
+      ${anhUrl ? `<img src="${anhUrl}" alt="${ten}">` : ''}
+    `;
+    return div;
+  }
+
+  function render(config) {
+    const musicBtn = document.getElementById('musicToggle');
+    const musicEl = document.getElementById('bgMusic');
+
+    if (config.musicUrl) {
+      musicEl.src = config.musicUrl;
+      musicBtn.classList.add('show');
+      musicBtn.classList.remove('paused');
+    } else {
+      musicEl.removeAttribute('src');
+      musicBtn.classList.remove('show');
+    }
+
+    document.getElementById('biaTenChuRe').textContent = config.groomShort;
+    document.getElementById('biaTenCoDau').textContent = config.brideShort;
+    document.getElementById('biaNgayCuoi').textContent = dinhDangNgayThu(config.reception.date);
+
+    document.getElementById('heroTenCapDoi').innerHTML =
+      `${config.groomShort} <span>❦</span> ${config.brideShort}`;
+    if (config.photos?.coverPhoto) {
+      document.getElementById('heroAnh').src = config.photos.coverPhoto;
+    }
+
+    const haiCot = document.getElementById('ndHaiCot');
+
+    const hangPhuHuynh = document.createElement('div');
+    hangPhuHuynh.className = 'hang-phu-huynh';
+    hangPhuHuynh.appendChild(xayThongTinPhuHuynh('Nhà Trai', config.groomParents));
+    const duongKeGiua = document.createElement('div');
+    duongKeGiua.className = 'duong-ke-giua';
+    hangPhuHuynh.appendChild(duongKeGiua);
+    hangPhuHuynh.appendChild(xayThongTinPhuHuynh('Nhà Gái', config.brideParents));
+    haiCot.appendChild(hangPhuHuynh);
+
+    const hangCaNhan = document.createElement('div');
+    hangCaNhan.className = 'hang-ca-nhan';
+    hangCaNhan.appendChild(xayThongTinCaNhan(config.groomFull, config.groomRole, config.photos?.groomPhoto));
+    hangCaNhan.appendChild(xayThongTinCaNhan(config.brideFull, config.brideRole, config.photos?.bridePhoto));
+    haiCot.appendChild(hangCaNhan);
+
+    const { ngay, thang, nam } = phanTichNgayCham(config.ceremony.dateLabel);
+    document.getElementById('ndThongTinLe').innerHTML = `
+      <div class="le-cau-mo-dau">Hôn lễ sẽ cử hành tại tư gia lúc</div>
+      <div class="le-gio">${config.ceremony.time}</div>
+      <div class="le-ngay">Ngày ${ngay} tháng ${thang} năm ${nam}</div>
+      <div class="le-am-lich">${config.ceremony.lunar}</div>
+    `;
+
+    if (Array.isArray(config.gallery) && config.gallery.length > 0) {
+      const luoiAnh = document.getElementById('ndGallery');
+      const galleryUrls = config.gallery;
+      galleryUrls.forEach((url, idx) => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = `Ảnh cưới ${idx + 1}`;
+        img.dataset.idx = String(idx);
+        luoiAnh.appendChild(img);
+      });
+
+      const galleryLightbox = document.getElementById('galleryLightbox');
+      const galleryImage = document.getElementById('galleryImage');
+      const galleryCount = document.getElementById('galleryCount');
+      const galleryClose = document.getElementById('galleryClose');
+      const galleryPrev = document.getElementById('galleryPrev');
+      const galleryNext = document.getElementById('galleryNext');
+      let galleryCurrent = 0;
+
+      function openGallery(idx) {
+        galleryCurrent = idx;
+        galleryImage.src = galleryUrls[galleryCurrent];
+        galleryImage.alt = `Ảnh cưới ${galleryCurrent + 1}`;
+        galleryCount.textContent = `${galleryCurrent + 1} / ${galleryUrls.length}`;
+        galleryLightbox.classList.add('open');
+      }
+
+      function closeGallery() {
+        galleryLightbox.classList.remove('open');
+      }
+
+      function showPrev() {
+        galleryCurrent = (galleryCurrent - 1 + galleryUrls.length) % galleryUrls.length;
+        galleryImage.src = galleryUrls[galleryCurrent];
+        galleryImage.alt = `Ảnh cưới ${galleryCurrent + 1}`;
+        galleryCount.textContent = `${galleryCurrent + 1} / ${galleryUrls.length}`;
+      }
+
+      function showNext() {
+        galleryCurrent = (galleryCurrent + 1) % galleryUrls.length;
+        galleryImage.src = galleryUrls[galleryCurrent];
+        galleryImage.alt = `Ảnh cưới ${galleryCurrent + 1}`;
+        galleryCount.textContent = `${galleryCurrent + 1} / ${galleryUrls.length}`;
+      }
+
+      luoiAnh.querySelectorAll('img').forEach((img) => {
+        img.addEventListener('click', () => {
+          galleryCurrent = Number(img.dataset.idx);
+          openGallery(galleryCurrent);
+        });
+      });
+
+      galleryClose.addEventListener('click', closeGallery);
+      galleryPrev.addEventListener('click', showPrev);
+      galleryNext.addEventListener('click', showNext);
+
+      galleryLightbox.addEventListener('click', (event) => {
+        if (event.target === galleryLightbox) closeGallery();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (!galleryLightbox.classList.contains('open')) return;
+        if (event.key === 'Escape') closeGallery();
+        if (event.key === 'ArrowLeft') showPrev();
+        if (event.key === 'ArrowRight') showNext();
+      });
+    } else {
+      document.getElementById('ndGallery').style.display = 'none';
+      const trong = document.getElementById('ndAlbumTrong');
+      trong.textContent = 'Album ảnh sẽ được cập nhật sau, mời quý khách quay lại sau nhé!';
+      trong.style.display = 'block';
+    }
+
+    document.getElementById('ndThongTinTiec').innerHTML = `
+      <div class="tiec-nhan">Thời gian</div>
+      <div class="tiec-gia-tri-noi-bat">${config.reception.welcomeTime}</div>
+      <div class="tiec-ngay">${dinhDangNgayThu(config.reception.date)}</div>
+      <div class="tiec-nhan">Địa điểm</div>
+      <div class="tiec-gia-tri-noi-bat">${config.reception.venueName}</div>
+      <div class="tiec-dia-chi">${config.reception.address}</div>
+    `;
+
+    if (config.reception.mapQuery) {
+      document.getElementById('mapFrame').src = config.reception.mapQuery;
+      document.getElementById('tiecBanDoWrap').style.display = 'block';
+    }
+
+    document.getElementById('nutThemLich').addEventListener('click', () => {
+      window.open(taoLinkGoogleCalendar(config), '_blank', 'noopener');
+    });
+
+    const modalRsvpOverlay = document.getElementById('modalRsvpOverlay');
+    function dongRsvp() { modalRsvpOverlay.classList.remove('hien'); }
+
+    document.getElementById('nutXacNhan').addEventListener('click', () => {
+      modalRsvpOverlay.classList.add('hien');
+    });
+    document.getElementById('modalRsvpDong').addEventListener('click', dongRsvp);
+    modalRsvpOverlay.addEventListener('click', (e) => {
+      if (e.target === modalRsvpOverlay) dongRsvp();
+    });
+
+    const rsvpSoLuong = document.getElementById('rsvpSoLuong');
+    document.querySelectorAll('input[name="rsvpTrangThai"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        rsvpSoLuong.disabled = radio.value !== 'co';
+      });
+    });
+
+    document.getElementById('formRsvp').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const trangThai = document.querySelector('input[name="rsvpTrangThai"]:checked').value;
+      let soLuong = 0;
+      if(trangThai === 'co') {
+        soLuong = rsvpSoLuong.value;
+      }
+      const monAn = 'Bình thường';
+      const ghiChu = document.getElementById('rsvpGhiChu').value.trim();
+
+      const nutGui = e.target.querySelector('button[type="submit"]');
+      nutGui.disabled = true;
+
+      fetch(`/api/invitations/${encodeURIComponent(window.__INVITATION_ID__)}/rsvp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: tenKhach,
+          phone: '',
+          attendanceStatus: trangThai === 'co' ? 'attending' : 'declined',
+          guestCount: parseInt(soLuong) || 1,
+          mealPreference: monAn,
+          message: ghiChu
+        })
+      }).then(async response => {
+        if (!response.ok) throw new Error('Unable to save RSVP');
+        alert('Cảm ơn bạn đã gửi xác nhận!');
+        e.target.reset();
+        dongRsvp();
+      }).catch(error => {
+        console.error('Unable to save RSVP:', error);
+        alert('Không thể gửi xác nhận lúc này. Vui lòng thử lại.');
+      }).finally(() => { nutGui.disabled = false; });
+    });
+
+    const boxChuongTrinh = document.getElementById('ndChuongTrinh');
+    config.schedule.forEach(muc => {
+      const div = document.createElement('div');
+      div.className = 'muc-chuong-trinh';
+      div.innerHTML = `<div class="gio">${muc.time}</div><div class="noi-dung-muc">${muc.label}</div>`;
+      boxChuongTrinh.appendChild(div);
+    });
+
+    document.getElementById('quaMonogram').textContent = `${config.groomShort} & ${config.brideShort}`;
+
+    const phongBiChuRe = document.getElementById('phongBiChuRe');
+    const phongBiCoDau = document.getElementById('phongBiCoDau');
+    const modalQuaOverlay = document.getElementById('modalQuaOverlay');
+    const modalHaiCot = document.getElementById('modalHaiCot');
+    const modalTieuDe = document.getElementById('modalTieuDe');
+
+    function moHopQua(who) {
+      const laChuRe = who === 'groom';
+      const nutDaBam = laChuRe ? phongBiChuRe : phongBiCoDau;
+      const taiKhoan = laChuRe ? config.gifts?.groom : config.gifts?.bride;
+      const ten = laChuRe ? config.groomShort : config.brideShort;
+      if (!taiKhoan) return;
+
+      nutDaBam.classList.add('bung-no');
+
+      modalTieuDe.textContent = `Mừng cưới ${ten}`;
+      modalHaiCot.innerHTML = '';
+      modalHaiCot.appendChild(xayCotMungCuoi(ten, taiKhoan));
+
+      setTimeout(() => { modalQuaOverlay.classList.add('hien'); }, 380);
+    }
+
+    function dongHopQua() {
+      modalQuaOverlay.classList.remove('hien');
+      phongBiChuRe.classList.remove('bung-no');
+      phongBiCoDau.classList.remove('bung-no');
+    }
+
+    phongBiChuRe.addEventListener('click', () => moHopQua('groom'));
+    phongBiCoDau.addEventListener('click', () => moHopQua('bride'));
+    document.getElementById('modalDong').addEventListener('click', dongHopQua);
+    modalQuaOverlay.addEventListener('click', (e) => {
+      if (e.target === modalQuaOverlay) dongHopQua();
+    });
+  }
+
+  let config;
+  let invitationId;
+
+  function racHoaTietRongChim() {
+    const anhHanhTinh = [
+      'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/dragon_left_MMnU.webp',
+      'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/dragon_right_MMnU.webp'
+    ];
+    document.querySelectorAll('.man-noi-dung > .khoi').forEach((khoi) => {
+      const anh = document.createElement('img');
+      anh.className = 'rong-chim-khoi';
+      anh.alt = '';
+      anh.src = anhHanhTinh[Math.floor(Math.random() * anhHanhTinh.length)];
+      const goc = Math.floor(Math.random() * 360);
+      const lat = Math.random() < 0.5 ? -1 : 1;
+      anh.style.transform = `translate(-50%, -50%) rotate(${goc}deg) scaleX(${lat})`;
+      khoi.appendChild(anh);
+    });
+  }
+
+  function init() {
+    config = window.__INVITATION_CONFIG__ || DEFAULT_CONFIG;
+    invitationId = window.__INVITATION_ID__ || DEFAULT_INVITATION_ID;
+    render(config);
+    racHoaTietRongChim();
+  }
+
+  init();
+
+  const wishes = [];
+
+  function renderWishes() {
+    const box = document.getElementById('danhSachLoiChuc');
+    box.innerHTML = '';
+
+    if (wishes.length === 0) {
+      const trong = document.createElement('div');
+      trong.className = 'chua-co-loi-chuc';
+      trong.textContent = 'Chưa có lời chúc nào — hãy là người đầu tiên!';
+      box.appendChild(trong);
+      return;
+    }
+
+    wishes.forEach(wish => {
+      const div = document.createElement('div');
+      div.className = 'mot-loi-chuc';
+
+      const ten = document.createElement('div');
+      ten.className = 'ten';
+      ten.textContent = wish.name;
+
+      const noiDung = document.createElement('div');
+      noiDung.className = 'noi-dung';
+      noiDung.textContent = wish.message;
+
+      div.appendChild(ten);
+      div.appendChild(noiDung);
+      box.appendChild(div);
+    });
+  }
+
+  async function loadWishes() {
+    if (!invitationId) return;
+    try {
+      const response = await fetch(`/api/invitations/${encodeURIComponent(invitationId)}/wishes`);
+      if (!response.ok) throw new Error('Unable to load wishes');
+      const data = await response.json();
+      wishes.splice(0, wishes.length, ...(data.wishes || []));
+      renderWishes();
+    } catch (error) {
+      console.error('Unable to load invitation wishes:', error);
+    }
+  }
+
+  loadWishes();
+
+  document.getElementById('formLuuBut').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('inputTenKhach').value.trim();
+    const msg = document.getElementById('inputLoiChuc').value.trim();
+    if (!name || !msg) return;
+
+    const submitButton = document.getElementById('formLuuBut').querySelector('button');
+    submitButton.disabled = true;
+
+    fetch(`/api/invitations/${encodeURIComponent(invitationId)}/wishes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, message: msg })
+    }).then(async response => {
+      if (!response.ok) throw new Error('Unable to save wish');
+      const data = await response.json();
+      wishes.unshift(data.wish);
+      renderWishes();
+      document.getElementById('formLuuBut').reset();
+    }).catch(error => {
+      console.error('Unable to save invitation wish:', error);
+      alert('Không thể gửi lời chúc lúc này. Vui lòng thử lại.');
+    }).finally(() => { submitButton.disabled = false; });
+  });
+
+  function xayCotMungCuoi(nhan, taiKhoan) {
+    const div = document.createElement('div');
+    div.className = 'modal-cot';
+    const oQr = taiKhoan.qrImage
+      ? `<div class="modal-qr"><img src="${taiKhoan.qrImage}" alt="Mã QR ${nhan}"></div>`
+      : `<div class="modal-qr"><div class="modal-qr-trong">Mã QR sẽ<br>cập nhật sau</div></div>`;
+    div.innerHTML = `
+      <div class="modal-nhan">${nhan}</div>
+      ${oQr}
+      <div class="modal-ngan-hang">${taiKhoan.bank}</div>
+      <div class="modal-so-tk">${taiKhoan.account}</div>
+      <div class="modal-ten-tk">${taiKhoan.name}</div>
+    `;
+    return div;
+  }
+
+  const thamSo = new URLSearchParams(window.location.search);
+  const tenKhach = thamSo.get('guest') ? thamSo.get('guest').split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : "";
+  if (tenKhach) {
+    document.getElementById('tenKhach').textContent = tenKhach;
+    document.getElementById('tiecTenKhach').textContent = tenKhach;
+  }
+
+  const manBia = document.getElementById('manBia');
+  const manNoiDung = document.getElementById('manNoiDung');
+  const nutMo = document.getElementById('nutMo');
+  const nutQuayLai = document.getElementById('nutQuayLai');
+
+  const musicEl = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicToggle');
+
+  function playMusicIfAvailable(){
+    if (!musicEl.src) return;
+    musicEl.play().then(() => {
+      musicBtn.classList.remove('paused');
+    }).catch(() => {
+      musicBtn.classList.add('paused');
+    });
+  }
+
+  musicBtn.addEventListener('click', () => {
+    if (musicEl.paused) {
+      musicEl.play().then(() => musicBtn.classList.remove('paused')).catch(() => {});
+    } else {
+      musicEl.pause();
+      musicBtn.classList.add('paused');
+    }
+  });
+
+  function moThiep() {
+    manBia.classList.add('dang-dong');
+    setTimeout(() => {
+      manBia.style.display = 'none';
+      manNoiDung.style.display = 'flex';
+      requestAnimationFrame(() => { manNoiDung.classList.add('hien'); });
+      playMusicIfAvailable();
+      window.scrollTo(0, 0);
+    }, 500);
+  }
+
+  function dongThiep() {
+    manNoiDung.classList.remove('hien');
+    setTimeout(() => {
+      manNoiDung.style.display = 'none';
+      manBia.style.display = 'flex';
+      requestAnimationFrame(() => { manBia.classList.remove('dang-dong'); });
+      window.scrollTo(0, 0);
+    }, 400);
+  }
+
+  nutMo.addEventListener('click', () => {
+    moThiep();
+    confetti({
+      particleCount: 220,
+      spread: 90,
+      origin: { y: 0.6 },
+      colors: ['#ffd700', '#ffe066', '#e94b8a', '#4dd0e1', '#6b4fa0', '#ffffff']
+    });
+    setTimeout(() => {
+      confetti({
+        particleCount: 60,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+        colors: ['#ffd700', '#4dd0e1', '#e94b8a']
+      });
+      confetti({
+        particleCount: 60,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+        colors: ['#ffd700', '#6b4fa0', '#ffffff']
+      });
+    }, 200);
+  });
+  nutQuayLai.addEventListener('click', dongThiep);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+</body>
+</html>

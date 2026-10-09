@@ -937,7 +937,7 @@ function renderCalendar(date){
 $('openBtn').addEventListener('click', () => {
   $('cover').classList.add('opened');
   document.body.style.overflow = 'auto';
-  playMusicIfAvailable();
+  //playMusicIfAvailable();
 });
 
 /* =====================================================================
@@ -1169,6 +1169,14 @@ const io = new IntersectionObserver((entries) => {
   renderInvitation(cfg);
   document.body.classList.add('mode-invite');
   document.body.style.overflow = 'hidden';
+    
+  // Ẩn bìa thiệp, hiển thị nội dung trực tiếp ngay khi tải trang
+  // (bỏ qua bước bấm "Mở thiệp")
+  // cover = document.getElementById('cover');
+  // cover.style.display = 'none';
+  // cover.classList.add('opened');
+  // document.body.style.overflow = 'auto';
+  //playMusicIfAvailable();
 })();
 </script>
 </body>

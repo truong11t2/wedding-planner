@@ -1,0 +1,4114 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ==============================================================
+     THẺ CHIA SẺ LINK — Open Graph (Zalo / Facebook)
+     Phần JS bên dưới sẽ ghi đè lại theo dữ liệu thật của thiệp.
+     ============================================================== -->
+    <meta
+      name="description"
+      content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc."
+    />
+    <meta name="author" content="Vemotnha" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#1d1a18" />
+    <title>Thiệp mời cưới — Trân trọng kính mời</title>
+
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vemotnha — Thiệp cưới online" />
+    <meta property="og:title" content="Thiệp mời cưới — Trân trọng kính mời" />
+    <meta
+      property="og:description"
+      content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi."
+    />
+    <meta
+      property="og:image"
+      content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp"
+    />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1707" />
+    <meta property="og:image:height" content="2560" />
+    <meta property="og:image:alt" content="Ảnh cưới của cô dâu và chú rể" />
+    <meta
+      property="og:image"
+      content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg"
+    />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Thiệp mời cưới — Trân trọng kính mời" />
+    <meta
+      name="twitter:description"
+      content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi."
+    />
+    <meta
+      name="twitter:image"
+      content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+Display:wght@400;500&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --ivory: #f6f1e7;
+        --cream: #ece4d3;
+        --sand: #ddd2bc;
+        --taupe: #6a635a;
+        --brown: #2a2623;
+        --deep-brown: #1d1a18;
+        --gold: #b5281e;
+        --soft-gold: #e0c88f;
+        --font-serif:
+          "Noto Serif Display", "Cormorant Garamond", Georgia, serif;
+        --font-sans: "Be Vietnam Pro", "Segoe UI", sans-serif;
+        --shadow-soft: 0 12px 28px -12px rgba(29, 26, 24, 0.22);
+        --shadow-strong: 0 25px 45px -15px rgba(29, 26, 24, 0.4);
+      }
+
+      body {
+        background: #f6f1e7;
+        font-family: var(--font-serif);
+        color: var(--brown);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      body.cover-active {
+        overflow: hidden;
+      }
+
+      #mainContent {
+        opacity: 0;
+        transition: opacity 1s ease 0.35s;
+      }
+      body.opened #mainContent {
+        opacity: 1;
+      }
+
+      /* ====== MUSIC FAB ====== */
+      .music-fab {
+        position: fixed;
+        bottom: 18px;
+        left: 18px;
+        z-index: 1700;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg, var(--soft-gold), var(--gold));
+        color: #fff;
+        box-shadow: 0 6px 20px rgba(29, 26, 24, 0.4);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .music-fab.show {
+        display: flex;
+      }
+      .music-fab .bar {
+        display: inline-flex;
+        align-items: flex-end;
+        gap: 2.5px;
+        height: 16px;
+      }
+      .music-fab .bar span {
+        width: 3px;
+        background: #fff;
+        border-radius: 1px;
+        animation: eq 0.9s ease-in-out infinite;
+      }
+      .music-fab .bar span:nth-child(1) {
+        height: 7px;
+        animation-delay: 0s;
+      }
+      .music-fab .bar span:nth-child(2) {
+        height: 15px;
+        animation-delay: 0.15s;
+      }
+      .music-fab .bar span:nth-child(3) {
+        height: 10px;
+        animation-delay: 0.3s;
+      }
+      .music-fab.paused .bar span {
+        animation-play-state: paused;
+        height: 5px;
+      }
+      @keyframes eq {
+        0%,
+        100% {
+          transform: scaleY(0.4);
+        }
+        50% {
+          transform: scaleY(1);
+        }
+      }
+
+      /* ====== SECTION SHARED ====== */
+      section {
+        padding: 4rem 2rem;
+      }
+      .container {
+        max-width: 1300px;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .section-heading {
+        text-align: center;
+        font-size: 2rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-weight: 300;
+        color: var(--brown);
+        margin-bottom: 0.5rem;
+        font-family: var(--font-serif);
+      }
+      .section-heading i {
+        font-size: 1.1rem;
+        color: var(--gold);
+        margin: 0 0.8rem;
+        vertical-align: middle;
+      }
+      .section-sub {
+        text-align: center;
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        letter-spacing: 4px;
+        color: #6a635a;
+        margin-bottom: 2.8rem;
+        text-transform: uppercase;
+      }
+
+      /* ====== INVITATION COVER ====== */
+      .invitation-cover {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        background: linear-gradient(
+          135deg,
+          #f6f1e7 0%,
+          #ece4d3 45%,
+          #ece4d3 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        overflow: hidden;
+        transition:
+          opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+          visibility 0.9s;
+      }
+      .invitation-cover::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          radial-gradient(
+            circle at 20% 20%,
+            rgba(181, 40, 30, 0.13) 0%,
+            transparent 45%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(181, 40, 30, 0.16) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(230, 207, 159, 0.09) 0%,
+            transparent 60%
+          );
+      }
+      .invitation-cover::after {
+        content: "";
+        position: absolute;
+        inset: 1.5rem;
+        pointer-events: none;
+        border: 1px solid rgba(181, 40, 30, 0.28);
+        border-radius: 6px;
+      }
+      .invitation-cover.opening {
+        opacity: 0;
+        transform: scale(1.08);
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .cover-inner {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 720px;
+        width: 100%;
+        padding: 1.5rem;
+      }
+      .cover-inner > * {
+        opacity: 0;
+        transform: translateY(15px);
+        animation: coverFadeUp 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+      }
+      .cover-inner > *:nth-child(1) {
+        animation-delay: 0.15s;
+      }
+      .cover-inner > *:nth-child(2) {
+        animation-delay: 0.3s;
+      }
+      .cover-inner > *:nth-child(3) {
+        animation-delay: 0.45s;
+      }
+      .cover-inner > *:nth-child(4) {
+        animation-delay: 0.6s;
+      }
+      .cover-inner > *:nth-child(5) {
+        animation-delay: 0.75s;
+      }
+      .cover-inner > *:nth-child(6) {
+        animation-delay: 0.95s;
+      }
+      .cover-inner > *:nth-child(7) {
+        animation-delay: 1.15s;
+      }
+      .cover-inner > *:nth-child(8) {
+        animation-delay: 1.35s;
+      }
+      @keyframes coverFadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .cover-ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        color: var(--gold);
+        font-size: 1.1rem;
+        margin: 0.8rem 0;
+        opacity: 0;
+        animation: coverFadeUp 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+      }
+      .cover-ornament::before,
+      .cover-ornament::after {
+        content: "";
+        height: 1px;
+        width: clamp(40px, 10vw, 80px);
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--gold),
+          transparent
+        );
+      }
+      .cover-eyebrow {
+        font-family: var(--font-sans);
+        font-size: clamp(0.65rem, 2vw, 0.75rem);
+        letter-spacing: clamp(4px, 1.5vw, 8px);
+        text-transform: uppercase;
+        color: var(--brown);
+        margin-bottom: 0.6rem;
+        margin-top: 5rem;
+      }
+      .cover-guest {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: clamp(1.5rem, 4vw, 3rem);
+        color: var(--deep-brown);
+        margin-bottom: 1.8rem;
+        letter-spacing: 0.03em;
+        font-weight: 500;
+        line-height: 1.15;
+      }
+      .cover-guest:empty {
+        display: none;
+      }
+      .cover-names {
+        font-family: var(--font-serif);
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--deep-brown);
+        line-height: 1;
+        margin-bottom: 1.6rem;
+      }
+      .cover-names .amp {
+        font-style: italic;
+        color: var(--gold);
+        margin: 0 0.15em;
+        font-weight: 600;
+      }
+      .cover-date {
+        font-family: var(--font-sans);
+        font-size: clamp(0.72rem, 1vw, 0.9rem);
+        letter-spacing: clamp(5px, 2vw, 9px);
+        color: #4a453f;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+      .cover-open-btn {
+        background: transparent;
+        border: 1.5px solid var(--gold);
+        color: var(--gold);
+        padding: 1.1rem 2.8rem;
+        border-radius: 50px;
+        font-family: var(--font-sans);
+        font-size: 0.78rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 500;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .cover-open-btn:hover {
+        background: var(--gold);
+        color: #fff;
+        letter-spacing: 5px;
+        transform: translateY(-3px);
+        box-shadow: 0 18px 35px -12px var(--gold);
+      }
+
+      /* ====== HERO ====== */
+      .hero-full {
+        background: linear-gradient(
+          135deg,
+          #f6f1e7 0%,
+          #ece4d3 50%,
+          #ece4d3 100%
+        );
+        padding: 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-full::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          radial-gradient(
+            circle at 15% 25%,
+            rgba(181, 40, 30, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 85% 75%,
+            rgba(181, 40, 30, 0.1) 0%,
+            transparent 50%
+          );
+      }
+      /* Ảnh cưới toàn chiều ngang ở đầu hero — phủ gradient mờ dần về nền thiệp,
+     tên cô dâu/chú rể nằm đè lên phần dưới ảnh (giống hero-anh của mẫu song long) */
+      .hero-photo-wrap {
+        position: relative;
+        width: 100%;
+        background: #ece4d3;
+      }
+      .hero-photo {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .hero-photo-shade {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          180deg,
+          rgba(20, 18, 16, 0.18) 0%,
+          rgba(20, 18, 16, 0.02) 42%,
+          rgba(253, 250, 246, 0.6) 78%,
+          #f6f1e7 100%
+        );
+      }
+      .hero-photo-wrap .hero-title {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: clamp(1rem, 3vw, 2.2rem);
+        margin: 0;
+        padding: 0 1.5rem;
+        color: var(--deep-brown);
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+      }
+      .hero-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        padding: 0 2rem 4rem;
+      }
+      .hero-full.no-photo .hero-content {
+        padding-top: 5rem;
+      }
+      .hero-eyebrow {
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        letter-spacing: 8px;
+        text-transform: uppercase;
+        color: var(--brown);
+        margin-bottom: 1rem;
+        margin-top: 5rem;
+      }
+      .hero-full.has-photo .hero-eyebrow {
+        margin-top: 2.5rem;
+      }
+      .guest-name {
+        font-family: var(--font-serif);
+        font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+        font-weight: 500;
+        font-style: italic;
+        letter-spacing: 0.05em;
+        color: var(--deep-brown);
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+      }
+      .guest-name:empty {
+        display: none;
+      }
+      .hero-invite-line {
+        font-family: var(--font-sans);
+        font-size: 0.78rem;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: var(--taupe);
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+      }
+      .hero-title {
+        font-size: clamp(1.5rem, 9vw, 4.5rem);
+        font-weight: bold;
+        letter-spacing: 0.05em;
+        color: var(--deep-brown);
+        line-height: 1;
+        margin-bottom: 1.5rem;
+      }
+      .hero-title .amp {
+        font-style: italic;
+        color: var(--gold);
+        margin: 0 0.1em;
+        font-weight: 300;
+      }
+      .hero-date-full {
+        font-family: var(--font-sans);
+        font-size: 2rem;
+        letter-spacing: 8px;
+        color: #4a453f;
+        padding: 1rem 2.5rem;
+        display: inline-block;
+        border-top: 1px solid #c9b48a;
+        border-bottom: 1px solid #c9b48a;
+        margin: 0.5rem 0 2rem;
+      }
+      .countdown-full {
+        display: flex;
+        justify-content: center;
+        gap: clamp(1rem, 3vw, 3rem);
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+      .cd-block {
+        font-family: var(--font-sans);
+        text-align: center;
+        min-width: 70px;
+      }
+      .cd-block .cd-num {
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 500;
+        color: var(--deep-brown);
+        display: block;
+        line-height: 1;
+      }
+      .cd-block .cd-lbl {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #6a635a;
+        font-weight: 300;
+        margin-top: 0.4rem;
+        display: block;
+      }
+
+      /* ====== VENUE ====== */
+      .venue-section {
+        background: #f6f1e7;
+        border-top: 1px solid #ddd2bc;
+        border-bottom: 1px solid #ddd2bc;
+      }
+      .venue-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+        gap: 2.5rem;
+        align-items: stretch;
+        margin-top: 1rem;
+      }
+      .venue-info {
+        background: white;
+        border-radius: 30px;
+        padding: 2.8rem 2.5rem;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid #ddd2bc;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .venue-info .venue-icon {
+        font-size: 2rem;
+        color: var(--gold);
+        margin-bottom: 1.2rem;
+      }
+      .venue-info h3 {
+        font-size: 2rem;
+        font-weight: 400;
+        color: var(--deep-brown);
+        margin-bottom: 1.2rem;
+        line-height: 1.2;
+      }
+      .venue-info .venue-address {
+        font-family: var(--font-sans);
+        font-size: 0.95rem;
+        color: #3a3633;
+        line-height: 1.9;
+        font-weight: 300;
+        margin-bottom: 1.5rem;
+      }
+      .venue-info .venue-time {
+        font-family: var(--font-sans);
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px dashed #ddd2bc;
+      }
+      .map-wrapper {
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+        border: 4px solid white;
+        min-height: 400px;
+        background: #ddd2bc;
+      }
+      .map-wrapper iframe {
+        width: 100%;
+        height: 100%;
+        min-height: 400px;
+        border: 0;
+        display: block;
+        filter: saturate(0.9) contrast(1.02);
+      }
+      .venue-rsvp-wrapper {
+        text-align: center;
+        margin-top: 2.5rem;
+      }
+      .venue-rsvp-btn {
+        background: var(--gold);
+        border: 1.5px solid var(--gold);
+        color: #fff;
+        padding: 1.1rem 3rem;
+        border-radius: 50px;
+        font-family: var(--font-sans);
+        font-size: 0.8rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.35s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 500;
+        box-shadow: 0 15px 30px -12px rgba(181, 40, 30, 0.7);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .venue-rsvp-btn:hover {
+        background: #d24a3d;
+        border-color: #d24a3d;
+        letter-spacing: 5px;
+        transform: translateY(-3px);
+        box-shadow: 0 22px 40px -12px rgba(181, 40, 30, 0.85);
+      }
+      .venue-rsvp-note {
+        font-family: var(--font-sans);
+        font-size: 0.8rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #6a635a;
+        margin-top: 1rem;
+      }
+
+      /* ====== COUPLE ====== */
+      .couple-section {
+        background: #f6f1e7;
+        border-top: 1px solid #ddd2bc;
+        border-bottom: 1px solid #ddd2bc;
+      }
+      .couple-grid {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: clamp(2rem, 6vw, 6rem);
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+      .person-card {
+        text-align: center;
+        max-width: 450px;
+        flex: 1 1 280px;
+      }
+      .person-photo-frame {
+        width: clamp(200px, 20vw, 260px);
+        height: clamp(200px, 20vw, 260px);
+        margin: 0 auto 1.8rem;
+        border-radius: 50%;
+        padding: 4px;
+        background: linear-gradient(
+          135deg,
+          var(--gold),
+          var(--soft-gold),
+          #e8d5a8
+        );
+        box-shadow: 0 20px 35px -12px rgba(29, 26, 24, 0.35);
+        transition: transform 0.4s ease;
+      }
+      .person-photo-frame:hover {
+        transform: translateY(-6px) scale(1.02);
+      }
+      .person-photo {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        background: #ddd2bc;
+      }
+      .person-name {
+        font-size: 1.8rem;
+        font-weight: 400;
+        color: var(--deep-brown);
+        letter-spacing: 2px;
+        margin-bottom: 0.3rem;
+      }
+      .person-role {
+        font-family: var(--font-sans);
+        font-size: 0.7rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1rem;
+      }
+      .person-bio {
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        font-weight: 300;
+        color: #3a3633;
+        line-height: 1.75;
+        padding: 0 0.5rem;
+      }
+      .heart-connector {
+        align-self: center;
+        font-size: 2.5rem;
+        color: var(--gold);
+        opacity: 0.5;
+        flex: 0 0 auto;
+      }
+
+      /* ====== STORY TIMELINE ====== */
+      .story-section {
+        background: #f6f1e7;
+      }
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        position: relative;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1rem 0;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          #ddd2bc 10%,
+          #c9b48a 50%,
+          #ddd2bc 90%,
+          transparent
+        );
+        opacity: 0.6;
+      }
+      .timeline-item {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        position: relative;
+        z-index: 2;
+      }
+      .timeline-item:nth-child(odd) {
+        flex-direction: row;
+      }
+      .timeline-item:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+      .timeline-content {
+        width: 44%;
+        padding: 2rem 2rem 1.8rem;
+        background: white;
+        border-radius: 24px;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid #ddd2bc;
+        transition: all 0.3s ease;
+      }
+      .timeline-content:hover {
+        box-shadow: var(--shadow-strong);
+        border-color: #ddd2bc;
+        transform: translateY(-4px);
+      }
+      .timeline-item:nth-child(odd) .timeline-content {
+        margin-right: auto;
+      }
+      .timeline-item:nth-child(even) .timeline-content {
+        margin-left: auto;
+      }
+      .timeline-image {
+        width: 44%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .timeline-image img {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+        border-radius: 28px;
+        box-shadow: 0 20px 35px -14px rgba(29, 26, 24, 0.35);
+        border: 6px solid white;
+        object-fit: cover;
+        aspect-ratio: 4/3;
+        transition: transform 0.4s ease;
+      }
+      .timeline-image img:hover {
+        transform: scale(1.02);
+      }
+      .timeline-date {
+        font-family: var(--font-sans);
+        font-size: 0.68rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+        display: inline-block;
+        border-bottom: 1px solid #ddd2bc;
+        padding-bottom: 0.25rem;
+      }
+      .timeline-title {
+        font-size: 1.7rem;
+        font-weight: 400;
+        color: var(--deep-brown);
+        margin-bottom: 0.6rem;
+        line-height: 1.3;
+      }
+      .timeline-desc {
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: #3a3633;
+        line-height: 1.75;
+        font-weight: 300;
+      }
+      .timeline-item::after {
+        content: "✦";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        color: var(--gold);
+        background: #f6f1e7;
+        padding: 0.4rem;
+        border-radius: 50%;
+        z-index: 5;
+        text-shadow: 0 0 8px #fff;
+      }
+
+      /* ====== MASONRY GALLERY ====== */
+      .gallery-section {
+        background: #f6f1e7;
+        border-top: 1px solid #ddd2bc;
+        border-bottom: 1px solid #ddd2bc;
+      }
+      .masonry-gallery {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: clamp(55px, 12.5vw, 160px);
+        gap: clamp(6px, 1.5vw, 20px);
+        margin-top: 2.5rem;
+      }
+      .gallery-card {
+        border-radius: clamp(10px, 2vw, 28px);
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 15px 28px -12px rgba(29, 26, 24, 0.3);
+        transition: all 0.45s cubic-bezier(0.15, 0.85, 0.3, 1);
+        cursor: pointer;
+        background: #ddd2bc;
+        border: clamp(2px, 0.35vw, 4px) solid white;
+      }
+      .gallery-card:hover {
+        transform: translateY(-8px) scale(1.015);
+        box-shadow: 0 30px 45px -15px rgba(29, 26, 24, 0.45);
+        z-index: 10;
+      }
+      .gallery-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition:
+          transform 0.8s ease,
+          filter 0.5s ease;
+        filter: brightness(0.97) saturate(1.03);
+      }
+      .gallery-card:hover img {
+        transform: scale(1.08);
+        filter: brightness(1.05) saturate(1.1);
+      }
+      .gallery-card .overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(
+          to top,
+          rgba(20, 18, 16, 0.75),
+          transparent
+        );
+        color: white;
+        padding: 2rem 1.2rem 1rem;
+        font-family: var(--font-sans);
+        font-size: clamp(0.55rem, 1.2vw, 0.75rem);
+        letter-spacing: clamp(1px, 0.25vw, 3px);
+        text-transform: uppercase;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      .gallery-card:hover .overlay {
+        opacity: 1;
+      }
+      .gallery-card.size-hero {
+        grid-column: span 4;
+        grid-row: span 4;
+      }
+      .gallery-card.size-wide {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+      .gallery-card.size-tall {
+        grid-column: span 2;
+        grid-row: span 3;
+      }
+      .gallery-card.size-normal {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+      .gallery-card.size-small {
+        grid-column: span 2;
+        grid-row: span 1;
+      }
+      .gallery-card.size-mid {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+
+      /* ====== WISHES ====== */
+      .wishes-section {
+        background: #f6f1e7;
+      }
+      .wishes-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+        margin-top: 1rem;
+      }
+      .wishes-form-box {
+        background: white;
+        border-radius: 30px;
+        padding: 2.2rem 2rem;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid #ddd2bc;
+      }
+      .wishes-form-box h3 {
+        font-size: 1.4rem;
+        font-weight: 400;
+        color: var(--deep-brown);
+        margin-bottom: 1.5rem;
+        letter-spacing: 1px;
+      }
+      .wishes-form-box input,
+      .wishes-form-box textarea {
+        width: 100%;
+        padding: 1rem 1.2rem;
+        margin-bottom: 1.1rem;
+        border: 1px solid #a89c82;
+        border-radius: 18px;
+        background: #ffffff;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: var(--brown);
+        outline: none;
+        transition: all 0.25s;
+        resize: vertical;
+      }
+      .wishes-form-box input:focus,
+      .wishes-form-box textarea:focus {
+        border-color: var(--soft-gold);
+        box-shadow: 0 0 0 3px rgba(181, 40, 30, 0.15);
+        background: white;
+      }
+      .wishes-form-box textarea {
+        min-height: 110px;
+      }
+      .submit-wish-btn {
+        background: var(--gold);
+        border: none;
+        color: white;
+        padding: 1rem 2.2rem;
+        border-radius: 50px;
+        font-family: var(--font-sans);
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 10px 18px -10px #8f2118;
+        font-weight: 500;
+      }
+      .submit-wish-btn:hover {
+        background: #d24a3d;
+        letter-spacing: 4px;
+        transform: translateY(-2px);
+      }
+      .submit-wish-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .wishes-display-box {
+        background: white;
+        border-radius: 30px;
+        padding: 2.2rem 2rem;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid #ddd2bc;
+        max-height: 520px;
+        overflow-y: auto;
+      }
+      .wishes-display-box h3 {
+        font-size: 1.4rem;
+        font-weight: 400;
+        color: var(--deep-brown);
+        margin-bottom: 1.5rem;
+        letter-spacing: 1px;
+      }
+      .wishes-display-box::-webkit-scrollbar {
+        width: 5px;
+      }
+      .wishes-display-box::-webkit-scrollbar-thumb {
+        background: var(--soft-gold);
+        border-radius: 10px;
+      }
+      .wish-item {
+        background: #f6f1e7;
+        border-radius: 18px;
+        padding: 1.2rem 1.3rem;
+        margin-bottom: 0.9rem;
+        border-left: 4px solid var(--gold);
+        animation: fadeIn 0.5s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .wish-item .wish-name {
+        font-family: var(--font-sans);
+        font-weight: 600;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 0.4rem;
+      }
+      .wish-item .wish-message {
+        font-family: var(--font-sans);
+        font-size: 0.88rem;
+        color: #2a2623;
+        line-height: 1.65;
+        font-weight: 300;
+        word-break: break-word;
+      }
+      .no-wishes {
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: #6a635a;
+        text-align: center;
+        padding: 2rem;
+        font-style: italic;
+      }
+
+      /* ====== LUCKY BOX ====== */
+      .lucky-section {
+        background: #f6f1e7;
+        border-top: 1px solid #ddd2bc;
+        border-bottom: 1px solid #ddd2bc;
+        text-align: center;
+      }
+      .lucky-box {
+        background: linear-gradient(135deg, #ece4d3, #efe6d3);
+        border-radius: 40px;
+        padding: 3rem 2rem 2.5rem;
+        border: 1px solid #ddd2bc;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 25px 40px -18px rgba(29, 26, 24, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+      .lucky-box .fa-gift {
+        font-size: 3rem;
+        color: var(--gold);
+        margin-bottom: 1rem;
+      }
+      .lucky-box h3 {
+        font-size: 2.2rem;
+        font-weight: 300;
+        letter-spacing: 5px;
+        color: var(--brown);
+        margin-bottom: 0.6rem;
+        text-transform: uppercase;
+      }
+      .lucky-box > p {
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        color: #45403a;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+      }
+      .envelope-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: clamp(1.5rem, 5vw, 4rem);
+        flex-wrap: wrap;
+        margin: 3rem 0 1rem;
+        perspective: 1000px;
+      }
+      .envelope-item {
+        text-align: center;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .envelope {
+        position: relative;
+        width: clamp(140px, 22vw, 200px);
+        height: clamp(98px, 15.4vw, 140px);
+        background: linear-gradient(160deg, #f6f1e7 0%, #e6dac0 100%);
+        border-radius: 6px;
+        box-shadow:
+          0 20px 35px -15px rgba(29, 26, 24, 0.45),
+          inset 0 0 0 1px rgba(181, 40, 30, 0.35);
+        transition:
+          transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1),
+          box-shadow 0.5s ease;
+        animation: envelopeFloat 3.6s ease-in-out infinite;
+        transform-style: preserve-3d;
+      }
+      .envelope-item:nth-child(2) .envelope {
+        animation-delay: -1.8s;
+      }
+      .envelope::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 55%;
+        background: linear-gradient(180deg, #d8c9a8 0%, #e0c88f 100%);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        border-radius: 6px 6px 0 0;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: top center;
+        box-shadow: 0 2px 6px rgba(29, 26, 24, 0.15);
+        z-index: 2;
+      }
+      .envelope::after {
+        content: "❤";
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(26px, 4vw, 34px);
+        height: clamp(26px, 4vw, 34px);
+        background: linear-gradient(135deg, #cf3b2e, #8f2118);
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(0.75rem, 1.4vw, 1rem);
+        box-shadow: 0 4px 10px rgba(29, 26, 24, 0.35);
+        z-index: 4;
+        transition: all 0.5s ease;
+      }
+      .envelope-card {
+        position: absolute;
+        top: 15%;
+        left: 8%;
+        right: 8%;
+        height: 65%;
+        background: linear-gradient(180deg, #ffffff 0%, #f6f1e7 100%);
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(29, 26, 24, 0.18);
+        z-index: 1;
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+      }
+      .envelope-card-content {
+        padding: 0.6rem 0.8rem;
+        text-align: center;
+      }
+      .envelope-card-content .mini-names {
+        font-family: var(--font-serif);
+        font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+        color: var(--gold);
+        font-style: italic;
+        letter-spacing: 0.05em;
+      }
+      .envelope-card-content .mini-heart {
+        font-size: clamp(0.7rem, 1.5vw, 1rem);
+        color: #b5281e;
+        margin-top: 0.15rem;
+      }
+      .envelope-item:hover .envelope {
+        transform: translateY(-14px) rotateX(6deg);
+        box-shadow:
+          0 30px 50px -18px rgba(29, 26, 24, 0.55),
+          inset 0 0 0 1px rgba(181, 40, 30, 0.5);
+      }
+      .envelope-item:hover .envelope::before {
+        transform: rotateX(-140deg);
+      }
+      .envelope-item:hover .envelope::after {
+        transform: translate(-50%, -50%) scale(0.85);
+        opacity: 0.7;
+      }
+      .envelope-item:hover .envelope-card {
+        top: 5%;
+      }
+      @keyframes envelopeFloat {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-1.5deg);
+        }
+        50% {
+          transform: translateY(-10px) rotate(1.5deg);
+        }
+      }
+      @keyframes bungNo {
+        0% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+        45% {
+          transform: scale(1.35) rotate(-6deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0) rotate(8deg);
+          opacity: 0;
+        }
+      }
+      .envelope-item.bung-no .envelope {
+        animation: bungNo 0.4s ease forwards;
+      }
+      .envelope-label {
+        margin-top: 1.4rem;
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--brown);
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+      .envelope-item:hover .envelope-label {
+        color: var(--gold);
+      }
+      .envelope-sublabel {
+        font-family: var(--font-sans);
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        color: #6a635a;
+        margin-top: 0.25rem;
+        font-style: italic;
+        font-weight: 300;
+      }
+      .lucky-note {
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        color: #6a635a;
+        margin-top: 2rem;
+        font-style: italic;
+        letter-spacing: 1.5px;
+      }
+      .lucky-note i {
+        color: var(--gold);
+        margin-right: 0.4rem;
+      }
+
+      /* ====== FOOTER ====== */
+      .footer-section {
+        background: linear-gradient(135deg, #26221f, #1d1a18);
+        color: #efe6d3;
+        text-align: center;
+        padding: 4rem 2rem 3rem;
+      }
+      .footer-blessing {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        color: #e0c88f;
+        line-height: 1.7;
+        max-width: 640px;
+        margin: 0 auto 2rem;
+        padding-bottom: 2rem;
+        letter-spacing: 0.02em;
+        position: relative;
+      }
+      .footer-blessing::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--gold),
+          transparent
+        );
+        opacity: 0.6;
+      }
+      .footer-section .footer-names {
+        font-size: 1.5rem;
+        font-weight: 300;
+        letter-spacing: 6px;
+        margin-bottom: 0.5rem;
+        color: #f6f1e7;
+      }
+      .footer-section .footer-date {
+        font-family: var(--font-sans);
+        font-size: 0.75rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1rem;
+      }
+      .footer-location {
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        color: #c4bdb0;
+        margin-top: 2rem;
+      }
+      .credit-footer {
+        background: #0e0c0b;
+        color: #c4bdb0;
+        text-align: center;
+        padding: 1rem 1rem;
+        font-family: var(--font-sans);
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        border-top: 1px solid #3a3430;
+      }
+      .credit-footer a {
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+        border-bottom: 1px solid transparent;
+        padding-bottom: 1px;
+      }
+      .credit-footer a:hover {
+        color: #e0c88f;
+        border-bottom-color: #e0c88f;
+        letter-spacing: 1.5px;
+      }
+      .credit-footer i {
+        color: var(--gold);
+        margin-right: 0.4rem;
+        font-size: 0.7rem;
+      }
+
+      /* ====== MODALS ====== */
+      .rsvp-modal,
+      .qr-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 18, 16, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 1100;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .qr-modal {
+        z-index: 1150;
+        background: rgba(20, 18, 16, 0.88);
+        backdrop-filter: blur(10px);
+        transition: opacity 0.35s ease;
+      }
+      .rsvp-modal.active,
+      .qr-modal.active {
+        display: flex;
+        opacity: 1;
+      }
+      .rsvp-modal-content,
+      .qr-modal-content {
+        background: var(--ivory);
+        border-radius: 32px;
+        padding: 2.5rem 2.2rem 2rem;
+        max-width: 480px;
+        width: 100%;
+        box-shadow: 0 45px 65px -20px #050404;
+        position: relative;
+        transform: scale(0.95);
+        transition: transform 0.35s ease;
+        max-height: 90vh;
+        overflow-y: auto;
+        border: 1px solid #ddd2bc;
+      }
+      .qr-modal-content {
+        max-width: 420px;
+        text-align: center;
+        transform: scale(0.9) translateY(15px);
+        transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        padding: 2.5rem 2rem 2rem;
+      }
+      .rsvp-modal.active .rsvp-modal-content {
+        transform: scale(1);
+      }
+      .qr-modal.active .qr-modal-content {
+        transform: scale(1) translateY(0);
+      }
+      .rsvp-modal-close,
+      .qr-modal-close {
+        position: absolute;
+        top: 14px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 2.2rem;
+        color: #6a635a;
+        cursor: pointer;
+        transition: all 0.25s;
+        line-height: 1;
+      }
+      .rsvp-modal-close:hover,
+      .qr-modal-close:hover {
+        color: var(--deep-brown);
+        transform: rotate(90deg);
+      }
+      .rsvp-modal h3,
+      .qr-modal h3 {
+        font-size: 1.8rem;
+        font-weight: 400;
+        color: var(--deep-brown);
+        text-align: center;
+        margin-bottom: 0.4rem;
+        letter-spacing: 2px;
+      }
+      .qr-modal h3 {
+        font-size: 1.6rem;
+      }
+      .rsvp-modal .modal-sub {
+        font-family: var(--font-sans);
+        font-size: 0.7rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold);
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .rsvp-field {
+        margin-bottom: 1.5rem;
+      }
+      .rsvp-field label {
+        display: block;
+        font-family: var(--font-sans);
+        font-size: 0.7rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #4a453f;
+        margin-bottom: 0.6rem;
+        font-weight: 500;
+      }
+      .rsvp-field input,
+      .rsvp-field select,
+      .rsvp-field textarea {
+        width: 100%;
+        padding: 0.9rem 1.1rem;
+        border: 1px solid #a89c82;
+        border-radius: 14px;
+        background: #ffffff;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        color: var(--brown);
+        outline: none;
+        transition: all 0.25s;
+      }
+      .rsvp-field textarea {
+        min-height: 70px;
+        resize: vertical;
+      }
+      .rsvp-field input:focus,
+      .rsvp-field select:focus,
+      .rsvp-field textarea:focus {
+        border-color: var(--soft-gold);
+        box-shadow: 0 0 0 3px rgba(181, 40, 30, 0.15);
+        background: white;
+      }
+      .rsvp-attend-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .rsvp-attend-option {
+        position: relative;
+      }
+      .rsvp-attend-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .rsvp-attend-option label {
+        display: block;
+        text-align: center;
+        padding: 1rem 0.8rem;
+        border: 1.5px solid #a89c82;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.25s;
+        background: #ffffff;
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #3a3633;
+        margin: 0;
+      }
+      .rsvp-attend-option input[type="radio"]:checked + label {
+        border-color: var(--gold);
+        background: #ece4d3;
+        color: var(--deep-brown);
+        font-weight: 600;
+        box-shadow: 0 0 0 3px rgba(181, 40, 30, 0.15);
+      }
+      .rsvp-attend-option label i {
+        display: block;
+        font-size: 1.1rem;
+        margin-bottom: 0.4rem;
+        color: var(--gold);
+      }
+      .guest-count-wrapper {
+        display: none;
+      }
+      .guest-count-wrapper.visible {
+        display: block;
+      }
+      .guest-count-wrapper input {
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+      .rsvp-submit-btn {
+        width: 100%;
+        background: var(--gold);
+        border: none;
+        color: white;
+        padding: 1.1rem;
+        border-radius: 50px;
+        font-family: var(--font-sans);
+        font-size: 0.78rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 0.5rem;
+        font-weight: 500;
+        box-shadow: 0 12px 20px -10px #8f2118;
+      }
+      .rsvp-submit-btn:hover {
+        background: #d24a3d;
+        letter-spacing: 4px;
+        transform: translateY(-2px);
+      }
+      .rsvp-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .rsvp-success {
+        display: none;
+        text-align: center;
+        padding: 1.5rem 0 0.5rem;
+      }
+      .rsvp-success.visible {
+        display: block;
+      }
+      .rsvp-success i {
+        font-size: 3rem;
+        color: var(--gold);
+        margin-bottom: 1rem;
+      }
+      .rsvp-success h4 {
+        font-size: 1.4rem;
+        font-weight: 400;
+        color: var(--deep-brown);
+        margin-bottom: 0.5rem;
+      }
+      .rsvp-success p {
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        color: #45403a;
+        line-height: 1.6;
+      }
+
+      /* QR modal */
+      .qr-modal-icon {
+        font-size: 2rem;
+        color: var(--gold);
+      }
+      .qr-modal-img-wrapper {
+        background: #f6f1e7;
+        padding: 1rem;
+        border-radius: 24px;
+        border: 1px solid #ddd2bc;
+        display: inline-block;
+      }
+      .qr-modal-img {
+        width: clamp(200px, 55vw, 260px);
+        height: clamp(200px, 55vw, 260px);
+        border-radius: 16px;
+        display: block;
+        background: #fff;
+        object-fit: contain;
+      }
+      .qr-modal-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: #fff;
+        background: var(--gold);
+        border: none;
+        border-radius: 30px;
+        padding: 0.7rem 1.6rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .qr-modal-download:hover {
+        background: #d24a3d;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px -12px var(--gold);
+      }
+      .qr-modal-download i {
+        font-size: 0.85rem;
+      }
+      .qr-modal-bank {
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        color: #3a3633;
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
+      .qr-modal-account {
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        color: #3a3633;
+        font-weight: 500;
+        letter-spacing: 1px;
+      }
+      .qr-modal-holder {
+        font-family: var(--font-sans);
+        font-size: 0.72rem;
+        color: #6a635a;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+      .qr-modal-note {
+        font-family: var(--font-sans);
+        font-size: 0.7rem;
+        color: #6a635a;
+        font-style: italic;
+        margin-top: 1.5rem;
+        letter-spacing: 1px;
+      }
+      .qr-modal-note i {
+        color: var(--gold);
+        margin-right: 0.3rem;
+      }
+
+      /* ====== LIGHTBOX ====== */
+      .lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 18, 16, 0.97);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        overscroll-behavior: contain;
+      }
+      .lightbox.active {
+        display: block;
+        opacity: 1;
+      }
+      .lightbox-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 3.5rem 5rem;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(181, 40, 30, 0.35);
+        color: #e0c88f;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+        backdrop-filter: blur(6px);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .lightbox-nav:hover {
+        background: rgba(181, 40, 30, 0.25);
+        color: #fff;
+        border-color: #b5281e;
+        transform: translateY(-50%) scale(1.08);
+      }
+      .lightbox-prev {
+        left: 1.5rem;
+      }
+      .lightbox-next {
+        right: 1.5rem;
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 1.2rem;
+        right: 1.5rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(181, 40, 30, 0.35);
+        color: #e0c88f;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        font-size: 1.6rem;
+        cursor: pointer;
+        transition: all 0.25s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        z-index: 10;
+        backdrop-filter: blur(6px);
+      }
+      .lightbox-close:hover {
+        background: rgba(181, 40, 30, 0.25);
+        color: #fff;
+        transform: rotate(90deg);
+      }
+      .lightbox-counter {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: var(--font-sans);
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        color: #e0c88f;
+        background: rgba(0, 0, 0, 0.35);
+        padding: 0.5rem 1.1rem;
+        border-radius: 40px;
+        border: 1px solid rgba(181, 40, 30, 0.25);
+        z-index: 10;
+        backdrop-filter: blur(6px);
+      }
+      .lightbox.single-image .lightbox-nav {
+        display: none;
+      }
+
+      /* ====== RESPONSIVE ====== */
+      @media (max-width: 1024px) {
+        .venue-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 860px) {
+        section {
+          padding: 3rem 1.5rem;
+        }
+        .timeline::before {
+          left: 50%;
+        }
+        .timeline-item {
+          flex-direction: column !important;
+          align-items: flex-start;
+          padding-left: 0;
+        }
+        .timeline-content {
+          width: 100% !important;
+          margin: 0 0 1rem 0 !important;
+        }
+        .timeline-image {
+          width: 100% !important;
+          justify-content: flex-start;
+          margin-bottom: 1rem;
+        }
+        .timeline-image img {
+          max-width: 100%;
+        }
+        .timeline-item::after {
+          left: 50%;
+          top: 0;
+          transform: translate(-50%, -125%);
+          padding: 0;
+          border-radius: 100%;
+          z-index: 5;
+          text-shadow: none;
+        }
+        .wishes-container {
+          grid-template-columns: 1fr;
+        }
+        .couple-grid {
+          gap: 1rem;
+        }
+        .heart-connector {
+          display: none;
+        }
+      }
+      @media (max-width: 640px) {
+        .hero-date-full {
+          font-size: 1.2rem;
+          letter-spacing: 4px;
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+        .rsvp-attend-options {
+          grid-template-columns: 1fr;
+        }
+        .lightbox-img {
+          padding: 3rem 0.5rem;
+        }
+        .lightbox-nav {
+          width: 44px;
+          height: 44px;
+          font-size: 1.15rem;
+        }
+        .lightbox-prev {
+          left: 0.5rem;
+        }
+        .lightbox-next {
+          right: 0.5rem;
+        }
+        .lightbox-close {
+          top: 0.8rem;
+          right: 0.8rem;
+          width: 40px;
+          height: 40px;
+          font-size: 1.4rem;
+        }
+        .lightbox-counter {
+          bottom: 1rem;
+          font-size: 0.68rem;
+          padding: 0.4rem 0.9rem;
+        }
+        .envelope-container {
+          gap: 1.5rem;
+        }
+        .hero-eyebrow {
+          font-size: clamp(0.62rem, 3.2vw, 0.9rem);
+          letter-spacing: 0.18em;
+          white-space: nowrap;
+          margin-top: 4rem;
+        }
+        .hero-title {
+          font-size: clamp(1.2rem, 7vw, 2.6rem);
+          letter-spacing: 0.03em;
+          white-space: nowrap;
+        }
+        .section-heading,
+        .lucky-box h3.section-heading {
+          font-size: clamp(0.95rem, 4.8vw, 1.5rem);
+          letter-spacing: 0.1em;
+          white-space: nowrap;
+        }
+        .section-heading i {
+          font-size: 0.7em;
+          margin: 0 0.4em;
+        }
+      }
+      @media (max-width: 420px) {
+        .person-photo-frame {
+          width: 180px;
+          height: 180px;
+        }
+        .person-name {
+          font-size: 1.5rem;
+        }
+        .section-heading {
+          font-size: 1.6rem;
+          letter-spacing: 5px;
+        }
+        .lightbox-img {
+          padding: 3rem 0.25rem;
+        }
+        .lightbox-nav {
+          width: 38px;
+          height: 38px;
+          font-size: 1rem;
+        }
+        .venue-rsvp-btn {
+          padding: 1rem 2rem;
+          font-size: 0.72rem;
+          letter-spacing: 3px;
+        }
+      }
+
+      /* ==========================================================
+     GIAO DIỆN SANG TRỌNG — Navy đêm · Vàng champagne · Ngà
+     Đặt cuối cùng để ghi đè; không đụng tới HTML/JS.
+     ========================================================== */
+      :root {
+        --navy: #1d1a18;
+        --navy-2: #26221f;
+        --navy-3: #141210;
+        --gold-ink: #a3261c;
+        --gold-light: #e0c88f;
+        --mist: #d9d3c7;
+      }
+      body {
+        background: var(--ivory);
+        color: var(--brown);
+      }
+      .section-heading {
+        font-weight: 400;
+        color: var(--navy);
+      }
+      .section-heading i {
+        color: var(--gold-ink);
+      }
+      .section-sub {
+        font-family: var(--font-serif);
+        font-style: italic;
+        text-transform: none;
+        letter-spacing: 0.02em;
+        font-size: 1.1rem;
+        color: #4a453f;
+      }
+      .venue-rsvp-note {
+        text-transform: none;
+        letter-spacing: 0.02em;
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1rem;
+        color: #4a453f;
+      }
+
+      /* Bìa */
+      .invitation-cover {
+        background: radial-gradient(
+          ellipse at 50% 30%,
+          #2e2926 0%,
+          var(--navy) 58%,
+          var(--navy-3) 100%
+        );
+      }
+      .invitation-cover::after {
+        border: 1px solid rgba(184, 147, 74, 0.6);
+        outline: 1px solid rgba(184, 147, 74, 0.25);
+        outline-offset: 6px;
+        border-radius: 2px;
+      }
+      .cover-eyebrow {
+        color: var(--gold-light);
+      }
+      .cover-guest,
+      .cover-names {
+        color: var(--ivory);
+      }
+      .cover-names .amp,
+      .hero-title .amp {
+        color: var(--gold-light);
+      }
+      .cover-date {
+        color: var(--mist);
+      }
+      .cover-open-btn {
+        background: linear-gradient(135deg, #cf3b2e, #b5281e);
+        color: var(--navy);
+        border-color: #b5281e;
+        font-weight: 600;
+      }
+      .cover-open-btn:hover {
+        background: linear-gradient(135deg, #d24a3d, #b5281e);
+        color: var(--navy);
+      }
+
+      /* Hero */
+      .hero-full {
+        background: linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 100%);
+        color: var(--ivory);
+      }
+      .hero-full::before {
+        background-image: radial-gradient(
+          circle at 50% 0%,
+          rgba(184, 147, 74, 0.14) 0%,
+          transparent 55%
+        );
+      }
+      .hero-photo-wrap {
+        background: var(--navy);
+      }
+      .hero-photo-shade {
+        background: linear-gradient(
+          180deg,
+          rgba(20, 18, 16, 0.35) 0%,
+          rgba(20, 18, 16, 0.05) 35%,
+          rgba(29, 26, 24, 0.8) 80%,
+          var(--navy) 100%
+        );
+      }
+      .hero-photo-wrap .hero-title {
+        color: var(--ivory);
+        text-shadow: 0 2px 18px rgba(20, 18, 16, 0.7);
+      }
+      .hero-title {
+        color: var(--ivory);
+        font-weight: 500;
+      }
+      .hero-eyebrow {
+        color: var(--gold-light);
+      }
+      .guest-name {
+        color: var(--ivory);
+      }
+      .hero-invite-line {
+        color: var(--mist);
+      }
+      .hero-date-full {
+        font-family: var(--font-serif);
+        font-weight: 400;
+        color: var(--gold-light);
+        border-color: rgba(184, 147, 74, 0.55);
+      }
+      .cd-block .cd-num {
+        font-family: var(--font-serif);
+        font-weight: 500;
+        color: var(--ivory);
+      }
+      .cd-block .cd-lbl {
+        color: var(--mist);
+        font-weight: 400;
+      }
+
+      /* Địa điểm */
+      .venue-section {
+        background: var(--ivory);
+      }
+      .venue-info {
+        background: #fff;
+        border-top: 3px solid var(--gold);
+      }
+      .venue-info .venue-time {
+        color: var(--gold-ink);
+        font-weight: 500;
+        border-bottom-color: #d9cdb4;
+      }
+      .venue-info .venue-address,
+      .person-bio,
+      .timeline-desc,
+      .wish-item .wish-message {
+        font-weight: 400;
+      }
+
+      /* Nút chính: navy + chữ vàng */
+      .venue-rsvp-btn,
+      .submit-wish-btn,
+      .rsvp-submit-btn,
+      .qr-modal-download {
+        background: var(--navy);
+        border-color: var(--navy);
+        color: var(--gold-light);
+        box-shadow: 0 14px 28px -12px rgba(29, 26, 24, 0.6);
+        font-weight: 600;
+      }
+      .venue-rsvp-btn:hover,
+      .submit-wish-btn:hover,
+      .rsvp-submit-btn:hover,
+      .qr-modal-download:hover {
+        background: var(--navy-2);
+        border-color: var(--navy-2);
+        color: #d24a3d;
+      }
+
+      /* Cô dâu chú rể — nền tối */
+      .couple-section {
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          #2e2926 0%,
+          var(--navy) 60%
+        );
+        border-color: rgba(184, 147, 74, 0.3);
+      }
+      .couple-section .section-heading,
+      .gallery-section .section-heading {
+        color: var(--ivory);
+      }
+      .couple-section .section-heading i,
+      .gallery-section .section-heading i {
+        color: var(--gold);
+      }
+      .couple-section .section-sub,
+      .gallery-section .section-sub {
+        color: var(--mist);
+      }
+      .person-name {
+        color: var(--ivory);
+      }
+      .person-role {
+        color: var(--gold-light);
+      }
+      .person-bio {
+        color: var(--mist);
+      }
+      .person-photo-frame {
+        background: linear-gradient(135deg, #cf3b2e, #b8934a, #cf3b2e);
+        box-shadow: 0 22px 40px -14px rgba(0, 0, 0, 0.65);
+      }
+      .person-photo {
+        background: var(--navy-2);
+      }
+      .heart-connector {
+        color: var(--gold);
+        opacity: 0.85;
+      }
+
+      /* Chuyện chúng tôi */
+      .timeline::before {
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          #c9b48a 10%,
+          #b8a27a 50%,
+          #c9b48a 90%,
+          transparent
+        );
+        opacity: 1;
+      }
+      .timeline-item::after {
+        color: var(--gold-ink);
+      }
+      .timeline-date {
+        color: var(--gold-ink);
+        font-weight: 500;
+        border-bottom-color: #d9cdb4;
+      }
+
+      /* Album — nền tối */
+      .gallery-section {
+        background: var(--navy-2);
+        border-color: rgba(184, 147, 74, 0.3);
+      }
+
+      /* Lời chúc & form */
+      .wishes-section {
+        background: var(--ivory);
+      }
+      .wish-item {
+        background: var(--cream);
+      }
+      .wish-item .wish-name,
+      .rsvp-modal .modal-sub,
+      .rsvp-attend-option label i {
+        color: var(--gold-ink);
+      }
+      .wishes-form-box input,
+      .wishes-form-box textarea,
+      .rsvp-field input,
+      .rsvp-field select,
+      .rsvp-field textarea {
+        background: #fff;
+        color: var(--navy);
+        border: 1px solid #a89c82;
+      }
+      .wishes-form-box input::placeholder,
+      .wishes-form-box textarea::placeholder,
+      .rsvp-field input::placeholder,
+      .rsvp-field textarea::placeholder {
+        color: #756e64;
+      }
+      .wishes-form-box input:focus,
+      .wishes-form-box textarea:focus,
+      .rsvp-field input:focus,
+      .rsvp-field select:focus,
+      .rsvp-field textarea:focus {
+        border-color: #8f2118;
+        box-shadow: 0 0 0 3px rgba(181, 40, 30, 0.3);
+        background: #fff;
+      }
+      .rsvp-attend-option input[type="radio"]:checked + label {
+        border-color: #8f2118;
+        background: var(--cream);
+        color: var(--navy);
+      }
+
+      /* Hộp mừng cưới — thẻ navy trên nền giấy */
+      .lucky-section {
+        background: var(--cream);
+      }
+      .lucky-box {
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          #2e2926 0%,
+          var(--navy) 70%
+        );
+        border: 1px solid rgba(184, 147, 74, 0.6);
+        box-shadow: 0 30px 50px -20px rgba(29, 26, 24, 0.6);
+      }
+      .lucky-box h3 {
+        color: var(--ivory);
+      }
+      .lucky-box .fa-gift {
+        color: var(--gold-light);
+      }
+      .lucky-box > p {
+        color: var(--mist);
+      }
+      .envelope-label {
+        color: var(--ivory);
+      }
+      .envelope-item:hover .envelope-label {
+        color: var(--gold-light);
+      }
+      .envelope-sublabel,
+      .lucky-note {
+        color: #c4bdb0;
+      }
+      .lucky-note i {
+        color: var(--gold-light);
+      }
+
+      /* Chân trang */
+      .footer-section {
+        background: linear-gradient(160deg, var(--navy-2), var(--navy-3));
+      }
+      .footer-section .footer-names {
+        font-weight: 400;
+        color: var(--ivory);
+      }
+      .footer-section .footer-date {
+        color: var(--gold-light);
+      }
+
+      /* Nhạc nền */
+      .music-fab {
+        background: linear-gradient(135deg, #cf3b2e, #b5281e);
+        color: var(--navy);
+      }
+      .music-fab .bar span {
+        background: var(--navy);
+      }
+
+      /* Góc bo: vuông vắn hơn cho cảm giác trang trọng */
+      .venue-info,
+      .map-wrapper,
+      .timeline-content,
+      .wishes-form-box,
+      .wishes-display-box,
+      .rsvp-modal-content,
+      .qr-modal-content {
+        border-radius: 12px;
+      }
+      .lucky-box {
+        border-radius: 14px;
+      }
+      .timeline-image img {
+        border-radius: 8px;
+      }
+      .gallery-card {
+        border-radius: clamp(4px, 0.8vw, 10px);
+      }
+      .wish-item,
+      .wishes-form-box input,
+      .wishes-form-box textarea,
+      .rsvp-field input,
+      .rsvp-field select,
+      .rsvp-field textarea,
+      .rsvp-attend-option label {
+        border-radius: 8px;
+      }
+      .venue-rsvp-btn,
+      .submit-wish-btn,
+      .rsvp-submit-btn,
+      .cover-open-btn,
+      .qr-modal-download {
+        border-radius: 3px;
+      }
+
+      /* ==========================================================
+     PHONG CÁCH NHẬT BẢN — giấy washi · mực sumi · đỏ shu · vàng kim
+     ========================================================== */
+      :root {
+        --washi: #f6f1e7;
+        --sumi: #1d1a18;
+        --shu: #b5281e;
+        --kin: #b8934a;
+        --font-serif: "Noto Serif JP", "Noto Serif Display", serif;
+        --font-sans: "Noto Sans JP", "Be Vietnam Pro", sans-serif;
+        --sg: radial-gradient(
+          circle at 50% 100%,
+          transparent 0 34%,
+          rgba(184, 147, 74, 0.13) 35% 37%,
+          transparent 38% 52%,
+          rgba(184, 147, 74, 0.13) 53% 55%,
+          transparent 56% 70%,
+          rgba(184, 147, 74, 0.13) 71% 73%,
+          transparent 74%
+        );
+      }
+      body {
+        background: var(--washi);
+        color: var(--sumi);
+      }
+      .cover-guest,
+      .guest-name,
+      .cover-names .amp,
+      .hero-title .amp,
+      .section-sub,
+      .venue-rsvp-note {
+        font-style: normal;
+      }
+      .section-heading {
+        text-transform: none;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+      }
+      .section-heading i {
+        display: none;
+      }
+      .section-heading::before {
+        content: "";
+        display: block;
+        width: 0.6rem;
+        height: 0.6rem;
+        border-radius: 50%;
+        background: var(--shu);
+        margin: 0 auto 1rem;
+      }
+      .section-sub {
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+      }
+      .venue-section,
+      .story-section,
+      .wishes-section,
+      .lucky-section {
+        background-image: radial-gradient(
+          rgba(90, 70, 40, 0.07) 1px,
+          transparent 1.2px
+        );
+        background-size: 5px 5px;
+      }
+
+      /* Bìa: giấy washi, chữ dọc, dấu hanko */
+      .invitation-cover {
+        background: radial-gradient(
+          ellipse at 50% 40%,
+          #fbf8f0 0%,
+          var(--washi) 60%,
+          #e9dfc9 100%
+        );
+      }
+      .invitation-cover::after {
+        border: 1px solid var(--sumi);
+        outline: 1px solid rgba(29, 26, 24, 0.3);
+        outline-offset: 6px;
+        border-radius: 0;
+      }
+      .cover-eyebrow,
+      .cover-date {
+        color: #4a453f;
+      }
+      .cover-guest,
+      .cover-names {
+        color: var(--sumi);
+      }
+      .cover-names .amp,
+      .cover-ornament {
+        color: var(--shu);
+      }
+      .cover-open-btn {
+        background: var(--shu);
+        border-color: var(--shu);
+        color: var(--washi);
+      }
+      .cover-open-btn:hover {
+        background: #8f2118;
+        border-color: #8f2118;
+        color: var(--washi);
+      }
+      .cover-inner::before {
+        content: "結婚式";
+        position: absolute;
+        left: 0.1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        writing-mode: vertical-rl;
+        font-family: var(--font-serif);
+        font-size: 1.05rem;
+        letter-spacing: 0.6em;
+        color: #6a5a3a;
+      }
+      .cover-inner::after {
+        content: "寿";
+        position: absolute;
+        right: 0.1rem;
+        top: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        background: var(--shu);
+        color: var(--washi);
+        font: 600 1.5rem/2.5rem var(--font-serif);
+        text-align: center;
+        border-radius: 2px;
+        transform: rotate(-4deg);
+      }
+
+      /* Hero tối, đường kẻ kim */
+      .hero-date-full {
+        border-color: rgba(184, 147, 74, 0.7);
+      }
+
+      /* Nút & thẻ: đỏ shu, góc gần vuông */
+      .venue-rsvp-btn,
+      .submit-wish-btn,
+      .rsvp-submit-btn,
+      .qr-modal-download {
+        background: var(--shu);
+        border-color: var(--shu);
+        color: var(--washi);
+        box-shadow: 0 12px 24px -12px rgba(181, 40, 30, 0.6);
+      }
+      .venue-rsvp-btn:hover,
+      .submit-wish-btn:hover,
+      .rsvp-submit-btn:hover,
+      .qr-modal-download:hover {
+        background: #8f2118;
+        border-color: #8f2118;
+        color: var(--washi);
+      }
+      .venue-info,
+      .map-wrapper,
+      .timeline-content,
+      .wishes-form-box,
+      .wishes-display-box,
+      .rsvp-modal-content,
+      .qr-modal-content,
+      .lucky-box,
+      .timeline-image img,
+      .wish-item,
+      .wishes-form-box input,
+      .wishes-form-box textarea,
+      .rsvp-field input,
+      .rsvp-field select,
+      .rsvp-field textarea,
+      .rsvp-attend-option label,
+      .gallery-card,
+      .venue-rsvp-btn,
+      .submit-wish-btn,
+      .rsvp-submit-btn,
+      .cover-open-btn,
+      .qr-modal-download {
+        border-radius: 2px;
+      }
+      .venue-info {
+        border-top: 3px solid var(--shu);
+      }
+      .wishes-form-box input:focus,
+      .wishes-form-box textarea:focus,
+      .rsvp-field input:focus,
+      .rsvp-field select:focus,
+      .rsvp-field textarea:focus {
+        border-color: var(--shu);
+        box-shadow: 0 0 0 3px rgba(181, 40, 30, 0.2);
+      }
+      .rsvp-attend-option input[type="radio"]:checked + label {
+        border-color: var(--shu);
+      }
+
+      /* Sóng seigaiha trên các mục tối */
+      .couple-section,
+      .gallery-section,
+      .footer-section {
+        background-size:
+          56px 28px,
+          56px 28px,
+          auto;
+        background-position:
+          0 0,
+          28px 14px,
+          0 0;
+      }
+      .couple-section {
+        background-image:
+          var(--sg), var(--sg),
+          radial-gradient(ellipse at 50% 0%, #2e2926 0%, #1d1a18 60%);
+      }
+      .gallery-section {
+        background-image:
+          var(--sg), var(--sg), linear-gradient(#26221f, #26221f);
+      }
+      .footer-section {
+        background-image:
+          var(--sg), var(--sg), linear-gradient(160deg, #26221f, #141210);
+      }
+      .person-photo-frame {
+        background: linear-gradient(135deg, #b8934a, #e0c88f, #b8934a);
+      }
+      .heart-connector {
+        color: var(--shu);
+        opacity: 1;
+      }
+
+      /* Mốc timeline = chấm đỏ; hộp quà */
+      .timeline-item::after {
+        content: "";
+        width: 0.75rem;
+        height: 0.75rem;
+        padding: 0;
+        font-size: 0;
+        background: var(--shu);
+        border: 3px solid var(--washi);
+        box-sizing: content-box;
+        text-shadow: none;
+      }
+      .timeline-item::after {
+        margin: 0;
+      }
+      .lucky-box {
+        border-color: rgba(184, 147, 74, 0.7);
+      }
+      .footer-blessing::before {
+        content: "寿";
+        display: block;
+        width: 2.6rem;
+        height: 2.6rem;
+        margin: 0 auto 1.4rem;
+        background: var(--shu);
+        color: var(--washi);
+        font: 600 1.5rem/2.6rem var(--font-serif);
+        border-radius: 2px;
+        transform: rotate(-3deg);
+      }
+      .music-fab {
+        background: var(--shu);
+        color: var(--washi);
+      }
+      .music-fab .bar span {
+        background: var(--washi);
+      }
+
+      /* ==========================================================
+     HÌNH NỀN NHẬT BẢN (SVG nhúng sẵn, không cần tải ảnh ngoài):
+     núi Phú Sĩ + mặt trời đỏ, cành hoa anh đào, cổng torii
+     ========================================================== */
+      .invitation-cover::before {
+        background-image:
+          url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20viewBox%3D%270%200%20420%20300%27%3E%3Cdefs%3E%3Cg%20id%3D%27f%27%3E%3Ccircle%20cx%3D%270%27%20cy%3D%27-6.2%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%275.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%273.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-3.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-5.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20r%3D%272.1%27%20fill%3D%27%23c94a62%27/%3E%3C/g%3E%3C/defs%3E%3Cg%20transform%3D%27%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%234a3a30%27%20stroke-linecap%3D%27round%27%3E%3Cpath%20d%3D%27M-10%2020C80%2040%20140%2020%20220%2070S330%20130%20400%20120%27%20stroke-width%3D%276%27/%3E%3Cpath%20d%3D%27M120%2038C150%2080%20140%20120%20170%20160%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M220%2070C250%2040%20290%2030%20330%2040%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M300%20112C320%20150%20350%20170%20360%20210%27%20stroke-width%3D%273.5%27/%3E%3C/g%3E%3Ccircle%20cx%3D%2796%27%20cy%3D%2760%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27206%27%20cy%3D%2796%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%2770%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27368%27%20cy%3D%27150%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27188%27%20cy%3D%27128%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%2860%2038%29%20rotate%2810%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28105%2036%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28150%2046%29%20rotate%2870%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28192%2062%29%20rotate%2820%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28236%2086%29%20rotate%2855%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28272%20102%29%20rotate%285%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28322%20118%29%20rotate%2835%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28386%20122%29%20rotate%2865%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28136%2076%29%20rotate%2825%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28156%20116%29%20rotate%2850%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28172%20158%29%20rotate%2815%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28252%2050%29%20rotate%2845%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28292%2036%29%20rotate%280%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28332%2042%29%20rotate%2830%29%20scale%281.2800000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28320%20152%29%20rotate%2860%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28346%20176%29%20rotate%2810%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28358%20208%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3C/g%3E%3C/svg%3E"),
+          url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20viewBox%3D%270%200%20420%20300%27%3E%3Cdefs%3E%3Cg%20id%3D%27f%27%3E%3Ccircle%20cx%3D%270%27%20cy%3D%27-6.2%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%275.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%273.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-3.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-5.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20r%3D%272.1%27%20fill%3D%27%23c94a62%27/%3E%3C/g%3E%3C/defs%3E%3Cg%20transform%3D%27translate%28420%200%29%20scale%28-1%201%29%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%234a3a30%27%20stroke-linecap%3D%27round%27%3E%3Cpath%20d%3D%27M-10%2020C80%2040%20140%2020%20220%2070S330%20130%20400%20120%27%20stroke-width%3D%276%27/%3E%3Cpath%20d%3D%27M120%2038C150%2080%20140%20120%20170%20160%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M220%2070C250%2040%20290%2030%20330%2040%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M300%20112C320%20150%20350%20170%20360%20210%27%20stroke-width%3D%273.5%27/%3E%3C/g%3E%3Ccircle%20cx%3D%2796%27%20cy%3D%2760%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27206%27%20cy%3D%2796%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%2770%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27368%27%20cy%3D%27150%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27188%27%20cy%3D%27128%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%2860%2038%29%20rotate%2810%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28105%2036%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28150%2046%29%20rotate%2870%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28192%2062%29%20rotate%2820%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28236%2086%29%20rotate%2855%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28272%20102%29%20rotate%285%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28322%20118%29%20rotate%2835%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28386%20122%29%20rotate%2865%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28136%2076%29%20rotate%2825%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28156%20116%29%20rotate%2850%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28172%20158%29%20rotate%2815%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28252%2050%29%20rotate%2845%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28292%2036%29%20rotate%280%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28332%2042%29%20rotate%2830%29%20scale%281.2800000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28320%20152%29%20rotate%2860%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28346%20176%29%20rotate%2810%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28358%20208%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3C/g%3E%3C/svg%3E"),
+          url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20900%20300%27%3E%3Ccircle%20cx%3D%27650%27%20cy%3D%27118%27%20r%3D%2750%27%20fill%3D%27%23b5281e%27%20opacity%3D%270.35%27/%3E%3Cpath%20d%3D%27M80%20300L330%20140Q450%20100%20570%20140L820%20300Z%27%20fill%3D%27%231d1a18%27%20opacity%3D%270.2%27/%3E%3Cpath%20d%3D%27M330%20140Q450%20100%20570%20140L540%20156L505%20138L470%20158L440%20140L405%20158L375%20140Z%27%20fill%3D%27%23f6f1e7%27%20opacity%3D%27.9%27/%3E%3Crect%20x%3D%270%27%20y%3D%27238%27%20width%3D%27900%27%20height%3D%2712%27%20fill%3D%27%23f6f1e7%27%20opacity%3D%27.35%27/%3E%3Cpath%20d%3D%27M0%20300V272Q150%20244%20300%20276T600%20270T900%20282V300Z%27%20fill%3D%27%231d1a18%27%20opacity%3D%270.2%27/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position:
+          left top,
+          right top,
+          center bottom;
+        background-size:
+          min(46vw, 380px) auto,
+          min(46vw, 380px) auto,
+          auto 28vh;
+      }
+      .couple-section,
+      .story-section,
+      .footer-section {
+        position: relative;
+        overflow: hidden;
+      }
+      .couple-section > .container,
+      .story-section > .container,
+      .footer-section > * {
+        position: relative;
+        z-index: 1;
+      }
+      .couple-section::before,
+      .couple-section::after,
+      .story-section::before,
+      .story-section::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: min(36vw, 340px);
+        aspect-ratio: 420/300;
+        background-size: contain;
+        background-repeat: no-repeat;
+        pointer-events: none;
+      }
+      .couple-section::before {
+        left: 0;
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20viewBox%3D%270%200%20420%20300%27%3E%3Cdefs%3E%3Cg%20id%3D%27f%27%3E%3Ccircle%20cx%3D%270%27%20cy%3D%27-6.2%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%275.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%273.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-3.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-5.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20r%3D%272.1%27%20fill%3D%27%23c94a62%27/%3E%3C/g%3E%3C/defs%3E%3Cg%20transform%3D%27%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%239a8670%27%20stroke-linecap%3D%27round%27%3E%3Cpath%20d%3D%27M-10%2020C80%2040%20140%2020%20220%2070S330%20130%20400%20120%27%20stroke-width%3D%276%27/%3E%3Cpath%20d%3D%27M120%2038C150%2080%20140%20120%20170%20160%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M220%2070C250%2040%20290%2030%20330%2040%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M300%20112C320%20150%20350%20170%20360%20210%27%20stroke-width%3D%273.5%27/%3E%3C/g%3E%3Ccircle%20cx%3D%2796%27%20cy%3D%2760%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27206%27%20cy%3D%2796%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%2770%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27368%27%20cy%3D%27150%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27188%27%20cy%3D%27128%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%2860%2038%29%20rotate%2810%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28105%2036%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28150%2046%29%20rotate%2870%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28192%2062%29%20rotate%2820%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28236%2086%29%20rotate%2855%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28272%20102%29%20rotate%285%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28322%20118%29%20rotate%2835%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28386%20122%29%20rotate%2865%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28136%2076%29%20rotate%2825%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28156%20116%29%20rotate%2850%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28172%20158%29%20rotate%2815%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28252%2050%29%20rotate%2845%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28292%2036%29%20rotate%280%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28332%2042%29%20rotate%2830%29%20scale%281.2800000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28320%20152%29%20rotate%2860%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28346%20176%29%20rotate%2810%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28358%20208%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .couple-section::after {
+        right: 0;
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20viewBox%3D%270%200%20420%20300%27%3E%3Cdefs%3E%3Cg%20id%3D%27f%27%3E%3Ccircle%20cx%3D%270%27%20cy%3D%27-6.2%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%275.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%273.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-3.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-5.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20r%3D%272.1%27%20fill%3D%27%23c94a62%27/%3E%3C/g%3E%3C/defs%3E%3Cg%20transform%3D%27translate%28420%200%29%20scale%28-1%201%29%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%239a8670%27%20stroke-linecap%3D%27round%27%3E%3Cpath%20d%3D%27M-10%2020C80%2040%20140%2020%20220%2070S330%20130%20400%20120%27%20stroke-width%3D%276%27/%3E%3Cpath%20d%3D%27M120%2038C150%2080%20140%20120%20170%20160%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M220%2070C250%2040%20290%2030%20330%2040%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M300%20112C320%20150%20350%20170%20360%20210%27%20stroke-width%3D%273.5%27/%3E%3C/g%3E%3Ccircle%20cx%3D%2796%27%20cy%3D%2760%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27206%27%20cy%3D%2796%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%2770%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27368%27%20cy%3D%27150%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27188%27%20cy%3D%27128%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%2860%2038%29%20rotate%2810%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28105%2036%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28150%2046%29%20rotate%2870%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28192%2062%29%20rotate%2820%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28236%2086%29%20rotate%2855%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28272%20102%29%20rotate%285%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28322%20118%29%20rotate%2835%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28386%20122%29%20rotate%2865%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28136%2076%29%20rotate%2825%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28156%20116%29%20rotate%2850%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28172%20158%29%20rotate%2815%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28252%2050%29%20rotate%2845%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28292%2036%29%20rotate%280%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28332%2042%29%20rotate%2830%29%20scale%281.2800000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28320%20152%29%20rotate%2860%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28346%20176%29%20rotate%2810%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28358%20208%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .story-section::before {
+        left: 0;
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20viewBox%3D%270%200%20420%20300%27%3E%3Cdefs%3E%3Cg%20id%3D%27f%27%3E%3Ccircle%20cx%3D%270%27%20cy%3D%27-6.2%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%275.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%273.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-3.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-5.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20r%3D%272.1%27%20fill%3D%27%23c94a62%27/%3E%3C/g%3E%3C/defs%3E%3Cg%20transform%3D%27%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%234a3a30%27%20stroke-linecap%3D%27round%27%3E%3Cpath%20d%3D%27M-10%2020C80%2040%20140%2020%20220%2070S330%20130%20400%20120%27%20stroke-width%3D%276%27/%3E%3Cpath%20d%3D%27M120%2038C150%2080%20140%20120%20170%20160%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M220%2070C250%2040%20290%2030%20330%2040%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M300%20112C320%20150%20350%20170%20360%20210%27%20stroke-width%3D%273.5%27/%3E%3C/g%3E%3Ccircle%20cx%3D%2796%27%20cy%3D%2760%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27206%27%20cy%3D%2796%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%2770%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27368%27%20cy%3D%27150%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27188%27%20cy%3D%27128%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%2860%2038%29%20rotate%2810%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28105%2036%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28150%2046%29%20rotate%2870%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28192%2062%29%20rotate%2820%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28236%2086%29%20rotate%2855%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28272%20102%29%20rotate%285%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28322%20118%29%20rotate%2835%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28386%20122%29%20rotate%2865%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28136%2076%29%20rotate%2825%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28156%20116%29%20rotate%2850%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28172%20158%29%20rotate%2815%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28252%2050%29%20rotate%2845%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28292%2036%29%20rotate%280%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28332%2042%29%20rotate%2830%29%20scale%281.2800000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28320%20152%29%20rotate%2860%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28346%20176%29%20rotate%2810%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28358%20208%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .story-section::after {
+        right: 0;
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20xmlns%3Axlink%3D%27http%3A//www.w3.org/1999/xlink%27%20viewBox%3D%270%200%20420%20300%27%3E%3Cdefs%3E%3Cg%20id%3D%27f%27%3E%3Ccircle%20cx%3D%270%27%20cy%3D%27-6.2%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%275.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%273.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-3.6%27%20cy%3D%275%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%27-5.9%27%20cy%3D%27-1.9%27%20r%3D%275.2%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20r%3D%272.1%27%20fill%3D%27%23c94a62%27/%3E%3C/g%3E%3C/defs%3E%3Cg%20transform%3D%27translate%28420%200%29%20scale%28-1%201%29%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%234a3a30%27%20stroke-linecap%3D%27round%27%3E%3Cpath%20d%3D%27M-10%2020C80%2040%20140%2020%20220%2070S330%20130%20400%20120%27%20stroke-width%3D%276%27/%3E%3Cpath%20d%3D%27M120%2038C150%2080%20140%20120%20170%20160%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M220%2070C250%2040%20290%2030%20330%2040%27%20stroke-width%3D%274%27/%3E%3Cpath%20d%3D%27M300%20112C320%20150%20350%20170%20360%20210%27%20stroke-width%3D%273.5%27/%3E%3C/g%3E%3Ccircle%20cx%3D%2796%27%20cy%3D%2760%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27206%27%20cy%3D%2796%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27300%27%20cy%3D%2770%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27368%27%20cy%3D%27150%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Ccircle%20cx%3D%27188%27%20cy%3D%27128%27%20r%3D%273.2%27%20fill%3D%27%23e58aa0%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%2860%2038%29%20rotate%2810%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28105%2036%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28150%2046%29%20rotate%2870%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28192%2062%29%20rotate%2820%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28236%2086%29%20rotate%2855%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28272%20102%29%20rotate%285%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28322%20118%29%20rotate%2835%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28386%20122%29%20rotate%2865%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28136%2076%29%20rotate%2825%29%20scale%281.4400000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28156%20116%29%20rotate%2850%29%20scale%281.7600000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28172%20158%29%20rotate%2815%29%20scale%282.08%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28252%2050%29%20rotate%2845%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28292%2036%29%20rotate%280%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28332%2042%29%20rotate%2830%29%20scale%281.2800000000000002%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28320%20152%29%20rotate%2860%29%20scale%281.6%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28346%20176%29%20rotate%2810%29%20scale%281.92%29%27/%3E%3Cuse%20xlink%3Ahref%3D%27%23f%27%20transform%3D%27translate%28358%20208%29%20rotate%2840%29%20scale%281.4400000000000002%29%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .footer-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        /* background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20900%20300%27%3E%3Ccircle%20cx%3D%27650%27%20cy%3D%27118%27%20r%3D%2750%27%20fill%3D%27%23b5281e%27%20opacity%3D%270.5%27/%3E%3Cpath%20d%3D%27M80%20300L330%20140Q450%20100%20570%20140L820%20300Z%27%20fill%3D%27%23f6f1e7%27%20opacity%3D%270.07%27/%3E%3Cpath%20d%3D%27M330%20140Q450%20100%20570%20140L540%20156L505%20138L470%20158L440%20140L405%20158L375%20140Z%27%20fill%3D%27%23f6f1e7%27%20opacity%3D%27.9%27/%3E%3Crect%20x%3D%270%27%20y%3D%27238%27%20width%3D%27900%27%20height%3D%2712%27%20fill%3D%27%23f6f1e7%27%20opacity%3D%27.35%27/%3E%3Cpath%20d%3D%27M0%20300V272Q150%20244%20300%20276T600%20270T900%20282V300Z%27%20fill%3D%27%23f6f1e7%27%20opacity%3D%270.07%27/%3E%3C/svg%3E")
+          center bottom / min(100%, 400px) auto no-repeat; */
+      }
+      .footer-section::after {
+        content: "";
+        position: absolute;
+        right: 6%;
+        bottom: 1.2rem;
+        width: clamp(64px, 10vw, 130px);
+        aspect-ratio: 200/160;
+        background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20200%20160%27%20fill%3D%27%23c23a2e%27%3E%3Cpath%20d%3D%27M6%2030Q100%2010%20194%2030L190%2043Q100%2027%2010%2043Z%27/%3E%3Crect%20x%3D%2722%27%20y%3D%2744%27%20width%3D%27156%27%20height%3D%278%27/%3E%3Crect%20x%3D%2734%27%20y%3D%2766%27%20width%3D%27132%27%20height%3D%279%27/%3E%3Crect%20x%3D%2744%27%20y%3D%2744%27%20width%3D%2713%27%20height%3D%27114%27/%3E%3Crect%20x%3D%27143%27%20y%3D%2744%27%20width%3D%2713%27%20height%3D%27114%27/%3E%3C/svg%3E")
+          center / contain no-repeat;
+        opacity: 0.85;
+        pointer-events: none;
+      }
+      @media (max-width: 640px) {
+        .couple-section::before,
+        .couple-section::after,
+        .story-section::before,
+        .story-section::after {
+          width: 30vw;
+          opacity: 0.6;
+        }
+      }
+
+      /* ==========================================================
+     MINH HỌA NHẬT BẢN TRONG NỘI DUNG: đền, kimono, sushi, đèn lồng, quạt
+     ========================================================== */
+      .ic-shrine {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M6%2040Q50%2012%2094%2040L88%2048Q50%2028%2012%2048Z%27%20fill%3D%27%231d1a18%27/%3E%3Crect%20x%3D%2718%27%20y%3D%2748%27%20width%3D%2764%27%20height%3D%276%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2754%27%20width%3D%277%27%20height%3D%2738%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2769%27%20y%3D%2754%27%20width%3D%277%27%20height%3D%2738%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2731%27%20y%3D%2760%27%20width%3D%2738%27%20height%3D%2732%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%231d1a18%27%20stroke-width%3D%272%27/%3E%3Crect%20x%3D%2744%27%20y%3D%2768%27%20width%3D%2712%27%20height%3D%2724%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2710%27%20y%3D%2792%27%20width%3D%2780%27%20height%3D%275%27%20fill%3D%27%236a635a%27/%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2722%27%20r%3D%273%27%20fill%3D%27%23b8934a%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .ic-kimB {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M28%2026L6%2036L9%2084L28%2078Z%27%20fill%3D%27%23c23a2e%27/%3E%3Cpath%20d%3D%27M72%2026L94%2036L91%2084L72%2078Z%27%20fill%3D%27%23c23a2e%27/%3E%3Cpath%20d%3D%27M28%2020L50%2030L72%2020L74%2096L26%2096Z%27%20fill%3D%27%23b5281e%27/%3E%3Ccircle%20cx%3D%2736%27%20cy%3D%2780%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2762%27%20cy%3D%2782%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2746%27%20cy%3D%2788%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2754%27%20cy%3D%2776%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2738%27%20cy%3D%2766%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2764%27%20cy%3D%2768%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Cpath%20d%3D%27M40%2020L50%2050L60%2020%27%20fill%3D%27none%27%20stroke%3D%27%23f6f1e7%27%20stroke-width%3D%275%27%20stroke-linejoin%3D%27round%27/%3E%3Crect%20x%3D%2727%27%20y%3D%2754%27%20width%3D%2746%27%20height%3D%2715%27%20fill%3D%27%23e0c88f%27/%3E%3Cpath%20d%3D%27M27%2061H73%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.3%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .ic-kimG {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M28%2026L6%2036L9%2084L28%2078Z%27%20fill%3D%27%232e2926%27/%3E%3Cpath%20d%3D%27M72%2026L94%2036L91%2084L72%2078Z%27%20fill%3D%27%232e2926%27/%3E%3Cpath%20d%3D%27M28%2020L50%2030L72%2020L74%2096L26%2096Z%27%20fill%3D%27%231d1a18%27/%3E%3Ccircle%20cx%3D%2736%27%20cy%3D%2780%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2762%27%20cy%3D%2782%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2746%27%20cy%3D%2788%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2754%27%20cy%3D%2776%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2738%27%20cy%3D%2766%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2764%27%20cy%3D%2768%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Cpath%20d%3D%27M40%2020L50%2050L60%2020%27%20fill%3D%27none%27%20stroke%3D%27%23f6f1e7%27%20stroke-width%3D%275%27%20stroke-linejoin%3D%27round%27/%3E%3Crect%20x%3D%2727%27%20y%3D%2754%27%20width%3D%2746%27%20height%3D%2715%27%20fill%3D%27%238a8176%27/%3E%3Cpath%20d%3D%27M27%2061H73%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.3%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .ic-sushi {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Crect%20x%3D%274%27%20y%3D%2772%27%20width%3D%2792%27%20height%3D%279%27%20rx%3D%274%27%20fill%3D%27%23b08a5a%27/%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2724%27%20r%3D%2713%27%20fill%3D%27%231d1a18%27/%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2724%27%20r%3D%279%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2724%27%20r%3D%273.6%27%20fill%3D%27%23e8664d%27/%3E%3Ccircle%20cx%3D%2766%27%20cy%3D%2724%27%20r%3D%2713%27%20fill%3D%27%231d1a18%27/%3E%3Ccircle%20cx%3D%2766%27%20cy%3D%2724%27%20r%3D%279%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2766%27%20cy%3D%2724%27%20r%3D%273.6%27%20fill%3D%27%237fb069%27/%3E%3Cg%20transform%3D%27translate%280%200%29%27%3E%3Crect%20x%3D%278%27%20y%3D%2754%27%20width%3D%2738%27%20height%3D%2718%27%20rx%3D%279%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23cfc8bb%27%20stroke-width%3D%271.5%27/%3E%3Cpath%20d%3D%27M5%2056Q27%2036%2049%2056Q27%2062%205%2056Z%27%20fill%3D%27%23f08a5d%27/%3E%3Cpath%20d%3D%27M14%2052L22%2046M26%2051L34%2045%27%20stroke%3D%27%23fff%27%20stroke-opacity%3D%27.6%27%20stroke-width%3D%272%27/%3E%3C/g%3E%3Cg%20transform%3D%27translate%2848%200%29%27%3E%3Crect%20x%3D%278%27%20y%3D%2754%27%20width%3D%2738%27%20height%3D%2718%27%20rx%3D%279%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23cfc8bb%27%20stroke-width%3D%271.5%27/%3E%3Cpath%20d%3D%27M5%2056Q27%2036%2049%2056Q27%2062%205%2056Z%27%20fill%3D%27%23c23a4a%27/%3E%3Cpath%20d%3D%27M14%2052L22%2046M26%2051L34%2045%27%20stroke%3D%27%23fff%27%20stroke-opacity%3D%27.6%27%20stroke-width%3D%272%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      }
+      .ic-lantern {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Crect%20x%3D%2736%27%20y%3D%2714%27%20width%3D%2728%27%20height%3D%277%27%20fill%3D%27%231d1a18%27/%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2750%27%20rx%3D%2726%27%20ry%3D%2730%27%20fill%3D%27%23b5281e%27/%3E%3Cpath%20d%3D%27M50%2020V80M36%2024Q26%2050%2036%2076M64%2024Q74%2050%2064%2076%27%20stroke%3D%27%238f2118%27%20stroke-width%3D%272%27%20fill%3D%27none%27/%3E%3Crect%20x%3D%2736%27%20y%3D%2778%27%20width%3D%2728%27%20height%3D%277%27%20fill%3D%27%231d1a18%27/%3E%3Cpath%20d%3D%27M50%2085V97%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%273%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .ic-fan {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M50%2092L8%2042A58%2058%200%200%201%2092%2042Z%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%231d1a18%27%20stroke-width%3D%272.5%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M50%2092L17%2052%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L33%2043%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L50%2040%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L67%2043%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L83%2052%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2752%27%20r%3D%2711%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2746%27%20y%3D%2788%27%20width%3D%278%27%20height%3D%279%27%20rx%3D%272%27%20fill%3D%27%23b08a5a%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .jp-band {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(0.6rem, 2.6vw, 1.8rem);
+        padding: 2.2rem 1rem;
+        background: var(--washi)
+          radial-gradient(rgba(90, 70, 40, 0.07) 1px, transparent 1.2px) 0 0/5px
+          5px;
+      }
+      .jp-band::before,
+      .jp-band::after {
+        content: "";
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 160px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--kin));
+      }
+      .jp-band::after {
+        transform: scaleX(-1);
+      }
+      .jp-ic {
+        display: block;
+        flex: 0 0 auto;
+        width: clamp(46px, 11vw, 84px);
+        aspect-ratio: 1;
+        background-size: contain;
+        background-repeat: no-repeat;
+        filter: drop-shadow(0 6px 8px rgba(29, 26, 24, 0.2));
+      }
+      .jp-band .ic-shrine {
+        width: clamp(58px, 14vw, 104px);
+      }
+      .venue-info::before,
+      .venue-info::after,
+      .person-role::before,
+      .timeline-date::before {
+        content: "";
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      /* .venue-info::before {
+        width: 84px;
+        height: 84px;
+        margin-bottom: 1rem;
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M6%2040Q50%2012%2094%2040L88%2048Q50%2028%2012%2048Z%27%20fill%3D%27%231d1a18%27/%3E%3Crect%20x%3D%2718%27%20y%3D%2748%27%20width%3D%2764%27%20height%3D%276%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2754%27%20width%3D%277%27%20height%3D%2738%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2769%27%20y%3D%2754%27%20width%3D%277%27%20height%3D%2738%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2731%27%20y%3D%2760%27%20width%3D%2738%27%20height%3D%2732%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%231d1a18%27%20stroke-width%3D%272%27/%3E%3Crect%20x%3D%2744%27%20y%3D%2768%27%20width%3D%2712%27%20height%3D%2724%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2710%27%20y%3D%2792%27%20width%3D%2780%27%20height%3D%275%27%20fill%3D%27%236a635a%27/%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2722%27%20r%3D%273%27%20fill%3D%27%23b8934a%27/%3E%3C/g%3E%3C/svg%3E");
+      } */
+      .venue-info::before {
+        width: 84px;
+        height: 84px;
+        /* margin-top: 1rem; */
+        /* align-self: flex-end; */
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Crect%20x%3D%274%27%20y%3D%2772%27%20width%3D%2792%27%20height%3D%279%27%20rx%3D%274%27%20fill%3D%27%23b08a5a%27/%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2724%27%20r%3D%2713%27%20fill%3D%27%231d1a18%27/%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2724%27%20r%3D%279%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2724%27%20r%3D%273.6%27%20fill%3D%27%23e8664d%27/%3E%3Ccircle%20cx%3D%2766%27%20cy%3D%2724%27%20r%3D%2713%27%20fill%3D%27%231d1a18%27/%3E%3Ccircle%20cx%3D%2766%27%20cy%3D%2724%27%20r%3D%279%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2766%27%20cy%3D%2724%27%20r%3D%273.6%27%20fill%3D%27%237fb069%27/%3E%3Cg%20transform%3D%27translate%280%200%29%27%3E%3Crect%20x%3D%278%27%20y%3D%2754%27%20width%3D%2738%27%20height%3D%2718%27%20rx%3D%279%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23cfc8bb%27%20stroke-width%3D%271.5%27/%3E%3Cpath%20d%3D%27M5%2056Q27%2036%2049%2056Q27%2062%205%2056Z%27%20fill%3D%27%23f08a5d%27/%3E%3Cpath%20d%3D%27M14%2052L22%2046M26%2051L34%2045%27%20stroke%3D%27%23fff%27%20stroke-opacity%3D%27.6%27%20stroke-width%3D%272%27/%3E%3C/g%3E%3Cg%20transform%3D%27translate%2848%200%29%27%3E%3Crect%20x%3D%278%27%20y%3D%2754%27%20width%3D%2738%27%20height%3D%2718%27%20rx%3D%279%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23cfc8bb%27%20stroke-width%3D%271.5%27/%3E%3Cpath%20d%3D%27M5%2056Q27%2036%2049%2056Q27%2062%205%2056Z%27%20fill%3D%27%23c23a4a%27/%3E%3Cpath%20d%3D%27M14%2052L22%2046M26%2051L34%2045%27%20stroke%3D%27%23fff%27%20stroke-opacity%3D%27.6%27%20stroke-width%3D%272%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      }
+      .person-role::before {
+        display: block;
+        width: 68px;
+        height: 68px;
+        margin: 0 auto 0.7rem;
+      }
+      .person-card:nth-child(1) .person-role::before {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M28%2026L6%2036L9%2084L28%2078Z%27%20fill%3D%27%23c23a2e%27/%3E%3Cpath%20d%3D%27M72%2026L94%2036L91%2084L72%2078Z%27%20fill%3D%27%23c23a2e%27/%3E%3Cpath%20d%3D%27M28%2020L50%2030L72%2020L74%2096L26%2096Z%27%20fill%3D%27%23b5281e%27/%3E%3Ccircle%20cx%3D%2736%27%20cy%3D%2780%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2762%27%20cy%3D%2782%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2746%27%20cy%3D%2788%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2754%27%20cy%3D%2776%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2738%27%20cy%3D%2766%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Ccircle%20cx%3D%2764%27%20cy%3D%2768%27%20r%3D%272.6%27%20fill%3D%27%23f2b8c2%27/%3E%3Cpath%20d%3D%27M40%2020L50%2050L60%2020%27%20fill%3D%27none%27%20stroke%3D%27%23f6f1e7%27%20stroke-width%3D%275%27%20stroke-linejoin%3D%27round%27/%3E%3Crect%20x%3D%2727%27%20y%3D%2754%27%20width%3D%2746%27%20height%3D%2715%27%20fill%3D%27%23e0c88f%27/%3E%3Cpath%20d%3D%27M27%2061H73%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.3%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .person-card:nth-child(3) .person-role::before {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M28%2026L6%2036L9%2084L28%2078Z%27%20fill%3D%27%232e2926%27/%3E%3Cpath%20d%3D%27M72%2026L94%2036L91%2084L72%2078Z%27%20fill%3D%27%232e2926%27/%3E%3Cpath%20d%3D%27M28%2020L50%2030L72%2020L74%2096L26%2096Z%27%20fill%3D%27%231d1a18%27/%3E%3Ccircle%20cx%3D%2736%27%20cy%3D%2780%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2762%27%20cy%3D%2782%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2746%27%20cy%3D%2788%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2754%27%20cy%3D%2776%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2738%27%20cy%3D%2766%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Ccircle%20cx%3D%2764%27%20cy%3D%2768%27%20r%3D%272.6%27%20fill%3D%27%23f6f1e7%27/%3E%3Cpath%20d%3D%27M40%2020L50%2050L60%2020%27%20fill%3D%27none%27%20stroke%3D%27%23f6f1e7%27%20stroke-width%3D%275%27%20stroke-linejoin%3D%27round%27/%3E%3Crect%20x%3D%2727%27%20y%3D%2754%27%20width%3D%2746%27%20height%3D%2715%27%20fill%3D%27%238a8176%27/%3E%3Cpath%20d%3D%27M27%2061H73%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.3%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .timeline-date::before {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        vertical-align: -0.45rem;
+        margin-right: 0.5rem;
+      }
+      .timeline-item:nth-child(3n + 1) .timeline-date::before {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Crect%20x%3D%2736%27%20y%3D%2714%27%20width%3D%2728%27%20height%3D%277%27%20fill%3D%27%231d1a18%27/%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2750%27%20rx%3D%2726%27%20ry%3D%2730%27%20fill%3D%27%23b5281e%27/%3E%3Cpath%20d%3D%27M50%2020V80M36%2024Q26%2050%2036%2076M64%2024Q74%2050%2064%2076%27%20stroke%3D%27%238f2118%27%20stroke-width%3D%272%27%20fill%3D%27none%27/%3E%3Crect%20x%3D%2736%27%20y%3D%2778%27%20width%3D%2728%27%20height%3D%277%27%20fill%3D%27%231d1a18%27/%3E%3Cpath%20d%3D%27M50%2085V97%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%273%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .timeline-item:nth-child(3n + 2) .timeline-date::before {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M50%2092L8%2042A58%2058%200%200%201%2092%2042Z%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%231d1a18%27%20stroke-width%3D%272.5%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M50%2092L17%2052%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L33%2043%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L50%2040%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L67%2043%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Cpath%20d%3D%27M50%2092L83%2052%27%20stroke%3D%27%231d1a18%27%20stroke-opacity%3D%27.4%27/%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2752%27%20r%3D%2711%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2746%27%20y%3D%2788%27%20width%3D%278%27%20height%3D%279%27%20rx%3D%272%27%20fill%3D%27%23b08a5a%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+      .timeline-item:nth-child(3n) .timeline-date::before {
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%23b8934a%27%20stroke-width%3D%272%27/%3E%3Cg%20transform%3D%27translate%2815%2015%29%20scale%28.7%29%27%3E%3Cpath%20d%3D%27M6%2040Q50%2012%2094%2040L88%2048Q50%2028%2012%2048Z%27%20fill%3D%27%231d1a18%27/%3E%3Crect%20x%3D%2718%27%20y%3D%2748%27%20width%3D%2764%27%20height%3D%276%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2754%27%20width%3D%277%27%20height%3D%2738%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2769%27%20y%3D%2754%27%20width%3D%277%27%20height%3D%2738%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2731%27%20y%3D%2760%27%20width%3D%2738%27%20height%3D%2732%27%20fill%3D%27%23f6f1e7%27%20stroke%3D%27%231d1a18%27%20stroke-width%3D%272%27/%3E%3Crect%20x%3D%2744%27%20y%3D%2768%27%20width%3D%2712%27%20height%3D%2724%27%20fill%3D%27%23b5281e%27/%3E%3Crect%20x%3D%2710%27%20y%3D%2792%27%20width%3D%2780%27%20height%3D%275%27%20fill%3D%27%236a635a%27/%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2722%27%20r%3D%273%27%20fill%3D%27%23b8934a%27/%3E%3C/g%3E%3C/svg%3E");
+      }
+    </style>
+    <noscript>
+      <style>
+        .invitation-cover {
+          display: none !important;
+        }
+        #mainContent {
+          opacity: 1 !important;
+        }
+        body.cover-active {
+          overflow: auto !important;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body class="cover-active">
+    <!-- ===== BÌA THIỆP ===== -->
+    <div class="invitation-cover" id="invitationCover">
+      <div class="cover-inner">
+        <div class="cover-ornament">❀</div>
+        <h1 class="cover-names" id="coverNames">
+          <span id="coverGroomShort"></span> <span class="amp">&</span>
+          <span id="coverBrideShort"></span>
+        </h1>
+        <div class="cover-eyebrow">Trân trọng kính mời</div>
+        <div class="cover-guest" id="coverGuest"></div>
+        <div class="cover-date" id="coverDate">21 · 06 · 2026</div>
+        <button class="cover-open-btn" id="openInvitationBtn" type="button">
+          <i class="fas fa-envelope-open-text"></i> Mở thiệp
+        </button>
+        <div class="cover-ornament">❀</div>
+      </div>
+    </div>
+
+    <!-- ===== NỘI DUNG THIỆP ===== -->
+    <main id="mainContent">
+      <!-- HERO -->
+      <header class="hero-full" id="heroSection">
+        <div class="hero-photo-wrap" id="heroPhotoWrap">
+          <img
+            class="hero-photo"
+            id="heroPhoto"
+            src=""
+            alt="Ảnh cưới của cô dâu và chú rể"
+          />
+          <div class="hero-photo-shade"></div>
+          <h1 class="hero-title" id="heroTitle"></h1>
+        </div>
+        <div class="hero-content">
+          <div class="hero-eyebrow">Trân trọng kính mời</div>
+          <div class="guest-name" id="guestName"></div>
+          <div class="hero-invite-line">Đến dự tiệc cưới</div>
+          <div class="hero-date-full" id="heroDateFull">21 THÁNG 6, 2026</div>
+          <div class="countdown-full" id="countdownFull">
+            <div class="cd-block">
+              <span class="cd-num" id="cdDays">00</span
+              ><span class="cd-lbl">Ngày</span>
+            </div>
+            <div class="cd-block">
+              <span class="cd-num" id="cdHours">00</span
+              ><span class="cd-lbl">Giờ</span>
+            </div>
+            <div class="cd-block">
+              <span class="cd-num" id="cdMinutes">00</span
+              ><span class="cd-lbl">Phút</span>
+            </div>
+            <div class="cd-block">
+              <span class="cd-num" id="cdSeconds">00</span
+              ><span class="cd-lbl">Giây</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="jp-band" aria-hidden="true" style="display: none">
+        <span class="jp-ic ic-fan"></span><span class="jp-ic ic-kimB"></span
+        ><span class="jp-ic ic-shrine"></span><span class="jp-ic ic-kimG"></span
+        ><span class="jp-ic ic-lantern"></span>
+      </div>
+
+      <!-- VENUE + RSVP -->
+      <section class="venue-section">
+        <div class="container">
+          <h2 class="section-heading">
+            <i class="fas fa-map-marker-alt"></i> Địa Điểm
+            <i class="fas fa-map-marker-alt"></i>
+          </h2>
+          <div class="section-sub">chung vui cùng cặp đôi</div>
+          <div class="venue-grid">
+            <div class="venue-info">
+              <h3 id="venueName">The Willow Estate</h3>
+              <div class="venue-address" id="venueAddress">
+                1234 Vineyard Lane
+              </div>
+              <div class="venue-time" id="venueTime">
+                <i class="fas fa-clock"></i> Đón khách 18:00
+              </div>
+              <div class="venue-time" id="venueTime-2">
+                <i class="fas fa-clock"></i> Khai tiệc 18:30
+              </div>
+            </div>
+            <div class="map-wrapper">
+              <iframe
+                id="mapFrame"
+                src=""
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Địa điểm tổ chức lễ cưới"
+              ></iframe>
+            </div>
+          </div>
+          <div class="venue-rsvp-wrapper">
+            <button class="venue-rsvp-btn" id="rsvpBtn">
+              <i class="fas fa-envelope-open-text"></i> Xác Nhận Tham Dự
+            </button>
+            <div class="venue-rsvp-note" id="rsvpDeadlineNote">
+              Thật tuyệt vời nếu có phản hồi trước ngày 1 tháng 6, 2026
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COUPLE -->
+      <section class="couple-section">
+        <div class="container">
+          <h2 class="section-heading">
+            <i class="fas fa-heart"></i> Cô Dâu & Chú Rể
+            <i class="fas fa-heart"></i>
+          </h2>
+          <div class="section-sub">hai trái tim, một hành trình</div>
+          <div class="couple-grid">
+            <div class="person-card">
+              <div class="person-photo-frame">
+                <img class="person-photo" id="bridePhoto" src="" alt="Cô Dâu" />
+              </div>
+              <div class="person-name" id="brideName">Olivia</div>
+              <div class="person-role" id="brideRole">Cô Dâu</div>
+              <p class="person-bio" id="brideBio"></p>
+            </div>
+            <div class="heart-connector"><i class="fas fa-heart"></i></div>
+            <div class="person-card">
+              <div class="person-photo-frame">
+                <img class="person-photo" id="groomPhoto" src="" alt="Chú Rể" />
+              </div>
+              <div class="person-name" id="groomName">James</div>
+              <div class="person-role" id="groomRole">Chú Rể</div>
+              <p class="person-bio" id="groomBio"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STORY -->
+      <section class="story-section">
+        <div class="container">
+          <h2 class="section-heading">
+            <i class="fas fa-book-open"></i> Chuyện Chúng Tôi
+            <i class="fas fa-book-open"></i>
+          </h2>
+          <div class="section-sub">
+            mỗi câu chuyện tình đều đẹp, nhưng chuyện của chúng tôi là câu
+            chuyện tôi yêu nhất
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </div>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="gallery-section">
+        <div class="container">
+          <h2 class="section-heading">
+            <i class="fas fa-camera"></i> Khoảnh Khắc
+            <i class="fas fa-camera"></i>
+          </h2>
+          <div class="section-sub">
+            một góc nhìn về hành trình của chúng tôi
+          </div>
+          <div class="masonry-gallery" id="masonryGallery"></div>
+        </div>
+      </section>
+
+      <div class="jp-band" aria-hidden="true" style="display: none">
+        <span class="jp-ic ic-lantern"></span
+        ><span class="jp-ic ic-sushi"></span><span class="jp-ic ic-fan"></span>
+      </div>
+
+      <!-- WISHES -->
+      <section class="wishes-section">
+        <div class="container">
+          <h2 class="section-heading">
+            <i class="fas fa-feather-alt"></i> Ước Nguyện
+            <i class="fas fa-feather-alt"></i>
+          </h2>
+          <div class="section-sub">gửi lời chúc cho cô dâu chú rể</div>
+          <div class="wishes-container">
+            <div class="wishes-form-box">
+              <input
+                type="text"
+                id="wishName"
+                placeholder="Tên của bạn"
+                maxlength="80"
+              />
+              <textarea
+                id="wishMessage"
+                placeholder="Viết lời chúc cho cô dâu & chú rể..."
+              ></textarea>
+              <button class="submit-wish-btn" id="submitWish" type="button">
+                <i class="fas fa-paper-plane"></i> Gửi
+              </button>
+            </div>
+            <div class="wishes-display-box" id="wishesDisplay">
+              <h3>Lời Chúc Từ Khách Mời</h3>
+              <div class="no-wishes" id="noWishesMsg">
+                ✨ Chưa có lời chúc nào — hãy là người đầu tiên gửi lời chúc!
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LUCKY BOX -->
+      <section class="lucky-section">
+        <div class="container">
+          <div class="lucky-box">
+            <i class="fas fa-gift"></i>
+            <h3 class="section-heading">Hộp Mừng Cưới</h3>
+            <p style="margin-bottom: 0">
+              Sự hiện diện của quý khách là món quà quý giá nhất, nếu bạn muốn
+              gửi tặng cặp đôi một món quà, mở phong bì bên dưới
+            </p>
+
+            <div class="envelope-container">
+              <div class="envelope-item" data-who="groom">
+                <div class="envelope">
+                  <div class="envelope-card">
+                    <div class="envelope-card-content">
+                      <div class="mini-names" id="miniNamesGroom">James</div>
+                      <div class="mini-heart">❤</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="envelope-label">Phong bì Chú Rể</div>
+                <div class="envelope-sublabel" id="groomBankLabel">
+                  Vietcombank
+                </div>
+              </div>
+
+              <div class="envelope-item" data-who="bride">
+                <div class="envelope">
+                  <div class="envelope-card">
+                    <div class="envelope-card-content">
+                      <div class="mini-names" id="miniNamesBride">Olivia</div>
+                      <div class="mini-heart">❤</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="envelope-label">Phong bì Cô Dâu</div>
+                <div class="envelope-sublabel" id="brideBankLabel">BIDV</div>
+              </div>
+            </div>
+
+            <div class="lucky-note">
+              <i class="fas fa-hand-pointer"></i> Nhấn vào phong bì để xem mã QR
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="footer-section">
+        <div class="footer-blessing">
+          Sự hiện diện của quý khách là niềm vinh hạnh cho gia đình chúng tôi.
+        </div>
+        <div class="footer-names" id="footerNames"></div>
+        <div class="footer-date" id="footerDate"></div>
+        <div class="footer-location" id="footerLocation">
+          <i class="fas fa-map-pin"></i> <span id="footerVenue"></span>
+        </div>
+      </footer>
+
+      <!-- CREDIT FOOTER -->
+      <div class="credit-footer">
+        <a href="https://vemotnha.com.vn" target="_blank" rel="noopener"
+          >vemotnha.com.vn</a
+        >
+      </div>
+
+      <!-- RSVP MODAL -->
+      <div class="rsvp-modal" id="rsvpModal">
+        <div class="rsvp-modal-content">
+          <button class="rsvp-modal-close" id="rsvpModalClose">&times;</button>
+          <div id="rsvpFormWrapper">
+            <h3>Xác Nhận Tham Dự</h3>
+            <div class="modal-sub" id="rsvpDeadlineSub">
+              vui lòng phản hồi trước ngày 1 tháng 6, 2026
+            </div>
+            <form id="rsvpForm">
+              <div class="rsvp-field">
+                <label for="rsvpName">Họ và Tên</label>
+                <input
+                  type="text"
+                  id="rsvpName"
+                  placeholder="Tên của bạn"
+                  required
+                  maxlength="80"
+                />
+              </div>
+              <div class="rsvp-field">
+                <label for="rsvpPhone">Số điện thoại (không bắt buộc)</label>
+                <input
+                  type="tel"
+                  id="rsvpPhone"
+                  placeholder="Số điện thoại"
+                  maxlength="20"
+                />
+              </div>
+              <div class="rsvp-field">
+                <label>Bạn có thể tham dự không?</label>
+                <div class="rsvp-attend-options">
+                  <div class="rsvp-attend-option">
+                    <input
+                      type="radio"
+                      name="attending"
+                      id="attendYes"
+                      value="yes"
+                      checked
+                    />
+                    <label for="attendYes"
+                      ><i class="fas fa-check-circle"></i> Vui Vẻ Tham Dự</label
+                    >
+                  </div>
+                  <div class="rsvp-attend-option">
+                    <input
+                      type="radio"
+                      name="attending"
+                      id="attendNo"
+                      value="no"
+                    />
+                    <label for="attendNo"
+                      ><i class="fas fa-times-circle"></i> Rất Tiếc Không
+                      Thể</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="rsvp-field guest-count-wrapper visible"
+                id="guestCountWrapper"
+              >
+                <label for="guestCount"
+                  >Số Người Tham Dự (bao gồm cả bạn)</label
+                >
+                <input
+                  type="number"
+                  id="guestCount"
+                  min="1"
+                  max="20"
+                  value="1"
+                />
+              </div>
+              <div class="rsvp-field">
+                <label for="rsvpNote">Ghi chú (không bắt buộc)</label>
+                <textarea
+                  id="rsvpNote"
+                  placeholder="Lời nhắn thêm..."
+                ></textarea>
+              </div>
+              <button type="submit" class="rsvp-submit-btn" id="rsvpSubmitBtn">
+                <i class="fas fa-paper-plane"></i> Gửi Xác Nhận
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- QR MODAL -->
+      <div class="qr-modal" id="qrModal">
+        <div class="qr-modal-content">
+          <button class="qr-modal-close" id="qrModalClose">&times;</button>
+          <div class="qr-modal-icon"><i class="fas fa-gift"></i></div>
+          <h3 id="qrModalTitle">Hộp Mừng Cưới</h3>
+          <div class="qr-modal-img-wrapper">
+            <img
+              class="qr-modal-img"
+              id="qrModalImg"
+              src=""
+              alt="Mã QR mừng cưới"
+            />
+          </div>
+          <div>
+            <button
+              class="qr-modal-download"
+              id="qrModalDownload"
+              type="button"
+            >
+              <i class="fas fa-download"></i> Tải mã QR
+            </button>
+          </div>
+          <div class="qr-modal-bank" id="qrModalBank">Vietcombank</div>
+          <div class="qr-modal-account" id="qrModalAccount">STK: 0000</div>
+          <div class="qr-modal-holder" id="qrModalHolder">Chủ tài khoản</div>
+          <div class="qr-modal-note">
+            <i class="fas fa-qrcode"></i> Quét mã bằng ứng dụng ngân hàng của
+            bạn
+          </div>
+        </div>
+      </div>
+
+      <!-- LIGHTBOX -->
+      <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Đóng">
+          &times;
+        </button>
+        <button
+          class="lightbox-nav lightbox-prev"
+          id="lightboxPrev"
+          aria-label="Ảnh trước"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <img
+          class="lightbox-img"
+          id="lightboxImg"
+          src=""
+          alt="ảnh kỷ niệm"
+          draggable="false"
+        />
+        <button
+          class="lightbox-nav lightbox-next"
+          id="lightboxNext"
+          aria-label="Ảnh tiếp theo"
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
+        <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
+      </div>
+    </main>
+
+    <audio id="bgMusic" loop preload="none"></audio>
+    <button
+      class="music-fab"
+      id="musicToggle"
+      type="button"
+      aria-label="Bật / tắt nhạc nền"
+    >
+      <span class="bar"><span></span><span></span><span></span></span>
+    </button>
+
+    <script>
+      /*
+    ==============================================================
+    BƯỚC A — DỮ LIỆU THIỆP
+    Backend sẽ gán dữ liệu thật vào window.__INVITATION_CONFIG__ và
+    window.__INVITATION_ID__ trước khi các script bên dưới chạy —
+    nên ở đây chỉ để null. DEFAULT_CONFIG / DEFAULT_INVITATION_ID
+    là dữ liệu mẫu, chỉ dùng khi backend chưa gán gì (chạy thử file
+    này độc lập) — xem hàm init() ở Bước B2.
+    ==============================================================
+  */
+      window.__INVITATION_CONFIG__ = null;
+      window.__INVITATION_ID__ = null;
+
+      const DEFAULT_CONFIG = {
+        groomShort: "Gia Bảo",
+        brideShort: "Minh Anh",
+        groomFull: "Nguyễn Gia Bảo",
+        brideFull: "Trần Minh Anh",
+        groomRole: "Trưởng Nam",
+        brideRole: "Út Nữ",
+        groomBio:
+          "Một nhạc sĩ trong tâm hồn và kỹ sư phần mềm vào ban ngày. Gia Bảo yêu thích leo núi, guitar cổ điển và làm cho Minh Anh cười.",
+        brideBio:
+          "Một người yêu sách, thích cà phê buổi sáng và những buổi đi dạo dưới mưa. Minh Anh làm kiến trúc sư và luôn tìm thấy vẻ đẹp trong những chi tiết nhỏ nhất.",
+        monogram: "B & A",
+        weddingDateISO: "2026-12-20T18:00:00",
+        rsvpDeadlineLabel: "1 tháng 12, 2026",
+        groomParents: {
+          father: "Ông Nguyễn Văn Long",
+          mother: "Bà Lê Thị Hồng",
+          address: "12 Trần Phú, Hải Châu, Đà Nẵng",
+        },
+        brideParents: {
+          father: "Ông Trần Văn Nam",
+          mother: "Bà Phạm Thị Lan",
+          address: "45 Lê Duẩn, Quận 1, TP.HCM",
+        },
+        ceremony: {
+          time: "09:00",
+          dateLabel: "20 · 12 · 2026",
+          lunar: "(Nhằm ngày 11 tháng 11 năm Bính Ngọ)",
+        },
+        reception: {
+          date: "2026-12-20",
+          welcomeTime: "17:30",
+          startTime: "18:00",
+          venueName: "The Adora Center",
+          address: "431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
+          mapQuery:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.2362995456515!2d106.6583!3d10.8005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175293e0d0a0c9f%3A0x0!2sThe%20Adora%20Center!5e0!3m2!1svi!2s!4v1700000000000",
+        },
+        schedule: [
+          { time: "17:30", label: "Đón khách" },
+          { time: "18:00", label: "Nghi thức cưới" },
+          { time: "18:20", label: "Khai tiệc" },
+          { time: "19:00", label: "Phục vụ tiệc chính" },
+          { time: "21:00", label: "Kết thúc tiệc" },
+        ],
+        gallery: [
+          "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&auto=format&fit=crop&q=85",
+          "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1400&auto=format&fit=crop&q=85",
+          "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?w=1400&auto=format&fit=crop&q=85",
+          "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1400&auto=format&fit=crop&q=85",
+          "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1400&auto=format&fit=crop&q=85",
+          "https://images.unsplash.com/photo-1507504031003-b417219a0fde?w=1400&auto=format&fit=crop&q=85",
+          "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1400&auto=format&fit=crop&q=85",
+          "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=1400&auto=format&fit=crop&q=85",
+        ],
+        gifts: {
+          groom: {
+            bank: "Vietcombank",
+            account: "0123 4567 89",
+            name: "NGUYEN GIA BAO",
+            qrImage:
+              "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=Vietcombank%20-%200123456789%20-%20NGUYEN%20GIA%20BAO&bgcolor=ffffff&color=1d1a18",
+          },
+          bride: {
+            bank: "BIDV",
+            account: "9876 5432 10",
+            name: "TRAN MINH ANH",
+            qrImage:
+              "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=BIDV%20-%209876543210%20-%20TRAN%20MINH%20ANH&bgcolor=ffffff&color=1d1a18",
+          },
+        },
+        musicUrl: "",
+        story: [
+          {
+            date: "Mùa thu 2021",
+            text: "Lần đầu gặp gỡ tại một quán cà phê nhỏ ven sông.",
+          },
+          {
+            date: "Mùa hè 2025",
+            text: "Lời cầu hôn bất ngờ dưới ánh hoàng hôn.",
+          },
+          {
+            date: "20.12.2026",
+            text: "Ngày chúng tôi chính thức nên duyên vợ chồng.",
+          },
+        ],
+        photos: {
+          coverPhoto:
+            "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&auto=format&fit=crop&q=85",
+          groomPhoto:
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80",
+          bridePhoto:
+            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&auto=format&fit=crop&q=80",
+        },
+      };
+
+      const DEFAULT_INVITATION_ID = "d8795988-035b-445c-813f-e1e5ff5f9f9e";
+    </script>
+
+    <script>
+      /*
+    ==============================================================
+    BƯỚC B — ĐỌC DỮ LIỆU & HIỂN THỊ (render)
+    Chỉ đọc từ config (window.__INVITATION_CONFIG__ hoặc DEFAULT_CONFIG).
+    Phần nào rỗng thì tự ẩn thay vì hiện chữ trống.
+    ==============================================================
+  */
+
+      const layPhanTu = (id) => document.getElementById(id);
+      const THU = [
+        "Chủ Nhật",
+        "Thứ Hai",
+        "Thứ Ba",
+        "Thứ Tư",
+        "Thứ Năm",
+        "Thứ Sáu",
+        "Thứ Bảy",
+      ];
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = String(text == null ? "" : text);
+        return div.innerHTML;
+      }
+
+      // "2026-12-20" -> "20 · 12 · 2026"
+      function dinhDangNgayCham(chuoiNgay) {
+        const [nam, thang, ngay] = chuoiNgay.split("-");
+        return `${ngay} · ${thang} · ${nam}`;
+      }
+
+      // "2026-12-20" -> "Chủ Nhật, ngày 20 tháng 12 năm 2026"
+      function dinhDangNgayDai(chuoiNgay) {
+        const d = new Date(chuoiNgay + "T00:00:00");
+        const [nam, thang, ngay] = chuoiNgay.split("-");
+        return `${THU[d.getDay()]}, ngày ${ngay} tháng ${thang} năm ${nam}`;
+      }
+
+      let demNguocTimer;
+      function batDauDemNguoc(iso) {
+        const dich = new Date(iso).getTime();
+        const pad = (n) => String(n).padStart(2, "0");
+        function capNhat() {
+          const con = Math.max(0, dich - Date.now());
+          layPhanTu("cdDays").textContent = pad(Math.floor(con / 86400000));
+          layPhanTu("cdHours").textContent = pad(
+            Math.floor((con % 86400000) / 3600000),
+          );
+          layPhanTu("cdMinutes").textContent = pad(
+            Math.floor((con % 3600000) / 60000),
+          );
+          layPhanTu("cdSeconds").textContent = pad(
+            Math.floor((con % 60000) / 1000),
+          );
+        }
+        capNhat();
+        clearInterval(demNguocTimer);
+        demNguocTimer = setInterval(capNhat, 1000);
+      }
+
+      function render(config) {
+        const musicBtn = layPhanTu("musicToggle");
+        const musicEl = layPhanTu("bgMusic");
+
+        if (config.musicUrl) {
+          musicEl.src = config.musicUrl;
+          musicBtn.classList.add("show");
+          musicBtn.classList.remove("paused");
+        } else {
+          musicEl.removeAttribute("src");
+          musicBtn.classList.remove("show");
+        }
+
+        const tenCapDoi = `${config.groomShort} & ${config.brideShort}`;
+        const tenChuRe = `${config.groomShort}`;
+        const tenCoDau = `${config.brideShort}`;
+        const ngayCham = dinhDangNgayCham(config.reception.date);
+        const gioDon = `${config.reception.welcomeTime}`;
+        const gioBatDau = `${config.reception.startTime}`;
+
+        // --- Màn bìa ---
+        layPhanTu("coverGroomShort").textContent = config.groomShort;
+        layPhanTu("coverBrideShort").textContent = config.brideShort;
+        layPhanTu("coverDate").textContent = ngayCham;
+
+        // --- 1. Hero + ảnh cưới + đếm ngược ---
+        layPhanTu("heroTitle").innerHTML =
+          `${escapeHtml(config.groomShort)} <span class="amp">&amp;</span> ${escapeHtml(config.brideShort)}`;
+        const heroSection = layPhanTu("heroSection");
+        const heroPhotoWrap = layPhanTu("heroPhotoWrap");
+        const anhHero =
+          config.photos?.coverPhoto ||
+          (Array.isArray(config.gallery) ? config.gallery.find(Boolean) : "") ||
+          "";
+        if (anhHero) {
+          layPhanTu("heroPhoto").src = anhHero;
+          heroPhotoWrap.style.display = "";
+          heroSection.classList.add("has-photo");
+          heroSection.classList.remove("no-photo");
+        } else {
+          heroPhotoWrap.style.display = "none";
+          heroSection.classList.add("no-photo");
+          heroSection.classList.remove("has-photo");
+          // Không có ảnh: đưa tên cô dâu/chú rể về lại khối nội dung để không bị ẩn mất
+          const heroContent = heroSection.querySelector(".hero-content");
+          heroContent.insertBefore(
+            layPhanTu("heroTitle"),
+            heroContent.firstChild,
+          );
+        }
+        layPhanTu("heroDateFull").textContent = `${ngayCham}`;
+        batDauDemNguoc(config.weddingDateISO);
+
+        // --- 2. Địa điểm + bản đồ + hạn RSVP ---
+        layPhanTu("venueName").textContent = config.reception.venueName;
+        layPhanTu("venueTime").innerHTML =
+          `<i class="fas fa-clock"></i> Đón khách ${escapeHtml(gioDon)}`;
+        layPhanTu("venueTime-2").innerHTML =
+          `<i class="fas fa-clock"></i> Khai tiệc ${escapeHtml(gioBatDau)}`;
+        layPhanTu("venueAddress").innerHTML =
+          `${escapeHtml(config.reception.address)}`;
+
+        // Chỉ nhúng bản đồ khi có mapQuery — tránh hiện khung trống nếu chưa cập nhật
+        if (config.reception.mapQuery) {
+          layPhanTu("mapFrame").src = config.reception.mapQuery;
+        } else {
+          document.querySelector(".map-wrapper").style.display = "none";
+          document.querySelector(".venue-grid").style.gridTemplateColumns =
+            "1fr";
+        }
+
+        if (config.rsvpDeadlineLabel) {
+          layPhanTu("rsvpDeadlineNote").textContent =
+            `Thật tuyệt vời nếu có phản hồi trước ngày ${config.rsvpDeadlineLabel}`;
+          layPhanTu("rsvpDeadlineSub").textContent =
+            `Thật tuyệt vời nếu có phản hồi trước ngày ${config.rsvpDeadlineLabel}`;
+        } else {
+          layPhanTu("rsvpDeadlineNote").style.display = "none";
+          layPhanTu("rsvpDeadlineSub").style.display = "none";
+        }
+
+        // --- 3. Cô dâu & chú rể ---
+        layPhanTu("brideName").textContent =
+          config.brideFull || config.brideShort;
+        layPhanTu("groomName").textContent =
+          config.groomFull || config.groomShort;
+        layPhanTu("brideRole").textContent = config.brideRole || "Cô Dâu";
+        layPhanTu("groomRole").textContent = config.groomRole || "Chú Rể";
+        layPhanTu("brideBio").textContent = config.brideBio || "";
+        layPhanTu("groomBio").textContent = config.groomBio || "";
+        if (config.photos?.bridePhoto)
+          layPhanTu("bridePhoto").src = config.photos.bridePhoto;
+        if (config.photos?.groomPhoto)
+          layPhanTu("groomPhoto").src = config.photos.groomPhoto;
+
+        // --- 4. Chuyện chúng tôi (timeline) ---
+        const timeline = layPhanTu("timeline");
+        const cauChuyen = Array.isArray(config.story) ? config.story : [];
+        const anhAlbum = Array.isArray(config.gallery) ? config.gallery : [];
+        if (cauChuyen.length === 0) {
+          timeline.style.display = "none";
+        } else {
+          cauChuyen.forEach((muc, idx) => {
+            const anh =
+              muc.photo ||
+              anhAlbum[idx % Math.max(1, anhAlbum.length)] ||
+              config.photos?.coverPhoto ||
+              "";
+            const div = document.createElement("div");
+            div.className = "timeline-item";
+            div.innerHTML = `
+          <div class="timeline-content">
+            <span class="timeline-date">${escapeHtml(muc.date)}</span>
+            <h3 class="timeline-title">${escapeHtml(muc.title || "Khoảnh khắc")}</h3>
+            <p class="timeline-desc">${escapeHtml(muc.text)}</p>
+          </div>
+          <div class="timeline-image">
+            ${anh ? `<img src="${escapeHtml(anh)}" alt="${escapeHtml(muc.date)}">` : ""}
+          </div>`;
+            timeline.appendChild(div);
+          });
+        }
+
+        // --- 5. Album ảnh (masonry) + lightbox ---
+        const luoiAnh = layPhanTu("masonryGallery");
+        if (anhAlbum.length > 0) {
+          const kichCo = [
+            "size-hero",
+            "size-tall",
+            "size-normal",
+            "size-small",
+            "size-wide",
+            "size-mid",
+            "size-mid",
+            "size-wide",
+          ];
+          const galleryUrls = anhAlbum;
+          anhAlbum.forEach((url, idx) => {
+            const the = document.createElement("div");
+            the.className = "gallery-card " + kichCo[idx % kichCo.length];
+            the.dataset.idx = String(idx);
+            the.innerHTML = `<img src="${escapeHtml(url)}" alt="Ảnh cưới ${idx + 1}" loading="lazy"><div class="overlay">Khoảnh khắc ${idx + 1}</div>`;
+            luoiAnh.appendChild(the);
+          });
+
+          const galleryLightbox = layPhanTu("lightbox");
+          const galleryImage = layPhanTu("lightboxImg");
+          const galleryCount = layPhanTu("lightboxCounter");
+          let galleryCurrent = 0;
+
+          function capNhatGallery() {
+            galleryImage.src = galleryUrls[galleryCurrent];
+            galleryImage.alt = `Ảnh cưới ${galleryCurrent + 1}`;
+            galleryCount.textContent = `${galleryCurrent + 1} / ${galleryUrls.length}`;
+            galleryLightbox.classList.toggle(
+              "single-image",
+              galleryUrls.length <= 1,
+            );
+          }
+          function openGallery(idx) {
+            galleryCurrent = idx;
+            capNhatGallery();
+            galleryLightbox.classList.add("active");
+            document.body.style.overflow = "hidden";
+          }
+          function closeGallery() {
+            galleryLightbox.classList.remove("active");
+            document.body.style.overflow = "";
+          }
+          function showPrev() {
+            galleryCurrent =
+              (galleryCurrent - 1 + galleryUrls.length) % galleryUrls.length;
+            capNhatGallery();
+          }
+          function showNext() {
+            galleryCurrent = (galleryCurrent + 1) % galleryUrls.length;
+            capNhatGallery();
+          }
+
+          luoiAnh.querySelectorAll(".gallery-card").forEach((the) => {
+            the.addEventListener("click", () =>
+              openGallery(Number(the.dataset.idx)),
+            );
+          });
+
+          layPhanTu("lightboxClose").addEventListener("click", closeGallery);
+          layPhanTu("lightboxPrev").addEventListener("click", (e) => {
+            e.stopPropagation();
+            showPrev();
+          });
+          layPhanTu("lightboxNext").addEventListener("click", (e) => {
+            e.stopPropagation();
+            showNext();
+          });
+          galleryLightbox.addEventListener("click", (event) => {
+            if (event.target === galleryLightbox) closeGallery();
+          });
+
+          // Vuốt ngang trên điện thoại để chuyển ảnh
+          let cham = { x: 0, y: 0 };
+          galleryLightbox.addEventListener(
+            "touchstart",
+            (e) => {
+              cham = {
+                x: e.changedTouches[0].screenX,
+                y: e.changedTouches[0].screenY,
+              };
+            },
+            { passive: true },
+          );
+          galleryLightbox.addEventListener(
+            "touchend",
+            (e) => {
+              const dx = e.changedTouches[0].screenX - cham.x;
+              const dy = e.changedTouches[0].screenY - cham.y;
+              if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+                dx < 0 ? showNext() : showPrev();
+              }
+            },
+            { passive: true },
+          );
+
+          document.addEventListener("keydown", (event) => {
+            if (!galleryLightbox.classList.contains("active")) return;
+            if (event.key === "Escape") closeGallery();
+            if (event.key === "ArrowLeft") showPrev();
+            if (event.key === "ArrowRight") showNext();
+          });
+        } else {
+          luoiAnh.style.display = "none";
+        }
+
+        // --- 6. Xác nhận tham dự — mở popup RSVP, gửi kết quả về backend ---
+        const modalRsvp = layPhanTu("rsvpModal");
+        const rsvpForm = layPhanTu("rsvpForm");
+        const oSoLuong = layPhanTu("guestCountWrapper");
+        const rsvpSoLuong = layPhanTu("guestCount");
+        function dongRsvp() {
+          modalRsvp.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+
+        layPhanTu("rsvpBtn").addEventListener("click", () => {
+          rsvpForm.reset();
+          if (tenKhach) layPhanTu("rsvpName").value = tenKhach; // điền sẵn tên khách từ URL
+          oSoLuong.classList.add("visible");
+          modalRsvp.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+        layPhanTu("rsvpModalClose").addEventListener("click", dongRsvp);
+        modalRsvp.addEventListener("click", (e) => {
+          if (e.target === modalRsvp) dongRsvp(); // bấm ra ngoài card cũng đóng được
+        });
+
+        document
+          .querySelectorAll('input[name="attending"]')
+          .forEach((radio) => {
+            radio.addEventListener("change", () => {
+              const coDen = radio.value === "yes";
+              if (radio.checked) {
+                oSoLuong.classList.toggle("visible", coDen);
+                rsvpSoLuong.required = coDen;
+              }
+            });
+          });
+
+        rsvpForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const trangThai = document.querySelector(
+            'input[name="attending"]:checked',
+          ).value;
+          const ten = layPhanTu("rsvpName").value.trim();
+          const soDienThoai = layPhanTu("rsvpPhone").value.trim();
+          const soLuong =
+            trangThai === "yes" ? parseInt(rsvpSoLuong.value, 10) || 1 : 0;
+          const ghiChu = layPhanTu("rsvpNote").value.trim();
+          if (!ten) {
+            alert("Vui lòng điền tên của bạn.");
+            return;
+          }
+
+          const nutGui = layPhanTu("rsvpSubmitBtn");
+          nutGui.disabled = true;
+
+          fetch(`/api/invitations/${encodeURIComponent(invitationId)}/rsvp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: ten,
+              phone: soDienThoai,
+              attendanceStatus: trangThai === "yes" ? "attending" : "declined",
+              guestCount: soLuong || 1,
+              mealPreference: "Bình thường",
+              message: ghiChu,
+            }),
+          })
+            .then(async (response) => {
+              if (!response.ok) throw new Error("Unable to save RSVP");
+              alert("Cảm ơn bạn đã gửi xác nhận!");
+              e.target.reset();
+              dongRsvp();
+            })
+            .catch((error) => {
+              console.error("Unable to save RSVP:", error);
+              alert("Không thể gửi xác nhận lúc này. Vui lòng thử lại.");
+            })
+            .finally(() => {
+              nutGui.disabled = false;
+            });
+        });
+
+        // --- 7. Mừng cưới: tên rút gọn trên phong bì + nhãn ngân hàng ---
+        layPhanTu("miniNamesGroom").textContent = tenChuRe;
+        layPhanTu("miniNamesBride").textContent = tenCoDau;
+        if (config.gifts?.groom?.bank)
+          layPhanTu("groomBankLabel").textContent = config.gifts.groom.bank;
+        if (config.gifts?.bride?.bank)
+          layPhanTu("brideBankLabel").textContent = config.gifts.bride.bank;
+
+        // --- Phong bì: bấm phong bì của ai thì CHỈ phong bì đó bung nở,
+        //     và popup CHỈ hiển thị thông tin người đó ---
+        const modalQr = layPhanTu("qrModal");
+
+        // who: 'groom' hoặc 'bride'
+        function moHopQua(who, phongBi) {
+          const laChuRe = who === "groom";
+          const taiKhoan = laChuRe ? config.gifts?.groom : config.gifts?.bride;
+          const ten = laChuRe ? config.groomShort : config.brideShort;
+          if (!taiKhoan) return;
+
+          phongBi.classList.add("bung-no");
+
+          layPhanTu("qrModalTitle").textContent = `Mừng cưới ${ten}`;
+          layPhanTu("qrModalBank").textContent = taiKhoan.bank || "";
+          layPhanTu("qrModalAccount").textContent = taiKhoan.account
+            ? `STK: ${taiKhoan.account}`
+            : "";
+          layPhanTu("qrModalHolder").textContent = taiKhoan.name || "";
+          const anhQr = layPhanTu("qrModalImg");
+          anhQr.src = taiKhoan.qrImage || "";
+          anhQr.parentElement.style.display = taiKhoan.qrImage ? "" : "none";
+          const nutTaiQr = layPhanTu("qrModalDownload");
+          if (nutTaiQr) {
+            nutTaiQr.style.display = taiKhoan.qrImage ? "" : "none";
+            nutTaiQr.dataset.tenFile = `ma-qr-mung-cuoi-${who}`;
+          }
+
+          setTimeout(() => {
+            modalQr.classList.add("active");
+            document.body.style.overflow = "hidden";
+          }, 380);
+        }
+
+        function dongHopQua() {
+          modalQr.classList.remove("active");
+          document.body.style.overflow = "";
+          document
+            .querySelectorAll(".envelope-item")
+            .forEach((p) => p.classList.remove("bung-no"));
+        }
+
+        document.querySelectorAll(".envelope-item").forEach((phongBi) => {
+          phongBi.addEventListener("click", () =>
+            moHopQua(phongBi.dataset.who, phongBi),
+          );
+        });
+        layPhanTu("qrModalClose").addEventListener("click", dongHopQua);
+
+        // Tải mã QR về máy
+        const nutTaiQr = layPhanTu("qrModalDownload");
+        if (nutTaiQr)
+          nutTaiQr.addEventListener("click", async () => {
+            const anhQr = layPhanTu("qrModalImg");
+            const nguon = anhQr?.src;
+            if (!nguon) return;
+            const tenFile = `${nutTaiQr.dataset.tenFile || "ma-qr-mung-cuoi"}.png`;
+            const taiBlob = (blob) => {
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = tenFile;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              setTimeout(() => URL.revokeObjectURL(url), 1000);
+            };
+            try {
+              const res = await fetch(nguon, { mode: "cors" });
+              if (!res.ok) throw new Error("fetch failed");
+              taiBlob(await res.blob());
+            } catch (err) {
+              // Ảnh khác nguồn chặn tải trực tiếp -> mở tab mới để người dùng lưu
+              window.open(nguon, "_blank", "noopener");
+            }
+          });
+
+        modalQr.addEventListener("click", (e) => {
+          if (e.target === modalQr) dongHopQua(); // bấm ra ngoài card cũng đóng được
+        });
+
+        // Esc đóng popup đang mở (lightbox tự xử lý Esc ở phần album)
+        document.addEventListener("keydown", (e) => {
+          if (e.key !== "Escape") return;
+          if (modalQr.classList.contains("active")) dongHopQua();
+          else if (modalRsvp.classList.contains("active")) dongRsvp();
+        });
+
+        // --- 8. Chân trang ---
+        layPhanTu("footerNames").textContent = tenCapDoi;
+        layPhanTu("footerDate").textContent = dinhDangNgayDai(
+          config.reception.date,
+        );
+        layPhanTu("footerVenue").textContent =
+          `${config.reception.venueName} · ${config.reception.address}`;
+      }
+
+      /*
+    ==============================================================
+    BƯỚC B2 — init(): lấy dữ liệu backend đã gán (nếu có), nếu
+    chưa có thì dùng dữ liệu mẫu DEFAULT_CONFIG / DEFAULT_INVITATION_ID
+    (khai báo ở Bước A) để file vẫn chạy được khi xem thử độc lập.
+    `config` và `invitationId` là 2 biến duy nhất được dùng để
+    render và gọi API bên dưới — không đọc thẳng window.__...__ nữa.
+    ==============================================================
+  */
+      let config;
+      let invitationId;
+
+      function init() {
+        config = window.__INVITATION_CONFIG__ || DEFAULT_CONFIG;
+        invitationId = window.__INVITATION_ID__ || DEFAULT_INVITATION_ID;
+        render(config);
+        capNhatTheChiaSe(config);
+      }
+
+      /*
+    ==============================================================
+    BƯỚC B3 — CẬP NHẬT THẺ CHIA SẺ (Open Graph) THEO DỮ LIỆU THẬT
+    Thẻ og:* tĩnh trong <head> là bản mặc định dành cho crawler của
+    Zalo/Facebook (chúng không chạy JavaScript). Hàm dưới đây ghi đè
+    lại bằng tên cô dâu/chú rể, địa điểm và ảnh bìa thật của thiệp.
+    Nhớ: og:image luôn phải là URL tuyệt đối https.
+    ==============================================================
+  */
+      const ANH_BIA_MAC_DINH =
+        "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp";
+
+      // Thêm thẻ <meta> nếu chưa có, cập nhật nếu đã có.
+      function datTheMeta(thuocTinh, ten, noiDung) {
+        let the = document.head.querySelector(`meta[${thuocTinh}="${ten}"]`);
+        if (!the) {
+          the = document.createElement("meta");
+          the.setAttribute(thuocTinh, ten);
+          document.head.appendChild(the);
+        }
+        the.setAttribute("content", noiDung);
+      }
+
+      // Xoá hết các thẻ <meta> khớp (dùng khi thông số cũ không còn đúng nữa).
+      function xoaTheMeta(thuocTinh, ten) {
+        document.head
+          .querySelectorAll(`meta[${thuocTinh}="${ten}"]`)
+          .forEach((the) => the.remove());
+      }
+
+      function tuyetDoiHoaUrl(url) {
+        try {
+          return new URL(url, window.location.href).href;
+        } catch {
+          return ANH_BIA_MAC_DINH;
+        }
+      }
+
+      // Ảnh bìa để chia sẻ: ưu tiên ảnh thật của thiệp, cuối cùng mới dùng ảnh mặc định.
+      function anhBiaChiaSe(config) {
+        const anh =
+          config?.photos?.coverPhoto ||
+          (Array.isArray(config?.gallery)
+            ? config.gallery.find(Boolean)
+            : "") ||
+          ANH_BIA_MAC_DINH;
+        return tuyetDoiHoaUrl(anh);
+      }
+
+      function capNhatTheChiaSe(config) {
+        const tenCapDoi = [config.groomShort, config.brideShort]
+          .filter(Boolean)
+          .join(" & ");
+        const tieuDe = tenCapDoi
+          ? `Thiệp mời cưới ${tenCapDoi}`
+          : "Thiệp mời cưới";
+        const diaDiem = [config.reception?.venueName, config.reception?.address]
+          .filter(Boolean)
+          .join(", ");
+        const moTa =
+          `Trân trọng kính mời bạn đến dự lễ thành hôn của ${tenCapDoi || "chúng tôi"}` +
+          (diaDiem ? ` tại ${diaDiem}` : "") +
+          ". Nhấn để mở thiệp và xem chi tiết.";
+        const url =
+          window.location.origin +
+          window.location.pathname +
+          window.location.search;
+        const anh = anhBiaChiaSe(config);
+
+        document.title = tieuDe;
+        datTheMeta("property", "og:title", tieuDe);
+        datTheMeta("property", "og:description", moTa);
+        datTheMeta("name", "twitter:title", tieuDe);
+        datTheMeta("name", "twitter:description", moTa);
+        datTheMeta("property", "og:url", url);
+
+        // Ảnh bìa thật (khách tự upload) có kích thước/định dạng khác ảnh
+        // mặc định trong <head>, nên bỏ các thẻ mô tả ảnh cũ trước khi thay.
+        [
+          "og:image",
+          "og:image:secure_url",
+          "og:image:type",
+          "og:image:width",
+          "og:image:height",
+          "og:image:alt",
+        ].forEach((ten) => xoaTheMeta("property", ten));
+        datTheMeta("property", "og:image", anh);
+        datTheMeta("property", "og:image:secure_url", anh);
+        datTheMeta("property", "og:image:alt", `Ảnh cưới ${tenCapDoi}`.trim());
+        datTheMeta("name", "twitter:image", anh);
+
+        // Link chuẩn của thiệp.
+        let canonical = document.head.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+          canonical = document.createElement("link");
+          canonical.setAttribute("rel", "canonical");
+          document.head.appendChild(canonical);
+        }
+        canonical.setAttribute("href", url);
+      }
+
+      init();
+
+      /*
+    ==============================================================
+    BƯỚC C — LỜI CHÚC (gọi API thật)
+    invitationId (lấy ở init() phía trên) dùng để xác định thiệp
+    nào khi gọi API.
+    ==============================================================
+  */
+
+      const wishes = [];
+
+      // Vẽ danh sách lời chúc hiện có trong mảng `wishes` ra DOM.
+      // Dùng textContent (không phải innerHTML) để tránh chèn mã độc
+      // từ nội dung do khách nhập vào.
+      function renderWishes() {
+        const box = layPhanTu("wishesDisplay");
+        box.querySelectorAll(".wish-item").forEach((el) => el.remove());
+        const chuaCo = layPhanTu("noWishesMsg");
+        chuaCo.style.display = wishes.length === 0 ? "block" : "none";
+
+        wishes.forEach((wish) => {
+          const div = document.createElement("div");
+          div.className = "wish-item";
+
+          const ten = document.createElement("div");
+          ten.className = "wish-name";
+          ten.textContent = wish.name;
+
+          const noiDung = document.createElement("div");
+          noiDung.className = "wish-message";
+          noiDung.textContent = wish.message;
+
+          div.appendChild(ten);
+          div.appendChild(noiDung);
+          box.appendChild(div);
+        });
+      }
+
+      async function loadWishes() {
+        if (!invitationId) return;
+        try {
+          const response = await fetch(
+            `/api/invitations/${encodeURIComponent(invitationId)}/wishes`,
+          );
+          if (!response.ok) throw new Error("Unable to load wishes");
+          const data = await response.json();
+          wishes.splice(0, wishes.length, ...(data.wishes || []));
+          renderWishes();
+        } catch (error) {
+          console.error("Unable to load invitation wishes:", error);
+        }
+      }
+
+      loadWishes();
+
+      layPhanTu("submitWish").addEventListener("click", () => {
+        const inputTen = layPhanTu("wishName");
+        const inputLoiChuc = layPhanTu("wishMessage");
+        const name = inputTen.value.trim();
+        const msg = inputLoiChuc.value.trim();
+        if (!name || !msg) {
+          alert("Vui lòng điền cả tên và lời chúc của bạn.");
+          return;
+        }
+
+        const submitButton = layPhanTu("submitWish");
+        submitButton.disabled = true;
+
+        fetch(`/api/invitations/${encodeURIComponent(invitationId)}/wishes`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, message: msg }),
+        })
+          .then(async (response) => {
+            if (!response.ok) throw new Error("Unable to save wish");
+            const data = await response.json();
+            wishes.unshift(data.wish);
+            renderWishes();
+            inputTen.value = "";
+            inputLoiChuc.value = "";
+          })
+          .catch((error) => {
+            console.error("Unable to save invitation wish:", error);
+            alert("Không thể gửi lời chúc lúc này. Vui lòng thử lại.");
+          })
+          .finally(() => {
+            submitButton.disabled = false;
+          });
+      });
+
+      /*
+    ==============================================================
+    BƯỚC D — TƯƠNG TÁC "MỞ THIỆP" + CÁ NHÂN HÓA THEO KHÁCH (URL)
+    ==============================================================
+  */
+      const thamSo = new URLSearchParams(window.location.search);
+      const tenKhach = thamSo.get("guest")
+        ? thamSo
+            .get("guest")
+            .trim()
+            .split(/\s+/)
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")
+        : "";
+      if (tenKhach) {
+        layPhanTu("coverGuest").textContent = tenKhach;
+        layPhanTu("guestName").textContent = tenKhach;
+      }
+
+      const manBia = layPhanTu("invitationCover");
+      const nutMo = layPhanTu("openInvitationBtn");
+      const musicEl = layPhanTu("bgMusic");
+      const musicBtn = layPhanTu("musicToggle");
+
+      function playMusicIfAvailable() {
+        if (!musicEl.src) return;
+        musicEl
+          .play()
+          .then(() => {
+            musicBtn.classList.remove("paused");
+          })
+          .catch(() => {
+            musicBtn.classList.add("paused");
+          });
+      }
+
+      musicBtn.addEventListener("click", () => {
+        if (musicEl.paused) {
+          musicEl
+            .play()
+            .then(() => musicBtn.classList.remove("paused"))
+            .catch(() => {});
+        } else {
+          musicEl.pause();
+          musicBtn.classList.add("paused");
+        }
+      });
+
+      function moThiep() {
+        manBia.classList.add("opening"); // bắt đầu hiệu ứng mờ dần + phóng to của màn bìa
+        document.body.classList.add("opened"); // nội dung thiệp mờ dần hiện ra
+        playMusicIfAvailable();
+        setTimeout(() => {
+          manBia.style.display = "none";
+          document.body.classList.remove("cover-active");
+          window.scrollTo(0, 0);
+        }, 900); // khớp với thời lượng transition ở CSS (.invitation-cover)
+      }
+
+      nutMo.addEventListener("click", () => {
+        moThiep();
+        confetti({
+          particleCount: 200,
+          spread: 80,
+          origin: { y: 0.6 },
+        });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  </body>
+</html>

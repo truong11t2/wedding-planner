@@ -11,17 +11,17 @@
 <style>
   /* ============ DESIGN TOKENS ============ */
   :root{
-    --pine-dark:   #4B2E12;
-    --pine:        #7F5210;
-    --pine-mid:    #B47A1B;
-    --gold:        #C9911E;
-    --gold-light:  #D8A92B;
-    --gold-pale:   #FFF8E2;
-    --gold-deep:   #5D390C;
-    --ivory:       #FFFDF9;
-    --ivory-soft:  #FFF3D7;
-    --ink:         #1F1207;
-    --ink-soft:    #4B3318;
+    --wine-dark:   #201507;   /* darker base for high contrast */
+    --wine:        #654511;   /* stronger brown text/base */
+    --wine-mid:    #7F4F12;   /* richer mid-brown */
+    --gold:        #be8426;   /* stronger gold for lines and accents */
+    --gold-light:  #F7D991;   /* warm light highlight */
+    --gold-pale:   #FFFDF6;   /* high-readability light field */
+    --gold-deep:   #4E2B00;   /* deep golden-brown */
+    --ivory:       #FFFDF9;   /* pale invite card background */
+    --ivory-soft:  #FCEBC8;   /* soft warm paper */
+    --ink:         #22150A;   /* near-black ink for readable text */
+    --ink-soft:    #563B16;   /* softer brown text */
 
     --font-display: 'Playfair Display', serif;
     --font-script:  'Cormorant Garamond', serif;
@@ -32,14 +32,14 @@
   html{ scroll-behavior:smooth; }
   body{
     font-family: var(--font-body);
-    color: var(--ink);
-    background: linear-gradient(180deg, #5D3C16 0%, #7B5218 100%);
+    color: var(--gold-pale);
+    background: var(--wine-dark);
     -webkit-font-smoothing: antialiased;
   }
   img{ max-width:100%; display:block; }
   button{ font-family:inherit; cursor:pointer; border:none; background:none; }
 
-  ::selection{ background: var(--gold-light); color:var(--pine-dark); }
+  ::selection{ background: var(--gold-light); color:var(--wine-dark); }
 
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
@@ -53,9 +53,9 @@
     display:flex;
     justify-content:center;
     background:
-      radial-gradient(ellipse at 50% -10%, rgba(255,214,110,0.22) 0%, transparent 60%),
-      repeating-linear-gradient(135deg, rgba(216,177,90,0.06) 0px, rgba(216,177,90,0.06) 1px, transparent 1px, transparent 26px),
-      linear-gradient(180deg, #5D3C16 0%, #7B5218 100%);
+      radial-gradient(ellipse at 50% -10%, #201507 0%, transparent 60%),
+      repeating-linear-gradient(135deg, rgba(201,162,75,0.05) 0px, rgba(201,162,75,0.05) 1px, transparent 1px, transparent 26px);
+      background-color: var(--wine-dark);
   }
   .card{
     width:100%;
@@ -90,16 +90,17 @@
     background:linear-gradient(90deg, transparent, var(--gold), transparent);
   }
   .eyebrow{
-    font-family:var(--font-body); font-size:11px; letter-spacing:.32em; font-weight:600;
-    text-transform:uppercase; color:var(--gold-deep);
+    font-family:var(--font-body); font-size:12px; letter-spacing:.32em; font-weight:600;
+    text-transform:uppercase; color:var(--gold);
   }
   .section-title{
     font-family:var(--font-display); font-weight:600; font-size:22px;
-    text-align:center; color:var(--pine-dark); margin-top:8px;
+    text-align:center; color:var(--wine); margin-top:8px;
   }
   .fade-in{ opacity:0; transform:translateY(18px); transition:opacity .8s ease, transform .8s ease; }
   .fade-in.in-view{ opacity:1; transform:translateY(0); }
 
+  /* corner flourish (signature element) */
   .flourish{ width:120px; height:auto; }
   .flourish path{
     fill:none; stroke:var(--gold); stroke-width:1.4; stroke-linecap:round;
@@ -115,7 +116,7 @@
     position:fixed; inset:0; z-index:50;
     display:flex; align-items:center; justify-content:center;
     background:
-      radial-gradient(ellipse at 50% 20%, #D6A940 0%, #5B370E 70%);
+      radial-gradient(ellipse at 50% 20%, var(--wine-mid) 0%, var(--wine-dark) 70%);
     color:var(--gold-pale);
     text-align:center;
     transition: transform 1s cubic-bezier(.65,0,.35,1), opacity .9s ease;
@@ -131,6 +132,13 @@
   }
   @media (min-width:900px){ .cover-inner{ max-width:420px; padding:48px 40px; } .cover-names{ font-size:48px; } }
   .cover-eyebrow{ font-size:12px; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-top:28px; margin-bottom:14px; }
+  .cover-guest{
+    display:none;
+    margin-top:10px; margin-bottom:8px;
+    font-family:var(--font-display); font-size:22px; letter-spacing:.12em;
+    text-transform:capitalize; font-weight:500; color:var(--gold-light);
+    text-shadow:0 0 18px rgba(232,205,130,.25);
+  }
   .cover-names{
     font-family:var(--font-script); font-style:italic; font-weight:500;
     font-size:40px; line-height:1.15; color:var(--gold-pale);
@@ -142,24 +150,24 @@
     color:var(--gold-pale); font-size:12px; letter-spacing:.28em; text-transform:uppercase;
     border-radius:2px; position:relative; transition:background .3s ease, color .3s ease;
   }
-  .open-btn:hover{ background:var(--gold); color:var(--pine-dark); }
+  .open-btn:hover{ background:var(--gold); color:var(--wine-dark); }
   .open-btn:focus-visible{ outline:2px solid var(--gold-light); outline-offset:3px; }
 
   /* ============ HERO ============ */
   .hero{
     position:relative; overflow:hidden; padding:64px 24px 48px; text-align:center;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,214,110,0.28) 0%, transparent 65%),
-      linear-gradient(180deg, #B67A1D 0%, #8D5B14 100%);
+      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
+      var(--wine);
     color:var(--gold-pale);
   }
-  .hero .eyebrow{ color:var(--ivory); }
+  .hero .eyebrow{ color:var(--gold-light); }
   .hero-flourish{ margin:0 auto 6px; }
   .hero-names{
     font-family:var(--font-script); font-style:italic; font-weight:500;
-    font-size:46px; line-height:1.1; color:var(--ivory); margin-top:10px;
+    font-size:46px; line-height:1.1; color:#fff; margin-top:10px;
   }
-  .hero-names small{ display:block; font-size:22px; color:var(--ivory); margin:4px 0; font-style:normal; letter-spacing:.15em; }
+  .hero-names small{ display:block; font-size:36px; color:var(--gold-light); margin:4px 0; font-style:italic; letter-spacing:.15em; }
   /* .hero-date{
     margin-top:20px; font-family:var(--font-body); font-size:13px; letter-spacing:.15em;
     color:var(--gold-pale); text-transform:uppercase;
@@ -171,12 +179,12 @@
     display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:start;
     margin-top:26px; font-size:13.5px; color:var(--ink-soft); line-height:1.65;
   }
-  .parents .side b{ display:block; color:var(--ink); font-weight:700; font-family:var(--font-body); }
+  .parents .side b{ display:block; color:var(--ink); font-weight:600; font-family:var(--font-body); }
   .parents .divider{ width:1px; background:var(--gold); opacity:.4; align-self:stretch; }
   .parents .label{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold-deep); margin-bottom:6px; display:block; }
 
   .couple-block{ margin-top:34px; }
-  .couple-name{ font-family:var(--font-display); font-size:20px; color:var(--pine); font-weight:700; }
+  .couple-name{ font-family:var(--font-display); font-size:20px; color:var(--wine); font-weight:600; }
   .couple-role{ font-size:12px; color:var(--ink-soft); margin-top:2px; letter-spacing:.05em; }
   .couple-amp{ font-family:var(--font-script); font-style:italic; font-size:24px; color:var(--gold-deep); margin:12px 0; }
 
@@ -185,12 +193,12 @@
     border:1px solid rgba(201,162,75,.4); border-radius:6px;
   }
   .ceremony-box .place{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
-  .ceremony-box .time{ font-family:var(--font-display); font-size:30px; color:var(--pine); margin:8px 0 4px; font-weight:700; }
-  /* .ceremony-box .datebadge{
+  .ceremony-box .time{ font-family:var(--font-display); font-size:30px; color:var(--wine); margin:8px 0 4px; font-weight:600; }
+  .ceremony-box .datebadge{
     display:inline-flex; align-items:baseline; gap:6px; font-size:13px; color:var(--ink); margin-top:6px;
-  } */
-  .ceremony-box .datebadge b{ font-family:var(--font-display); font-size:20px; color:var(--pine); }
-  .ceremony-box .lunar{ margin-top:8px; font-size:12px; color:var(--ink-soft); font-style:italic; }
+  }
+  .ceremony-box .datebadge b{ font-family:var(--font-display); font-size:17px; color:var(--wine); }
+  .ceremony-box .lunar{ margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-style:italic; }
 
   /* ============ GALLERY ============ */
   .gallery{ padding:44px 20px; text-align:center; background:var(--ivory-soft); }
@@ -207,7 +215,7 @@
 
   /* lightbox */
   #lightbox{
-    position:fixed; inset:0; background:rgba(4,20,12,0.94); z-index:80;
+    position:fixed; inset:0; background:rgba(20,4,7,0.94); z-index:80;
     display:none; align-items:center; justify-content:center; flex-direction:column; padding:20px;
   }
   #lightbox.open{ display:flex; }
@@ -217,17 +225,15 @@
   #lightbox .lb-prev{ left:6px; } #lightbox .lb-next{ right:6px; }
   #lightbox .lb-close{ position:absolute; top:18px; right:20px; color:var(--gold-pale); font-size:22px; }
 
-  /* ============ TIỆC CƯỚI / COUNTDOWN (Song Hỷ Xanh) ============ */
+  /* ============ TIỆC CƯỚI / COUNTDOWN (Song Hỷ Đỏ) ============ */
   .countdown-sec{
     position:relative; overflow:hidden;
     padding:58px 22px 62px; text-align:center;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,214,110,0.25) 0%, transparent 65%),
-      linear-gradient(180deg, #B67A1D 0%, #8D5B14 100%);
-    color:var(--ivory);
+      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
+      var(--wine);
+    color:#fff;
   }
-  /* subtle leafy lattice, shared "silk garden" language across the
-     three deep-green sections so they read as one continuous fabric */
   .countdown-sec::before, .hero::before, .gift::before, footer::before{
     content:''; position:absolute; inset:0; pointer-events:none; opacity:.10;
     background-image:
@@ -235,13 +241,13 @@
       repeating-linear-gradient(-45deg, rgba(232,205,130,.55) 0 1px, transparent 1px 22px);
   }
   .countdown-sec > *, .hero > *, .gift > *, footer > *{ position:relative; z-index:1; }
-  .countdown-sec .section-title{ color:var(--ivory); font-size:24px; }
+  .countdown-sec .section-title{ color:#fff; font-size:24px; }
   .countdown-sec .gold-rule{ background:linear-gradient(90deg, transparent, var(--gold-light), transparent); }
 
   .hy-seal{
     width:56px; height:56px; margin:14px auto 14px; border-radius:50%;
     border:1px solid var(--gold); display:flex; align-items:center; justify-content:center;
-    font-size:24px; color:var(--ivory); position:relative;
+    font-size:24px; color:var(--gold-light); position:relative;
   }
   .hy-seal::after{
     content:''; position:absolute; inset:-7px; border:1px solid rgba(201,162,75,.3); border-radius:50%;
@@ -266,7 +272,7 @@
   }
   .countdown-grid .num{
     font-family:var(--font-display); font-size:28px; line-height:1;
-    color:var(--ivory); font-weight:600; font-variant-numeric:tabular-nums;
+    color:var(--gold-light); font-weight:600; font-variant-numeric:tabular-nums;
   }
   .countdown-grid .lbl{ font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-pale); margin-top:7px; opacity:.85; }
 
@@ -292,9 +298,9 @@
     font-variant-numeric:tabular-nums;
   }
   .cal-grid .day.empty{ visibility:hidden; }
-  .cal-grid .day.today{ color:var(--ivory); box-shadow:inset 0 0 0 1px rgba(232,205,130,.35); }
+  .cal-grid .day.today{ color:#fff; box-shadow:inset 0 0 0 1px rgba(232,205,130,.35); }
   .cal-grid .day.wed{
-    position:relative; color:var(--pine-dark); font-weight:700;
+    position:relative; color:var(--wine-dark); font-weight:700;
     background:radial-gradient(circle at 50% 40%, var(--gold-light), var(--gold));
     animation: calPulse 2.4s ease-in-out infinite;
   }
@@ -318,30 +324,40 @@
     font-size:13px; color:var(--gold-pale); line-height:1.7;
   }
   .party-info b{
-    display:block; font-family:var(--font-script); font-style:italic; font-weight:600;
-    font-size:21px; color:var(--ivory); margin-bottom:14px;
+    display:block; font-family:var(--font-script); font-weight:600;
+    font-size:21px; color:#fff; margin-bottom:14px;
   }
+
+  .guest-invite{ margin-top:30px; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .guest-invite .guest-prefix{ font-size:14px; color:var(--ivory); }
+  .guest-invite .guest-name{ display:inline-block; font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--ivory-soft); padding:10px 14px; }
+  .guest-invite .guest-suffix{ font-size:12px; color:var(--ivory); }
+
+
+  #partyTimeTitle .party-date{ display:block; font-family:var(--font-display); font-size:24px; font-weight:600; color:#fff; line-height:1.4; margin-top:4px; }
   .party-times{ display:flex; justify-content:center; gap:0; margin-top:2px; }
   .party-times .t{ flex:1; position:relative; }
   .party-times .t + .t::before{
     content:''; position:absolute; left:0; top:10%; bottom:10%; width:1px; background:rgba(232,205,130,.35);
   }
-  .party-times .t span{ display:block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ivory); }
-  .party-times .t strong{ display:block; font-family:var(--font-display); font-size:22px; color:var(--ivory); font-weight:600; margin-top:5px; }
+  .party-times .t span{ display:block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); }
+  .party-times .t strong{ display:block; font-family:var(--font-display); font-size:22px; color:#fff; font-weight:600; margin-top:5px; }
 
   .venue-line{
     margin-top:18px; padding-top:16px; border-top:1px solid rgba(232,205,130,.28);
-    font-size:13px; color:var(--ivory); line-height:1.6;
+    font-size:13px; color:#fff; line-height:1.6;
   }
   .venue-line .lbl{ display:block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+  .venue-line #venueName{ display:block; font-family:var(--font-display); font-size:24px; font-weight:600; color:#fff; line-height:1.4; }
+  .venue-line #venueAddress{ display:block; font-size:14px; color:#fff; line-height:1.45; margin-top:4px; }
 
   .cta-row{ margin-top:26px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
   .btn{
     padding:12px 24px; font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
     border-radius:2px; border:1px solid var(--gold); color:var(--gold-pale); transition:.25s;
   }
-  .btn.solid{ background:var(--gold); color:var(--pine-dark); }
-  .btn:hover{ background:var(--gold); color:var(--pine-dark); }
+  .btn.solid{ background:var(--gold); color:var(--wine-dark); }
+  .btn:hover{ background:var(--gold); color:var(--wine-dark); }
   .btn.solid:hover{ opacity:.88; }
 
   .map-wrap{
@@ -358,48 +374,43 @@
 
   /* ============ SCHEDULE ============ */
   .schedule{ padding:46px 26px; text-align:center; background:var(--ivory-soft); }
-  .schedule ol{ list-style:none; margin-top:28px; position:relative; }
-  .schedule ol::before{ content:''; position:absolute; left:29px; top:6px; bottom:6px; width:1px; background:rgba(201,162,75,.5); }
-  .schedule li{ position:relative; padding-left:60px; margin-bottom:24px; }
-  .schedule li:last-child{ margin-bottom:0; }
-  .schedule .dot{
-    position:absolute; left:22px; top:2px; width:15px; height:15px; border-radius:50%;
-    background:var(--ivory-soft); border:2px solid var(--gold); box-shadow:0 0 0 3px var(--ivory-soft);
-  }
-  .schedule .time{ font-family:var(--font-display); font-size:14px; color:var(--pine-dark); font-weight:700; }
-  .schedule .label{ font-size:13px; color:var(--ink); margin-top:2px; }
+  .schedule ol{ list-style:none; margin-top:28px; position:relative; max-width:360px; margin-left:auto; margin-right:auto; padding:0; }
+  .schedule li{ display:grid; grid-template-columns:2fr 3fr; align-items:center; gap:24px; margin-bottom:14px; padding:8px 0; border-bottom:1px solid rgba(110,20,35,.12); width:100%; }
+  .schedule li:last-child{ margin-bottom:0; border-bottom:none; }
+  .schedule .time{ font-family:var(--font-display); font-size:16px; color:var(--wine); font-weight:600; text-align:right; }
+  .schedule .label{ font-size:13px; color:var(--ink-soft);  text-align:left; }
 
   /* ============ GUESTBOOK ============ */
   .guestbook{ padding:46px 22px; text-align:center; background:var(--ivory-soft); }
   .gb-form{ margin-top:22px; display:flex; flex-direction:column; gap:10px; max-width:500px; margin-left:auto; margin-right:auto; }
   .gb-form input, .gb-form textarea{
-    padding:11px 13px; border:1px solid var(--gold-light); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
+    padding:11px 13px; border:1px solid rgba(110,20,35,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
   }
   .gb-form textarea{ resize:none; height:70px; }
   .rsvp-form{ margin-top:22px; display:flex; flex-direction:column; gap:10px; max-width:500px; margin-left:auto; margin-right:auto; text-align:left; }
   .rsvp-form input, .rsvp-form select, .rsvp-form textarea{
-    padding:11px 13px; border:1px solid var(--gold-light); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
+    padding:11px 13px; border:1px solid rgba(110,20,35,.25); border-radius:4px; font-family:var(--font-body); font-size:13.5px; background:#fff;
   }
   .rsvp-form textarea{ resize:none; height:70px; }
-  .rsvp-form button{ padding:12px; background:var(--pine-mid); color:var(--ivory); border-radius:4px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+  .rsvp-form button{ padding:12px; background:var(--wine-mid); color:#fff; border-radius:4px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
   .rsvp-form fieldset{ border:0; display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--ink-soft); }
   .rsvp-form legend{ font-size:12px; font-weight:600; color:var(--ink); margin-bottom:7px; }
   .rsvp-form label{ display:flex; align-items:center; gap:6px; }
-  .rsvp-status{ min-height:18px; font-size:12px; color:var(--pine); text-align:center; }
+  .rsvp-status{ min-height:18px; font-size:12px; color:var(--wine); text-align:center; }
   #rsvp-modal{
     position:fixed; inset:0; z-index:1000; display:none; align-items:center; justify-content:center;
-    padding:20px; background:var(--ink); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+    padding:20px; background:rgba(20,4,7,.72); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
   }
   #rsvp-modal.open{ display:flex; }
   .rsvp-box{ position:relative; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; padding:28px 22px; background:var(--ivory); border-radius:8px; box-shadow:0 18px 50px rgba(0,0,0,.35); }
   .rsvp-box .close-x{ position:absolute; top:10px; right:14px; font-size:20px; color:var(--ink-soft); }
   .gb-form button{
-    margin-top:4px; padding:12px; background:var(--pine-mid); color:var(--ivory); border-radius:4px;
+    margin-top:4px; padding:12px; background:var(--wine-mid); color:#fff; border-radius:4px;
     font-size:12px; letter-spacing:.14em; text-transform:uppercase;
   }
   .gb-list{ margin-top:28px; display:flex; flex-direction:column; gap:14px; max-width:500px; margin-left:auto; margin-right:auto; text-align:left; }
   .gb-item{ background:var(--ivory-soft); border-radius:6px; padding:12px 14px; border-left:3px solid var(--gold); }
-  .gb-item b{ font-size:13px; color:var(--pine); }
+  .gb-item b{ font-size:13px; color:var(--wine); text-transform: capitalize; }
   .gb-item p{ font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.5; }
   .gb-empty{ font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-top:22px; }
 
@@ -407,8 +418,8 @@
   .gift{
     position:relative; overflow:hidden; padding:46px 22px; text-align:center;
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(255,214,110,0.25) 0%, transparent 65%),
-      linear-gradient(180deg, #B67A1D 0%, #8D5B14 100%);
+      radial-gradient(ellipse at 50% 0%, var(--wine-mid) 0%, transparent 65%),
+      var(--wine);
   }
   .gift-cards{ margin-top:24px; display:flex; gap:12px; max-width:400px; margin-left:auto; margin-right:auto; }
   .gift-card{
@@ -416,25 +427,25 @@
     background:rgba(255,255,255,0.03); cursor:pointer; transition:.25s;
   }
   .gift-card:hover{ background:rgba(201,162,75,.08); }
-  .gift-card .role{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--ivory); }
-  .gift-card .nm{ font-family:var(--font-display); font-size:15px; color:var(--ivory); margin-top:6px; }
+  .gift-card .role{ font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); }
+  .gift-card .nm{ font-family:var(--font-display); font-size:15px; color:#fff; margin-top:6px; }
   .gift-card .tap{ font-size:10.5px; color:var(--gold-pale); margin-top:10px; opacity:.75; }
 
   #qr-modal{
-    position:fixed; inset:0; background:rgba(4,20,12,.85); z-index:90;
+    position:fixed; inset:0; background:rgba(20,4,7,.85); z-index:90;
     display:none; align-items:center; justify-content:center; padding:24px;
   }
   #qr-modal.open{ display:flex; }
   .qr-box{ background:var(--ivory); border-radius:10px; padding:28px 24px; max-width:300px; width:100%; text-align:center; position:relative; }
   .qr-box img{ margin:16px auto; border-radius:6px; border:1px solid rgba(0,0,0,.08); }
-  .qr-box .bank{ font-family:var(--font-display); font-size:16px; color:var(--pine); }
+  .qr-box .bank{ font-family:var(--font-display); font-size:16px; color:var(--wine); }
   .qr-box .acc{ font-size:15px; letter-spacing:.06em; margin-top:6px; font-weight:600; }
   .qr-box .accname{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
   .qr-box .close-x{ position:absolute; top:10px; right:14px; font-size:20px; color:var(--ink-soft); }
-  .qr-box .save-btn{ margin-top:14px; display:inline-block; padding:9px 18px; border:1px solid var(--pine); border-radius:4px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--pine); }
+  .qr-box .save-btn{ margin-top:14px; display:inline-block; padding:9px 18px; border:1px solid var(--wine); border-radius:4px; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--wine); }
 
   /* gift section footer message (moved in from the old footer) */
-  .gift .msg{ font-family:var(--font-script); font-style:italic; font-size:19px; max-width:320px; margin:28px auto 0; line-height:1.5; color:var(--ivory); }
+  .gift .msg{ font-family:var(--font-script); font-style:italic; font-size:19px; max-width:320px; margin:28px auto 0; line-height:1.5; color:#fff; }
   .gift .credit{ margin-top:14px; font-size:10.5px; letter-spacing:.14em; color:var(--gold); text-transform:uppercase; }
   .home-link{
     display:inline-block; margin-top:25px; font-size:10px; letter-spacing:.12em;
@@ -445,13 +456,13 @@
   .music-fab{
     position:fixed; bottom:18px; left:18px; z-index:55;
     width:44px; height:44px; border-radius:50%;
-    background:var(--gold); color:var(--pine-dark);
+    background:var(--gold); color:var(--wine-dark);
     box-shadow:0 6px 20px rgba(0,0,0,.35);
     display:none; align-items:center; justify-content:center; font-size:16px;
   }
   .music-fab.show{ display:flex; }
   .music-fab .bar{ display:inline-flex; align-items:flex-end; gap:2px; height:14px; }
-  .music-fab .bar span{ width:2.5px; background:var(--pine-dark); border-radius:1px; animation: eq 0.9s ease-in-out infinite; }
+  .music-fab .bar span{ width:2.5px; background:var(--wine-dark); border-radius:1px; animation: eq 0.9s ease-in-out infinite; }
   .music-fab .bar span:nth-child(1){ height:6px; animation-delay:0s; }
   .music-fab .bar span:nth-child(2){ height:14px; animation-delay:.15s; }
   .music-fab .bar span:nth-child(3){ height:9px; animation-delay:.3s; }
@@ -470,6 +481,7 @@
   <div class="cover-inner">
     <div class="cover-names" id="coverNames">Gia Bảo <span class="cover-amp">&amp;</span> Minh Anh</div>
     <div class="cover-eyebrow">Trân trọng kính mời</div>
+    <div class="cover-guest" id="coverGuest">Chị Lan</div>
     <div class="cover-date" id="coverDate">20 . 12 . 2026</div>
     <button class="open-btn" id="openBtn">Mở Thiệp</button>
   </div>
@@ -487,15 +499,15 @@
       <div class="eyebrow">Lễ Thành Hôn</div>
       <div class="hy-seal">囍</div>
       <div class="hero-names">
-        <small id="heroGroom">Nguyễn Gia Bảo</small>
-        &amp;
-        <small id="heroBride">Trần Minh Anh</small>
+        <small id="heroGroom">Gia Bảo</small>
+        <small>❦</small>
+        <small id="heroBride">Minh Anh</small>
       </div>
       <!-- <div class="hero-date" id="heroDate">Chủ Nhật · 20 tháng 12 · 2026</div> -->
     </section>
 
     <section class="info fade-in">
-      <span class="eyebrow">Thông Tin Lễ Cưới</span>
+      <span class="eyebrow">Lễ Cưới</span>
       <div class="gold-rule"></div>
 
       <div class="parents">
@@ -545,7 +557,13 @@
     </div>
 
     <section class="countdown-sec fade-in">
-      <span class="eyebrow" style="color:var(--gold-deep)">Thông Tin Tiệc Cưới</span>
+      <span class="eyebrow">Tiệc Cưới</span>
+        <div class="guest-invite">
+          <div class="guest-prefix">Trân trọng kính mời</div>
+          <div class="guest-name" id="guestInviteName">Chị Lan</div>
+          <div class="guest-suffix">Đến dự bữa tiệc chung vui cùng gia đình.</div>
+          <div class="gold-rule"></div>
+        </div>
       <div class="party-info">
         <b id="partyTimeTitle"></b>
         <div class="venue-line"></div>
@@ -557,6 +575,7 @@
         <div class="venue-line">
           <span class="lbl">Địa điểm</span>
           <span id="venueName">Địa điểm tiệc cưới</span>
+          <span id="venueAddress"></span>
         </div>
       </div>
       <!-- <div class="cal">
@@ -602,8 +621,8 @@
     </section>
 
     <section class="gift fade-in">
-      <span class="eyebrow" style="color:var(--gold-deep)">Hộp Quà Mừng</span>
-      <div class="section-title" style="color:var(--ivory)">Mừng Cưới Online</div>
+      <span class="eyebrow">Hộp Quà Mừng</span>
+      <div class="section-title" style="color:#fff">Mừng Cưới Online</div>
       <div class="gift-cards">
         <div class="gift-card" data-who="groom">
           <div class="role">Chú Rể</div>
@@ -613,7 +632,7 @@
         <div class="gift-card" data-who="bride">
           <div class="role">Cô Dâu</div>
           <div class="nm" id="giftBrideName">Minh Anh</div>
-          <div class="tap">Chạm để xem QR</div>
+          <div class="tap">Ấn để xem QR</div>
         </div>
       </div>
 
@@ -648,7 +667,7 @@
         <label><input type="radio" name="attendanceStatus" value="attending" checked /> Có, tôi sẽ tham dự</label>
         <label><input type="radio" name="attendanceStatus" value="declined" /> Rất tiếc, tôi không thể tham dự</label>
       </fieldset>
-      <input type="number" id="rsvpGuestCount" min="1" max="10" value="1" aria-label="Số người tham dự" placeholder="Số người tham dự" required />
+      <input type="number" id="rsvpGuestCount" min="1" max="100" value="1" aria-label="Số người tham dự" placeholder="Số người tham dự" required />
       <select id="rsvpMealPreference" aria-label="Lựa chọn món ăn">
         <option value="">Lựa chọn món ăn (không bắt buộc)</option>
         <option value="Bình thường">Thực đơn thường</option>
@@ -695,17 +714,21 @@ const DEFAULT_CONFIG = {
     date: "2026-12-20",
     welcomeTime: "17:30",
     startTime: "18:00",
-    venueName: "The Adora Center, 431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
-    mapQuery: ""
+    venueName: "The Adora Center",
+    address: "431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
+    mapQuery: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.1683051673813!2d106.6568232753989!3d10.798418358786982!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529d96e56d9bd%3A0x205428f74d7f4ddb!2sThe%20ADORA!5e0!3m2!1sen!2s!4v1788687164235!5m2!1sen!2s"
   },
   schedule: [
     { time: "17:30", label: "Đón khách" },
-    { time: "18:00", label: "Khai tiệc" },
-    { time: "18:20", label: "Nghi thức rót rượu, cắt bánh" },
+    { time: "18:00", label: "Nghi thức cưới" },
+    { time: "18:20", label: "Khai tiệc" },
     { time: "19:00", label: "Phục vụ tiệc chính" },
     { time: "21:00", label: "Kết thúc tiệc" }
   ],
   gallery: [
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-1.webp",
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-2.webp",
+    "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-3.webp"
   ],
   gifts: {
     groom: { bank: "Vietcombank", account: "0123 4567 89", name: "NGUYEN GIA BAO", qrImage: "" },
@@ -726,9 +749,27 @@ let countdownInterval = null;
 function renderInvitation(cfg){
   CONFIG = cfg;
 
+  const guestName = new URLSearchParams(window.location.search).get('guest');
+  const guestText = (guestName || '').trim();
+  const coverEyebrow = document.querySelector('.cover-eyebrow');
+  const coverGuest = document.getElementById('coverGuest');
+  const guestInviteName = document.getElementById('guestInviteName');
+
+  if (coverEyebrow) {
+    coverEyebrow.textContent = 'Trân trọng kính mời';
+  }
+  if (coverGuest) {
+    coverGuest.textContent = guestText || '';
+    coverGuest.style.display = guestText ? 'block' : 'none';
+  }
+  if (guestInviteName) {
+    guestInviteName.textContent = guestText || 'Chị Lan';
+    guestInviteName.style.display = guestText ? 'inline-block' : 'inline-block';
+  }
+
   $('coverNames').innerHTML = `${cfg.groomShort} <span class="cover-amp">&amp;</span> ${cfg.brideShort}`;
-  $('heroGroom').textContent = cfg.groomFull;
-  $('heroBride').textContent = cfg.brideFull;
+  $('heroGroom').textContent = cfg.groomShort;
+  $('heroBride').textContent = cfg.brideShort;
   $('groomFather').textContent = cfg.groomParents.father;
   $('groomMother').textContent = cfg.groomParents.mother;
   $('groomAddress').textContent = cfg.groomParents.address;
@@ -751,7 +792,7 @@ function renderInvitation(cfg){
   const receptionDateText = receptionDateObj && !isNaN(receptionDateObj)
     ? receptionDateObj.toLocaleDateString('vi-VN', { weekday:'long', day:'2-digit', month:'2-digit', year:'numeric' })
     : '';
-  $('partyTimeTitle').innerHTML = `Tiệc cưới sẽ diễn ra vào ngày${receptionDateText ? '<br>' + receptionDateText : ''}`;
+  $('partyTimeTitle').innerHTML = `Tiệc cưới sẽ diễn ra vào ngày${receptionDateText ? '<br><span class="party-date">' + receptionDateText + '</span>' : ''}`;
   const receptionStartObj = receptionDateRaw
     ? new Date(`${receptionDateRaw}T${cfg.reception.startTime || '00:00'}:00`)
     : null;
@@ -759,6 +800,7 @@ function renderInvitation(cfg){
     ? receptionStartObj
     : new Date(cfg.weddingDateISO);
   $('venueName').textContent = cfg.reception.venueName;
+  $('venueAddress').textContent = cfg.reception.address || '';
 
   const mapWrap = document.querySelector('.map-wrap');
   const hasMapQuery = !!(cfg.reception && cfg.reception.mapQuery && String(cfg.reception.mapQuery).trim());
@@ -801,7 +843,7 @@ function renderInvitation(cfg){
 
   // schedule
   $('scheduleList').innerHTML = cfg.schedule.map(s => `
-    <li><span class="dot"></span><div class="time">${s.time}</div><div class="label">${s.label}</div></li>
+    <li><div class="time">${s.time}</div><div class="label">${s.label}</div></li>
   `).join('');
 
   // gallery

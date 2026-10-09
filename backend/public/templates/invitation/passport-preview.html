@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiệp cưới — Hộ Chiếu Tình Yêu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================
+     BIẾN MÀU — PASSPORT THEME
+     ========================================================== */
+  :root{
+    --cover-1:#1d3b66;
+    --cover-2:#122a4d;
+    --cover-3:#0a1830;
+    --gold:#c9a54a;
+    --gold-lt:#efd89a;
+    --gold-dk:#8a6d1f;
+    --paper:#f7f2e7;
+    --paper-2:#efe6d4;
+    --paper-line:#ddd1b8;
+    --ink:#1b2430;
+    --ink-2:#5b6674;
+    --red:#b8362e;
+    --blue:#23578c;
+    --green:#2f6b4f;
+    --pop:#ff4d6d;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{min-height:100%;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#070a12;
+    font-family:'Be Vietnam Pro',sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+    position:relative;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ==========================================================
+     NỀN BÀN LÀM VIỆC / BẢN ĐỒ THẾ GIỚI
+     ========================================================== */
+  .nen-ban{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% -10%, rgba(35,87,140,.55), transparent 62%),
+      radial-gradient(ellipse 60% 55% at 12% 88%, rgba(201,165,74,.12), transparent 60%),
+      radial-gradient(ellipse 60% 55% at 88% 82%, rgba(184,54,46,.12), transparent 60%),
+      linear-gradient(160deg,#0d1524 0%,#0a0f1a 50%,#060910 100%);
+  }
+  .nen-ban::before{
+    content:''; position:absolute; inset:0;
+    background-image:radial-gradient(rgba(201,165,74,.16) 1px, transparent 1px);
+    background-size:26px 26px;
+    -webkit-mask-image:radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
+    mask-image:radial-gradient(ellipse at 50% 45%, #000 15%, transparent 72%);
+    opacity:.55;
+  }
+  .nen-ban::after{
+    content:''; position:absolute; inset:-30%;
+    background:conic-gradient(from 200deg at 50% 50%,
+      transparent 0deg, rgba(201,165,74,.07) 70deg, transparent 140deg,
+      rgba(35,87,140,.09) 220deg, transparent 300deg);
+    animation:xoayNen 200s linear infinite;
+    filter:blur(40px);
+  }
+  @keyframes xoayNen{ from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+  /* ==========================================================
+     MÁY BAY BAY NGANG BẦU TRỜI
+     - Mỗi chiếc có đuôi khói trắng phía sau
+     - Bay chéo từ trái sang phải với tốc độ khác nhau
+     ========================================================== */
+  .may-bay{
+    position:absolute;
+    width:38px; height:38px;
+    opacity:0;
+    animation:mayBay linear infinite;
+    filter:drop-shadow(0 0 8px rgba(255,255,255,.85))
+           drop-shadow(0 0 18px rgba(201,165,74,.55));
+    will-change:transform,opacity;
+    pointer-events:none;
+  }
+  /* SVG máy bay — xoay để mũi hướng theo quỹ đạo bay (phải & hơi chúc xuống) */
+  .may-bay svg{
+    width:100%; height:100%; display:block;
+    transform:rotate(100deg);
+  }
+  /* Đuôi khói / vệt trời phía sau máy bay */
+  .may-bay::before{
+    content:'';
+    position:absolute;
+    right:calc(100% - 6px); top:50%;
+    width:220px; height:2px;
+    transform:translateY(-50%);
+    background:linear-gradient(90deg,
+      transparent 0%,
+      rgba(255,255,255,.10) 25%,
+      rgba(255,255,255,.65) 70%,
+      rgba(255,255,255,.95) 100%);
+    border-radius:999px;
+    filter:blur(1px);
+  }
+
+  .mb1{top:12%; left:-20%; animation-duration:11s;  animation-delay:0s;}
+  .mb2{top:48%; left:-20%; animation-duration:14s;  animation-delay:4s;}
+  .mb3{top:78%; left:-20%; animation-duration:12s;  animation-delay:7.5s;}
+
+  @keyframes mayBay{
+    0%   {transform:translate3d(0,0,0);       opacity:0;}
+    5%   {opacity:.95;}
+    38%  {transform:translate3d(120vw,34vh,0); opacity:.95;}
+    44%  {opacity:0;}
+    100% {transform:translate3d(120vw,34vh,0); opacity:0;}
+  }
+
+  /* ==========================================================
+     KHUNG THIỆP
+     ========================================================== */
+  .thiep{
+    position:relative; z-index:2;
+    width:100%; max-width:520px;
+    overflow:hidden;
+    border-radius:24px;
+    background:linear-gradient(180deg,#0e1a2e 0%,#0a1322 60%,#070d18 100%);
+    box-shadow:
+      0 40px 100px rgba(0,0,0,.8),
+      0 0 0 1px rgba(201,165,74,.28),
+      0 0 90px rgba(35,87,140,.35);
+  }
+  @media (max-width:520px){
+    body{align-items:flex-start;}
+    .thiep{max-width:100%; border-radius:0; min-height:100vh; box-shadow:none;}
+  }
+
+  /* ==========================================================
+     MÀN BÌA — CUỐN HỘ CHIẾU
+     ========================================================== */
+  .man-bia{
+    position:relative; z-index:2;
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:48px 24px 42px;
+    transition:opacity .55s ease, transform .55s ease;
+  }
+  .man-bia.dang-dong{opacity:0; transform:scale(.94) translateY(-20px); pointer-events:none;}
+
+  .bia-sach{
+    position:relative;
+    width:268px; height:364px;
+    border-radius:4px 14px 14px 4px;
+    background:
+      radial-gradient(ellipse 90% 70% at 30% 12%, rgba(90,140,200,.28), transparent 60%),
+      linear-gradient(140deg, var(--cover-1) 0%, var(--cover-2) 42%, var(--cover-3) 100%);
+    box-shadow:
+      -8px 0 0 -2px #0a1424,
+      -13px 0 0 -4px #050c18,
+      0 34px 60px rgba(0,0,0,.72),
+      0 0 0 1px rgba(201,165,74,.35),
+      inset 0 0 60px rgba(0,0,0,.5);
+    display:flex; align-items:center; justify-content:center;
+    animation:lungLinhBia 7s ease-in-out infinite;
+    overflow:hidden;
+  }
+  @keyframes lungLinhBia{
+    0%,100%{transform:translateY(0) rotate(-.4deg);}
+    50%{transform:translateY(-8px) rotate(.4deg);}
+  }
+  .bia-sach::before{
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 4px),
+      repeating-linear-gradient(-45deg, rgba(0,0,0,.06) 0 1px, transparent 1px 4px);
+  }
+  .bia-sach::after{
+    content:''; position:absolute; inset:-40%;
+    background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.16) 48%, transparent 58%);
+    animation:anhKim 6.5s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes anhKim{
+    0%,100%{transform:translateX(-55%) rotate(0deg);}
+    50%{transform:translateX(55%) rotate(0deg);}
+  }
+
+  .bia-vien{
+    position:absolute; inset:12px;
+    border:1.5px solid rgba(201,165,74,.55);
+    border-radius:2px 10px 10px 2px;
+    pointer-events:none;
+  }
+  .bia-vien::before{
+    content:''; position:absolute; inset:4px;
+    border:.8px solid rgba(201,165,74,.3);
+    border-radius:2px 8px 8px 2px;
+  }
+
+  .bia-noi-dung{
+    position:relative; z-index:2;
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    height:100%; width:100%; padding:30px 22px 26px;
+  }
+
+  .bia-quoc-hieu{line-height:1.5;}
+  .qh-1{
+    font-size:8.5px; letter-spacing:.22em; font-weight:600;
+    color:var(--gold-lt);
+  }
+  .qh-2{
+    font-size:6.5px; letter-spacing:.16em; margin-top:2px;
+    color:rgba(239,216,154,.6);
+    font-family:'Space Mono',monospace;
+  }
+
+  .bia-emblem{width:96px; height:96px; filter:drop-shadow(0 0 12px rgba(201,165,74,.55));}
+  .bia-emblem svg{width:100%; height:100%; display:block;}
+
+  .bia-tieu-de{line-height:1.35;}
+  .td-1{
+    font-family:'Playfair Display',serif;
+    font-size:19px; font-weight:700; letter-spacing:.06em;
+    background:linear-gradient(135deg,#8a6d1f 0%,#efd89a 30%,#c9a54a 55%,#f7ecc4 75%,#9a7a2e 100%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 1px 0 rgba(0,0,0,.5));
+  }
+  .td-2{
+    font-family:'Space Mono',monospace;
+    font-size:7.5px; letter-spacing:.34em; margin-top:6px;
+    color:rgba(239,216,154,.75);
+  }
+
+  .bia-duoi{text-align:center;}
+  .bd-ten{
+    font-family:'Playfair Display',serif;
+    font-size:13px; letter-spacing:.14em; font-weight:600;
+    background:linear-gradient(135deg,#8a6d1f,#efd89a,#c9a54a,#9a7a2e);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .bd-so{
+    font-family:'Space Mono',monospace;
+    font-size:7.5px; letter-spacing:.2em; margin-top:6px;
+    color:rgba(239,216,154,.55);
+  }
+
+  .bia-moi{margin-top:30px; text-align:center;}
+  .moi-nhan{
+    font-size:10px; letter-spacing:.3em; text-transform:uppercase;
+    color:rgba(239,216,154,.6);
+  }
+  .moi-ten{
+    font-family:'Playfair Display',serif;
+    font-size:27px; font-weight:600; margin-top:6px;
+    background:linear-gradient(180deg,#fff 0%,#efd89a 55%,#c9a54a 100%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 16px rgba(201,165,74,.45));
+  }
+  .mo-ta-loi-moi { font-size: 13px; opacity: .75; margin-top: 10px; margin-bottom: 10px; color:rgba(239,216,154,.6);}
+  .moi-phu{
+    font-size:14px; margin-top:8px; line-height:1.6;
+    color:rgba(247,242,231,.55);
+    letter-spacing:.04em;
+  }
+
+  .nut-mo{
+    margin-top:20px;
+    font-family:'Be Vietnam Pro',sans-serif;
+    font-size:11.5px; letter-spacing:.26em; text-transform:uppercase; font-weight:600;
+    color:#2a1e05;
+    background:linear-gradient(135deg,#f7ecc4 0%,#efd89a 30%,#c9a54a 70%,#a8873a 100%);
+    border:none; padding:15px 44px; border-radius:999px; cursor:pointer;
+    position:relative; overflow:hidden;
+    box-shadow:0 0 0 1px rgba(201,165,74,.6), 0 10px 30px rgba(201,165,74,.28), 0 0 50px rgba(201,165,74,.18);
+    transition:transform .22s ease, box-shadow .22s ease;
+  }
+  .nut-mo::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.75) 50%, transparent 60%);
+    transform:translateX(-120%);
+    animation:nutSang 3.4s ease-in-out infinite;
+  }
+  @keyframes nutSang{0%,60%{transform:translateX(-120%);}100%{transform:translateX(120%);}}
+  .nut-mo:hover{
+    transform:translateY(-2px);
+    box-shadow:0 0 0 1px rgba(201,165,74,.9), 0 14px 38px rgba(201,165,74,.42), 0 0 70px rgba(201,165,74,.3);
+  }
+  .nut-mo:active{transform:scale(.95);}
+
+  /* ==========================================================
+     MÀN NỘI DUNG
+     ========================================================== */
+  .man-noi-dung{
+    display:none; flex-direction:column;
+    padding:0 0 0;
+    opacity:0; transform:translateY(20px);
+    transition:opacity .45s ease, transform .45s ease;
+  }
+  .man-noi-dung.hien{opacity:1; transform:translateY(0);}
+
+  .khoi{
+    position:relative;
+    margin:12px;
+    padding:30px 22px;
+    border-radius:16px;
+    color:var(--ink);
+    background:
+      repeating-linear-gradient(0deg, rgba(27,36,48,.022) 0 1px, transparent 1px 3px),
+      radial-gradient(circle at 88% 8%, rgba(201,165,74,.12), transparent 42%),
+      radial-gradient(circle at 6% 96%, rgba(35,87,140,.07), transparent 45%),
+      var(--paper);
+    box-shadow:
+      0 14px 34px rgba(0,0,0,.4),
+      0 0 0 1px rgba(201,165,74,.28),
+      inset 0 1px 0 rgba(255,255,255,.7);
+    overflow:hidden;
+  }
+  .khoi:first-child{margin-top:12px;}
+
+  .nhan-khoi{
+    display:inline-block;
+    font-family:'Space Mono',monospace;
+    font-size:9.5px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--gold-dk);
+    padding-bottom:5px;
+    border-bottom:1.5px solid rgba(201,165,74,.45);
+    margin-bottom:20px;
+  }
+  .tieu-de-khoi{
+    font-family:'Playfair Display',serif;
+    font-size:23px; font-weight:700; line-height:1.25;
+    margin:0 0 22px;
+    color:var(--ink);
+  }
+
+  .con-dau{
+    position:absolute;
+    border-radius:50%;
+    border:2px solid var(--red);
+    color:var(--red);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace;
+    text-align:center;
+    opacity:.3;
+    pointer-events:none;
+    transform:rotate(-14deg);
+  }
+  .con-dau::before{
+    content:''; position:absolute; inset:4px;
+    border:1px dashed currentColor; border-radius:50%; opacity:.7;
+  }
+  .con-dau .cd-tren{font-size:7px; letter-spacing:.14em; font-weight:700;}
+  .con-dau .cd-giua{font-size:16px; line-height:1; margin:2px 0;}
+  .con-dau .cd-duoi{font-size:6px; letter-spacing:.1em;}
+  .con-dau.xanh{color:var(--blue); border-color:var(--blue);}
+  .con-dau.luc{color:var(--green); border-color:var(--green);}
+
+  /* ==========================================================
+     HERO
+     ========================================================== */
+  .khoi-hero{
+    margin:12px 12px 0; padding:0;
+    border-radius:16px;
+    overflow:hidden;
+    background:#0a1322;
+    box-shadow:0 14px 34px rgba(0,0,0,.5), 0 0 0 1px rgba(201,165,74,.28);
+    min-height:230px;
+  }
+  .hero-anh-wrap{position:relative; width:100%; min-height:230px;}
+  .hero-anh{width:100%; height:auto; display:block; min-height:230px; object-fit:cover;}
+  .hero-phu{
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(10,19,34,.1) 0%, rgba(10,19,34,.3) 45%, rgba(7,13,24,.95) 100%);
+  }
+  .hero-nhan{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:0 20px 22px; text-align:center;
+  }
+  .hero-nhan-nho{
+    font-family:'Space Mono',monospace;
+    font-size:8.5px; letter-spacing:.34em; color:rgba(239,216,154,.75);
+    margin-bottom:8px;
+  }
+  .hero-ten{
+    font-family:'Playfair Display',serif;
+    font-size:30px; font-weight:700; line-height:1.15;
+    background:linear-gradient(180deg,#fff 0%,#efd89a 60%,#c9a54a 100%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 18px rgba(201,165,74,.45));
+  }
+  .hero-ten span{
+    -webkit-text-fill-color:var(--gold);
+    font-size:20px; vertical-align:middle;
+  }
+
+  /* ==========================================================
+     TRANG DỮ LIỆU HỘ CHIẾU
+     ========================================================== */
+  .khoi-du-lieu{padding:26px 16px 22px;}
+  .trang-giay{
+    position:relative;
+    border-radius:12px;
+    padding:18px 16px 14px;
+    background:
+      repeating-linear-gradient(90deg, rgba(35,87,140,.05) 0 1px, transparent 1px 6px),
+      repeating-linear-gradient(0deg, rgba(35,87,140,.045) 0 1px, transparent 1px 6px),
+      linear-gradient(160deg,#fdfaf3 0%, #f3ecdb 100%);
+    border:1px solid var(--paper-line);
+    box-shadow:inset 0 0 30px rgba(201,165,74,.12), 0 4px 14px rgba(0,0,0,.08);
+    overflow:hidden;
+  }
+  .trang-giay::after{
+    content:'';
+    position:absolute; right:-40px; top:-40px;
+    width:150px; height:150px; border-radius:50%;
+    background:radial-gradient(circle, rgba(184,54,46,.14), transparent 65%);
+    pointer-events:none;
+  }
+
+  .tg-header{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:'Space Mono',monospace;
+    font-size:8px; letter-spacing:.18em;
+    color:var(--blue);
+    padding-bottom:9px;
+    border-bottom:1.5px solid rgba(35,87,140,.28);
+    margin-bottom:16px;
+  }
+  .tg-header span:first-child{font-weight:700; font-size:9px;}
+
+  .tg-grid{
+    display:grid;
+    grid-template-columns:78px 1fr 78px;
+    gap:12px;
+    align-items:start;
+    position:relative; z-index:1;
+  }
+  .tg-anh-wrap{text-align:center;}
+  .tg-anh{
+    width:100%; aspect-ratio:3/4;
+    border-radius:6px; overflow:hidden;
+    border:1px solid rgba(35,87,140,.35);
+    background:#e5dcc8;
+    box-shadow:0 3px 10px rgba(0,0,0,.14);
+  }
+  .tg-anh img{width:100%; height:100%; object-fit:cover; display:block;}
+  .tg-anh-ten{
+    font-family:'Space Mono',monospace;
+    font-size:7.5px; letter-spacing:.1em;
+    margin-top:6px; color:var(--ink-2);
+    text-transform:uppercase;
+  }
+
+  .tg-fields{display:flex; flex-direction:column; gap:9px;}
+  .tg-truong{border-bottom:1px dotted rgba(35,87,140,.3); padding-bottom:5px;}
+  .tg-nhan{
+    font-family:'Space Mono',monospace;
+    font-size:7px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--blue); opacity:.85;
+  }
+  .tg-gia-tri{
+    font-size:11.5px; font-weight:600; color:var(--ink);
+    line-height:1.35; margin-top:2px;
+  }
+  .tg-gia-tri.nho{font-size:10.5px; font-weight:500; color:var(--ink-2);}
+
+  .tg-mrz{
+    margin-top:16px; padding-top:11px;
+    border-top:1.5px solid rgba(35,87,140,.28);
+    font-family:'Space Mono',monospace;
+    font-size:8.5px; line-height:1.75; letter-spacing:.04em;
+    color:var(--ink); word-break:break-all;
+    position:relative; z-index:1;
+  }
+
+  .hai-gia-dinh{
+    margin-top:22px;
+    display:flex; align-items:stretch; justify-content:center;
+    background:rgba(255,255,255,.5);
+    border:1px solid var(--paper-line);
+    border-radius:12px;
+    padding:18px 12px;
+  }
+  .gđ-cot{flex:1; text-align:center; padding:0 6px;}
+  .gđ-nhan{
+    font-family:'Space Mono',monospace;
+    font-size:8px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold-dk); margin-bottom:10px;
+  }
+  .gđ-cha,.gđ-me{font-size:11.5px; line-height:1.7; color:var(--ink);}
+  .gđ-dia-chi{font-size:10px; color:var(--ink-2); margin-top:6px; line-height:1.5;}
+  .gđ-vach{
+    width:1px; align-self:stretch;
+    background:repeating-linear-gradient(180deg, rgba(201,165,74,.7) 0 5px, transparent 5px 10px);
+    margin:2px 6px;
+  }
+
+  .thong-tin-le{
+    margin-top:18px;
+    position:relative;
+    border:1.5px dashed rgba(184,54,46,.4);
+    border-radius:12px;
+    padding:22px 18px;
+    text-align:center;
+    background:rgba(255,255,255,.45);
+  }
+  .le-nhan{
+    position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+    background:var(--paper); padding:0 10px;
+    font-family:'Space Mono',monospace;
+    font-size:8px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--red);
+  }
+  .le-mo-dau{font-size:11.5px; color:var(--ink-2); margin-bottom:10px; letter-spacing:.04em;}
+  .le-gio{
+    font-family:'Playfair Display',serif;
+    font-size:44px; font-weight:700; line-height:1;
+    color:var(--red);
+    letter-spacing:.02em;
+  }
+  .le-ngay{font-size:13px; margin-top:10px; font-weight:600; color:var(--ink);}
+  .le-am-lich{font-size:10.5px; font-style:italic; color:var(--ink-2); margin-top:5px;}
+
+  /* ==========================================================
+     VÉ MÁY BAY / BOARDING PASS
+     ========================================================== */
+  .khoi-boarding{
+    background:
+      radial-gradient(circle at 88% 8%, rgba(35,87,140,.14), transparent 45%),
+      radial-gradient(circle at 10% 92%, rgba(201,165,74,.14), transparent 45%),
+      var(--paper);
+  }
+  .ve-may-bay{
+    position:relative;
+    border-radius:12px;
+    background:linear-gradient(160deg,#ffffff 0%, #f7f3ea 100%);
+    border:1px solid var(--paper-line);
+    box-shadow:0 10px 26px rgba(0,0,0,.14);
+    overflow:hidden;
+  }
+  .ve-dau{
+    padding:14px 18px;
+    background:linear-gradient(100deg, var(--cover-1) 0%, var(--cover-2) 100%);
+    color:var(--gold-lt);
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'Space Mono',monospace;
+    font-size:8.5px; letter-spacing:.2em;
+  }
+  .ve-dau .logo{font-weight:700; font-size:10px; letter-spacing:.16em;}
+  .ve-than{display:flex; position:relative;}
+
+  .ve-trai{flex:1; padding:18px 16px;}
+  .ve-tuyen{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:8px; margin-bottom:18px;
+  }
+  .san-bay{text-align:center; flex:0 0 auto;}
+  .sb-ma{
+    font-family:'Playfair Display',serif;
+    font-size:30px; font-weight:700; line-height:1;
+    color:var(--ink);
+  }
+  .sb-ten{
+    font-family:'Space Mono',monospace;
+    font-size:7.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-2); margin-top:5px;
+  }
+  .ve-duong{
+    flex:1; position:relative; height:1.5px;
+    background:repeating-linear-gradient(90deg, var(--paper-line) 0 5px, transparent 5px 10px);
+    margin:0 4px;
+  }
+  .ve-duong::after{
+    content:'✈';
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%) rotate(0deg);
+    font-size:14px; color:var(--red);
+    background:#fff; padding:0 4px;
+    animation:bayLuon 3.6s ease-in-out infinite;
+  }
+  @keyframes bayLuon{
+    0%,100%{transform:translate(-50%,-50%) translateX(-6px) rotate(0deg);}
+    50%{transform:translate(-50%,-50%) translateX(6px) rotate(0deg);}
+  }
+
+  .ve-luoi{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px 12px;
+  }
+  .ve-o{border-bottom:1px dotted rgba(35,87,140,.35); padding-bottom:5px;}
+  .ve-o .n{
+    font-family:'Space Mono',monospace;
+    font-size:6.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--blue);
+  }
+  .ve-o .v{font-size:11.5px; font-weight:600; margin-top:3px; line-height:1.35;}
+  .ve-o .v.nho{font-size:10.5px; font-weight:500; color:var(--ink-2); line-height:1.5;}
+
+  .ve-phan-cach{
+    position:relative; width:0;
+    border-left:1.5px dashed rgba(35,87,140,.4);
+    margin:14px 0;
+  }
+  .ve-phan-cach::before,
+  .ve-phan-cach::after{
+    content:''; position:absolute; left:-9px;
+    width:18px; height:18px; border-radius:50%;
+    background:var(--paper);
+    box-shadow:inset 0 0 0 1px rgba(35,87,140,.18);
+  }
+  .ve-phan-cach::before{top:-23px;}
+  .ve-phan-cach::after{bottom:-23px;}
+
+  .ve-phai{
+    flex:0 0 108px;
+    padding:18px 12px;
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    text-align:center;
+  }
+  .ve-stub-nhan{
+    font-family:'Space Mono',monospace;
+    font-size:6.5px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--blue);
+  }
+  .ve-stub-ma{
+    font-family:'Playfair Display',serif;
+    font-size:22px; font-weight:700; color:var(--ink); margin-top:4px;
+  }
+  .ve-barcode{
+    width:100%; height:44px; margin-top:10px;
+    background:repeating-linear-gradient(90deg,
+      var(--ink) 0 2px, transparent 2px 4px,
+      var(--ink) 4px 5px, transparent 5px 9px,
+      var(--ink) 9px 12px, transparent 12px 14px);
+    opacity:.82; border-radius:2px;
+  }
+  .ve-stub-so{
+    font-family:'Space Mono',monospace;
+    font-size:8px; letter-spacing:.12em; color:var(--ink-2); margin-top:8px;
+  }
+  .ve-mrz{
+    padding:10px 16px 14px;
+    font-family:'Space Mono',monospace;
+    font-size:7.5px; line-height:1.7; letter-spacing:.05em;
+    color:var(--ink-2); word-break:break-all;
+    border-top:1px solid rgba(35,87,140,.18);
+    background:rgba(35,87,140,.04);
+  }
+
+  .tiec-hanh-dong{display:flex; gap:10px; margin-top:20px;}
+  .nut-tiec{
+    flex:1;
+    font-family:'Be Vietnam Pro',sans-serif;
+    font-size:10px; letter-spacing:.10em; text-transform:uppercase; font-weight:600;
+    padding:10px 8px; border-radius:999px; cursor:pointer;
+    border:1.5px solid rgba(35,87,140,.45);
+    background:transparent; color:var(--blue);
+    transition:all .22s ease;
+  }
+  .nut-tiec:hover{background:rgba(35,87,140,.08); border-color:var(--blue);}
+  .nut-tiec-rsvp{
+    background:linear-gradient(135deg, var(--red) 0%, #8f2620 100%);
+    color:#fff; border-color:transparent;
+    box-shadow:0 8px 22px rgba(184,54,46,.35);
+  }
+  .nut-tiec-rsvp:hover{
+    background:linear-gradient(135deg,#c93f36 0%, #a02b24 100%);
+    box-shadow:0 12px 30px rgba(184,54,46,.5);
+    transform:translateY(-1px);
+  }
+
+  .tiec-ban-do-wrap{
+    margin: 24px -26px 0; width: calc(100% + 52px);
+    border-top:1px solid rgba(35,87,140,.2);
+    filter:grayscale(.35) contrast(.95) sepia(.12);
+  }
+  .tiec-ban-do{width:100%; height:260px; border:0; display:block;}
+
+  /* ==========================================================
+     ALBUM — TRANG VISA
+     ========================================================== */
+  .khoi-album{
+    background:
+      radial-gradient(circle at 12% 6%, rgba(184,54,46,.09), transparent 42%),
+      radial-gradient(circle at 90% 94%, rgba(47,107,79,.09), transparent 42%),
+      var(--paper);
+  }
+  .thu-vien-anh{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+  }
+  .anh-visa{
+    position:relative;
+    background:#fff;
+    padding:5px 5px 16px;
+    border-radius:3px;
+    box-shadow:0 5px 14px rgba(0,0,0,.16);
+    cursor:pointer;
+    transition:transform .28s ease, box-shadow .28s ease;
+  }
+  .anh-visa:nth-child(3n+1){transform:rotate(-1.6deg);}
+  .anh-visa:nth-child(3n+2){transform:rotate(1.2deg);}
+  .anh-visa:nth-child(3n+3){transform:rotate(-.7deg);}
+  .anh-visa:hover{
+    transform:rotate(0deg) translateY(-4px) scale(1.03);
+    box-shadow:0 12px 28px rgba(0,0,0,.28);
+    z-index:3;
+  }
+  .anh-visa img{width:100%; aspect-ratio:1; object-fit:cover; display:block; border-radius:2px;}
+  .anh-visa .cham{
+    position:absolute; right:3px; bottom:12px;
+    font-family:'Space Mono',monospace;
+    font-size:6px; letter-spacing:.1em;
+    color:var(--red); opacity:.75;
+    border:1px solid var(--red); border-radius:50%;
+    width:26px; height:26px;
+    display:flex; align-items:center; justify-content:center;
+    transform:rotate(-16deg);
+  }
+  .album-trong{
+    font-size:12px; color:var(--ink-2); text-align:center;
+    padding:26px 12px; line-height:1.7;
+    border:1.5px dashed var(--paper-line); border-radius:10px;
+  }
+
+  /* ==========================================================
+     LỊCH TRÌNH
+     ========================================================== */
+  .khoi-lichtrinh{
+    background:
+      repeating-linear-gradient(0deg, rgba(35,87,140,.05) 0 1px, transparent 1px 22px),
+      var(--paper);
+  }
+  .danh-sach-lich-trinh{position:relative; padding-left:26px;}
+  .danh-sach-lich-trinh::before{
+    content:''; position:absolute; left:6px; top:8px; bottom:8px;
+    border-left:1.5px dashed rgba(35,87,140,.35);
+  }
+  .muc-chuong-trinh{
+    position:relative;
+    display:flex; gap:14px; align-items:baseline;
+    padding:11px 0;
+  }
+  .muc-chuong-trinh::before{
+    content:''; position:absolute; left:-24px; top:16px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--red);
+    box-shadow:0 0 0 3px rgba(184,54,46,.12);
+  }
+  .muc-chuong-trinh .gio{
+    flex:0 0 54px;
+    font-family:'Space Mono',monospace;
+    font-size:12px; font-weight:700; color:var(--red);
+  }
+  .muc-chuong-trinh .noi-dung-muc{font-size:13px; color:var(--ink); line-height:1.5;}
+
+  /* ==========================================================
+     LƯU BÚT
+     ========================================================== */
+  .khoi-luubut{
+    background:
+      radial-gradient(circle at 90% 10%, rgba(201,165,74,.14), transparent 45%),
+      var(--paper);
+  }
+  .form-luu-but{display:flex; flex-direction:column; gap:10px; margin-bottom:24px;}
+  .form-luu-but input,
+  .form-luu-but textarea{
+    font-family:'Be Vietnam Pro',sans-serif;
+    padding:13px 15px; border-radius:10px;
+    border:1.5px solid var(--paper-line);
+    background:rgba(255,255,255,.8);
+    color:var(--ink); font-size:13.5px;
+    transition:all .2s ease;
+  }
+  .form-luu-but input::placeholder,
+  .form-luu-but textarea::placeholder{color:#9aa3af;}
+  .form-luu-but input:focus,
+  .form-luu-but textarea:focus{
+    outline:none; border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(201,165,74,.18);
+  }
+  .form-luu-but textarea{min-height:84px; resize:vertical;}
+  .form-luu-but button{
+    align-self:flex-end;
+    font-family:'Be Vietnam Pro',sans-serif;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+    color:#2a1e05;
+    background:linear-gradient(135deg,#f7ecc4 0%,#efd89a 35%,#c9a54a 100%);
+    border:none; padding:13px 28px; border-radius:999px; cursor:pointer;
+    box-shadow:0 8px 22px rgba(201,165,74,.35);
+    transition:all .22s ease;
+  }
+  .form-luu-but button:hover{transform:translateY(-1px); box-shadow:0 12px 30px rgba(201,165,74,.5);}
+  .form-luu-but button:disabled{opacity:.55; cursor:not-allowed; transform:none;}
+
+  .danh-sach-loi-chuc{display:flex; flex-direction:column; gap:11px;}
+  .mot-loi-chuc{
+    position:relative;
+    background:#fffdf7;
+    border:1px solid var(--paper-line);
+    border-left:3px solid var(--gold);
+    border-radius:8px;
+    padding:13px 15px;
+    box-shadow:0 3px 10px rgba(0,0,0,.06);
+  }
+  .mot-loi-chuc .ten{
+    font-family:'Space Mono',monospace;
+    font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--blue); font-weight:700; margin-bottom:6px;
+  }
+  .mot-loi-chuc .noi-dung{font-size:12.5px; line-height:1.65; color:var(--ink-2);}
+  .chua-co-loi-chuc{
+    font-size:12px; color:var(--ink-2); text-align:center;
+    padding:22px 12px; border:1.5px dashed var(--paper-line); border-radius:10px;
+  }
+
+  /* ==========================================================
+     MỪNG CƯỚI
+     ========================================================== */
+  .khoi-qua{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(201,165,74,.16), transparent 50%),
+      var(--paper);
+    text-align:center;
+  }
+  .khoi-qua .nhan-khoi{margin-left:auto; margin-right:auto;}
+  .phong-bi-wrap{display:flex; justify-content:center; gap:34px; margin:8px 0 6px;}
+  .phong-bi{
+    background:none; border:none; cursor:pointer; padding:0;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    animation:docDua 4.5s ease-in-out infinite;
+  }
+  .phong-bi:nth-child(2){animation-delay:2.1s;}
+  @keyframes docDua{
+    0%,100%{transform:translateY(0) rotate(-1deg);}
+    50%{transform:translateY(-9px) rotate(1.5deg);}
+  }
+  .phong-bi svg{
+    width:70px; height:88px;
+    filter:drop-shadow(0 8px 18px rgba(10,24,48,.35));
+    transition:transform .25s ease, filter .25s ease;
+  }
+  .phong-bi:hover svg{
+    transform:scale(1.08) rotate(3deg);
+    filter:drop-shadow(0 12px 26px rgba(201,165,74,.5));
+  }
+  .phong-bi-nhan{
+    font-family:'Space Mono',monospace;
+    font-size:8.5px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--blue); font-weight:700;
+  }
+  @keyframes bungNo{
+    0%{transform:scale(1) rotate(0); opacity:1;}
+    45%{transform:scale(1.35) rotate(-7deg); opacity:1;}
+    100%{transform:scale(0) rotate(9deg); opacity:0;}
+  }
+  .phong-bi.bung-no{animation:bungNo .42s ease forwards;}
+
+  .loi-cam-on{margin-top:30px; font-size:12.5px; line-height:1.9; color:var(--ink-2);}
+  .monogram-cuoi{
+    font-family:'Playfair Display',serif;
+    font-size:24px; font-weight:700; margin-top:16px;
+    color:var(--gold-dk);
+  }
+  .nut-quay-lai-cuoi{
+    margin-top:30px;
+    background:transparent;
+    border:1.5px solid rgba(35,87,140,.45);
+    color:var(--blue);
+    padding:13px 28px; border-radius:999px;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:600;
+    cursor:pointer; transition:all .22s ease;
+    font-family:'Be Vietnam Pro',sans-serif;
+  }
+  .nut-quay-lai-cuoi:hover{background:rgba(35,87,140,.08); border-color:var(--blue);}
+
+  /* ==========================================================
+     CHÂN TRANG
+     ========================================================== */
+  .chan-trang{text-align:center; padding:20px 0 30px;}
+  .chan-trang a{
+    font-family:'Space Mono',monospace;
+    font-size:9px; letter-spacing:.24em; text-transform:uppercase;
+    color:rgba(239,216,154,.5); text-decoration:none;
+    transition:color .2s ease;
+  }
+  .chan-trang a:hover{color:var(--gold);}
+
+  /* ==========================================================
+     MUSIC FAB
+     ========================================================== */
+  .music-fab{
+    position:fixed; bottom:18px; left:18px; z-index:70;
+    width:46px; height:46px; border-radius:50%;
+    border:1.5px solid rgba(201,165,74,.5);
+    background:linear-gradient(140deg, var(--cover-1), var(--cover-3));
+    color:var(--gold);
+    box-shadow:0 8px 22px rgba(0,0,0,.45), 0 0 22px rgba(201,165,74,.22);
+    display:none; align-items:center; justify-content:center; cursor:pointer;
+    transition:transform .2s ease;
+  }
+  .music-fab.show{display:flex;}
+  .music-fab:hover{transform:scale(1.07);}
+  .music-fab .bar{display:inline-flex; align-items:flex-end; gap:2.5px; height:15px;}
+  .music-fab .bar span{
+    width:2.5px; background:var(--gold); border-radius:1px;
+    animation:eq .9s ease-in-out infinite;
+  }
+  .music-fab .bar span:nth-child(1){height:6px; animation-delay:0s;}
+  .music-fab .bar span:nth-child(2){height:15px; animation-delay:.15s;}
+  .music-fab .bar span:nth-child(3){height:9px; animation-delay:.3s;}
+  .music-fab.paused .bar span{animation-play-state:paused; height:4px;}
+  @keyframes eq{0%,100%{transform:scaleY(.4);}50%{transform:scaleY(1);}}
+
+  /* ==========================================================
+     MODAL
+     ========================================================== */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:200;
+    background:rgba(7,10,18,.85);
+    backdrop-filter:blur(8px);
+    display:flex; align-items:center; justify-content:center; padding:22px;
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
+  }
+  .modal-overlay.hien{opacity:1; pointer-events:auto;}
+  .modal-box{
+    width:100%; max-width:360px;
+    background:
+      repeating-linear-gradient(0deg, rgba(27,36,48,.02) 0 1px, transparent 1px 3px),
+      var(--paper);
+    border-radius:18px; padding:28px 22px 24px;
+    position:relative;
+    transform:scale(.92); transition:transform .3s cubic-bezier(.2,.9,.3,1.2);
+    box-shadow:0 30px 70px rgba(0,0,0,.7), 0 0 0 1.5px rgba(201,165,74,.5);
+  }
+  .modal-overlay.hien .modal-box{transform:scale(1);}
+  .modal-dong{
+    position:absolute; top:12px; right:12px;
+    width:32px; height:32px; border-radius:50%;
+    border:1.5px solid rgba(35,87,140,.35);
+    background:transparent; color:var(--blue);
+    font-size:17px; cursor:pointer; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .2s ease;
+  }
+  .modal-dong:hover{background:rgba(35,87,140,.1);}
+  .modal-tieu-de{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-size:20px; font-weight:700;
+    color:var(--ink); margin-bottom:20px;
+    padding-bottom:14px;
+    border-bottom:1.5px dashed var(--paper-line);
+  }
+  .modal-hai-cot{display:flex; gap:14px;}
+  .modal-cot{flex:1; text-align:center;}
+  .modal-nhan{
+    font-family:'Space Mono',monospace;
+    font-size:8px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold-dk); margin-bottom:10px; font-weight:700;
+  }
+  .modal-qr img,.modal-qr-trong{
+    width:100%; aspect-ratio:1; border-radius:10px; margin-bottom:10px;
+  }
+  .modal-qr img{object-fit:contain; border:1px solid var(--paper-line); background:#fff;}
+  .modal-qr-trong{
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(35,87,140,.06);
+    border:1.5px dashed rgba(35,87,140,.35);
+    font-family:'Space Mono',monospace;
+    font-size:8px; color:var(--ink-2); line-height:1.5;
+    padding:8px; text-align:center;
+  }
+  .modal-ngan-hang{font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:3px;}
+  .modal-so-tk{
+    font-family:'Space Mono',monospace;
+    font-size:11.5px; color:var(--red); font-weight:700; letter-spacing:.05em;
+    margin-bottom:3px;
+  }
+  .modal-ten-tk{font-size:10px; color:var(--ink-2); letter-spacing:.06em;}
+
+  /* RSVP form */
+  .form-rsvp{display:flex; flex-direction:column; gap:15px; text-align:left;}
+  .rsvp-lua-chon{display:flex; flex-direction:column; gap:10px;}
+  .rsvp-radio{
+    display:flex; align-items:center; gap:10px;
+    font-size:12.5px; cursor:pointer; color:var(--ink);
+    padding:11px 13px;
+    border:1.5px solid var(--paper-line);
+    border-radius:10px;
+    background:rgba(255,255,255,.6);
+    transition:all .2s ease;
+  }
+  .rsvp-radio:has(input:checked){
+    border-color:var(--gold);
+    background:rgba(201,165,74,.1);
+    box-shadow:0 0 0 3px rgba(201,165,74,.14);
+  }
+  .rsvp-radio input[type="radio"]{accent-color:var(--gold-dk);}
+  .rsvp-truong{
+    display:flex; flex-direction:column; gap:6px;
+    font-family:'Space Mono',monospace;
+    font-size:8.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--blue);
+  }
+  .rsvp-truong input,
+  .rsvp-truong select,
+  .rsvp-truong textarea{
+    font-family:'Be Vietnam Pro',sans-serif;
+    padding:11px 13px; border-radius:10px;
+    border:1.5px solid var(--paper-line);
+    background:rgba(255,255,255,.85);
+    color:var(--ink); font-size:13.5px;
+    text-transform:none; letter-spacing:0;
+    transition:all .2s ease;
+  }
+  .rsvp-truong input:focus,
+  .rsvp-truong select:focus,
+  .rsvp-truong textarea:focus{
+    outline:none; border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(201,165,74,.18);
+  }
+  .rsvp-truong textarea{min-height:62px; resize:vertical;}
+  .nut-gui-rsvp{
+    align-self:flex-end;
+    font-family:'Be Vietnam Pro',sans-serif;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+    color:#fff;
+    background:linear-gradient(135deg, var(--red), #8f2620);
+    border:none; padding:13px 26px; border-radius:999px; cursor:pointer;
+    box-shadow:0 8px 22px rgba(184,54,46,.35);
+    transition:all .22s ease;
+  }
+  .nut-gui-rsvp:hover{transform:translateY(-1px); box-shadow:0 12px 30px rgba(184,54,46,.5);}
+  .nut-gui-rsvp:disabled{opacity:.55; cursor:not-allowed; transform:none;}
+
+  /* ==========================================================
+     LIGHTBOX
+     ========================================================== */
+  .gallery-lightbox-overlay{
+    position:fixed; inset:0; z-index:220;
+    background:rgba(4,7,12,.97);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .gallery-lightbox-overlay.open{opacity:1; pointer-events:auto;}
+  .gallery-lightbox-frame{
+    position:relative; width:100vw; height:100vh;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .gallery-lightbox-img{width:100vw; height:100vh; object-fit:contain;}
+  .gallery-lightbox-close,
+  .gallery-lightbox-prev,
+  .gallery-lightbox-next{
+    position:absolute; z-index:2;
+    border:1.5px solid rgba(201,165,74,.55);
+    color:var(--gold); background:rgba(10,19,34,.75);
+    width:46px; height:46px; border-radius:50%; font-size:24px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .2s ease;
+  }
+  .gallery-lightbox-close:hover,
+  .gallery-lightbox-prev:hover,
+  .gallery-lightbox-next:hover{
+    background:var(--gold); color:#0a1322; transform:scale(1.07);
+  }
+  .gallery-lightbox-close{top:16px; right:16px;}
+  .gallery-lightbox-prev{left:16px; top:50%; transform:translateY(-50%);}
+  .gallery-lightbox-next{right:16px; top:50%; transform:translateY(-50%);}
+  .gallery-lightbox-prev:hover,
+  .gallery-lightbox-next:hover{transform:translateY(-50%) scale(1.07);}
+  .gallery-lightbox-count{
+    position:absolute; left:50%; bottom:22px; transform:translateX(-50%);
+    font-family:'Space Mono',monospace;
+    color:var(--gold-lt); font-size:10px; letter-spacing:.2em;
+    background:rgba(10,19,34,.85); padding:8px 18px; border-radius:999px;
+    border:1px solid rgba(201,165,74,.35);
+  }
+
+  @media (max-width:400px){
+    .bia-sach{width:238px; height:324px;}
+    .tg-grid{grid-template-columns:66px 1fr 66px; gap:9px;}
+    .ve-phai{flex:0 0 92px;}
+    .sb-ma{font-size:25px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ==========================================================
+     NỀN + MÁY BAY BAY NGANG
+     ========================================================== -->
+<div class="nen-ban" aria-hidden="true">
+  <div class="may-bay mb1">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2 L13.5 9 L22 14 L22 16 L13.5 13 L13.5 18 L16.5 20.5 L16.5 21.5 L12 20 L7.5 21.5 L7.5 20.5 L10.5 18 L10.5 13 L2 16 L2 14 L10.5 9 Z" fill="#ffffff"/>
+    </svg>
+  </div>
+  <div class="may-bay mb2">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2 L13.5 9 L22 14 L22 16 L13.5 13 L13.5 18 L16.5 20.5 L16.5 21.5 L12 20 L7.5 21.5 L7.5 20.5 L10.5 18 L10.5 13 L2 16 L2 14 L10.5 9 Z" fill="#ffffff"/>
+    </svg>
+  </div>
+  <div class="may-bay mb3">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2 L13.5 9 L22 14 L22 16 L13.5 13 L13.5 18 L16.5 20.5 L16.5 21.5 L12 20 L7.5 21.5 L7.5 20.5 L10.5 18 L10.5 13 L2 16 L2 14 L10.5 9 Z" fill="#ffffff"/>
+    </svg>
+  </div>
+</div>
+
+<div class="thiep">
+
+  <!-- ========================================================
+       MÀN BÌA — HỘ CHIẾU
+       ======================================================== -->
+  <div class="man-bia" id="manBia">
+    <div class="bia-sach">
+      <div class="bia-vien"></div>
+      <div class="bia-noi-dung">
+
+        <div class="bia-quoc-hieu">
+          <div class="qh-1">CỘNG HÒA XÃ HỘI TÌNH YÊU</div>
+          <div class="qh-2">SOCIALIST REPUBLIC OF LOVE</div>
+        </div>
+
+        <div class="bia-emblem">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#8a6d1f"/>
+                <stop offset="28%" stop-color="#efd89a"/>
+                <stop offset="52%" stop-color="#c9a54a"/>
+                <stop offset="74%" stop-color="#f7ecc4"/>
+                <stop offset="100%" stop-color="#9a7a2e"/>
+              </linearGradient>
+            </defs>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="url(#goldGrad)" stroke-width="2.2"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="url(#goldGrad)" stroke-width="0.8" opacity=".8"/>
+            <ellipse cx="60" cy="60" rx="45" ry="18" fill="none" stroke="url(#goldGrad)" stroke-width="0.8" opacity=".75"/>
+            <ellipse cx="60" cy="60" rx="18" ry="45" fill="none" stroke="url(#goldGrad)" stroke-width="0.8" opacity=".75"/>
+            <ellipse cx="60" cy="60" rx="34" ry="45" fill="none" stroke="url(#goldGrad)" stroke-width="0.6" opacity=".5"/>
+            <line x1="15" y1="60" x2="105" y2="60" stroke="url(#goldGrad)" stroke-width="0.8" opacity=".75"/>
+            <path d="M60 82 C 38 64, 36 47, 49 40.5 C 56.5 36.8, 60 43.5, 60 47 C 60 43.5, 63.5 36.8, 71 40.5 C 84 47, 82 64, 60 82 Z"
+                  fill="url(#goldGrad)"/>
+          </svg>
+        </div>
+
+        <div class="bia-tieu-de">
+          <div class="td-1">HỘ CHIẾU TÌNH YÊU</div>
+          <div class="td-2">PASSPORT OF LOVE</div>
+        </div>
+
+        <div class="bia-duoi">
+          <div class="bd-ten" id="biaTenCapDoi">GIA BẢO &amp; MINH ANH</div>
+          <div class="bd-so" id="biaSoHoChieu">No. 2026 1220</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- <div class="bia-moi">
+      <div class="moi-nhan">Trân trọng kính mời</div>
+      <div class="moi-ten" id="tenKhach">Quý khách</div>
+      <div class="mo-ta-loi-moi">đến dự buổi tiệc chung vui cùng gia đình</div>
+      <div class="moi-phu" id="biaNgayCuoi"></div>
+    </div> -->
+
+    <button class="nut-mo" id="nutMo">Mở Hộ Chiếu</button>
+  </div>
+
+  <!-- ========================================================
+       MÀN NỘI DUNG
+       ======================================================== -->
+  <div class="man-noi-dung" id="manNoiDung">
+
+    <!-- HERO -->
+    <section class="khoi khoi-hero">
+      <div class="hero-anh-wrap">
+        <img class="hero-anh" id="heroAnh" src="" alt="Ảnh cưới">
+        <div class="hero-phu"></div>
+        <div class="hero-nhan">
+          <div class="hero-nhan-nho">BOARDING TO FOREVER</div>
+          <div class="hero-ten" id="heroTenCapDoi"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANG DỮ LIỆU -->
+    <section class="khoi khoi-du-lieu">
+      <div class="trang-giay">
+        <div class="tg-header">
+          <span>HỘ CHIẾU TÌNH YÊU</span>
+          <span>PASSPORT OF LOVE</span>
+        </div>
+
+        <div class="tg-grid">
+          <div class="tg-anh-wrap">
+            <div class="tg-anh"><img id="anhChuRe" src="" alt="Chú rể"></div>
+            <div class="tg-anh-ten" id="tenChuReNgan"></div>
+          </div>
+
+          <div class="tg-fields" id="tgFields"></div>
+
+          <div class="tg-anh-wrap">
+            <div class="tg-anh"><img id="anhCoDau" src="" alt="Cô dâu"></div>
+            <div class="tg-anh-ten" id="tenCoDauNgan"></div>
+          </div>
+        </div>
+
+        <div class="tg-mrz" id="tgMrz"></div>
+      </div>
+
+      <div class="hai-gia-dinh" id="ndHaiCot"></div>
+      <div class="thong-tin-le" id="ndThongTinLe"></div>
+
+      <div class="con-dau" style="top:14px; right:16px; width:78px; height:78px;">
+        <span class="cd-tren">LOVE</span>
+        <span class="cd-giua">❤</span>
+        <span class="cd-duoi">2026</span>
+      </div>
+    </section>
+
+    <!-- BOARDING PASS -->
+    <section class="khoi khoi-boarding">
+      <div class="nhan-khoi">Thư Mời / Invitation</div>
+      <div class="tieu-de-khoi">Chuyến Bay Hạnh Phúc</div>
+
+      <div class="ve-may-bay">
+        <div class="ve-dau">
+          <span class="logo">✈ LOVE AIRLINES</span>
+          <span id="veSoHieu">LA 2026</span>
+        </div>
+
+        <div class="ve-than">
+          <div class="ve-trai">
+            <div class="ve-tuyen">
+              <div class="san-bay">
+                <div class="sb-ma">SGN</div>
+                <div class="sb-ten">Độc Thân</div>
+              </div>
+              <div class="ve-duong"></div>
+              <div class="san-bay">
+                <div class="sb-ma">MRR</div>
+                <div class="sb-ten">Kết Hôn</div>
+              </div>
+            </div>
+
+            <div class="ve-luoi" id="veLuoi"></div>
+          </div>
+
+          <div class="ve-phan-cach"></div>
+
+          <div class="ve-phai">
+            <div>
+              <div class="ve-stub-nhan">Gate</div>
+              <div class="ve-stub-ma" id="veGate">A1</div>
+            </div>
+            <div style="width:100%;">
+              <div class="ve-barcode"></div>
+              <div class="ve-stub-so" id="veStubSo">2026 1220</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ve-mrz" id="veMrz"></div>
+      </div>
+
+      <div class="tiec-ban-do-wrap" id="tiecBanDoWrap" style="display:none;">
+        <iframe id="mapFrame" class="tiec-ban-do" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
+      </div>
+
+      <div class="tiec-hanh-dong">
+        <button type="button" class="nut-tiec" id="nutThemLich">Thêm vào lịch</button>
+        <button type="button" class="nut-tiec nut-tiec-rsvp" id="nutXacNhan">Xác nhận tham dự</button>
+      </div>
+    </section>
+
+    <!-- ALBUM -->
+    <section class="khoi khoi-album">
+      <div class="nhan-khoi">Visa Pages</div>
+      <div class="tieu-de-khoi">Những Chặng Đã Qua</div>
+      <div class="thu-vien-anh" id="ndGallery"></div>
+      <div class="album-trong" id="ndAlbumTrong" style="display:none;"></div>
+    </section>
+
+    <!-- LỊCH TRÌNH -->
+    <section class="khoi khoi-lichtrinh">
+      <div class="nhan-khoi">Itinerary</div>
+      <div class="tieu-de-khoi">Lịch Trình Chuyến Đi</div>
+      <div class="danh-sach-lich-trinh" id="ndChuongTrinh"></div>
+    </section>
+
+    <!-- LƯU BÚT -->
+    <section class="khoi khoi-luubut">
+      <div class="nhan-khoi">Travel Notes</div>
+      <div class="tieu-de-khoi">Ghi Lại Hành Trình</div>
+      <form class="form-luu-but" id="formLuuBut">
+        <input type="text" id="inputTenKhach" placeholder="Tên của bạn" required>
+        <textarea id="inputLoiChuc" placeholder="Lời chúc của bạn..." required></textarea>
+        <button type="submit">Gửi Lời Chúc</button>
+      </form>
+      <div class="danh-sach-loi-chuc" id="danhSachLoiChuc"></div>
+    </section>
+
+    <!-- MỪNG CƯỚI -->
+    <section class="khoi khoi-qua" id="khoiQua">
+      <div class="nhan-khoi">Customs</div>
+      <div class="tieu-de-khoi">Hành Lý Yêu Thương</div>
+
+      <div class="phong-bi-wrap">
+        <button type="button" class="phong-bi" id="phongBiChuRe" aria-label="Mừng cưới chú rể">
+          <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="envA" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1d3b66"/>
+                <stop offset="100%" stop-color="#0a1830"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="60" height="76" rx="6" fill="url(#envA)" stroke="#c9a54a" stroke-width="1.6"/>
+            <path d="M2 8 L32 32 L62 8" fill="rgba(201,165,74,.16)" stroke="#c9a54a" stroke-width="1.1"/>
+            <circle cx="32" cy="48" r="12" fill="none" stroke="#c9a54a" stroke-width="1.2"/>
+            <text x="32" y="54" text-anchor="middle" font-size="15" fill="#c9a54a" font-family="serif">♂</text>
+            <circle cx="32" cy="48" r="15.5" fill="none" stroke="#c9a54a" stroke-width=".5" opacity=".55" stroke-dasharray="2 3"/>
+          </svg>
+          <span class="phong-bi-nhan">Chú Rể</span>
+        </button>
+
+        <button type="button" class="phong-bi" id="phongBiCoDau" aria-label="Mừng cưới cô dâu">
+          <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="envB" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1d3b66"/>
+                <stop offset="100%" stop-color="#0a1830"/>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="60" height="76" rx="6" fill="url(#envB)" stroke="#c9a54a" stroke-width="1.6"/>
+            <path d="M2 8 L32 32 L62 8" fill="rgba(201,165,74,.16)" stroke="#c9a54a" stroke-width="1.1"/>
+            <circle cx="32" cy="48" r="12" fill="none" stroke="#c9a54a" stroke-width="1.2"/>
+            <text x="32" y="54" text-anchor="middle" font-size="15" fill="#c9a54a" font-family="serif">♀</text>
+            <circle cx="32" cy="48" r="15.5" fill="none" stroke="#c9a54a" stroke-width=".5" opacity=".55" stroke-dasharray="2 3"/>
+          </svg>
+          <span class="phong-bi-nhan">Cô Dâu</span>
+        </button>
+      </div>
+
+      <div class="loi-cam-on">
+        <p>Sự hiện diện của quý khách là niềm vinh hạnh<br>cho gia đình chúng tôi.</p>
+        <div class="monogram-cuoi" id="quaMonogram"></div>
+      </div>
+
+      <button class="nut-quay-lai-cuoi" id="nutQuayLai">‹ Quay Lại Bìa</button>
+    </section>
+
+    <div class="chan-trang">
+      <a href="https://vemotnha.com.vn" target="_blank" rel="noopener">✦ vemotnha.com.vn ✦</a>
+    </div>
+
+  </div>
+
+  <!-- MODAL QUÀ -->
+  <div class="modal-overlay" id="modalQuaOverlay">
+    <div class="modal-box">
+      <button type="button" class="modal-dong" id="modalDong" aria-label="Đóng">×</button>
+      <div class="modal-tieu-de" id="modalTieuDe">Thông tin mừng cưới</div>
+      <div class="modal-hai-cot" id="modalHaiCot"></div>
+    </div>
+  </div>
+
+  <!-- MODAL RSVP -->
+  <div class="modal-overlay" id="modalRsvpOverlay">
+    <div class="modal-box">
+      <button type="button" class="modal-dong" id="modalRsvpDong" aria-label="Đóng">×</button>
+      <div class="modal-tieu-de">Xác nhận tham dự</div>
+      <form class="form-rsvp" id="formRsvp">
+        <div class="rsvp-lua-chon">
+          <label class="rsvp-radio">
+            <input type="radio" name="rsvpTrangThai" value="co" checked>
+            <span>Có, tôi sẽ tham dự</span>
+          </label>
+          <label class="rsvp-radio">
+            <input type="radio" name="rsvpTrangThai" value="khong">
+            <span>Rất tiếc, tôi không thể tham dự</span>
+          </label>
+        </div>
+        <label class="rsvp-truong">
+          <span>Số lượng người tham dự</span>
+          <input type="number" id="rsvpSoLuong" min="1" value="1">
+        </label>
+        <label class="rsvp-truong">
+          <span>Ghi chú (không bắt buộc)</span>
+          <textarea id="rsvpGhiChu" placeholder="Lời nhắn thêm..."></textarea>
+        </label>
+        <button type="submit" class="nut-gui-rsvp">Gửi Xác Nhận</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="gallery-lightbox-overlay" id="galleryLightbox">
+    <div class="gallery-lightbox-frame">
+      <button type="button" class="gallery-lightbox-close" id="galleryClose" aria-label="Đóng">×</button>
+      <button type="button" class="gallery-lightbox-prev" id="galleryPrev" aria-label="Ảnh trước">‹</button>
+      <img class="gallery-lightbox-img" id="galleryImage" src="" alt="">
+      <button type="button" class="gallery-lightbox-next" id="galleryNext" aria-label="Ảnh sau">›</button>
+      <div class="gallery-lightbox-count" id="galleryCount">1 / 1</div>
+    </div>
+  </div>
+
+</div>
+
+<audio id="bgMusic" loop preload="none"></audio>
+<button class="music-fab" id="musicToggle" title="Bật / tắt nhạc nền" type="button" aria-label="Bật / tắt nhạc nền">
+  <span class="bar"><span></span><span></span><span></span></span>
+</button>
+
+<script>
+  window.__INVITATION_CONFIG__ = null;
+  window.__INVITATION_ID__ = null;
+
+  const DEFAULT_CONFIG = {
+    "groomShort": "Gia Bảo",
+    "brideShort": "Minh Anh",
+    "groomFull": "Nguyễn Gia Bảo",
+    "brideFull": "Trần Minh Anh",
+    "groomRole": "Trưởng Nam",
+    "brideRole": "Út Nữ",
+    "monogram": "B & A",
+    "weddingDateISO": "2026-12-20T18:00:00",
+    "groomParents": {
+      "father": "Ông Nguyễn Văn Long",
+      "mother": "Bà Lê Thị Hồng",
+      "address": "12 Trần Phú, Hải Châu, Đà Nẵng"
+    },
+    "brideParents": {
+      "father": "Ông Trần Văn Nam",
+      "mother": "Bà Phạm Thị Lan",
+      "address": "45 Lê Duẩn, Quận 1, TP.HCM"
+    },
+    "ceremony": {
+      "time": "09:00",
+      "dateLabel": "20 · 12 · 2026",
+      "lunar": "(Nhằm ngày 11 tháng 11 năm Bính Ngọ)"
+    },
+    "reception": {
+      "date": "2026-12-20",
+      "welcomeTime": "17:30",
+      "startTime": "18:00",
+      "venueName": "The Adora Center",
+      "address": "431 Hoàng Văn Thụ, Tân Bình, TP.HCM",
+      "mapQuery": ""
+    },
+    "schedule": [
+      { "time": "17:30", "label": "Đón khách & check-in" },
+      { "time": "18:00", "label": "Nghi thức cưới" },
+      { "time": "18:20", "label": "Khai tiệc" },
+      { "time": "19:00", "label": "Phục vụ tiệc chính" },
+      { "time": "21:00", "label": "Kết thúc tiệc" }
+    ],
+    "gallery": [
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi-1.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/DSC_8736.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-1.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-2.webp",
+      "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/anh-3.webp"
+    ],
+    "gifts": {
+      "groom": { "bank": "Vietcombank", "account": "0123 4567 89", "name": "NGUYEN GIA BAO", "qrImage": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/qrcode_chu-re.png" },
+      "bride": { "bank": "BIDV", "account": "9876 5432 10", "name": "TRAN MINH ANH", "qrImage": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/qrcode_co-dau.jpg" }
+    },
+    "musicUrl": "",
+    "story": [
+      { "date": "Mùa thu 2021", "text": "Lần đầu gặp gỡ tại một quán cà phê nhỏ ven sông." },
+      { "date": "Mùa hè 2025", "text": "Lời cầu hôn bất ngờ dưới ánh hoàng hôn." },
+      { "date": "20.12.2026", "text": "Ngày chúng tôi chính thức nên duyên vợ chồng." }
+    ],
+    "photos": {
+      "coverPhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp",
+      "groomPhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/chu-re.webp",
+      "bridePhoto": "https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/co-dau.webp"
+    }
+  };
+
+  const DEFAULT_INVITATION_ID = "d8795988-035b-445c-813f-e1e5ff5f9f9e";
+</script>
+
+<script>
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+  function dinhDangNgayThu(chuoiNgay) {
+    const d = new Date(chuoiNgay + 'T00:00:00');
+    const thu = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][d.getDay()];
+    const [nam, thang, ngay] = chuoiNgay.split('-');
+    return `${thu}, ${ngay}.${thang}.${nam}`;
+  }
+
+  function phanTichNgayCham(nhan) {
+    const phan = nhan.split('·').map(p => p.trim());
+    return { ngay: phan[0], thang: phan[1], nam: phan[2] };
+  }
+
+  function boDauTiengViet(str) {
+    return (str || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+      .toUpperCase();
+  }
+
+  function taoLinkGoogleCalendar(config) {
+    const [nam, thang, ngay] = config.reception.date.split('-').map(Number);
+    const [gio, phut] = config.reception.welcomeTime.split(':').map(Number);
+    const batDau = new Date(nam, thang - 1, ngay, gio, phut);
+    const ketThuc = new Date(batDau.getTime() + 4 * 60 * 60 * 1000);
+    const pad = (n) => String(n).padStart(2, '0');
+    const fmt = (d) => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+    const thamSoLich = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: `Tiệc cưới ${config.groomShort} & ${config.brideShort}`,
+      dates: `${fmt(batDau)}/${fmt(ketThuc)}`,
+      details: `Trân trọng kính mời đến dự tiệc cưới của ${config.groomFull} & ${config.brideFull}.`,
+      location: `${config.reception.venueName}, ${config.reception.address}`
+    });
+    return `https://calendar.google.com/calendar/render?${thamSoLich.toString()}`;
+  }
+
+  function xayThongTinPhuHuynh(nhanGiaDinh, phuHuynh) {
+    const div = document.createElement('div');
+    div.className = 'gđ-cot';
+    div.innerHTML = `
+      <div class="gđ-nhan">${nhanGiaDinh}</div>
+      <div class="gđ-cha">${phuHuynh.father}</div>
+      <div class="gđ-me">${phuHuynh.mother}</div>
+      <div class="gđ-dia-chi">${phuHuynh.address}</div>
+    `;
+    return div;
+  }
+
+  function xayCotMungCuoi(nhan, taiKhoan) {
+    const div = document.createElement('div');
+    div.className = 'modal-cot';
+    const oQr = taiKhoan.qrImage
+      ? `<div class="modal-qr"><img src="${taiKhoan.qrImage}" alt="Mã QR ${nhan}"></div>`
+      : `<div class="modal-qr"><div class="modal-qr-trong">Mã QR sẽ<br>cập nhật sau</div></div>`;
+    div.innerHTML = `
+      <div class="modal-nhan">${nhan}</div>
+      ${oQr}
+      <div class="modal-ngan-hang">${taiKhoan.bank}</div>
+      <div class="modal-so-tk">${taiKhoan.account}</div>
+      <div class="modal-ten-tk">${taiKhoan.name}</div>
+    `;
+    return div;
+  }
+
+  /* =========================================================
+     RENDER
+     ========================================================= */
+  let tenKhachHienTai = '';
+
+  function render(config) {
+    const musicBtn = document.getElementById('musicToggle');
+    const musicEl = document.getElementById('bgMusic');
+
+    if (config.musicUrl) {
+      musicEl.src = config.musicUrl;
+      musicBtn.classList.add('show');
+      musicBtn.classList.remove('paused');
+    } else {
+      musicEl.removeAttribute('src');
+      musicBtn.classList.remove('show');
+    }
+
+    /* --- BÌA --- */
+    document.getElementById('biaTenCapDoi').textContent =
+      `${config.groomShort} & ${config.brideShort}`.toUpperCase();
+    const [nam, thang, ngay] = config.reception.date.split('-');
+    document.getElementById('biaSoHoChieu').textContent = `No. ${nam} ${thang}${ngay}`;
+    // document.getElementById('biaNgayCuoi').textContent = dinhDangNgayThu(config.reception.date);
+
+    /* --- HERO --- */
+    document.getElementById('heroTenCapDoi').innerHTML =
+      `${config.groomShort} <span>❤</span> ${config.brideShort}`;
+    if (config.photos?.coverPhoto) {
+      document.getElementById('heroAnh').src = config.photos.coverPhoto;
+    }
+
+    /* --- TRANG DỮ LIỆU --- */
+    if (config.photos?.groomPhoto) document.getElementById('anhChuRe').src = config.photos.groomPhoto;
+    if (config.photos?.bridePhoto) document.getElementById('anhCoDau').src = config.photos.bridePhoto;
+    document.getElementById('tenChuReNgan').textContent = config.groomShort;
+    document.getElementById('tenCoDauNgan').textContent = config.brideShort;
+
+    document.getElementById('tgFields').innerHTML = `
+      <div class="tg-truong">
+        <div class="tg-nhan">Họ và tên / Name</div>
+        <div class="tg-gia-tri">${config.groomFull}</div>
+      </div>
+      <div class="tg-truong">
+        <div class="tg-nhan">Họ và tên / Name</div>
+        <div class="tg-gia-tri">${config.brideFull}</div>
+      </div>
+      <div class="tg-truong">
+        <div class="tg-nhan">Quốc tịch / Nationality</div>
+        <div class="tg-gia-tri nho">Trái tim của nhau</div>
+      </div>
+      <div class="tg-truong">
+        <div class="tg-nhan">Có giá trị đến / Valid until</div>
+        <div class="tg-gia-tri nho">Mãi mãi · Forever</div>
+      </div>
+    `;
+
+    const mrz1 = `P<VNM${boDauTiengViet(config.groomShort).replace(/\s/g,'<')}<<<<<<<<<<<<<<<<<<<<<<`;
+    const mrz2 = `${nam}${thang}${ngay}VNM${boDauTiengViet(config.brideShort).replace(/\s/g,'<')}<<<<<<<<<<<<<<<<<`;
+    document.getElementById('tgMrz').innerHTML = `${mrz1}<br>${mrz2}`;
+
+    /* --- HAI GIA ĐÌNH --- */
+    const haiCot = document.getElementById('ndHaiCot');
+    haiCot.innerHTML = '';
+    haiCot.appendChild(xayThongTinPhuHuynh('Nhà Trai', config.groomParents));
+    const vach = document.createElement('div');
+    vach.className = 'gđ-vach';
+    haiCot.appendChild(vach);
+    haiCot.appendChild(xayThongTinPhuHuynh('Nhà Gái', config.brideParents));
+
+    /* --- THÔNG TIN LỄ --- */
+    const { ngay: nLe, thang: tLe, nam: namLe } = phanTichNgayCham(config.ceremony.dateLabel);
+    document.getElementById('ndThongTinLe').innerHTML = `
+      <div class="le-nhan">Lễ Thành Hôn</div>
+      <div class="le-mo-dau">Hôn lễ sẽ cử hành tại tư gia lúc</div>
+      <div class="le-gio">${config.ceremony.time}</div>
+      <div class="le-ngay">Ngày ${nLe} tháng ${tLe} năm ${namLe}</div>
+      <div class="le-am-lich">${config.ceremony.lunar}</div>
+    `;
+
+    /* --- BOARDING PASS --- */
+    document.getElementById('veSoHieu').textContent = `LA ${nam}`;
+    document.getElementById('veStubSo').textContent = `${nam} ${thang}${ngay}`;
+
+    const gateChu = (config.reception.venueName || 'A1').replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase() || 'A1';
+    document.getElementById('veGate').textContent = gateChu;
+
+    document.getElementById('veLuoi').innerHTML = `
+      <div class="ve-o">
+        <div class="n">Hành khách / Passenger</div>
+        <div class="v" id="veHanhKhach">${tenKhachHienTai || 'Quý khách'}</div>
+      </div>
+      <div class="ve-o">
+        <div class="n">Ngày / Date</div>
+        <div class="v">${dinhDangNgayThu(config.reception.date)}</div>
+      </div>
+      <div class="ve-o">
+        <div class="n">Giờ lên máy bay / Boarding</div>
+        <div class="v">${config.reception.welcomeTime}</div>
+      </div>
+      <div class="ve-o">
+        <div class="n">Khởi hành / Departure</div>
+        <div class="v">${config.reception.startTime}</div>
+      </div>
+      <div class="ve-o" style="grid-column:1/-1;">
+        <div class="n">Địa điểm / Venue</div>
+        <div class="v">${config.reception.venueName}</div>
+        <div class="v nho" style="margin-top:3px;">${config.reception.address}</div>
+      </div>
+    `;
+
+    document.getElementById('veMrz').textContent =
+      `LA${nam}${thang}${ngay}MRR<<${boDauTiengViet(config.groomShort).replace(/\s/g,'<')}<${boDauTiengViet(config.brideShort).replace(/\s/g,'<')}`;
+
+    if (config.reception.mapQuery) {
+      document.getElementById('mapFrame').src = config.reception.mapQuery;
+      document.getElementById('tiecBanDoWrap').style.display = 'block';
+    }
+
+    /* --- NÚT THÊM LỊCH --- */
+    document.getElementById('nutThemLich').addEventListener('click', () => {
+      window.open(taoLinkGoogleCalendar(config), '_blank', 'noopener');
+    });
+
+    /* --- RSVP --- */
+    const modalRsvpOverlay = document.getElementById('modalRsvpOverlay');
+    const dongRsvp = () => modalRsvpOverlay.classList.remove('hien');
+
+    document.getElementById('nutXacNhan').addEventListener('click', () => {
+      modalRsvpOverlay.classList.add('hien');
+    });
+    document.getElementById('modalRsvpDong').addEventListener('click', dongRsvp);
+    modalRsvpOverlay.addEventListener('click', (e) => {
+      if (e.target === modalRsvpOverlay) dongRsvp();
+    });
+
+    const rsvpSoLuong = document.getElementById('rsvpSoLuong');
+    document.querySelectorAll('input[name="rsvpTrangThai"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        rsvpSoLuong.disabled = radio.value !== 'co';
+      });
+    });
+
+    document.getElementById('formRsvp').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const trangThai = document.querySelector('input[name="rsvpTrangThai"]:checked').value;
+      const soLuong = trangThai === 'co' ? rsvpSoLuong.value : 0;
+      const ghiChu = document.getElementById('rsvpGhiChu').value.trim();
+      const nutGui = e.target.querySelector('button[type="submit"]');
+      nutGui.disabled = true;
+
+      fetch(`/api/invitations/${encodeURIComponent(window.__INVITATION_ID__ || DEFAULT_INVITATION_ID)}/rsvp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: tenKhachHienTai || 'Quý khách',
+          phone: '',
+          attendanceStatus: trangThai === 'co' ? 'attending' : 'declined',
+          guestCount: parseInt(soLuong) || 1,
+          mealPreference: 'Bình thường',
+          message: ghiChu
+        })
+      }).then(async response => {
+        if (!response.ok) throw new Error('Unable to save RSVP');
+        alert('Cảm ơn bạn đã gửi xác nhận!');
+        e.target.reset();
+        dongRsvp();
+      }).catch(error => {
+        console.error('Unable to save RSVP:', error);
+        alert('Không thể gửi xác nhận lúc này. Vui lòng thử lại.');
+      }).finally(() => { nutGui.disabled = false; });
+    });
+
+    /* --- ALBUM --- */
+    if (Array.isArray(config.gallery) && config.gallery.length > 0) {
+      const luoiAnh = document.getElementById('ndGallery');
+      const galleryUrls = config.gallery;
+      galleryUrls.forEach((url, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'anh-visa';
+        wrap.dataset.idx = String(idx);
+        wrap.innerHTML = `
+          <img src="${url}" alt="Ảnh cưới ${idx + 1}">
+          <div class="cham">${String(idx + 1).padStart(2,'0')}</div>
+        `;
+        luoiAnh.appendChild(wrap);
+      });
+
+      const galleryLightbox = document.getElementById('galleryLightbox');
+      const galleryImage = document.getElementById('galleryImage');
+      const galleryCount = document.getElementById('galleryCount');
+      let galleryCurrent = 0;
+
+      function hienAnh(idx) {
+        galleryCurrent = (idx + galleryUrls.length) % galleryUrls.length;
+        galleryImage.src = galleryUrls[galleryCurrent];
+        galleryImage.alt = `Ảnh cưới ${galleryCurrent + 1}`;
+        galleryCount.textContent = `${galleryCurrent + 1} / ${galleryUrls.length}`;
+      }
+      function openGallery(idx) {
+        hienAnh(idx);
+        galleryLightbox.classList.add('open');
+      }
+      function closeGallery() { galleryLightbox.classList.remove('open'); }
+
+      luoiAnh.querySelectorAll('.anh-visa').forEach((el) => {
+        el.addEventListener('click', () => openGallery(Number(el.dataset.idx)));
+      });
+
+      document.getElementById('galleryClose').addEventListener('click', closeGallery);
+      document.getElementById('galleryPrev').addEventListener('click', () => hienAnh(galleryCurrent - 1));
+      document.getElementById('galleryNext').addEventListener('click', () => hienAnh(galleryCurrent + 1));
+
+      galleryLightbox.addEventListener('click', (event) => {
+        if (event.target === galleryLightbox) closeGallery();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (!galleryLightbox.classList.contains('open')) return;
+        if (event.key === 'Escape') closeGallery();
+        if (event.key === 'ArrowLeft') hienAnh(galleryCurrent - 1);
+        if (event.key === 'ArrowRight') hienAnh(galleryCurrent + 1);
+      });
+    } else {
+      document.getElementById('ndGallery').style.display = 'none';
+      const trong = document.getElementById('ndAlbumTrong');
+      trong.textContent = 'Album ảnh sẽ được cập nhật sau, mời quý khách quay lại sau nhé!';
+      trong.style.display = 'block';
+    }
+
+    /* --- LỊCH TRÌNH --- */
+    const boxChuongTrinh = document.getElementById('ndChuongTrinh');
+    boxChuongTrinh.innerHTML = '';
+    config.schedule.forEach(muc => {
+      const div = document.createElement('div');
+      div.className = 'muc-chuong-trinh';
+      div.innerHTML = `<div class="gio">${muc.time}</div><div class="noi-dung-muc">${muc.label}</div>`;
+      boxChuongTrinh.appendChild(div);
+    });
+
+    /* --- QUÀ --- */
+    document.getElementById('quaMonogram').textContent = `${config.groomShort} & ${config.brideShort}`;
+
+    const phongBiChuRe = document.getElementById('phongBiChuRe');
+    const phongBiCoDau = document.getElementById('phongBiCoDau');
+    const modalQuaOverlay = document.getElementById('modalQuaOverlay');
+    const modalHaiCot = document.getElementById('modalHaiCot');
+    const modalTieuDe = document.getElementById('modalTieuDe');
+
+    function moHopQua(who) {
+      const laChuRe = who === 'groom';
+      const nutDaBam = laChuRe ? phongBiChuRe : phongBiCoDau;
+      const taiKhoan = laChuRe ? config.gifts?.groom : config.gifts?.bride;
+      const ten = laChuRe ? config.groomShort : config.brideShort;
+      if (!taiKhoan) return;
+
+      nutDaBam.classList.add('bung-no');
+      modalTieuDe.textContent = `Mừng cưới ${ten}`;
+      modalHaiCot.innerHTML = '';
+      modalHaiCot.appendChild(xayCotMungCuoi(ten, taiKhoan));
+      setTimeout(() => { modalQuaOverlay.classList.add('hien'); }, 380);
+    }
+
+    function dongHopQua() {
+      modalQuaOverlay.classList.remove('hien');
+      phongBiChuRe.classList.remove('bung-no');
+      phongBiCoDau.classList.remove('bung-no');
+    }
+
+    phongBiChuRe.addEventListener('click', () => moHopQua('groom'));
+    phongBiCoDau.addEventListener('click', () => moHopQua('bride'));
+    document.getElementById('modalDong').addEventListener('click', dongHopQua);
+    modalQuaOverlay.addEventListener('click', (e) => {
+      if (e.target === modalQuaOverlay) dongHopQua();
+    });
+  }
+
+  /* =========================================================
+     GUEST NAME TỪ URL
+     ========================================================= */
+  const thamSo = new URLSearchParams(window.location.search);
+  const tenKhachRaw = thamSo.get('guest');
+  if (tenKhachRaw) {
+    tenKhachHienTai = tenKhachRaw.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    document.getElementById('tenKhach').textContent = tenKhachHienTai;
+  }
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  let config;
+  let invitationId;
+
+  function init() {
+    config = window.__INVITATION_CONFIG__ || DEFAULT_CONFIG;
+    invitationId = window.__INVITATION_ID__ || DEFAULT_INVITATION_ID;
+    render(config);
+  }
+
+  init();
+
+  /* =========================================================
+     LƯU BÚT
+     ========================================================= */
+  const wishes = [];
+
+  function renderWishes() {
+    const box = document.getElementById('danhSachLoiChuc');
+    box.innerHTML = '';
+    if (wishes.length === 0) {
+      const trong = document.createElement('div');
+      trong.className = 'chua-co-loi-chuc';
+      trong.textContent = 'Chưa có lời chúc nào — hãy là người đầu tiên!';
+      box.appendChild(trong);
+      return;
+    }
+    wishes.forEach(wish => {
+      const div = document.createElement('div');
+      div.className = 'mot-loi-chuc';
+      div.innerHTML = `<div class="ten">${wish.name}</div><div class="noi-dung">${wish.message}</div>`;
+      box.appendChild(div);
+    });
+  }
+
+  async function loadWishes() {
+    if (!invitationId) return;
+    try {
+      const response = await fetch(`/api/invitations/${encodeURIComponent(invitationId)}/wishes`);
+      if (!response.ok) throw new Error('Unable to load wishes');
+      const data = await response.json();
+      wishes.splice(0, wishes.length, ...(data.wishes || []));
+      renderWishes();
+    } catch (error) {
+      console.error('Unable to load invitation wishes:', error);
+      renderWishes();
+    }
+  }
+
+  //loadWishes();
+
+  document.getElementById('formLuuBut').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('inputTenKhach').value.trim();
+    const msg = document.getElementById('inputLoiChuc').value.trim();
+    if (!name || !msg) return;
+
+    const submitButton = e.target.querySelector('button');
+    submitButton.disabled = true;
+
+    fetch(`/api/invitations/${encodeURIComponent(invitationId)}/wishes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, message: msg })
+    }).then(async response => {
+      if (!response.ok) throw new Error('Unable to save wish');
+      const data = await response.json();
+      wishes.unshift(data.wish);
+      renderWishes();
+      e.target.reset();
+    }).catch(error => {
+      console.error('Unable to save invitation wish:', error);
+      alert('Không thể gửi lời chúc lúc này. Vui lòng thử lại.');
+    }).finally(() => { submitButton.disabled = false; });
+  });
+
+  /* =========================================================
+     MỞ / ĐÓNG THIỆP
+     ========================================================= */
+  const manBia = document.getElementById('manBia');
+  const manNoiDung = document.getElementById('manNoiDung');
+  const nutMo = document.getElementById('nutMo');
+  const nutQuayLai = document.getElementById('nutQuayLai');
+
+  const musicEl = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicToggle');
+
+  function playMusicIfAvailable(){
+    if (!musicEl.src) return;
+    musicEl.play().then(() => {
+      musicBtn.classList.remove('paused');
+    }).catch(() => {
+      musicBtn.classList.add('paused');
+    });
+  }
+
+  musicBtn.addEventListener('click', () => {
+    if (musicEl.paused) {
+      musicEl.play().then(() => musicBtn.classList.remove('paused')).catch(() => {});
+    } else {
+      musicEl.pause();
+      musicBtn.classList.add('paused');
+    }
+  });
+
+  function moThiep() {
+    manBia.classList.add('dang-dong');
+    setTimeout(() => {
+      manBia.style.display = 'none';
+      manNoiDung.style.display = 'flex';
+      requestAnimationFrame(() => { manNoiDung.classList.add('hien'); });
+      //playMusicIfAvailable();
+      window.scrollTo(0, 0);
+    }, 520);
+  }
+
+  function dongThiep() {
+    manNoiDung.classList.remove('hien');
+    setTimeout(() => {
+      manNoiDung.style.display = 'none';
+      manBia.style.display = 'flex';
+      requestAnimationFrame(() => { manBia.classList.remove('dang-dong'); });
+      window.scrollTo(0, 0);
+    }, 420);
+  }
+
+  nutMo.addEventListener('click', () => {
+    moThiep();
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 180,
+        spread: 88,
+        origin: { y: 0.62 },
+        colors: ['#c9a54a', '#efd89a', '#b8362e', '#23578c', '#ffffff']
+      });
+      setTimeout(() => {
+        confetti({ particleCount: 55, angle: 60, spread: 55, origin: { x: 0, y: 0.7 }, colors: ['#c9a54a', '#23578c'] });
+        confetti({ particleCount: 55, angle: 120, spread: 55, origin: { x: 1, y: 0.7 }, colors: ['#b8362e', '#efd89a'] });
+      }, 220);
+    }
+  });
+
+  nutQuayLai.addEventListener('click', dongThiep);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+</body>
+</html>

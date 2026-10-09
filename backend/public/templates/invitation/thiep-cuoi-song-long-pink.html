@@ -3,56 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!--
-  ==============================================================
-  THẺ CHIA SẺ LINK — Open Graph (Zalo / Facebook / Messenger)
-  ==============================================================
-  1. Zalo đọc HTML bằng crawler phía server và KHÔNG chạy JavaScript,
-     nên các thẻ og:* dưới đây phải là thẻ TĨNH mới có tác dụng.
-     Phần JS ở cuối file chỉ ghi đè lại cho đúng tên cô dâu/chú rể và
-     ảnh bìa thật (dùng cho tab trình duyệt + crawler có chạy JS).
-  2. og:image PHẢI là URL tuyệt đối, công khai qua https (Zalo không
-     đọc được đường dẫn tương đối như "/images/...").
-  3. Ảnh nên là JPG/PNG, nặng dưới ~5MB thì Zalo hiển thị chắc chắn
-     hơn. Vì vậy ngoài ảnh mặc định của thiệp (webp) còn khai báo
-     thêm 1 ảnh JPG dự phòng cùng domain.
-  4. Zalo cache preview theo URL: muốn Zalo đọc lại, hãy chia sẻ kèm
-     tham số khác, ví dụ .../invitations/abc.html?v=2
-  ==============================================================
--->
-<meta name="description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="author" content="Vemotnha">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0b3d39">
-<title>Thiệp mời cưới — Trân trọng kính mời</title>
-
-<meta property="og:locale" content="vi_VN">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Vemotnha — Thiệp cưới online">
-<meta property="og:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta property="og:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-
-<!-- Ảnh chính: đúng ảnh bìa mặc định của mẫu thiệp này -->
-<meta property="og:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:secure_url" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:type" content="image/webp">
-<meta property="og:image:width" content="1707">
-<meta property="og:image:height" content="2560">
-<meta property="og:image:alt" content="Ảnh cưới của cô dâu và chú rể">
-
-<!-- Ảnh dự phòng: khổ ngang + định dạng JPG, nằm cùng domain với trang thiệp -->
-<meta property="og:image" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:secure_url" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1920">
-<meta property="og:image:height" content="1074">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta name="twitter:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="twitter:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-
+<title>Thiệp mẫu — Song Long (bản học tập)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Noto+Serif+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -63,18 +14,18 @@
     ==============================================================
   */
   :root {
-    --jade-deep: #0b3d39;
-    --jade: #12574e;
-    --jade-light: #1f7a6c;
-    --gold: #d4af37;
-    --gold-light: #f3dfa0;
-    --gold-deep: #8a6a1f;
-    --cream: #faf6ec;
-    --cream-2: #f1e9d8;
-    --ink: #14231f;
-    --ink-dark: #0d1f1c;
-    --bronze-dark: #4a3319;
-    --bronze-deep: #2b1f10;
+    --jade-deep: #efbdcd;
+    --jade: #f6cfdb;
+    --jade-light: #fce7ee;
+    --gold: #e693ab;
+    --gold-light: #f2b8c9;
+    --gold-deep: #b2637d;
+    --cream: #fff7f9;
+    --cream-2: #fdeaf0;
+    --ink: #6b3b48;
+    --ink-dark: #552c38;
+    --bronze-dark: #c98ba0;
+    --bronze-deep: #a8677c;
   }
 
   * { box-sizing: border-box; }
@@ -85,7 +36,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #04110f;
+    background: #fdf0f4;
     font-family: 'Be Vietnam Pro', sans-serif;
     /* padding: 32px 16px; */
     /* box-sizing: border-box; */
@@ -99,8 +50,8 @@
     overflow: hidden;
     border-radius: 22px;
     background: radial-gradient(circle at 50% 20%, var(--jade-light) 0%, var(--jade) 45%, var(--jade-deep) 100%);
-    color: var(--cream);
-    box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(212,175,55,.15);
+    color: var(--ink);
+    box-shadow: 0 30px 90px rgba(107,59,72,.28), 0 0 0 1px rgba(230,147,171,.45);
   }
 
   /* Trên di động: hiển thị toàn màn hình, bỏ padding/bo góc/đổ bóng của "thẻ nổi" */
@@ -112,14 +63,14 @@
 
   /* LỚP 2 — HỌA TIẾT TRANG TRÍ (chỉ dùng ở màn bìa) */
   .hoa-tiet { position: absolute; inset: 0; pointer-events: none; }
-  .rong-nen { position: absolute; top: 50%; transform: translateY(-50%); height: 62%; width: auto; object-fit: contain; opacity: .12; }
+  .rong-nen { position: absolute; top: 50%; transform: translateY(-50%); height: 62%; width: auto; object-fit: contain; opacity: .4; }
   .rong-trai { right: 50%; }
   .rong-phai { left: 50%; }
   .song { position: absolute; bottom: 0; left: 0; width: 100%; opacity: .9; }
 
   /* LỚP 3 — CHỮ HỈ BAY LƯỢN (màn bìa) */
   .chu-hi {
-    position: absolute; color: var(--gold-light); font-size: 22px; opacity: .35;
+    position: absolute; color: var(--gold); font-size: 22px; opacity: .35;
     animation: bayLen 6s ease-in-out infinite; user-select: none;
   }
   @keyframes bayLen {
@@ -136,34 +87,34 @@
   }
   .man-bia.dang-dong { opacity: 0; transform: scale(.96) translateY(-16px); pointer-events: none; }
 
-  .nhan-nho { font-size: 13px; letter-spacing: .08em; color: var(--gold-light); margin-bottom: 18px; }
-  .ten-cap-doi { font-family: 'Noto Serif Display', serif; font-size: 28px; line-height: 1.15; margin: 0 0 14px; color: var(--gold-light); }
-  .hoa-van-nho { color: var(--gold); font-size: 20px; margin: 6px 0 18px; }
+  .nhan-nho { font-size: 13px; letter-spacing: .08em; color: var(--gold-deep); margin-bottom: 18px; }
+  .ten-cap-doi { font-family: 'Noto Serif Display', serif; font-size: 28px; line-height: 1.15; margin: 0 0 14px; color: var(--gold-deep); }
+  .hoa-van-nho { color: var(--gold-deep); font-size: 20px; margin: 6px 0 18px; }
   .ngay-cuoi { font-size: 15px; letter-spacing: .04em; opacity: .9; margin-bottom: 34px; }
   .loi-moi { font-size: 18px; opacity: .85; margin-bottom: 4px; margin-top: 38px }
-  .ten-khach { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-light); margin: 4px 0 6px; }
+  .ten-khach { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-deep); margin: 4px 0 6px; }
   .mo-ta-loi-moi { font-size: 13px; opacity: .75; margin-bottom: 38px; }
 
   .nut-mo {
     font-family: 'Be Vietnam Pro', sans-serif; font-size: 14px; letter-spacing: .05em;
-    color: var(--jade-deep); background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    color: var(--ink); background: linear-gradient(135deg, var(--gold-light), var(--gold));
     border: none; padding: 14px 36px; border-radius: 999px; cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease; box-shadow: 0 8px 24px rgba(212,175,55,.35);
+    transition: transform .2s ease, box-shadow .2s ease; box-shadow: 0 8px 24px rgba(230,147,171,.45);
   }
-  .nut-mo:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(212,175,55,.45); }
-  .nut-mo:active { transform: scale(.94); box-shadow: 0 4px 14px rgba(212,175,55,.35); }
+  .nut-mo:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(230,147,171,.55); }
+  .nut-mo:active { transform: scale(.94); box-shadow: 0 4px 14px rgba(230,147,171,.45); }
   
   /* Nút nhạc nền kiểu floating button giống minimal-red */
   .music-fab{
     position: fixed; bottom: 18px; left: 18px; z-index: 70;
     width: 44px; height: 44px; border-radius: 50%;
     border: none; background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    color: var(--jade-deep); box-shadow: 0 6px 20px rgba(0,0,0,.35);
+    color: var(--ink); box-shadow: 0 6px 20px rgba(107,59,72,.3);
     display: none; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
   }
   .music-fab.show{ display: flex; }
   .music-fab .bar{ display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
-  .music-fab .bar span{ width: 2.5px; background: var(--jade-deep); border-radius: 1px; animation: eq .9s ease-in-out infinite; }
+  .music-fab .bar span{ width: 2.5px; background: var(--ink); border-radius: 1px; animation: eq .9s ease-in-out infinite; }
   .music-fab .bar span:nth-child(1){ height: 6px; animation-delay:0s; }
   .music-fab .bar span:nth-child(2){ height: 14px; animation-delay:.15s; }
   .music-fab .bar span:nth-child(3){ height: 9px; animation-delay:.3s; }
@@ -187,32 +138,32 @@
   .khoi { position: relative; z-index: 0; width: 100%; padding: 56px 26px 46px; text-align: center; overflow: hidden; }
   .rong-chim-khoi {
     position: absolute; top: 50%; left: 50%; height: 55%; width: auto;
-    object-fit: contain; opacity: .18; z-index: -1; pointer-events: none;
+    object-fit: contain; opacity: .4; z-index: -1; pointer-events: none;
   }
   .nhan-khoi { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; margin-bottom: 10px; }
   .tieu-de-khoi { font-family: 'Noto Serif Display', serif; font-size: 22px; margin: 0 0 28px; }
 
   /* Section 1 — Hero: ảnh hiển thị ĐẦY ĐỦ theo đúng tỷ lệ gốc (không cắt),
      có lớp phủ tối + tên cặp đôi đè lên phía dưới ảnh */
-  .khoi-hero { padding: 0; background: var(--jade-deep); color: var(--cream); }
+  .khoi-hero { padding: 0; background: var(--jade-deep); color: var(--ink); }
   .hero-anh-wrap { position: relative; width: 100%; min-height: 220px; }
   .hero-anh { width: 100%; height: auto; display: block; }
   .hero-phu {
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(11,61,57,.05) 65%, rgba(11,61,57,.5) 80%, rgba(11,61,57,1) 90%, rgba(11,61,57,1) 100%);;
+    background: linear-gradient(180deg, rgba(239,189,205,.05) 65%, rgba(239,189,205,.55) 80%, rgba(239,189,205,1) 90%, rgba(239,189,205,1) 100%);;
   }
-  .hero-noi-dung { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; color: var(--gold-light); }
+  .hero-noi-dung { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; color: var(--gold-deep); }
   .ten-cap-doi-lon { font-family: 'Noto Serif Display', serif; font-size: 32px; margin: 8px 0; }
 
   /* Section 2 — Lễ thành hôn (nhà trai / nhà gái) — NỀN TỐI */
-  .khoi-le { background: var(--jade-deep); color: var(--cream); }
+  .khoi-le { background: var(--jade-deep); color: var(--ink); }
   .hai-cot { display: flex; flex-direction: column; gap: 22px; }
 
   /* Hàng 1: thông tin cha mẹ 2 bên, có đường kẻ ngắn ở giữa */
   .hang-phu-huynh { display: flex; align-items: stretch; justify-content: center; }
   .phu-huynh-cot { flex: 1; text-align: center; }
-  .duong-ke-giua { width: 1px; align-self: stretch; background: var(--gold); opacity: .5; margin: 2px 16px; }
-  .phu-huynh-cot .nhan-nha { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .duong-ke-giua { width: 1px; align-self: stretch; background: var(--gold-deep); opacity: .5; margin: 2px 16px; }
+  .phu-huynh-cot .nhan-nha { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 10px; }
   .phu-huynh-cot .cha, .phu-huynh-cot .me { font-size: 12px; line-height: 1.7; opacity: .9; }
   .phu-huynh-cot .dia-chi { font-size: 11px; opacity: .7; margin-top: 4px; line-height: 1.5; }
 
@@ -225,11 +176,11 @@
 
   .thong-tin-le {
     margin-top: 26px; text-align: center;
-    background: rgba(250,246,236,.06); border: 1px solid rgba(212,175,55,.3);
+    background: rgba(255,255,255,.6); border: 1px solid rgba(230,147,171,.55);
     border-radius: 16px; padding: 22px 18px;
   }
   .le-cau-mo-dau { font-size: 13px; opacity: .85; margin-bottom: 12px; }
-  .le-gio { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-light); line-height: 1; margin-bottom: 10px; }
+  .le-gio { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-deep); line-height: 1; margin-bottom: 10px; }
   .le-ngay { font-size: 15px; margin-bottom: 8px; }
   .le-am-lich { font-size: 12px; font-style: italic; opacity: .75; }
 
@@ -241,38 +192,38 @@
   .album-trong { font-size: 13px; opacity: .7; padding: 20px 0; }
 
   /* Section 4 — Tiệc cưới — NỀN TỐI */
-  .khoi-tiec { background: var(--jade-deep); color: var(--cream); }
+  .khoi-tiec { background: var(--jade-deep); color: var(--ink); }
   .tiec-ten-khach {
-    font-family: 'Noto Serif Display', serif; font-size: 20px; color: var(--gold-light);
-    margin: -14px 0 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(212,175,55,.35);
+    font-family: 'Noto Serif Display', serif; font-size: 20px; color: var(--gold-deep);
+    margin: -14px 0 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(178,99,125,.4);
     display: inline-block;
   }
   .tiec-loi-moi { font-size: 15px; opacity: .85; margin-bottom: 22px; }
   #ndThongTinTiec {
-    background: rgba(250,246,236,.06); border: 1px solid rgba(212,175,55,.3);
+    background: rgba(255,255,255,.6); border: 1px solid rgba(230,147,171,.55);
     border-radius: 16px; padding: 22px 18px;
   }
-  .tiec-nhan { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-light); margin: 22px 0 8px; }
+  .tiec-nhan { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-deep); margin: 22px 0 8px; }
   #ndThongTinTiec .tiec-nhan:first-child { margin-top: 0; }
-  .tiec-gia-tri-noi-bat { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-light); line-height: 1.2; margin-bottom: 6px; }
-  .tiec-ngay { font-size: 14px; color: var(--cream); opacity: .9; }
+  .tiec-gia-tri-noi-bat { font-family: 'Noto Serif Display', serif; font-size: 24px; color: var(--gold-deep); line-height: 1.2; margin-bottom: 6px; }
+  .tiec-ngay { font-size: 14px; color: var(--ink); opacity: .9; }
   .tiec-dia-chi { font-size: 14px; opacity: .9; max-width: 280px; margin: 0 auto; }
 
   .tiec-hanh-dong { display: flex; flex-direction: row; gap: 12px; margin-top: 26px; }
   .nut-tiec {
     flex: 1; font-family: 'Be Vietnam Pro', sans-serif; font-size: 10px; letter-spacing: .02em;
     padding: 10px 10px; border-radius: 999px; cursor: pointer;
-    border: 1px solid rgba(212,175,55,.4); background: transparent; color: var(--cream);
+    border: 1px solid rgba(178,99,125,.45); background: transparent; color: var(--ink);
   }
   .nut-tiec-rsvp {
     background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    color: var(--jade-deep); border: none; font-weight: 600;
+    color: var(--ink); border: none; font-weight: 600;
   }
 
   /* Bản đồ nằm NGOÀI khối thông tin, kéo full-width hết chiều ngang section (phá lề của .khoi) */
   .tiec-ban-do-wrap {
     margin: 24px -26px 0; width: calc(100% + 52px);
-    overflow: hidden; border-top: 1px solid rgba(212,175,55,.3); border-bottom: 1px solid rgba(212,175,55,.3);
+    overflow: hidden; border-top: 1px solid rgba(230,147,171,.5); border-bottom: 1px solid rgba(230,147,171,.5);
   }
   .tiec-ban-do { width: 100%; height: 300px; border: 0; display: block; }
 
@@ -280,28 +231,28 @@
   .khoi-lichtrinh { background: var(--cream); color: var(--ink); }
   .khoi-lichtrinh .nhan-khoi { color: var(--gold-deep); }
   .danh-sach-lich-trinh { text-align: left; max-width: 300px; margin: 0 auto; }
-  .muc-chuong-trinh { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(20,35,31,.1); }
+  .muc-chuong-trinh { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(107,59,72,.15); }
   .muc-chuong-trinh:last-child { border-bottom: none; }
   .muc-chuong-trinh .gio { flex-shrink: 0; width: 52px; color: var(--gold-deep); font-weight: 600; font-size: 13px; }
   .muc-chuong-trinh .noi-dung-muc { font-size: 14px; }
 
   /* Section 6 — Sổ lưu bút — NỀN TỐI */
-  .khoi-luubut { background: var(--jade-deep); color: var(--cream); }
+  .khoi-luubut { background: var(--jade-deep); color: var(--ink); }
   .form-luu-but { display: flex; flex-direction: column; gap: 10px; text-align: left; margin-bottom: 26px; }
   .form-luu-but input, .form-luu-but textarea {
     font-family: 'Be Vietnam Pro', sans-serif; padding: 10px 14px; border-radius: 10px;
-    border: 1px solid rgba(20,35,31,.15); background: #fff; font-size: 14px;
+    border: 1px solid rgba(107,59,72,.2); background: #fff; font-size: 14px;
   }
   .form-luu-but textarea { min-height: 70px; resize: vertical; }
   .form-luu-but button {
     align-self: flex-end; font-family: 'Be Vietnam Pro', sans-serif; font-size: 13px; letter-spacing: .03em;
-    color: var(--jade-deep); background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    color: var(--ink); background: linear-gradient(135deg, var(--gold-light), var(--gold));
     border: none; padding: 10px 22px; border-radius: 999px; cursor: pointer;
   }
   .danh-sach-loi-chuc { text-align: left; display: flex; flex-direction: column; gap: 12px; }
-  .mot-loi-chuc { background: var(--jade-deep); color: var(--cream); border-radius: 12px; padding: 12px 14px; border: 1px solid rgba(212,175,55,.25); }
-  .mot-loi-chuc .ten { font-weight: 600; font-size: 13px; margin-bottom: 4px; color: var(--gold-light); text-transform: capitalize; }
-  .mot-loi-chuc .noi-dung { font-size: 13px; line-height: 1.5; color: var(--cream); }
+  .mot-loi-chuc { background: var(--cream); color: var(--ink); border-radius: 12px; padding: 12px 14px; border: 1px solid rgba(230,147,171,.5); }
+  .mot-loi-chuc .ten { font-weight: 600; font-size: 13px; margin-bottom: 4px; color: var(--gold-deep); text-transform: capitalize; }
+  .mot-loi-chuc .noi-dung { font-size: 13px; line-height: 1.5; color: var(--ink); }
   .chua-co-loi-chuc { font-size: 13px; opacity: .7; text-align: center; }
 
   /* Section 7 — Hộp quà mừng cưới & lời cảm ơn — NỀN SÁNG */
@@ -320,7 +271,7 @@
     0%, 100% { transform: translateY(0) rotate(0deg); }
     50%      { transform: translateY(-6px) rotate(-2deg); }
   }
-  .phong-bi svg { width: 64px; height: 80px; filter: drop-shadow(0 6px 14px rgba(0,0,0,.18)); transition: transform .2s ease; }
+  .phong-bi svg { width: 64px; height: 80px; filter: drop-shadow(0 6px 14px rgba(107,59,72,.2)); transition: transform .2s ease; }
   .phong-bi:hover svg { transform: scale(1.06) rotate(1.5deg); }
   .phong-bi-nhan { font-size: 12px; color: var(--gold-deep); letter-spacing: .04em; }
 
@@ -336,7 +287,7 @@
   .monogram-cuoi { font-family: 'Noto Serif Display', serif; font-size: 22px; color: var(--gold-deep); margin-top: 16px; }
 
   .nut-quay-lai-cuoi {
-    margin-top: 34px; background: none; border: 1px solid rgba(20,35,31,.25); color: var(--ink);
+    margin-top: 34px; background: none; border: 1px solid rgba(107,59,72,.3); color: var(--ink);
     padding: 10px 24px; border-radius: 999px; font-size: 13px; cursor: pointer;
   }
 
@@ -348,7 +299,7 @@
   /* POPUP thông tin chuyển khoản + QR */
   .modal-qua-overlay {
     position: fixed; inset: 0; z-index: 20;
-    background: rgba(13,31,28,.72);
+    background: rgba(107,59,72,.6);
     display: flex; align-items: center; justify-content: center; padding: 24px;
     opacity: 0; pointer-events: none; transition: opacity .3s ease;
   }
@@ -357,21 +308,21 @@
     width: 100%; max-width: 340px; background: var(--cream); color: var(--ink);
     border-radius: 20px; padding: 26px 20px; position: relative;
     transform: scale(.9); transition: transform .3s ease;
-    box-shadow: 0 24px 60px rgba(0,0,0,.4);
+    box-shadow: 0 24px 60px rgba(107,59,72,.3);
   }
   .modal-qua-overlay.hien .modal-qua { transform: scale(1); }
   .modal-dong {
     position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; border-radius: 50%;
-    border: none; background: rgba(20,35,31,.08); color: var(--ink); font-size: 16px; cursor: pointer;
+    border: none; background: rgba(107,59,72,.1); color: var(--ink); font-size: 16px; cursor: pointer;
   }
   .modal-tieu-de { text-align: center; font-family: 'Noto Serif Display', serif; font-size: 18px; margin-bottom: 18px; }
   .modal-hai-cot { display: flex; gap: 14px; }
   .modal-cot { flex: 1; text-align: center; }
   .modal-nhan { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 8px; }
   .modal-qr img, .modal-qr-trong { width: 100%; aspect-ratio: 1; border-radius: 10px; margin-bottom: 10px; }
-  .modal-qr img { object-fit: contain; border: 1px solid rgba(20,35,31,.1); }
+  .modal-qr img { object-fit: contain; border: 1px solid rgba(107,59,72,.12); }
   .modal-qr-trong {
-    display: flex; align-items: center; justify-content: center; background: #efe7d6;
+    display: flex; align-items: center; justify-content: center; background: #fbe3ea;
     font-size: 10px; color: var(--ink); opacity: .65; line-height: 1.4; padding: 6px; text-align: center;
   }
   .modal-ngan-hang { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
@@ -385,12 +336,12 @@
   .rsvp-truong { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--gold-deep); }
   .rsvp-truong input, .rsvp-truong select, .rsvp-truong textarea {
     font-family: 'Be Vietnam Pro', sans-serif; padding: 9px 12px; border-radius: 10px;
-    border: 1px solid rgba(20,35,31,.2); font-size: 14px; background: #fff; color: var(--ink);
+    border: 1px solid rgba(107,59,72,.25); font-size: 14px; background: #fff; color: var(--ink);
   }
   .rsvp-truong textarea { min-height: 60px; resize: vertical; }
   .nut-gui-rsvp {
     align-self: flex-end; background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    color: var(--jade-deep); border: none; padding: 10px 22px; border-radius: 999px;
+    color: var(--ink); border: none; padding: 10px 22px; border-radius: 999px;
     font-size: 13px; font-weight: 600; cursor: pointer;
   }
   .nut-gui-rsvp:disabled { opacity: .6; cursor: not-allowed; }
@@ -452,8 +403,8 @@
     <img class="rong-nen rong-trai" src="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/dragon_left_MMnU.webp" alt="">
     <img class="rong-nen rong-phai" src="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/dragon_right_MMnU.webp" alt="">
     <svg class="song" viewBox="0 0 430 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 30 Q35 10 70 30 T140 30 T210 30 T280 30 T350 30 T430 30 V60 H0 Z" fill="#0b3d39"/>
-      <path d="M0 40 Q35 22 70 40 T140 40 T210 40 T280 40 T350 40 T430 40 V60 H0 Z" fill="#12574e" opacity="0.8"/>
+      <path d="M0 30 Q35 10 70 30 T140 30 T210 30 T280 30 T350 30 T430 30 V60 H0 Z" fill="#efbdcd"/>
+      <path d="M0 40 Q35 22 70 40 T140 40 T210 40 T280 40 T350 40 T430 40 V60 H0 Z" fill="#f6cfdb" opacity="0.8"/>
     </svg>
   </div>
 
@@ -552,19 +503,19 @@
       <div class="phong-bi-wrap" id="phongBiWrap">
         <button type="button" class="phong-bi" id="phongBiChuRe" aria-label="Mừng cưới chú rể">
           <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="60" height="76" rx="6" fill="#12574e" stroke="#d4af37" stroke-width="2"/>
-            <path d="M2 8 L32 32 L62 8" fill="none" stroke="#d4af37" stroke-width="2"/>
-            <circle cx="32" cy="46" r="10" fill="none" stroke="#d4af37" stroke-width="1.5"/>
-            <text x="32" y="51" text-anchor="middle" font-size="12" fill="#d4af37" font-family="serif">囍</text>
+            <rect x="2" y="2" width="60" height="76" rx="6" fill="#f2b8c9" stroke="#b2637d" stroke-width="2"/>
+            <path d="M2 8 L32 32 L62 8" fill="none" stroke="#b2637d" stroke-width="2"/>
+            <circle cx="32" cy="46" r="10" fill="none" stroke="#b2637d" stroke-width="1.5"/>
+            <text x="32" y="51" text-anchor="middle" font-size="12" fill="#b2637d" font-family="serif">囍</text>
           </svg>
           <span class="phong-bi-nhan">Chú Rể</span>
         </button>
         <button type="button" class="phong-bi" id="phongBiCoDau" aria-label="Mừng cưới cô dâu">
           <svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="60" height="76" rx="6" fill="#12574e" stroke="#d4af37" stroke-width="2"/>
-            <path d="M2 8 L32 32 L62 8" fill="none" stroke="#d4af37" stroke-width="2"/>
-            <circle cx="32" cy="46" r="10" fill="none" stroke="#d4af37" stroke-width="1.5"/>
-            <text x="32" y="51" text-anchor="middle" font-size="12" fill="#d4af37" font-family="serif">囍</text>
+            <rect x="2" y="2" width="60" height="76" rx="6" fill="#f2b8c9" stroke="#b2637d" stroke-width="2"/>
+            <path d="M2 8 L32 32 L62 8" fill="none" stroke="#b2637d" stroke-width="2"/>
+            <circle cx="32" cy="46" r="10" fill="none" stroke="#b2637d" stroke-width="1.5"/>
+            <text x="32" y="51" text-anchor="middle" font-size="12" fill="#b2637d" font-family="serif">囍</text>
           </svg>
           <span class="phong-bi-nhan">Cô Dâu</span>
         </button>
@@ -1093,98 +1044,11 @@
     });
   }
 
-  /*
-    ==============================================================
-    BƯỚC B3 — CẬP NHẬT THẺ CHIA SẺ (Open Graph) THEO DỮ LIỆU THẬT
-    Thẻ og:* tĩnh trong <head> là bản mặc định dành cho crawler của
-    Zalo/Facebook (chúng không chạy JavaScript). Hàm dưới đây ghi đè
-    lại bằng tên cô dâu/chú rể, địa điểm và ảnh bìa thật của thiệp —
-    có tác dụng với tiêu đề tab trình duyệt và các crawler/app có
-    chạy JavaScript. Nhớ: og:image luôn phải là URL tuyệt đối https.
-    ==============================================================
-  */
-  const ANH_BIA_MAC_DINH = 'https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp';
-
-  // Thêm thẻ <meta> nếu chưa có, cập nhật nếu đã có.
-  function datTheMeta(thuocTinh, ten, noiDung) {
-    let the = document.head.querySelector(`meta[${thuocTinh}="${ten}"]`);
-    if (!the) {
-      the = document.createElement('meta');
-      the.setAttribute(thuocTinh, ten);
-      document.head.appendChild(the);
-    }
-    the.setAttribute('content', noiDung);
-  }
-
-  // Xoá hết các thẻ <meta> khớp (dùng khi con số cũ không còn đúng nữa).
-  function xoaTheMeta(thuocTinh, ten) {
-    document.head.querySelectorAll(`meta[${thuocTinh}="${ten}"]`).forEach((the) => the.remove());
-  }
-
-  // Ảnh bìa để chia sẻ: ưu tiên ảnh thật của thiệp, cuối cùng mới dùng ảnh mặc định.
-  function anhBiaChiaSe(config) {
-    const anh = config?.photos?.coverPhoto
-      || (Array.isArray(config?.gallery) ? config.gallery.find(Boolean) : '')
-      || ANH_BIA_MAC_DINH;
-    return tuyetDoiHoaUrl(anh);
-  }
-
-  // Crawler không chạy JS nên chỉ cần URL tuyệt đối; hàm này cũng giúp
-  // link thiệp chạy đúng khi xem offline / trên domain khác.
-  function tuyetDoiHoaUrl(url) {
-    try {
-      return new URL(url, window.location.href).href;
-    } catch {
-      return ANH_BIA_MAC_DINH;
-    }
-  }
-
-  function capNhatTheChiaSe(config) {
-    const tenCapDoi = [config.groomShort, config.brideShort].filter(Boolean).join(' & ');
-    const tieuDe = tenCapDoi ? `Thiệp mời cưới ${tenCapDoi}` : 'Thiệp mời cưới';
-    const diaDiem = [config.reception?.venueName, config.reception?.address].filter(Boolean).join(', ');
-    const moTa = `Trân trọng kính mời bạn đến dự lễ thành hôn của ${tenCapDoi || 'chúng tôi'}`
-      + (diaDiem ? ` tại ${diaDiem}` : '')
-      + '. Nhấn để mở thiệp và xem chi tiết.';
-    const url = window.location.origin + window.location.pathname + window.location.search;
-    const anh = anhBiaChiaSe(config);
-
-    document.title = tieuDe;
-    datTheMeta('property', 'og:title', tieuDe);
-    datTheMeta('property', 'og:description', moTa);
-    datTheMeta('name', 'twitter:title', tieuDe);
-    datTheMeta('name', 'twitter:description', moTa);
-    datTheMeta('property', 'og:url', url);
-
-    // Ảnh bìa thật (khách tự upload) có kích thước/định dạng khác ảnh
-    // mặc định trong <head>, nên bỏ các thẻ mô tả ảnh cũ trước khi thay.
-    xoaTheMeta('property', 'og:image');
-    xoaTheMeta('property', 'og:image:secure_url');
-    xoaTheMeta('property', 'og:image:type');
-    xoaTheMeta('property', 'og:image:width');
-    xoaTheMeta('property', 'og:image:height');
-    xoaTheMeta('property', 'og:image:alt');
-    datTheMeta('property', 'og:image', anh);
-    datTheMeta('property', 'og:image:secure_url', anh);
-    datTheMeta('property', 'og:image:alt', `Ảnh cưới ${tenCapDoi}`.trim());
-    datTheMeta('name', 'twitter:image', anh);
-
-    // Link chuẩn của thiệp (bỏ phần #anchor nội bộ).
-    let canonical = document.head.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', url);
-  }
-
   function init() {
     config = window.__INVITATION_CONFIG__ || DEFAULT_CONFIG;
     invitationId = window.__INVITATION_ID__ || DEFAULT_INVITATION_ID;
     render(config);
     racHoaTietRongChim();
-    capNhatTheChiaSe(config);
   }
 
   init();

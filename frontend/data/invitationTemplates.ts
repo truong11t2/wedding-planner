@@ -12,6 +12,22 @@ export interface InvitationTemplate {
 
 export const invitationTemplates: InvitationTemplate[] = [
   {
+    id: 'thiep-cuoi-nhat-ban',
+    name: 'Nhật Bản',
+    category: 'Sáng tạo',
+    tone: 'Đỏ',
+    badge: 'Hot',
+    description: 'Thiết kế đơn giản, hiện đại nhưng vẫn trang trọng và tinh tế theo phong cách Nhật Bản. Phù hợp việc mời khách Nhật.',
+  },
+  {
+    id: 'thiep-cuoi-chau-au-do',
+    name: 'Châu Âu',
+    category: 'Sáng tạo',
+    tone: 'Đỏ',
+    badge: 'Hot',
+    description: 'Thiết kế đơn giản, hiện đại nhưng vẫn trang trọng và tinh tế theo phong cách Châu Âu. Phù hợp việc mời khách nước ngoài.',
+  },
+  {
     id: 'thiep-cuoi-western',
     name: 'Hiện đại',
     category: 'Sáng tạo',
