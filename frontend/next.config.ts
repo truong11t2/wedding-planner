@@ -13,11 +13,11 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 // Development CSP (more permissive)
 const developmentCSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://connect.facebook.net",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://connect.facebook.net https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: https: https://lh3.googleusercontent.com https://graph.facebook.com",
-  "connect-src 'self' http://localhost:5000 https://apis.google.com https://accounts.google.com https://play.google.com https://connect.facebook.net",
+  "connect-src 'self' http://localhost:5000 https://apis.google.com https://accounts.google.com https://play.google.com https://connect.facebook.net https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com",
   "frame-src 'self' http://localhost:5000 https://accounts.google.com https://www.facebook.com www.google.com https://www.youtube.com",
   "object-src 'none'",
   "base-uri 'self'",
@@ -28,11 +28,11 @@ const developmentCSP = [
 // Production CSP (more restrictive)
 const productionCSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://connect.facebook.net https://www.google-analytics.com`, // todo: consider removing 'unsafe-inline' 'unsafe-eval' in production use 'nonce-${nonce}' if needed
+  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://connect.facebook.net https://www.googletagmanager.com`, // todo: consider removing 'unsafe-inline' 'unsafe-eval' in production use 'nonce-${nonce}' if needed
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: https: https://lh3.googleusercontent.com https://graph.facebook.com",
-  "connect-src * https://vemotnha.com.vn https://vemotnha.ddns.net http://155.94.144.195:5001 https://apis.google.com https://accounts.google.com https://connect.facebook.net",
+  "connect-src * https://vemotnha.com.vn https://vemotnha.ddns.net http://155.94.144.195:5001 https://apis.google.com https://accounts.google.com https://connect.facebook.net https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com",
   "frame-src 'self' https://vemotnha.com.vn https://vemotnha.ddns.net https://accounts.google.com https://www.facebook.com www.google.com https://www.youtube.com",
   "object-src 'none'",
   "base-uri 'self'",

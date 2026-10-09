@@ -94,3 +94,25 @@
   border-radius: 0.5rem;
   overflow-x: auto;
 }
+
+.content :global(.heading-anchor) {
+  margin-left: -1.2rem;
+  color: #EC4899;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.content :global(h1:hover .heading-anchor),
+.content :global(h2:hover .heading-anchor),
+.content :global(h3:hover .heading-anchor),
+.content :global(.heading-anchor:focus-visible) {
+  opacity: 1;
+  color: #BE185D;
+}
+
+@media (hover: none) {
+  .content :global(.heading-anchor) {
+    opacity: 1;
+  }
+}

@@ -6,6 +6,7 @@ import styles from '@/styles/article.module.css';
 import { MDXComponents } from '@/components/mdx/MDXComponents';
 import CommentSection from '@/components/blog/CommentSection';
 import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
 
 
 interface PageProps {
@@ -60,7 +61,7 @@ export default async function BlogPost({ params }: PageProps) {
             parseFrontmatter: true,
             mdxOptions: {
               remarkPlugins: [remarkGfm],
-              rehypePlugins: [],
+              rehypePlugins: [rehypeSlug],
             },
           }}
         />

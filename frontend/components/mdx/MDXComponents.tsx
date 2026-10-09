@@ -1,16 +1,36 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithoutRef, ElementType } from 'react';
 import Tabs from './Tabs';
 import Accordion, { AccordionItem } from './Accordion';
 import Iframe from './Iframe';
 import Slideshow from './Slideshow';
 import PhotoGallery from './PhotoGallery';
 
+function HeadingAnchor({ id }: { id?: string }) {
+  if (!id) return null;
+  return (
+    <a href={`#${id}`} aria-label="Liên kết tới mục này" className="heading-anchor">
+      <span aria-hidden="true">#</span>
+    </a>
+  );
+}
+
+function createHeading(Tag: ElementType, className: string) {
+  return function Heading({ id, children, className: extraClassName, ...props }: ComponentPropsWithoutRef<'h2'>) {
+    return (
+      <Tag id={id} className={[className, 'scroll-mt-24', extraClassName].filter(Boolean).join(' ')} {...props}>
+        <HeadingAnchor id={id} />
+        {children}
+      </Tag>
+    );
+  };
+}
+
 export const MDXComponents = {
-  h1: (props: ComponentPropsWithoutRef<'h1'>) => <h1 className="text-4xl font-bold text-gray-900 mb-6" {...props} />,
-  h2: (props: ComponentPropsWithoutRef<'h2'>) => <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6" {...props} />,
-  h3: (props: ComponentPropsWithoutRef<'h3'>) => <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-4" {...props} />,
+  h1: createHeading('h1', 'text-4xl font-bold text-gray-900 mb-6'),
+  h2: createHeading('h2', 'text-3xl font-bold text-gray-900 mt-12 mb-6'),
+  h3: createHeading('h3', 'text-2xl font-bold text-gray-900 mt-8 mb-4'),
   p: (props: ComponentPropsWithoutRef<'p'>) => <p className="text-gray-800 mt-3 mb-2 leading-relaxed" {...props} />,
   ul: (props: ComponentPropsWithoutRef<'ul'>) => <ul className="list-disc list-inside mb-6 space-y-2" {...props} />,
   ol: (props: ComponentPropsWithoutRef<'ol'>) => <ol className="list-decimal list-inside mb-6 space-y-2" {...props} />,

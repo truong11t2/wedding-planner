@@ -6,6 +6,7 @@ import styles from '@/styles/article.module.css';
 import { Star } from 'lucide-react';
 import { MDXComponents } from '@/components/mdx/MDXComponents';
 import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
 import SelectVendorButton from '@/components/vendor/SelectVendorButton';
 
 interface PageProps {
@@ -63,7 +64,7 @@ export default async function VendorPage({ params }: PageProps) {
             parseFrontmatter: true,
             mdxOptions: {
               remarkPlugins: [remarkGfm],
-              rehypePlugins: [],
+              rehypePlugins: [rehypeSlug],
             },
           }}
         />

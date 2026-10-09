@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { TimelineProvider } from "@/context/TimelineContext";
@@ -14,6 +15,8 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   title: "Về Một Nhà - Giúp bạn một đám cưới hoàn hảo",
@@ -41,6 +44,12 @@ export default function RootLayout({
             </ClientLayout>
           </TimelineProvider>
         </AuthProvider>
+        {gaId && (
+          <GoogleAnalytics
+            gaId={gaId}
+            debugMode={process.env.NODE_ENV === "development"}
+          />
+        )}
       </body>
     </html>
   );
