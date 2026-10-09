@@ -19,7 +19,7 @@ export default function Features() {
                 <Link href={f.href} className="group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-700">
                   <div className="flex items-center gap-4 sm:block">
                     <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-pink-50 text-pink-600 transition-colors group-hover:bg-pink-100"><Icon className="size-6" aria-hidden="true" /></span>
-                    <h3 className="text-lg font-semibold text-slate-900 transition-colors group-hover:text-pink-700 sm:mt-4">{f.title}</h3>
+                    <h3 className="text-lg font-semibold text-pink-600 transition-colors group-hover:text-pink-700 sm:mt-4">{f.title}</h3>
                   </div>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{f.body}</p>
                 </Link>

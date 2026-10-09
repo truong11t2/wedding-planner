@@ -17,7 +17,7 @@ export function ButtonLink({ href, variant = 'primary', children, className = ''
 
 export function SectionHeading({ id, title, sub, center = false }: { id: string; title: string; sub?: string; center?: boolean }) {
   return (
-    <div className={center ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'}>
+    <div className={center ? 'mx-auto max-w-5xl text-center' : 'max-w-2xl'}>
       <h2 id={id} className={`${DISPLAY} text-3xl leading-tight text-slate-900 sm:text-4xl`}>{title}</h2>
       {sub && <p className="mt-3 leading-relaxed text-slate-600">{sub}</p>}
     </div>

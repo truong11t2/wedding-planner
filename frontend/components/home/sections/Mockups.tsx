@@ -36,7 +36,7 @@ function Stat({ label, value, bar }: { label: string; value: string; bar?: numbe
 export function DashboardMock({ large = false }: { large?: boolean }) {
   return (
     <div className="flex overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-xl shadow-rose-600/10">
-      <ul className="hidden w-32 shrink-0 flex-col gap-1 border-r border-rose-100 bg-rose-50/70 p-3 text-[11px] sm:flex">
+      <ul className="hidden w-32 shrink-0 flex-col gap-1 border-r border-rose-100 bg-rose-50/70 p-3 text-[12px] sm:flex">
         {SIDE.map((s, i) => (
           <li key={s.label}>
             <Link href={s.href} className={`block rounded-lg px-2 py-1.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-700 ${i === 0 ? 'bg-white font-semibold text-pink-800 shadow-sm' : 'text-pink-700 hover:bg-white/70 hover:text-pink-800'}`}>{s.label}</Link>
@@ -87,7 +87,7 @@ export function DashboardMock({ large = false }: { large?: boolean }) {
 
 export function InvitationPhone({ className = '' }: { className?: string }) {
   return (
-    <div className={`w-36 rounded-[2rem] border-[6px] border-slate-900 bg-white p-2 shadow-2xl sm:w-40 ${className}`}>
+    <div className={`w-36 rounded-[2rem] border-[2px] border-pink-400 bg-white p-2 shadow-2xl sm:w-40 ${className}`}>
       <div className="relative flex aspect-9/17 flex-col overflow-hidden rounded-[1.4rem] bg-white">
         <Image
           src="/images/homepage/invitation-card.svg"
@@ -98,7 +98,7 @@ export function InvitationPhone({ className = '' }: { className?: string }) {
           className="object-cover"
         />
         <Link href="/invitation#select" className="absolute inset-x-0 bottom-0 flex justify-center pb-3">
-          <span className="rounded-full bg-linear-to-r from-pink-600 to-purple-700 px-4 py-1 text-[10px] font-semibold text-white">Tạo thiệp</span>
+          <span className="rounded-full bg-pink-600 px-5 py-1 text-[13px] font-semibold text-white">Tạo thiệp</span>
         </Link>
       </div>
     </div>
