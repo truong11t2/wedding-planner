@@ -10,6 +10,7 @@ import MilestoneTracker from '@/components/dashboard/MilestoneTracker';
 import BlogPosts from '@/components/dashboard/BlogPosts';
 import DashboardStats from '@/components/dashboard/DashboardStats';
 import { Calendar } from 'lucide-react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const { user, isLoggedIn } = useAuth();
@@ -18,11 +19,6 @@ export default function DashboardPage() {
   const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      router.push('/');
-      return;
-    }
-
     // Set greeting based on time of day
     const hour = new Date().getHours();
     if (hour < 12) setGreeting('Chào buổi sáng');
@@ -47,15 +43,24 @@ export default function DashboardPage() {
     return diffDays;
   };
 
+  const daysUntilWedding = getDaysUntilWedding();
+
   if (!isLoggedIn) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-pink-500"></div>
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui lòng đăng nhập</h1>
+          <p className="text-gray-600">Bạn cần đăng nhập để xem kế hoạch đám cưới của mình.</p>
+          <Link
+            href="/login"
+            className="inline-flex items-center mt-4 px-5 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+          >
+            Đăng nhập ngay
+          </Link>
+        </div>
       </div>
     );
   }
-
-  const daysUntilWedding = getDaysUntilWedding();
 
   return (
     <div className="px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">

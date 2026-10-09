@@ -12,6 +12,7 @@ import {
   updateGuest as apiUpdateGuest,
   deleteGuest as apiDeleteGuest,
   Guest} from '@/api/guest';
+import Link from 'next/link';
 
 interface AddGuestModalProps {
   isOpen: boolean;
@@ -466,6 +467,12 @@ export default function GuestsPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui Lòng Đăng Nhập</h1>
           <p className="text-gray-600">Quản lý danh sách khách mời của bạn bằng cách đăng nhập trước.</p>
+          <Link
+            href="/login"
+            className="inline-flex items-center mt-4 px-5 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+          >
+            Đăng nhập ngay
+          </Link>
         </div>
       </div>
     );

@@ -33,6 +33,7 @@ import { usePhotoLibrary } from '@/lib/usePhotoLibrary';
 import { generateAlbum, updateAlbum, getAlbum } from '@/api/album';
 import { API_BASE_URL } from '@/api/config';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface PhotoViewerProps {
   photo: Photo;
@@ -626,6 +627,12 @@ export default function PhotosPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui Lòng Đăng Nhập</h1>
           <p className="text-gray-600">Truy cập hình cưới của bạn bằng cách đăng nhập trước.</p>
+          <Link
+            href="/login"
+            className="inline-flex items-center mt-4 px-5 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+          >
+            Đăng nhập ngay
+          </Link>
         </div>
       </div>
     );

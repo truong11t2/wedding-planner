@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { venueService, Venue } from '@/lib/venueService';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface VenueCardProps {
   venue: Venue;
@@ -559,6 +560,12 @@ useEffect(() => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui lòng đăng nhập</h1>
           <p className="text-gray-600">Duyệt địa điểm tổ chức tiệc cưới bằng cách đăng nhập trước.</p>
+          <Link
+            href="/login"
+            className="inline-flex items-center mt-4 px-5 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+          >
+            Đăng nhập ngay
+          </Link>
         </div>
       </div>
     );

@@ -13,6 +13,7 @@ import {
   toggleChecklistItem as apiToggleItem,
   ChecklistItem 
 } from '@/api/checklist';
+import Link from 'next/link';
 
 interface AddTaskModalProps {
   isOpen: boolean;
@@ -232,6 +233,12 @@ export default function ChecklistPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Vui Lòng Đăng Nhập</h1>
           <p className="text-gray-600">Truy cập danh sách nhiệm vụ của bạn bằng cách đăng nhập.</p>
+          <Link
+            href="/login"
+            className="inline-flex items-center mt-4 px-5 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+          >
+            Đăng nhập ngay
+          </Link>
         </div>
       </div>
     );
