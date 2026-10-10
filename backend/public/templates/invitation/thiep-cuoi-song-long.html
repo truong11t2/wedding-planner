@@ -4,55 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!--
-  ==============================================================
-  THẺ CHIA SẺ LINK — Open Graph (Zalo / Facebook / Messenger)
-  ==============================================================
-  1. Zalo đọc HTML bằng crawler phía server và KHÔNG chạy JavaScript,
-     nên các thẻ og:* dưới đây phải là thẻ TĨNH mới có tác dụng.
-     Phần JS ở cuối file chỉ ghi đè lại cho đúng tên cô dâu/chú rể và
-     ảnh bìa thật (dùng cho tab trình duyệt + crawler có chạy JS).
-  2. og:image PHẢI là URL tuyệt đối, công khai qua https (Zalo không
-     đọc được đường dẫn tương đối như "/images/...").
-  3. Ảnh nên là JPG/PNG, nặng dưới ~5MB thì Zalo hiển thị chắc chắn
-     hơn. Vì vậy ngoài ảnh mặc định của thiệp (webp) còn khai báo
-     thêm 1 ảnh JPG dự phòng cùng domain.
-  4. Zalo cache preview theo URL: muốn Zalo đọc lại, hãy chia sẻ kèm
-     tham số khác, ví dụ .../invitations/abc.html?v=2
-  ==============================================================
--->
-<meta name="description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="author" content="Vemotnha">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0b3d39">
-<title>Thiệp mời cưới — Trân trọng kính mời</title>
-
-<meta property="og:locale" content="vi_VN">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Vemotnha — Thiệp cưới online">
-<meta property="og:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta property="og:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-
-<!-- Ảnh chính: đúng ảnh bìa mặc định của mẫu thiệp này -->
-<meta property="og:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:secure_url" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-<meta property="og:image:type" content="image/webp">
-<meta property="og:image:width" content="1707">
-<meta property="og:image:height" content="2560">
-<meta property="og:image:alt" content="Ảnh cưới của cô dâu và chú rể">
-
-<!-- Ảnh dự phòng: khổ ngang + định dạng JPG, nằm cùng domain với trang thiệp -->
-<meta property="og:image" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:secure_url" content="https://vemotnha.com.vn/images/carousel/wedding-1.jpg">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1920">
-<meta property="og:image:height" content="1074">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thiệp mời cưới — Trân trọng kính mời">
-<meta name="twitter:description" content="Trân trọng kính mời bạn đến dự lễ thành hôn và tiệc cưới của chúng tôi. Mở thiệp để xem thời gian, địa điểm, bản đồ, album ảnh và gửi lời chúc.">
-<meta name="twitter:image" content="https://vemotnha.s3.ap-southeast-1.amazonaws.com/invitations/default/cap-doi.webp">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Noto+Serif+Display:wght@400;600;700&display=swap" rel="stylesheet">
