@@ -66,25 +66,133 @@ function deriveEventDate(config) {
   return config.weddingDateISO.split('T')[0];
 }
 
-function buildInvitationRedirectTarget(publicUrl, requestUrl) {
-  if (!publicUrl) return publicUrl;
+const SITE_NAME = 'Về Một Nhà — Thiệp cưới online';
+const DEFAULT_OG_IMAGE =
+  process.env.OG_DEFAULT_IMAGE ||
+  'https://vemotnha.com.vn/images/carousel/wedding-1.jpg';
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Public origin the invitation is shared from, used to build absolute
+// og:url / og:image values (social crawlers reject relative URLs).
+function resolvePublicBaseUrl(req) {
+  const configured =
+    process.env.PUBLIC_BASE_URL || process.env.BACKEND_URL || process.env.FRONTEND_URL;
+  if (configured) return configured.replace(/\/+$/, '');
+  return `${req.protocol}://${req.get('host')}`;
+}
+
+function toAbsoluteUrl(url, baseUrl) {
+  if (typeof url !== 'string' || !url.trim()) return '';
+  const trimmed = url.trim();
   try {
-    const parsedPublicUrl = new URL(publicUrl, 'http://localhost');
-    const requestUrlObj = new URL(requestUrl, 'http://localhost');
-    const guestName = requestUrlObj.searchParams.get('guest');
-
-    if (guestName && guestName.trim()) {
-      parsedPublicUrl.searchParams.set('guest', guestName.trim());
-    }
-
-    return `${parsedPublicUrl.pathname}${parsedPublicUrl.search}`;
+    return new URL(trimmed, `${baseUrl}/`).href;
   } catch {
-    return publicUrl;
+    return trimmed;
   }
 }
 
-exports.buildInvitationRedirectTarget = buildInvitationRedirectTarget;
+function formatEventDate(iso) {
+  const match = typeof iso === 'string' ? iso.match(/^(\d{4})-(\d{2})-(\d{2})/) : null;
+  if (!match) return '';
+  const [, year, month, day] = match;
+  return `${day}/${month}/${year}`;
+}
+
+// The couple's cover photo is stored in Invitation.config.photos.coverPhoto.
+// Fall back to the first gallery image, then to the site default.
+function pickCoverPhoto(config) {
+  const cover = config?.photos?.coverPhoto;
+  if (typeof cover === 'string' && cover.trim()) return cover.trim();
+  if (Array.isArray(config?.gallery)) {
+    const fromGallery = config.gallery.find((item) => typeof item === 'string' && item.trim());
+    if (fromGallery) return fromGallery.trim();
+  }
+  return DEFAULT_OG_IMAGE;
+}
+
+function buildShareMetadata(config = {}, { baseUrl, shareUrl } = {}) {
+  const coupleShort = [config.groomShort, config.brideShort].filter(Boolean).join(' & ');
+  const coupleFull = [config.groomFull, config.brideFull].filter(Boolean).join(' & ');
+  const title = coupleShort
+    ? `Thiệp mời cưới ${coupleShort}`
+    : 'Thiệp mời cưới — Trân trọng kính mời';
+
+  const venue = [config.reception?.venueName, config.reception?.address]
+    .filter(Boolean)
+    .join(', ');
+  const date = formatEventDate(config.weddingDateISO || config.reception?.date);
+
+  let description = `Trân trọng kính mời bạn đến dự lễ thành hôn của ${
+    coupleFull || coupleShort || 'chúng tôi'
+  }`;
+  if (date) description += ` vào ngày ${date}`;
+  if (venue) description += ` tại ${venue}`;
+  description += '. Nhấn để mở thiệp, xem chi tiết và gửi lời chúc.';
+
+  return {
+    siteName: SITE_NAME,
+    title,
+    description,
+    url: shareUrl || '',
+    image: toAbsoluteUrl(pickCoverPhoto(config), baseUrl) || DEFAULT_OG_IMAGE,
+    imageAlt: coupleShort ? `Ảnh cưới ${coupleShort}` : 'Ảnh cưới của cô dâu và chú rể'
+  };
+}
+
+/**
+ * Replaces any pre-existing Open Graph, Twitter and canonical tags in the
+ * generated HTML with a single server-rendered set. Social crawlers (Zalo, Facebook)
+ * do not run JavaScript, so the tags must be baked into the file with the
+ * couple's real data — most importantly the cover photo from the database.
+ */
+function injectSocialMetaTags(html, meta) {
+  const tags = [
+    '<meta property="og:locale" content="vi_VN" />',
+    '<meta property="og:type" content="website" />',
+    `<meta property="og:site_name" content="${escapeHtml(meta.siteName)}" />`,
+    `<meta property="og:title" content="${escapeHtml(meta.title)}" />`,
+    `<meta property="og:description" content="${escapeHtml(meta.description)}" />`,
+    `<meta property="og:url" content="${escapeHtml(meta.url)}" />`,
+    `<meta property="og:image" content="${escapeHtml(meta.image)}" />`,
+    `<meta property="og:image:secure_url" content="${escapeHtml(meta.image)}" />`,
+    `<meta property="og:image:alt" content="${escapeHtml(meta.imageAlt)}" />`,
+    '<meta name="twitter:card" content="summary_large_image" />',
+    `<meta name="twitter:title" content="${escapeHtml(meta.title)}" />`,
+    `<meta name="twitter:description" content="${escapeHtml(meta.description)}" />`,
+    `<meta name="twitter:image" content="${escapeHtml(meta.image)}" />`,
+    `<link rel="canonical" href="${escapeHtml(meta.url)}" />`
+  ].join('\n    ');
+
+  const titleTag = `<title>${escapeHtml(meta.title)}</title>`;
+
+  let output = html
+    .replace(/[ \t]*<meta\s+[^>]*property=["']og:[^>]*>\s*/gi, '')
+    .replace(/[ \t]*<meta\s+[^>]*name=["']twitter:[^>]*>\s*/gi, '')
+    .replace(/[ \t]*<link\s+[^>]*rel=["']canonical["'][^>]*>\s*/gi, '');
+
+  const hasTitle = /<title>[\s\S]*?<\/title>/i.test(output);
+  if (hasTitle) {
+    output = output.replace(/<title>[\s\S]*?<\/title>/i, titleTag);
+  }
+
+  if (/<\/head>/i.test(output)) {
+    const headBlock = hasTitle ? tags : `${titleTag}\n    ${tags}`;
+    output = output.replace(/<\/head>/i, `  ${headBlock}\n  </head>`);
+  }
+
+  return output;
+}
+
+exports.buildShareMetadata = buildShareMetadata;
+exports.injectSocialMetaTags = injectSocialMetaTags;
 
 /**
  * Finds the current user's invitation row and creates it if missing,
@@ -190,7 +298,7 @@ exports.getInvitationTemplate = async (req, res) => {
  *     localStorage (private browsing, in-app browsers, cleared storage, etc).
  *  2) Via `localStorage.setItem(...)` — kept as a legacy fallback only.
  */
-async function buildInvitationHtml(templateId, config, invitationId) {
+async function buildInvitationHtml(templateId, config, invitationId, shareOptions = {}) {
   const templatePath = await resolveTemplatePath(templateId);
   let templateContent = await fs.readFile(templatePath, 'utf-8');
 
@@ -218,7 +326,7 @@ async function buildInvitationHtml(templateId, config, invitationId) {
     );
   }
 
-  return templateContent;
+  return injectSocialMetaTags(templateContent, buildShareMetadata(config, shareOptions));
 }
 
 // Auth required: render/refresh the current user's single preview invitation
@@ -253,7 +361,9 @@ exports.renderInvitation = async (req, res) => {
       isPaid
     });
 
-    const htmlContent = await buildInvitationHtml(templateId, config, invitation.id);
+    const baseUrl = resolvePublicBaseUrl(req);
+    const shareOptions = { baseUrl, shareUrl: `${baseUrl}/i/${invitation.slug}` };
+    const htmlContent = await buildInvitationHtml(templateId, config, invitation.id, shareOptions);
     const outputPath = path.join(INVITATIONS_DIR, htmlFileName);
     await fs.writeFile(outputPath, htmlContent, 'utf-8');
     try {
@@ -330,7 +440,9 @@ exports.generateInvitation = async (req, res) => {
     await invitation.save();
 
     // Always (re)generate the final HTML file so it reflects the latest content
-    const htmlContent = await buildInvitationHtml(templateId, config, invitation.id);
+    const baseUrl = resolvePublicBaseUrl(req);
+    const shareOptions = { baseUrl, shareUrl: `${baseUrl}/i/${invitation.slug}` };
+    const htmlContent = await buildInvitationHtml(templateId, config, invitation.id, shareOptions);
     const outputPath = path.join(INVITATIONS_DIR, htmlFileName);
     await fs.writeFile(outputPath, htmlContent, 'utf-8');
     try {
@@ -428,7 +540,11 @@ exports.deleteGuestLink = async (req, res) => {
   }
 };
 
-// Public: resolve a shareable slug to its backend file URL
+// Public: serve the invitation HTML for a shareable slug.
+// The file is served directly (no redirect) so social crawlers such as Zalo
+// and Facebook read the Open Graph tags baked into the HTML, and so the
+// shareable /i/<slug> URL stays canonical. The `?guest=` query parameter is
+// preserved by the browser and read client-side by the template.
 exports.getInvitationBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -441,8 +557,27 @@ exports.getInvitationBySlug = async (req, res) => {
       });
     }
 
-    const redirectTarget = buildInvitationRedirectTarget(invitation.publicUrl, req.originalUrl);
-    res.redirect(302, redirectTarget);
+    const filePath = path.join(INVITATIONS_DIR, invitation.htmlFileName);
+    let html;
+    try {
+      html = await fs.readFile(filePath, 'utf-8');
+    } catch (error) {
+      return res.status(404).json({ success: false, message: 'Invitation not found or expired' });
+    }
+
+    // Re-derive the share tags from the stored config so links generated
+    // before this feature (or before a photo change) still preview with the
+    // couple's current cover photo.
+    const baseUrl = resolvePublicBaseUrl(req);
+    const shareUrl = `${baseUrl}/i/${invitation.slug}`;
+    const htmlWithMeta = injectSocialMetaTags(
+      html,
+      buildShareMetadata(invitation.config || {}, { baseUrl, shareUrl })
+    );
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.type('html');
+    return res.send(htmlWithMeta);
   } catch (error) {
     console.error('Error fetching invitation:', error);
     res.status(500).json({
