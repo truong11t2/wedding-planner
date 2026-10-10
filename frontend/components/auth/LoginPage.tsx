@@ -8,6 +8,7 @@ import SocialLoginButtons from './SocialLoginButtons';
 import Toast from '@/components/common/Toast';
 import { loginUser, registerUser } from '@/api/auth';
 import { clearReturnTo, readReturnTo, sanitizeReturnTo } from '@/lib/authRedirect';
+import { isValidEmail } from '@/lib/validation';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,6 +52,11 @@ export default function LoginPage() {
         return;
       }
 
+      if (!isValidEmail(email)) {
+        showToast('Địa chỉ thư điện tử không hợp lệ', 'error');
+        return;
+      }
+
       const result = await loginUser(email, password);
       if (result.success && result.token && result.user) {
         login(result.user);
@@ -63,6 +69,11 @@ export default function LoginPage() {
     } else {
       if (!firstName || !lastName || !email || !password || !confirmPassword) {
         showToast('Vui lòng điền vào tất cả các trường', 'error');
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        showToast('Địa chỉ thư điện tử không hợp lệ', 'error');
         return;
       }
 
