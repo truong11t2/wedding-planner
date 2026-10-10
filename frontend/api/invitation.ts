@@ -74,7 +74,7 @@ export interface InvitationConfig {
   musicUrl: string;
   /** Extra fields used by templates that support them. */
   story: InvitationStoryItem[] | null;
-  photos: InvitationPhotos;
+  photos: InvitationPhotos | null;
 }
 
 export interface RenderInvitationResponse {

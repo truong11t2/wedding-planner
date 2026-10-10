@@ -95,6 +95,31 @@ function buildDefaultConfig(templateId: string = defaultTemplate.id): Invitation
 /** Default config of the initial template — used to seed the form on first load. */
 const defaultConfig = buildDefaultConfig();
 
+/**
+ * Combines the config currently in the form with the defaults of the template
+ * the user just picked.
+ *
+ * The user's own data always wins, so switching a template never wipes the
+ * information they have already entered. Only the optional sections the new
+ * template introduces (story, photos, parents, ceremony), which stay `null`
+ * while the previous template did not support them, are seeded from that
+ * template's defaults — otherwise those form sections would render empty or not
+ * at all.
+ */
+function mergeConfigForTemplate(current: InvitationConfig, templateId: string): InvitationConfig {
+	const templateDefaults = buildDefaultConfig(templateId);
+
+	return {
+		...templateDefaults,
+		...current,
+		groomParents: current.groomParents ?? templateDefaults.groomParents,
+		brideParents: current.brideParents ?? templateDefaults.brideParents,
+		ceremony: current.ceremony ?? templateDefaults.ceremony,
+		photos: current.photos ?? templateDefaults.photos,
+		story: current.story ?? templateDefaults.story
+	};
+}
+
 function formatDateLabel(dateStr: string): string {
 	if (!dateStr) return '';
 	const [year, month, day] = dateStr.split('-');
@@ -312,11 +337,12 @@ export default function InvitationPage() {
 	);
 
 	/**
-	 * Switching templates loads that template's own default config — never a merge
-	 * with the form that was on screen before, so data belonging to another
-	 * template (its story, photos, parents, ...) can never leak into this one.
+	 * Switching templates keeps the data the user has already entered — the form
+	 * is not reset to the new template's sample defaults. The current config (as
+	 * loaded from the database) is carried over and only the optional sections
+	 * the new template adds are seeded (see `mergeConfigForTemplate`).
 	 *
-	 * The form is filled in straight away, whether or not the user is logged in;
+	 * The form is updated straight away, whether or not the user is logged in;
 	 * only the database write is skipped when logged out. The choice is stored via
 	 * the render endpoint — the template is kept nowhere else, and the other steps
 	 * read the form back from there.
@@ -324,25 +350,24 @@ export default function InvitationPage() {
 	const handleSelectTemplate = async (templateId: string) => {
 		if (templateId === selectedTemplateId) return;
 
-		const templateConfig = buildDefaultConfig(templateId);
-		const templateWeddingDate = templateConfig.weddingDateISO.split('T')[0];
+		const nextConfig = mergeConfigForTemplate(config, templateId);
 
 		setSelectedTemplateId(templateId);
-		setConfig(templateConfig);
-		setWeddingDate(templateWeddingDate);
+		setConfig(nextConfig);
 
 		// Always reset preview/share on template change
 		setPreviewUrl(null);
 		setPreviewFileName(null);
 		setShareUrl(null);
 
-		templateSaveRef.current = saveSelectedTemplate(templateId, templateConfig, templateWeddingDate);
+		templateSaveRef.current = saveSelectedTemplate(templateId, nextConfig, weddingDate);
 		await templateSaveRef.current;
 	};
 
 	/**
-	 * Stores the picked template (plus the config it starts from) in the database.
-	 * The render endpoint is the existing upsert, so no new API is needed.
+	 * Stores the picked template together with the current form data in the
+	 * database. The render endpoint is the existing upsert, so no new API is
+	 * needed.
 	 */
 	const saveSelectedTemplate = async (
 		templateId: string,

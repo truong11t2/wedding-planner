@@ -611,12 +611,12 @@ export default function Input({
 					</div>
 
 					{/* Chuyện tình (chỉ với mẫu hỗ trợ, VD: Thiệp cưới song long) */}
-					{config.story ? (
+					{features.story ? (
 						<div className="mt-6 border-t border-slate-100 pt-6">
 							<h3 className="text-sm font-semibold text-slate-900">Chuyện Tình</h3>
 							<p className="mt-1 text-xs text-slate-500">Thêm từng cột mốc trong chuyện tình của hai bạn</p>
 							<div className="mt-4 space-y-3">
-								{config.story.map((item, index) => (
+								{config.story?.map((item, index) => (
 									<div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
 										<div className="flex flex-col gap-3 sm:flex-row sm:items-start">
 											<LabeledImageUploadCard

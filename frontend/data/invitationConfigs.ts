@@ -46,11 +46,7 @@ const coreConfig: CoreInvitationConfig = {
 
 const minimalConfig: InvitationConfig = {
 	...coreConfig,
-	photos: {
-		coverPhoto: '',
-		groomPhoto: '',
-		bridePhoto: ''
-	},
+	photos: null,
 	groomParents: {
 		father: 'Ông Nguyễn Văn Long',
 		mother: 'Bà Lê Thị Hồng',
@@ -91,11 +87,7 @@ const songLongConfig: InvitationConfig = {
 		dateLabel: '20 · 12 · 2026',
 		lunar: '(Nhằm ngày 12 tháng 11 năm Bính Ngọ)'
 	},
-	story: [
-		{ date: 'Mùa thu 2021', text: 'Lần đầu gặp gỡ tại một quán cà phê nhỏ ven sông.' },
-		{ date: 'Mùa hè 2025', text: 'Lời cầu hôn bất ngờ dưới ánh hoàng hôn.' },
-		{ date: '20.12.2026', text: 'Ngày chúng tôi chính thức nên duyên vợ chồng.' }
-	],
+	story: null,
 };
 
 const hienDaiConfig: InvitationConfig = {
